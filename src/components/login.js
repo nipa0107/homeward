@@ -38,7 +38,7 @@ export default class Login extends Component {
           window.localStorage.setItem("token", data.data);
           window.localStorage.setItem("loggedIn", true);
           
-          window.location.href = "./detail";
+          window.location.href = "./home";
         } else {
         //ถ้าเข้าสู่ระบบไม่สำเร็จ
         const errorElement = document.getElementById("errormessage");

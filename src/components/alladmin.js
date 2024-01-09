@@ -2,6 +2,7 @@ import React, {useEffect, useState } from "react";
 import deleteimg from "../img/delete.png";
 import "../css/alladmin.css"
 
+
 export default function Alladmin({ userData }) {
   const [data, setData] = useState([]);
 
@@ -20,19 +21,10 @@ export default function Alladmin({ userData }) {
       });
   };
 
-  // const getAllUser = () => {
-  //   axios("http://localhost:5000/alladmin", {
-  //     method: "GET",
-  //   })
-  //     .then((res) => res.json())
-  //     .then((data) => {
-  //       console.log(data, "AllAdmin");
-  //       setData(data.data);
-  //     });
-  // };
+
 
   const home = () => {
-    window.location.href = "./detail";
+    window.location.href = "./home";
   };
   const add = () => {
     window.location.href = "./addadmin";

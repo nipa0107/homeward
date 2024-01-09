@@ -8,6 +8,7 @@ import Login from "./components/login";
 import Home from "./components/home";
 import Detail from "./components/detail";
 import Profile from "./components/profile";
+import Updateadmin from "./components/updateadmin";
 import Alladmin from "./components/alladmin";
 import AddAdmin from "./components/addadmin";
 
@@ -30,22 +31,39 @@ function App() {
           <Route
             exact
             path="/"
-            element={isLoggedIn === "true" ? <Detail/> : <Login />}/>
-           {/* <Route 
+            element={isLoggedIn === "true" ? <Home/> : <Login />}/>
+           <Route 
               path="/home" 
               element={<PrivateRoute element={<Home />} isLoggedIn={isLoggedIn} />}
-           />  */}
+           /> 
             {/* <Route
               path="/detail"
               element={<PrivateRoute element={<Detail />} isLoggedIn={isLoggedIn} />}
             /> */}
+            <Route
+              path="/alladmin"
+              element={<PrivateRoute element={<Alladmin />} isLoggedIn={isLoggedIn} />}
+            />
+            <Route
+              path="/addadmin"
+              element={<PrivateRoute element={<AddAdmin />} isLoggedIn={isLoggedIn} />}
+            />
+            <Route
+              path="/updateadmin"
+              element={<PrivateRoute element={<Updateadmin />} isLoggedIn={isLoggedIn} />}
+            />
+            <Route
+              path="/profile"
+              element={<PrivateRoute element={<Profile />} isLoggedIn={isLoggedIn} />}
+            />
 
             {/* -------------------- */}
-            <Route path="/home" element={<Home />} />    
-            <Route path="/detail" element={<Detail />} />
+            {/* <Route path="/home" element={<Home />} />    
+            <Route path="/detail" element={<Detail />} /> */}
             {/* <Route path="/profile" element={<Profile />} /> */}
-            <Route path="/alladmin" element={<Alladmin />} />
-            <Route path="/addadmin" element={<AddAdmin />} />
+            {/* <Route path="/alladmin" element={<Alladmin />} />
+            <Route path="/addadmin" element={<AddAdmin />} /> */}
+            {/* -------------------- */}
 
         </Routes>
       </div>

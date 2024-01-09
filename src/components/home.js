@@ -1,12 +1,37 @@
 import React, { useEffect, useState } from "react";
-
-// import React from "react";
-// import { useState } from "react";
 import "../css/sidebar.css";
 import "bootstrap-icons/font/bootstrap-icons.css";
 import logow from "../img/logow.png";
 
-export default function Home({ adminData }) {
+
+
+export default function Home({ }) {
+  const [adminData, setAdminData] = useState("");
+
+  useEffect(() => {
+    const token = window.localStorage.getItem("token");
+    if (token) {
+      fetch("http://localhost:5000/profile", {
+        method: "POST",
+        crossDomain: true,
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "application/json",
+          "Access-Control-Allow-Origin": "*",
+        },
+        body: JSON.stringify({
+          token: token,
+        }),
+      })
+        .then((res) => res.json())
+        .then((data) => {
+          console.log(data)
+          setAdminData(data.data);
+        });
+    }
+  }, []); //ส่งไปครั้งเดียว
+
+
   const logOut = () => {
     window.localStorage.clear();
     window.location.href = "./";
@@ -14,6 +39,10 @@ export default function Home({ adminData }) {
 
   const admin = () => {
     window.location.href = "./alladmin";
+  };
+
+  const profile = () => {
+    window.location.href = "./profile";
   };
 
   const [navCollpase, setNavCollapse] = useState(false);
@@ -27,8 +56,8 @@ export default function Home({ adminData }) {
         <ul>
           <i class="bx bx-user"></i>
           {/*เช็คว่ามีdataไหม */}
-          <li onClick={navCollpase}>{adminData && adminData.username}</li>
-    
+          {/* <li onClick={navCollpase}>{adminData && adminData.username}</li> */}
+          <li onClick={profile}>{adminData && adminData.username}</li>
         </ul>
       </nav>
       <div className="sidebar_content">
