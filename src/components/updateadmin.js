@@ -24,14 +24,17 @@ useEffect(() => {
   const Updateadmin = () => {
     console.log(password, newPassword, confirmNewPassword);
 
-    const token = window.localStorage.getItem("token");
-    if (token) {
+    // const token = window.localStorage.getItem("token");
+    // if (token) {
       fetch(`http://localhost:5000/updateadmin/${location.state._id}`, {
         method: "POST",
         headers: {
+          // "Content-Type": "application/json",
+          // Accept: "application/json",
+          // Authorization: `Bearer ${token}`,
           "Content-Type": "application/json",
           Accept: "application/json",
-          Authorization: `Bearer ${token}`,
+          "Access-Control-Allow-Origin": "*",
         },
         body: JSON.stringify({
           id: location.state._id,
@@ -42,21 +45,22 @@ useEffect(() => {
       })
         .then((res) => res.json())
         .then((data) => {
+          console.log(data);
           if (data.status === "ok") {
-            console.log(username, password, confirmPassword);
-            window.location.href = "./alladmin";
+            window.location.href = "./profile";
           }
-        
         })
         .catch((error) => {
           console.error(error);
-          // จัดการ error ตามที่คุณต้องการ
         });
-    }
+    // }
   };
 
   return (
-    <div className="auth-wrapper">
+    <div>
+      <h3 className="title">แก้ไขรหัสผ่าน</h3>
+    <div className="formcontainerpf">
+      
       <div className="auth-inner">
         รหัสผ่านเก่า
         <input
@@ -80,17 +84,20 @@ useEffect(() => {
         />
         <br />
       </div>
-      <button onClick={Updateadmin} className="btn btn-primary">
-        Update
+      <button onClick={Updateadmin} className="btn bthsave btn-primary">
+        บันทึก
       </button>
 
       <br /><br />
-      <button onClick={profile} className="btn btn-primary">
-        Back
-      </button>
+
 
 
     </div>
+    <button onClick={profile} className="btn btn-primary">
+        Back
+      </button>
+    </div>
+
   );
 }
 
