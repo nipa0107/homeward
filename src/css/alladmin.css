@@ -1,0 +1,28 @@
+.add{
+    border-style: solid 1px;
+    border-radius: 5px;
+}
+
+.add:hover{
+    background-color: #87CEFA;
+    color: #ffffff;
+    border-color: #87CEFA;
+}
+
+/* .countadmin{
+    
+} */
+
+.deleteimg{
+   border-radius: 10px;
+   width: 5vh;
+   float: right;
+   margin: auto auto;
+}
+
+.adminall{
+    width: 20% ;
+    margin-left: auto;
+    margin-right: auto;
+    box-shadow: 0 2px 5px 0 rgba(0,0,0,0.1); 
+}
