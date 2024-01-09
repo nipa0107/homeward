@@ -41,7 +41,7 @@ export default function Profile() {
         
 
         <div>{adminData && adminData.username}</div> <br/>
-        <div>{adminData && adminData.password} <p onClick={() => navigate("/updateadmin", {state: adminData})}>แก้ไข</p></div>
+        <div>{adminData && adminData.password.replace(/./g, '•'.repeat(1))} <p onClick={() => navigate("/updateadmin", {state: adminData})}>แก้ไข</p></div>
           <button onClick={logOut} className="btn btn-primary">
             Log Out
           </button>
