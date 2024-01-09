@@ -42,8 +42,11 @@ useEffect(() => {
       })
         .then((res) => res.json())
         .then((data) => {
-          console.log(data);
-          // ทำอะไรบางอย่างหลังจากที่อัปเดตข้อมูล
+          if (data.status === "ok") {
+            console.log(username, password, confirmPassword);
+            window.location.href = "./alladmin";
+          }
+        
         })
         .catch((error) => {
           console.error(error);
