@@ -5,6 +5,7 @@ import "../css/alladmin.css"
 
 export default function Alladmin({ userData }) {
   const [data, setData] = useState([]);
+  const [adminId, setAdminId] = useState('');
 
   useEffect(() => {
     getAllUser();
@@ -30,7 +31,10 @@ export default function Alladmin({ userData }) {
     window.location.href = "./addadmin";
   };
 
-  const deleteadmin = (id, username) => {
+  
+
+  
+  // const deleteadmin = (id, username) => {
    
 
     // if(window.confirm(`คุณต้องการลบ ${username}`)){}
@@ -55,9 +59,11 @@ export default function Alladmin({ userData }) {
   //       });
   //   } else {
   //   }
-  };
+  // };
 
-  // const deleteadmin = async (id, username) => {
+  const deleteadmin = async () => {
+
+
   //   const confirmDelete = window.confirm(`คุณต้องการลบ ${username}?`);
   
   //   if (confirmDelete) {
@@ -85,8 +91,9 @@ export default function Alladmin({ userData }) {
   //       console.error("เกิดข้อผิดพลาดในการลบผู้ดูแลระบบ:", error.message);
   //     }
   //   }
-  // };
+  };
   
+ 
   return (
     <div>
       <button onClick={home} className="btn">
@@ -102,7 +109,7 @@ export default function Alladmin({ userData }) {
           <div class="adminall card mb-3 ">
             <div class="card-body">
             {/* <img src={deleteimg} className="deleteimg" alt="deleteimg" onClick={deleteadmin}></img> */}
-              <img src={deleteimg} className="deleteimg" alt="deleteimg" onClick={deleteadmin(i._id, i.username )}></img>
+              <img src={deleteimg} className="deleteimg" alt="deleteimg" onClick={deleteadmin}></img>
               <h5 class="card-title">{i.username}</h5>
             </div>
           </div>
