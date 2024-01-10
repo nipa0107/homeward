@@ -3,7 +3,6 @@ import { useLocation } from "react-router-dom";
 
 function Updateadmin() {
   const location = useLocation();
-  // const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
   const [confirmNewPassword, setConfirmNewPassword] = useState("");
@@ -24,14 +23,9 @@ useEffect(() => {
   const Updateadmin = () => {
     console.log(password, newPassword, confirmNewPassword);
 
-    // const token = window.localStorage.getItem("token");
-    // if (token) {
       fetch(`http://localhost:5000/updateadmin/${location.state._id}`, {
         method: "POST",
         headers: {
-          // "Content-Type": "application/json",
-          // Accept: "application/json",
-          // Authorization: `Bearer ${token}`,
           "Content-Type": "application/json",
           Accept: "application/json",
           "Access-Control-Allow-Origin": "*",

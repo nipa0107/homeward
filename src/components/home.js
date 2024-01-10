@@ -2,10 +2,11 @@ import React, { useEffect, useState } from "react";
 import "../css/sidebar.css";
 import "bootstrap-icons/font/bootstrap-icons.css";
 import logow from "../img/logow.png";
-
+import { useNavigate } from "react-router-dom";
 
 
 export default function Home({ }) {
+  const navigate = useNavigate();
   const [adminData, setAdminData] = useState("");
 
   useEffect(() => {
@@ -37,17 +38,17 @@ export default function Home({ }) {
     window.location.href = "./";
   };
 
-  const admin = () => {
-    window.location.href = "./alladmin";
-  };
+  // const admin = () => {
+  //   window.location.href = "./alladmin";
+  // };
 
-  const profile = () => {
-    window.location.href = "./profile";
-  };
+  // const profile = () => {
+  //   window.location.href = "./profile";
+  // };
 
-  const equip = () => {
-    window.location.href = "./allequip";
-  };
+  // const equip = () => {
+  //   window.location.href = "./allequip";
+  // };
 
 
   const [navCollpase, setNavCollapse] = useState(false);
@@ -62,7 +63,7 @@ export default function Home({ }) {
           <i class="bx bx-user"></i>
           {/*เช็คว่ามีdataไหม */}
           {/* <li onClick={navCollpase}>{adminData && adminData.username}</li> */}
-          <li onClick={profile}>{adminData && adminData.username}</li>
+          <li onClick={() => navigate("/profile")}>{adminData && adminData.username}</li>
         </ul>
       </nav>
       <div className="sidebar_content">
@@ -81,12 +82,13 @@ export default function Home({ }) {
             <p>จัดการข้อมูลบุคลากร</p>
           </div>
           <div className="nav-option option1">
-            <i class="bi bi-prescription2" onClick={equip}></i>
-            <p onClick={equip}>จัดการอุปกรณ์ทางการแพทย์</p>
+            <i class="bi bi-prescription2" onClick={() => navigate("/allequip", { state: adminData } )}></i>
+            <p onClick={() => navigate("/allequip", { state: adminData })}>จัดการอุปกรณ์ทางการแพทย์</p>
           </div>
+
           <div className="nav-option option1">
-            <i class="bi bi-person-gear" onClick={admin}></i>
-            <p onClick={admin}>จัดการแอดมิน</p>
+            <i class="bi bi-person-gear" onClick={() => navigate("/alladmin")}></i>
+            <p  onClick={() => navigate("/alladmin")}>จัดการแอดมิน</p>
           </div>
           <div className="nav-option option1">
             <i class="bi bi-box-arrow-right" onClick={logOut}></i>

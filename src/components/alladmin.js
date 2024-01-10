@@ -3,9 +3,9 @@ import deleteimg from "../img/delete.png";
 import "../css/alladmin.css"
 
 
-export default function Alladmin({ userData }) {
+export default function Alladmin({}) {
   const [data, setData] = useState([]);
-  const [adminId, setAdminId] = useState('');
+  // const [adminId, setAdminId] = useState('');
 
   useEffect(() => {
     getAllUser();
