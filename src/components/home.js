@@ -45,6 +45,11 @@ export default function Home({ }) {
     window.location.href = "./profile";
   };
 
+  const equip = () => {
+    window.location.href = "./allequip";
+  };
+
+
   const [navCollpase, setNavCollapse] = useState(false);
   return (
     <div className="bartop">
@@ -76,8 +81,8 @@ export default function Home({ }) {
             <p>จัดการข้อมูลบุคลากร</p>
           </div>
           <div className="nav-option option1">
-            <i class="bi bi-prescription2"></i>
-            <p>จัดการอุปกรณ์ทางการแพทย์</p>
+            <i class="bi bi-prescription2" onClick={equip}></i>
+            <p onClick={equip}>จัดการอุปกรณ์ทางการแพทย์</p>
           </div>
           <div className="nav-option option1">
             <i class="bi bi-person-gear" onClick={admin}></i>
