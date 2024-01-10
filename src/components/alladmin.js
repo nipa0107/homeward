@@ -98,26 +98,25 @@ export default function Alladmin({}) {
   };
 
   const [navCollpase, setNavCollapse] = useState(false);
+  const [smallNavCollpase, setSmallNavCollapse] = useState(false);
+
   return (
     <div className="bartop">
       <nav className="nav">
         <div className="logo">
           <img src={logow} className="logow" alt="logo"></img>
-          <i className="bi bi-justify" onClick={e => setNavCollapse(!navCollpase)}></i>
+          <i className="bi bi-justify largeDeviceIcon" onClick={e => setNavCollapse(!navCollpase)}></i>
+          <i className="bi bi-justify smallDeviceIcon" onClick={e => setSmallNavCollapse(!smallNavCollpase)}></i>
         </div>
         <ul>
-          <i class="bx bx-user"></i>
+          <i class="bi bi-person"></i>
           {/*เช็คว่ามีdataไหม */}
           {/* <li onClick={navCollpase}>{adminData && adminData.username}</li> */}
           <li onClick={profile}>{adminData && adminData.username}</li>
         </ul>
       </nav>
       <div className="sidebar_content">
-        <div className={'sidebar-container ${navCollpase ? "navCollaps" : ""}'}>
-          <div className="nav-option option1">
-            <i class="bi bi-house" onClick={home}></i>
-            <p onClick={home}>หน้าหลัก</p>
-          </div>
+        <div className={`${smallNavCollpase ? "smalNav":""}sidebar-container ${navCollpase ? "navCollaps" : ""}`}>
           <div className="nav-option option1">
             <i class="bi bi-book"></i>
             <p>จัดการข้อมูลคู่มือการดูแลผู้ป่วย</p>
@@ -141,7 +140,7 @@ export default function Alladmin({}) {
           </div>
         </div>
       </div>
-      <div className="container .col-md-8">
+      <div className="container">
         <button onClick={add} className="bi bi-plus-circle add btn btn-outline-secondary py-1 px-4">
           เพิ่มแอดมิน
         </button>
