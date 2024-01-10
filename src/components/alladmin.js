@@ -73,30 +73,31 @@ export default function Alladmin({}) {
   };
 
 
-  const deleteAdmin = (id, username) => {
-    if (window.confirm(`คุณต้องการลบ ${username}`)) {
-      fetch(`http://localhost:5000/deleteAdmin`, {
-        method: "DELETE",
-        crossDomain: true,
-        headers: {
-          "Content-Type": "application/json",
-          Accept: "application/json",
-          "Access-Control-Allow-Origin": "*",
-        },
-        body: JSON.stringify({
-          adminId: id,
-        }),
-      })
-        .then((res) => res.json())
-        .then((data) => {
-          alert(data.data);
-          getAllUser();
+  const deleteAdmin = async (id, username) => {
+    if (window.confirm(`Are you sure you want to delete ${username}?`)) {
+      try {
+        const response = await fetch(`http://localhost:5000/deleteAdmin/${id}`, {
+          method: 'DELETE',
+          headers: {
+            'Content-Type': 'application/json',
+            Accept: 'application/json',
+          },
         });
-    } else {
-
+  
+        const data = await response.json();
+  
+        if (response.ok) {
+          alert(data.data);
+          // Refresh or update the admin list
+        } else {
+          console.error('Error during deletion:', data.data);
+        }
+      } catch (error) {
+        console.error('Error during fetch:', error);
+      }
     }
   };
-
+  
   const [navCollpase, setNavCollapse] = useState(false);
   const [smallNavCollpase, setSmallNavCollapse] = useState(false);
 
