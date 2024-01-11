@@ -20,8 +20,7 @@ import AllEquip from "./components/allequipment";
 import AllMpersonnel from "./components/allmpersonnel";
 import AddMpersonnel from "./components/addmpersonnel";
 import AddCaremanual from "./components/addcaremanual";
-// import AllCaremanual from "./components/allcaremanual";
-
+import UpdateCareManual from "./components/updatecaremanual";
 
 const PrivateRoute = ({ element, isLoggedIn }) => {
   return isLoggedIn === "true" ? (
@@ -96,19 +95,24 @@ function App() {
           <Route
             path="/allmpersonnel"
             element={
-              <PrivateRoute element={<AllMpersonnel />} isLoggedIn={isLoggedIn} />
+              <PrivateRoute
+                element={<AllMpersonnel />}
+                isLoggedIn={isLoggedIn}
+              />
             }
           />
 
-
-        <Route
+          <Route
             path="/addmpersonnel"
             element={
-              <PrivateRoute element={<AddMpersonnel />} isLoggedIn={isLoggedIn} />
+              <PrivateRoute
+                element={<AddMpersonnel />}
+                isLoggedIn={isLoggedIn}
+              />
             }
           />
 
-        {/* <Route
+          {/* <Route
             path="/allcaremanual"
             element={
               <PrivateRoute element={<AllCaremanual />} isLoggedIn={isLoggedIn} />
@@ -118,7 +122,20 @@ function App() {
           <Route
             path="/addcaremanual"
             element={
-              <PrivateRoute element={<AddCaremanual />} isLoggedIn={isLoggedIn} />
+              <PrivateRoute
+                element={<AddCaremanual />}
+                isLoggedIn={isLoggedIn}
+              />
+            }
+          />
+
+          <Route
+            path="/updatecaremanual"
+            element={
+              <PrivateRoute
+                element={<UpdateCareManual />}
+                isLoggedIn={isLoggedIn}
+              />
             }
           />
           {/* -------------------- */}
