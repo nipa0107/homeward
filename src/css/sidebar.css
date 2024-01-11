@@ -47,16 +47,17 @@
     font-weight: 600;
     white-space: nowrap;
 } */
+
 /* sidebar */
 .sidebar-container{
-    width: 320px;
+    width: 250px;
     height: 100%;
-    overflow-y: scroll;
-    overflow-x: hidden;
     border: 2px solid #87CEFA;
     border-left: 3px;
     border-top: 3px;
     position: fixed;
+    overflow-y: scroll;
+    overflow-x: hidden;
 }
 .sidebar-container::-webkit-scrollbar{
     display: none;
@@ -65,10 +66,10 @@
     display: flex;
     align-items: center;
     padding: 0px 20px ;
-    width: 280px;
+    width: 250px;
     gap: 10px;
-    border-radius: 12px;
-    margin: 10px 10px 10px 15px;
+    /* border-radius: 12px;
+    margin: 10px 10px 10px 15px; */
     
 }
 .nav-option:hover i.bi{
@@ -141,3 +142,5 @@
         display: none;
     }
 }
+
+/* sidebar2 */
