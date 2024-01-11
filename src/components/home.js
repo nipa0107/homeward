@@ -56,7 +56,7 @@ export default function Home({ }) {
         <div className={'sidebar-container ${navCollpase ? "navCollaps" : ""}'}>
           <div className="nav-option option1">
             <i class="bi bi-house"></i>
-            <p>หน้าหลัก</p>
+            <p onClick={() => navigate("/allcaremanual")}>จัดการข้อมูลคู่มือการดูแลผู้ป่วย</p>
           </div>
           <div className="nav-option option1">
             <i class="bi bi-people" onClick={() => navigate("/allmpersonnel")}>
