@@ -2,145 +2,16 @@
 *{
     font-family: 'IBM Plex Sans Thai', sans-serif;
 }
-.nav{
-    height: 60px;
-    background-color: #87CEFA;
-    display: flex;
-    justify-content: space-between;
-    padding: 0px 20px;
-    color: white;
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    z-index: 1000;
-}
-.nav img{
-    cursor: pointer;
-}
-.logo{
-    display: flex;
-    align-items: center;
-    gap: 35px;
-}
-.nav i.bi{
-    font-size:28px;
-    cursor: pointer;
-    /* font-weight: 1000; */
-}
-.nav ul{
-    list-style-type: none;
-    display: flex;
-    align-items: center;
-    gap: 20px;
-}
-.nav ul li{
-    cursor: pointer;
-    margin-top: 10px;
-}
-.nav ul i{
-    cursor: pointer;
-    margin-top: 10px;
-}
-/* .linkname{
-    font-size: 16px;
-    font-weight: 600;
-    white-space: nowrap;
-} */
+
 
 /* sidebar */
-.sidebar-container{
-    width: 250px;
-    height: 100%;
-    border: 2px solid #87CEFA;
-    border-left: 3px;
-    border-top: 3px;
-    position: fixed;
-    overflow-y: scroll;
-    overflow-x: hidden;
-}
-.sidebar-container::-webkit-scrollbar{
-    display: none;
-}
-.nav-option{
-    display: flex;
-    align-items: center;
-    padding: 0px 20px ;
-    width: 250px;
-    gap: 10px;
-    /* border-radius: 12px;
-    margin: 10px 10px 10px 15px; */
-    
-}
-.nav-option:hover i.bi{
-    font-size: 20px;
-    cursor: pointer;
-}
-.nav-option p{
-    margin-top: 15px;
-    font-weight: 600;
 
-}
-.logo i.bi{
-    background-color: #87CEFA;
-    color: white;
-    cursor: pointer;
-}
-.nav-option:hover{
-    background-color: #87CEFA;
-    color: white;
-    cursor: pointer;
-    transition: all .5s ease;
-
-}
 .logow{
     width: 15rem;
-    margin-bottom: 10px;
-    /* margin: 1px 0px ; */
-    /* padding: 1px 0; */
+
 }
 
-
-/* .bx-user li{
-    margin-top: auto;
-    margin-bottom: auto;
-} */
 /* media query */
 
-@media screen and (min-width:768px){
-    .navCollaps{
-        width: 80px;
-        /* transition: all .5s ease; */
-    }
-    .navCollaps .nav-option p{
-        display: none;
-    }
-    .navCollaps .nav-option{
-        padding: 15px;
-        
-        
-    }
-    .smallDeviceIcon{
-        display: none;
-        
-        
-    }
-
-}
-@media screen and (max-width:767px){
-    .largeDeviceIcon{
-        display: none;
-    }
-    .sidebar-container{
-        display: none;
-    }
-    .smallNav{
-        display: block;
-        
-    }
-    .logo img{
-        display: none;
-    }
-}
 
 /* sidebar2 */
