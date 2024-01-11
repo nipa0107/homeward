@@ -47,7 +47,7 @@ export default function Home({ }) {
           <i className="bi bi-justify" onClick={e => setNavCollapse(!navCollpase)}></i>
         </div>
         <ul>
-          <i class="bx bx-user"></i>
+          <i class="bi bi-person"></i>
           {/*เช็คว่ามีdataไหม */}
           <li onClick={() => navigate("/profile")}>{adminData && adminData.username}</li>
         </ul>
@@ -55,8 +55,8 @@ export default function Home({ }) {
       <div className="sidebar_content">
         <div className={'sidebar-container ${navCollpase ? "navCollaps" : ""}'}>
           <div className="nav-option option1">
-            <i class="bi bi-book" onClick={() => navigate("/allcaremanual")}></i>
-            <p onClick={() => navigate("/allcaremanual")}>จัดการข้อมูลคู่มือการดูแลผู้ป่วย</p>
+            <i class="bi bi-house"></i>
+            <p>หน้าหลัก</p>
           </div>
           <div className="nav-option option1">
             <i class="bi bi-people" onClick={() => navigate("/allmpersonnel")}>
