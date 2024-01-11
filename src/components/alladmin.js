@@ -34,78 +34,17 @@ export default function Alladmin({ }) {
   };
 
   
-
-  
-  // const deleteadmin = (id, username) => {
-   
-
-    // if(window.confirm(`คุณต้องการลบ ${username}`)){}
-  //   const Confirmdelete = window.confirm(`คุณต้องการลบ ${username}?`);
-  //   if (Confirmdelete) {
-  //     fetch("http://localhost:5000/deleteadmin", {
-  //       method: "POST",
-  //       crossDomain: true,
-  //       headers: {
-  //         "Content-Type": "application/json",
-  //         Accept: "application/json",
-  //         "Access-Control-Allow-Origin": "*",
-  //       },
-  //       body: JSON.stringify({
-  //         adminid: id,
-  //       }),
-  //     })
-  //       .then((res) => res.json())
-  //       .then((data) => {
-  //         alert(data.data);
-  //         getAllUser();
-  //       });
-  //   } else {
-  //   }
-  // };
-
-  const deleteadmin = async () => {
-
-
-  //   const confirmDelete = window.confirm(`คุณต้องการลบ ${username}?`);
-  
-  //   if (confirmDelete) {
-  //     try {
-  //       const response = await fetch("http://localhost:5000/deleteadmin", {
-  //         method: "POST",
-  //         headers: {
-  //           "Content-Type": "application/json",
-  //           Accept: "application/json",
-  //           "Access-Control-Allow-Origin": "*",
-  //         },
-  //         body: JSON.stringify({
-  //           adminid: id,
-  //         }),
-  //       });
-  
-  //       if (!response.ok) {
-  //         throw new Error(`เกิดข้อผิดพลาด: ${response.status}`);
-  //       }
-  
-  //       const data = await response.json();
-  //       alert(data.data);
-  //       getAllUser();
-  //     } catch (error) {
-  //       console.error("เกิดข้อผิดพลาดในการลบผู้ดูแลระบบ:", error.message);
-  //     }
-  //   }
-  };
-  
  
   return (
 
     <div>
       <sidebar/>
 
-      <li onClick={profile}>{adminData && adminData.username}</li>
+      {/* <li onClick={profile}>{adminData && adminData.username}</li>
       <i class="bi bi-person-gear" onClick={admin}></i>
       <p onClick={admin}>จัดการแอดมิน</p>
       <i class="bi bi-box-arrow-right" onClick={logOut}></i>
-      <p onClick={logOut}>ออกจากระบบ</p>
+      <p onClick={logOut}>ออกจากระบบ</p> */}
       <button onClick={add} className="bi bi-plus-circle add btn btn-outline-secondary py-1 px-4">
         เพิ่มแอดมิน
       </button>

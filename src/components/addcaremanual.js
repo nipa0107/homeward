@@ -20,8 +20,8 @@ export default function AddCaremanual({}) {
         e.preventDefault(); 
         const formData = new FormData();
         formData.append("caremanual_name", caremanual_name);
-        formData.append("image", image);
-        formData.append("file", file);
+        // formData.append("image", image);
+        // formData.append("file", file);
         formData.append("detail", detail);
         
 
@@ -75,23 +75,23 @@ export default function AddCaremanual({}) {
               />
             </div>
   
-            <div className="mb-3">
+            {/* <div className="mb-3">
               <label>รูปภาพ</label>
                 <input 
                 type="file"
                 className="form-control"
                 accept="image/*"
                 onChange={onInputChange}></input>
-            </div>
+            </div> */}
   
-            <div className="mb-3">
+            {/* <div className="mb-3">
               <label>แนบไฟล์</label>
               <input
                 type="file"
                 className="form-control"
                 onChange={(e) => setFile(e.target.value)}
               />
-            </div>
+            </div> */}
 
             <div className="mb-3">
               <label>รายละเอียด</label>
