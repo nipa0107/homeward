@@ -4,15 +4,29 @@ import "bootstrap-icons/font/bootstrap-icons.css";
 import logow from "../img/logow.png";
 import { useNavigate } from "react-router-dom";
 import deleteimg from "../img/delete.png";
-
+import editimg from "../img/edit.png";
 
 export default function Home({ }) {
+  
   const [data, setData] = useState([]);
   const navigate = useNavigate();
   const [adminData, setAdminData] = useState("");
+  const [caremanual, setCaremanual] = useState("");
 
   useEffect(() => {
     getAllCaremanual();
+
+    // const fetchData = async () => {
+    //   try {
+    //     const response = await fetch('/getcaremanual/:id'); 
+    //     const data = await response.json();
+    //     setCaremanual(data);
+    //   } catch (error) {
+    //     console.error('Error fetching caremanual data:', error);
+    //   }
+    // };
+
+    // fetchData();
 }, []);
 
 const add = () => {
@@ -85,6 +99,7 @@ const add = () => {
 
 
 
+
   const [navCollpase, setNavCollapse] = useState(false);
   return (
     <div className="bartop">
@@ -142,6 +157,7 @@ const add = () => {
           <div class="adminall card mb-3 ">
             <div class="card-body">
               <h5 class="card-title">{i.caremanual_name}</h5>
+              <img src={editimg} className="editimg" alt="deleteimg" onClick={() => navigate("/updatecaremanual", { state: { id: i._id, caremanual: i } })}></img>
               <img src={deleteimg} className="deleteimg" alt="deleteimg" onClick={() => deleteCaremanual(i._id, i.caremanual_name)}></img>
             </div>
           </div>
