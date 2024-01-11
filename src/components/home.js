@@ -111,6 +111,7 @@ export default function Home({ }) {
           <div class="adminall card mb-3 ">
             <div class="card-body">
               <h5 class="card-title">{i.caremanual_name}</h5>
+              <img src={editimg} className="editimg" alt="deleteimg" onClick={() => navigate("/updatecaremanual", { state: { id: i._id, caremanual: i } })}></img>
               <img src={deleteimg} className="deleteimg" alt="deleteimg" onClick={() => deleteCaremanual(i._id, i.caremanual_name)}></img>
             </div>
           </div>
