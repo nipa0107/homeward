@@ -20,7 +20,7 @@ import AllEquip from "./components/allequipment";
 import AllMpersonnel from "./components/allmpersonnel";
 import AddMpersonnel from "./components/addmpersonnel";
 import AddCaremanual from "./components/addcaremanual";
-import AllCaremanual from "./components/allcaremanual";
+// import AllCaremanual from "./components/allcaremanual";
 
 const PrivateRoute = ({ element, isLoggedIn }) => {
   return isLoggedIn === "true" ? (
@@ -107,12 +107,12 @@ function App() {
             }
           />
 
-        <Route
+        {/* <Route
             path="/allcaremanual"
             element={
               <PrivateRoute element={<AllCaremanual />} isLoggedIn={isLoggedIn} />
             }
-          />
+          /> */}
 
           <Route
             path="/addcaremanual"

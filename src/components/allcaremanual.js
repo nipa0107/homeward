@@ -10,7 +10,7 @@ export default function AllCaremanual({}) {
     }, []);
     
     const getAllCaremanual = () => {
-        fetch("http://localhost:5000/get-image",{
+        fetch("http://localhost:5000/allcaremanual",{
             method:"GET"
         })
         .then((res) => res.json())
