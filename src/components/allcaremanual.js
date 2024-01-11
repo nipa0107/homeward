@@ -1,5 +1,6 @@
 import React, {useEffect, useState } from "react";
 import "../css/alladmin.css"
+import deleteimg from "../img/delete.png";
 
 export default function AllCaremanual({}) {
     const [data, setData] = useState([]);
@@ -18,6 +19,31 @@ export default function AllCaremanual({}) {
         console.log(data);
         setData(data.data);
     })
+      };
+
+      const deleteCaremanual = async (id, caremanual_name) => {
+        if (window.confirm(`คุณต้องการลบ ${caremanual_name} หรือไม่ ?`)) {
+          try {
+            const response = await fetch(`http://localhost:5000/deleteCaremanual/${id}`, {
+              method: 'DELETE',
+              headers: {
+                'Content-Type': 'application/json',
+                Accept: 'application/json',
+              },
+            });
+    
+            const data = await response.json();
+    
+            if (response.ok) {
+              alert(data.data);
+              getAllCaremanual();
+            } else {
+              console.error('Error during deletion:', data.data);
+            }
+          } catch (error) {
+            console.error('Error during fetch:', error);
+          }
+        }
       };
   
   
@@ -49,6 +75,7 @@ export default function AllCaremanual({}) {
           <div class="adminall card mb-3 ">
             <div class="card-body">
               <h5 class="card-title">{i.caremanual_name}</h5>
+              <img src={deleteimg} className="deleteimg" alt="deleteimg" onClick={() => deleteAdmin(i._id, i.username)}></img>
             </div>
           </div>
         );
