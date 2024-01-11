@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import deleteimg from "../img/delete.png";
 
 export default function AllEquip({}) {
   const navigate = useNavigate();
@@ -41,6 +42,31 @@ export default function AllEquip({}) {
       });
   };
 
+  const deleteEquipment = async (id, equipment_name) => {
+    if (window.confirm( `คุณต้องการลบ ${equipment_name} หรือไม่ ?`)) {
+      try {
+        const response = await fetch(`http://localhost:5000/deleteEquipment/${id}`, {
+          method: 'DELETE',
+          headers: {
+            'Content-Type': 'application/json',
+            Accept: 'application/json',
+          },
+        });
+
+        const data = await response.json();
+
+        if (response.ok) {
+          alert(data.data);
+          getAllEquip();
+        } else {
+          console.error('Error during deletion:', data.data);
+        }
+      } catch (error) {
+        console.error('Error during fetch:', error);
+      }
+    }
+  };
+
   const addEquips = () => {
     //    const token = window.localStorage.getItem("token");
     //       if (token) {
@@ -66,7 +92,7 @@ export default function AllEquip({}) {
 
   return (
     <div>
-      <h3 className="title">จัดการอุปกรณ์</h3>
+      <h3 className="title">จัดการอุปกร์ทางการแพทย์</h3>
 
       <span></span>
       <button
@@ -100,7 +126,7 @@ export default function AllEquip({}) {
               <tr key={index}>
                 <td>{i.equipment_name}</td>
                 <td>{i.equipment_type}</td>
-                <td>คำสั่ง</td>
+                <td><img src={deleteimg} className="deleteimg" alt="deleteimg" onClick={() => deleteEquipment(i._id, i.equipment_name)}></img></td>
               </tr>
             );
           })}

@@ -22,6 +22,7 @@ import AddMpersonnel from "./components/addmpersonnel";
 import AddCaremanual from "./components/addcaremanual";
 import AllCaremanual from "./components/allcaremanual";
 
+
 const PrivateRoute = ({ element, isLoggedIn }) => {
   return isLoggedIn === "true" ? (
     element

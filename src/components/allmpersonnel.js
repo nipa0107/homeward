@@ -1,6 +1,6 @@
 import React, {useEffect, useState } from "react";
 import "../css/alladmin.css"
-
+import deleteimg from "../img/delete.png";
 
 export default function AllMpersonnel({}) {
   const [data, setData] = useState([]);
@@ -30,6 +30,31 @@ export default function AllMpersonnel({}) {
     window.location.href = "./addmpersonnel";
   };
 
+  const deleteMPersonnel = async (id, nametitle, name) => {
+    if (window.confirm( `คุณต้องการลบ ${nametitle} ${name} หรือไม่ ?`)) {
+      try {
+        const response = await fetch(`http://localhost:5000/deleteMPersonnel/${id} `, {
+          method: 'DELETE',
+          headers: {
+            'Content-Type': 'application/json',
+            Accept: 'application/json',
+          },
+        });
+
+        const data = await response.json();
+
+        if (response.ok) {
+          alert(data.data);
+          getAllMpersonnel();
+        } else {
+          console.error('Error during deletion:', data.data);
+        }
+      } catch (error) {
+        console.error('Error during fetch:', error);
+      }
+    }
+  };
+
  
   return (
     <div>
@@ -57,7 +82,7 @@ export default function AllMpersonnel({}) {
                <tr key={index}>
               <td>{i.nametitle}</td>
               <td>{i.name}</td>
-              <td>คำสั่ง</td>
+              <td><img src={deleteimg} className="deleteimg" alt="deleteimg" onClick={() => deleteMPersonnel(i._id, i.nametitle, i.name)}></img></td>
               </tr>
                );
             })}
