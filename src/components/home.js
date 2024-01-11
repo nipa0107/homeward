@@ -3,6 +3,7 @@ import "../css/sidebar.css";
 import "bootstrap-icons/font/bootstrap-icons.css";
 import logow from "../img/logow.png";
 import { useNavigate } from "react-router-dom";
+import deleteimg from "../img/delete.png";
 
 
 export default function Home({ }) {
@@ -56,6 +57,30 @@ const add = () => {
   const logOut = () => {
     window.localStorage.clear();
     window.location.href = "./";
+  };
+  const deleteCaremanual = async (id, caremanual_name) => {
+    if (window.confirm(`คุณต้องการลบ ${caremanual_name} หรือไม่ ?`)) {
+      try {
+        const response = await fetch(`http://localhost:5000/deleteCaremanual/${id}`, {
+          method: 'DELETE',
+          headers: {
+            'Content-Type': 'application/json',
+            Accept: 'application/json',
+          },
+        });
+
+        const data = await response.json();
+
+        if (response.ok) {
+          alert(data.data);
+          getAllCaremanual();
+        } else {
+          console.error('Error during deletion:', data.data);
+        }
+      } catch (error) {
+        console.error('Error during fetch:', error);
+      }
+    }
   };
 
 
@@ -117,6 +142,7 @@ const add = () => {
           <div class="adminall card mb-3 ">
             <div class="card-body">
               <h5 class="card-title">{i.caremanual_name}</h5>
+              <img src={deleteimg} className="deleteimg" alt="deleteimg" onClick={() => deleteCaremanual(i._id, i.caremanual_name)}></img>
             </div>
           </div>
         );
