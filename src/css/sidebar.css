@@ -86,6 +86,11 @@
     /* padding: 1px 0; */
 }
 
+
+/* .bx-user li{
+    margin-top: auto;
+    margin-bottom: auto;
+} */
 /* media query */
 
 @media screen and(min-width:768px){

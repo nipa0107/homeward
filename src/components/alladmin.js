@@ -22,7 +22,30 @@ export default function Alladmin({}) {
       });
   };
 
+  const deleteAdmin = async (id, username) => {
+    if (window.confirm(`Are you sure you want to delete ${username}?`)) {
+      try {
+        const response = await fetch(`http://localhost:5000/deleteAdmin/${id}`, {
+          method: 'DELETE',
+          headers: {
+            'Content-Type': 'application/json',
+            Accept: 'application/json',
+          },
+        });
 
+        const data = await response.json();
+
+        if (response.ok) {
+          alert(data.data);
+          // Refresh or update the admin list
+        } else {
+          console.error('Error during deletion:', data.data);
+        }
+      } catch (error) {
+        console.error('Error during fetch:', error);
+      }
+    }
+  };
 
   const home = () => {
     window.location.href = "./home";
@@ -33,65 +56,6 @@ export default function Alladmin({}) {
 
   
 
-  
-  // const deleteadmin = (id, username) => {
-   
-
-    // if(window.confirm(`คุณต้องการลบ ${username}`)){}
-  //   const Confirmdelete = window.confirm(`คุณต้องการลบ ${username}?`);
-  //   if (Confirmdelete) {
-  //     fetch("http://localhost:5000/deleteadmin", {
-  //       method: "POST",
-  //       crossDomain: true,
-  //       headers: {
-  //         "Content-Type": "application/json",
-  //         Accept: "application/json",
-  //         "Access-Control-Allow-Origin": "*",
-  //       },
-  //       body: JSON.stringify({
-  //         adminid: id,
-  //       }),
-  //     })
-  //       .then((res) => res.json())
-  //       .then((data) => {
-  //         alert(data.data);
-  //         getAllUser();
-  //       });
-  //   } else {
-  //   }
-  // };
-
-  const deleteadmin = async () => {
-
-
-  //   const confirmDelete = window.confirm(`คุณต้องการลบ ${username}?`);
-  
-  //   if (confirmDelete) {
-  //     try {
-  //       const response = await fetch("http://localhost:5000/deleteadmin", {
-  //         method: "POST",
-  //         headers: {
-  //           "Content-Type": "application/json",
-  //           Accept: "application/json",
-  //           "Access-Control-Allow-Origin": "*",
-  //         },
-  //         body: JSON.stringify({
-  //           adminid: id,
-  //         }),
-  //       });
-  
-  //       if (!response.ok) {
-  //         throw new Error(`เกิดข้อผิดพลาด: ${response.status}`);
-  //       }
-  
-  //       const data = await response.json();
-  //       alert(data.data);
-  //       getAllUser();
-  //     } catch (error) {
-  //       console.error("เกิดข้อผิดพลาดในการลบผู้ดูแลระบบ:", error.message);
-  //     }
-  //   }
-  };
   
  
   return (
@@ -109,7 +73,7 @@ export default function Alladmin({}) {
           <div class="adminall card mb-3 ">
             <div class="card-body">
             {/* <img src={deleteimg} className="deleteimg" alt="deleteimg" onClick={deleteadmin}></img> */}
-              <img src={deleteimg} className="deleteimg" alt="deleteimg" onClick={deleteadmin}></img>
+              <img src={deleteimg} className="deleteimg" alt="deleteimg" onClick={() => deleteAdmin(i._id, i.username)}></img>
               <h5 class="card-title">{i.username}</h5>
             </div>
           </div>

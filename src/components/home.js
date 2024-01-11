@@ -38,19 +38,6 @@ export default function Home({ }) {
     window.location.href = "./";
   };
 
-  // const admin = () => {
-  //   window.location.href = "./alladmin";
-  // };
-
-  // const profile = () => {
-  //   window.location.href = "./profile";
-  // };
-
-  // const equip = () => {
-  //   window.location.href = "./allequip";
-  // };
-
-
   const [navCollpase, setNavCollapse] = useState(false);
   return (
     <div className="bartop">
@@ -62,24 +49,19 @@ export default function Home({ }) {
         <ul>
           <i class="bx bx-user"></i>
           {/*เช็คว่ามีdataไหม */}
-          {/* <li onClick={navCollpase}>{adminData && adminData.username}</li> */}
           <li onClick={() => navigate("/profile")}>{adminData && adminData.username}</li>
         </ul>
       </nav>
       <div className="sidebar_content">
         <div className={'sidebar-container ${navCollpase ? "navCollaps" : ""}'}>
           <div className="nav-option option1">
-            <i class="bi bi-house"></i>
-            <p>หน้าหลัก</p>
+            <i class="bi bi-book" onClick={() => navigate("/allcaremanual")}></i>
+            <p onClick={() => navigate("/allcaremanual")}>จัดการข้อมูลคู่มือการดูแลผู้ป่วย</p>
           </div>
           <div className="nav-option option1">
-            <i class="bi bi-book"></i>
-            <p>จัดการข้อมูลคู่มือการดูแลผู้ป่วย</p>
-          </div>
-          <div className="nav-option option1">
-            <i class="bi bi-people">
-            </i>
-            <p>จัดการข้อมูลบุคลากร</p>
+            <i class="bi bi-people" onClick={() => navigate("/allmpersonnel")}>
+            </i >
+            <p onClick={() => navigate("/allmpersonnel")}>จัดการข้อมูลบุคลากร</p>
           </div>
           <div className="nav-option option1">
             <i class="bi bi-prescription2" onClick={() => navigate("/allequip", { state: adminData } )}></i>

@@ -10,13 +10,18 @@ import {
 
 import Login from "./components/login";
 import Home from "./components/home";
-import Detail from "./components/detail";
+// import Detail from "./components/detail";
 import Profile from "./components/profile";
 import Updateadmin from "./components/updateadmin";
 import Alladmin from "./components/alladmin";
 import AddAdmin from "./components/addadmin";
 import AddEquip from "./components/addequipment";
 import AllEquip from "./components/allequipment";
+import AllMpersonnel from "./components/allmpersonnel";
+import AddMpersonnel from "./components/addmpersonnel";
+import AddCaremanual from "./components/addcaremanual";
+import AllCaremanual from "./components/allcaremanual";
+
 const PrivateRoute = ({ element, isLoggedIn }) => {
   return isLoggedIn === "true" ? (
     element
@@ -87,9 +92,36 @@ function App() {
             }
           />
 
-      
+          <Route
+            path="/allmpersonnel"
+            element={
+              <PrivateRoute element={<AllMpersonnel />} isLoggedIn={isLoggedIn} />
+            }
+          />
+
+
+        <Route
+            path="/addmpersonnel"
+            element={
+              <PrivateRoute element={<AddMpersonnel />} isLoggedIn={isLoggedIn} />
+            }
+          />
+
+        <Route
+            path="/allcaremanual"
+            element={
+              <PrivateRoute element={<AllCaremanual />} isLoggedIn={isLoggedIn} />
+            }
+          />
+
+          <Route
+            path="/addcaremanual"
+            element={
+              <PrivateRoute element={<AddCaremanual />} isLoggedIn={isLoggedIn} />
+            }
+          />
           {/* -------------------- */}
-              {/* <Route path="/addequip" element={<AddEquip />} /> */}
+          {/* <Route path="/addequip" element={<AddEquip />} /> */}
           {/* <Route path="/home" element={<Home />} />    
             <Route path="/detail" element={<Detail />} /> */}
           {/* <Route path="/profile" element={<Profile />} /> */}
