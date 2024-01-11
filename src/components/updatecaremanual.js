@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
 
-function Updatecaremanual() {
+function UpdateCareManual() {
     const location = useLocation();
     const [caremanual_name, setPassword] = useState("");
     const [image, setNewPassword] = useState("");
@@ -12,3 +12,5 @@ function Updatecaremanual() {
 
 
 }
+
+export default UpdateCareManual;

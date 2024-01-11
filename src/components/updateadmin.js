@@ -9,11 +9,6 @@ function Updateadmin() {
 
 useEffect(() => {
     console.log(location);
-    // setUsername(location.state.username);
-    // setOldPassword(location.state.Oldpassword);
-    // setOldPassword(location.state.Oldpassword);
-    // setNewPassword(location.state.Newpassword);
-    // setConfirmNewPassword(location.state.ConfirmPassword);
   }, [location]);
 
   const profile = () => {
