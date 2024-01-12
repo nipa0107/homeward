@@ -44,7 +44,7 @@ export default function AddCaremanual({}) {
         console.log(data, "Addcaremanual");
         if (data.status === "ok") {
           console.log(caremanual_name, image, detail);
-          window.location.href = "./allcaremanual";
+          window.location.href = "./home";
         }
       });
   };
@@ -77,6 +77,7 @@ export default function AddCaremanual({}) {
               alt="Preview"
               style={{ maxWidth: "20%" }}
             /> <br/><br/>
+            
             <input
               type="file"
               className="form-control"

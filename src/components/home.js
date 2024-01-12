@@ -11,7 +11,6 @@ export default function Home({ }) {
   const [data, setData] = useState([]);
   const navigate = useNavigate();
   const [adminData, setAdminData] = useState("");
-  const [caremanual, setCaremanual] = useState("");
 
   useEffect(() => {
     getAllCaremanual();
