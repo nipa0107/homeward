@@ -13,6 +13,7 @@ export default function Home({ }) {
   const navigate = useNavigate();
   const [adminData, setAdminData] = useState("");
   const [caremanual, setCaremanual] = useState("");
+  const [isActive, setIsActive] = useState(false);
 
   useEffect(() => {
     getAllCaremanual();
