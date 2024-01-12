@@ -1,5 +1,10 @@
 import React, { useState } from "react";
 // import Alladmin from "./alladmin";
+import "../css/sidebar.css";
+import "../css/alladmin.css"
+import "bootstrap-icons/font/bootstrap-icons.css";
+import logow from "../img/logow.png";
+import { useNavigate } from "react-router-dom";
 
 export default function AddMpersonnel() {
   const [username, setUsername] = useState("");
@@ -8,6 +13,9 @@ export default function AddMpersonnel() {
   const [tel, setTel] = useState("");
   const [name, setName] = useState("");
   const [nametitle, setNameTitle] = useState("");
+  const [isActive, setIsActive] = useState(false);
+  const navigate = useNavigate();
+  const [adminData, setAdminData] = useState("");
 
   const home = () => {
     window.location.href = "./home";
@@ -50,9 +58,64 @@ export default function AddMpersonnel() {
         }
       });
   };
+  const logOut = () => {
+    window.localStorage.clear();
+    window.location.href = "./";
+  };
 
+    // bi-list
+    const handleToggleSidebar = () => {
+      setIsActive(!isActive);
+    };
   return (
-    <div className="auth-wrapper">
+    <main className="body">
+      <div className={`sidebar ${isActive ? 'active' : ''}`}>
+        <div class="logo_content">
+          <div class="logo">
+            <div class="logo_name">
+              <img src={logow} className="logow" alt="logo"></img>
+            </div>
+          </div>
+          <i class='bi bi-list' id="btn" onClick={handleToggleSidebar}></i>
+        </div>
+        <ul class="nav-list">
+          <li>
+            <a href="#" onClick={() => navigate("/home")}>
+              <i class="bi bi-book"></i>
+              <span class="links_name" >จัดการข้อมูลคู่มือการดูแลผู้ป่วย</span>
+            </a>
+          </li>
+          <li>
+            <a href="#" onClick={() => navigate("/allmpersonnel")}>
+              <i class="bi bi-people"></i>
+              <span class="links_name" >จัดการข้อมูลบุคลากร</span>
+            </a>
+          </li>
+          <li>
+            <a href="#" onClick={() => navigate("/allequip", { state: adminData })}>
+              <i class="bi bi-prescription2"></i>
+              <span class="links_name" >จัดการอุปกรณ์ทางการแพทย์</span>
+            </a>
+          </li>
+          <li>
+            <a href="#" onClick={() => navigate("/alladmin")}>
+              <i class="bi bi-person-gear"></i>
+              <span class="links_name" >จัดการแอดมิน</span>
+            </a>
+          </li>
+        </ul>
+        <div class="profile_content">
+          <div className="profile">
+            <div class="profile_details">
+              <i class="bi bi-person" onClick={() => navigate("/profile")}></i>
+              <div class="name_job">
+                <div class="name"><li onClick={() => navigate("/profile")}>{adminData && adminData.username}</li></div>
+              </div>
+            </div>
+            <i class='bi bi-box-arrow-right' id="log_out" onClick={logOut}></i>
+          </div>
+        </div>
+      </div>
       <div className="auth-inner">
         <form onSubmit={handleSubmit}>
           <h3>เพิ่มบุคลากร</h3>
@@ -83,7 +146,6 @@ export default function AddMpersonnel() {
               onChange={(e) => setConfirmPassword(e.target.value)}
             />
           </div>
-
           <div className="mb-3">
             <label>เบอร์โทรศัพท์</label>
             <input
@@ -92,7 +154,6 @@ export default function AddMpersonnel() {
               onChange={(e) => setTel(e.target.value)}
             />
           </div>
-
           <div className="mb-3">
             <label>คำนำหน้าชื่อ</label>
             <select
@@ -130,6 +191,6 @@ export default function AddMpersonnel() {
         </button>
 
       </div>
-    </div>
+    </main>
   );
 }
