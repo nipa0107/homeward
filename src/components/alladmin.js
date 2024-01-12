@@ -106,14 +106,7 @@ export default function Alladmin({ }) {
     </div> */
 
     <main>
-      <div className="sidebar">
-        <div className="logo_content">
-          <div className="logo">
-          <i className="bi bi-justify"></i>
-          <img src={logow} className="logow" alt="logo"></img>
-          </div>
-        </div>
-      </div>
+
       <button onClick={add} className="bi bi-plus-circle add btn btn-outline-secondary py-1 px-4">
         เพิ่มแอดมิน
       </button>

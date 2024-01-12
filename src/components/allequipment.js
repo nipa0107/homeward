@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import deleteimg from "../img/delete.png";
+import "../css/sidebar.css";
 
 export default function AllEquip({}) {
   const navigate = useNavigate();
@@ -91,9 +92,8 @@ export default function AllEquip({}) {
   };
 
   return (
-    <div>
+    <main className="body">
       <h3 className="title">จัดการอุปกร์ทางการแพทย์</h3>
-
       <span></span>
       <button
         className="add btn btn-outline-secondary py-1 px-4"
@@ -132,6 +132,6 @@ export default function AllEquip({}) {
           })}
         </tbody>
       </table>
-    </div>
+    </main>
   );
 }
