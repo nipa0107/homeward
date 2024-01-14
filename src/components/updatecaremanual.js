@@ -5,6 +5,8 @@ import "../css/alladmin.css";
 import "bootstrap-icons/font/bootstrap-icons.css";
 import logow from "../img/logow.png";
 import { useNavigate } from "react-router-dom";
+
+
 export default function UpdateCareManual() {
   const location = useLocation();
   const { id, caremanual } = location.state;
@@ -239,7 +241,8 @@ export default function UpdateCareManual() {
           </div> */}
 
           {/* กลับมาดูใหม่ */}
-          <div className="mb-3 pdf">
+
+          <div className="filename">
             {pdfURL ? (
               <a
                 href={`http://localhost:5000${pdfURL}`}
