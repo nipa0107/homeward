@@ -222,13 +222,23 @@
 
 .home_content .toolbar {
     float: right;
-    margin-right: 50px;
+    margin-right: 250px;
     line-height: 40px;
 }
+.home_content .toolbar p{
+    text-align: center;
+}
+
 hr{
     margin: 2rem 2rem;
     color: inherit;
     background-color: gray;
     border: 1;
     opacity: .25;
+}
+.home_content h3{
+    text-align: center;
+    font-size: 25px;
+    font-weight: 600;
+    margin-bottom: 20px;
 }

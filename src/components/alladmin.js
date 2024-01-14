@@ -10,6 +10,7 @@ export default function Alladmin({ }) {
   const navigate = useNavigate();
   const [data, setData] = useState([]);
   const [adminData, setAdminData] = useState("");
+  const [isActive, setIsActive] = useState(false);
 
   useEffect(() => {
     getAllUser();
@@ -64,63 +65,82 @@ export default function Alladmin({ }) {
     window.localStorage.clear();
     window.location.href = "./";
   };
+  // bi-list
+  const handleToggleSidebar = () => {
+    setIsActive(!isActive);
+  };
 
-  // const [navCollpase, setNavCollapse] = useState(false);
-  // const [smallNavCollpase, setSmallNavCollapse] = useState(false);
   return (
-    /* <nav className="nav">
-      <div className="logo">
-        <img src={logow} className="logow" alt="logo"></img>
-        <i className="bi bi-justify largeDeviceIcon" onClick={e => setNavCollapse(!navCollpase)}></i>
-        <i className="bi bi-justify smallDeviceIcon" onClick={e => setSmallNavCollapse(!smallNavCollpase)}></i>
-      </div>
-      <ul>
-        <i class="bi bi-person"></i>
-        <li onClick={() => navigate("/profile")}>{adminData && adminData.username}</li>
-      </ul>
-    </nav> */
-    /* <div className="sidebar_content">
-      <div className={`${smallNavCollpase ? "smalNav" : ""}sidebar-container ${navCollpase ? "navCollaps" : ""}`}>
-        <div className="nav-option option1">
-          <i class="bi bi-book"></i>
-          <p>จัดการข้อมูลคู่มือการดูแลผู้ป่วย</p>
-        </div>
-        <div className="nav-option option1">
-          <i class="bi bi-people">
-          </i>
-          <p>จัดการข้อมูลบุคลากร</p>
-        </div>
-        <div className="nav-option option1">
-          <i class="bi bi-prescription2"></i>
-          <p>จัดการอุปกรณ์ทางการแพทย์</p>
-        </div>
-        <div className="nav-option option1">
-          <i class="bi bi-person-gear" onClick={() => navigate("/alladmin")}></i>
-          <p onClick={() => navigate("/alladmin")}>จัดการแอดมิน</p>
-        </div>
-        <div className="nav-option option1">
-          <i class="bi bi-box-arrow-right" onClick={logOut}></i>
-          <p onClick={logOut}>ออกจากระบบ</p>
-        </div>
-      </div>
-    </div> */
-
-    <main>
-
-      <button onClick={add} className="bi bi-plus-circle add btn btn-outline-secondary py-1 px-4">
-        เพิ่มแอดมิน
-      </button>
-      <p className="countadmin">จำนวน : {data.length} คน</p>
-      {data.map((i) => {
-        return (
-          <div class="adminall card mb-3 ">
-            <div class="card-body">
-              <img src={deleteimg} className="deleteimg" alt="deleteimg" onClick={() => deleteAdmin(i._id, i.username)}></img>
-              <h5 class="card-title">{i.username}</h5>
+    <main className="body">
+      <div className={`sidebar ${isActive ? 'active' : ''}`}>
+        <div class="logo_content">
+          <div class="logo">
+            <div class="logo_name" >
+              <img src={logow} className="logow" alt="logo" ></img>
             </div>
           </div>
-        );
-      })}
+          <i class='bi bi-list' id="btn" onClick={handleToggleSidebar}></i>
+        </div>
+        <ul class="nav-list">
+          <li>
+            <a href="#" onClick={() => navigate("/home")}>
+              <i class="bi bi-book"></i>
+              <span class="links_name" >จัดการข้อมูลคู่มือการดูแลผู้ป่วย</span>
+            </a>
+          </li>
+          <li>
+            <a href="#" onClick={() => navigate("/allmpersonnel")}>
+              <i class="bi bi-people"></i>
+              <span class="links_name" >จัดการข้อมูลบุคลากร</span>
+            </a>
+          </li>
+          <li>
+            <a href="#" onClick={() => navigate("/allequip", { state: adminData })}>
+              <i class="bi bi-prescription2"></i>
+              <span class="links_name" >จัดการอุปกรณ์ทางการแพทย์</span>
+            </a>
+          </li>
+          <li>
+            <a href="#" onClick={() => navigate("/alladmin")}>
+              <i class="bi bi-person-gear"></i>
+              <span class="links_name" >จัดการแอดมิน</span>
+            </a>
+          </li>
+        </ul>
+        <div class="profile_content">
+          <div className="profile">
+            <div class="profile_details">
+              <i class="bi bi-person" onClick={() => navigate("/profile")}></i>
+              <div class="name_job">
+                <div class="name"><li onClick={() => navigate("/profile")}>{adminData && adminData.username}</li></div>
+              </div>
+            </div>
+            <i class='bi bi-box-arrow-right' id="log_out" onClick={logOut}></i>
+          </div>
+        </div>
+      </div>
+      <div className="home_content">
+        <div className="header">จัดการแอดมิน</div>
+        <hr></hr>
+        <div className="toolbar">
+          <button onClick={add} className="bi bi-plus-circle add btn btn-outline py-1 px-4">
+            เพิ่มแอดมิน
+          </button>
+          <p className="countadmin">จำนวน : {data.length} คน</p>
+        </div>
+        <div className="content">
+          {data.map((i) => {
+            return (
+              <div class="adminall card mb-3 ">
+                <div class="card-body">
+                  <img src={deleteimg} className="deleteimg" alt="deleteimg" onClick={() => deleteAdmin(i._id, i.username)}></img>
+                  <h5 class="card-title">{i.username}</h5>
+                </div>
+              </div>
+            );
+          })}
+        </div>
+      </div>
     </main>
   );
 }

@@ -125,13 +125,13 @@ export default function AllMpersonnel({ }) {
         <div className="header">จัดการข้อมูลบุคลากร</div>
         <hr></hr>
         <div className="toolbar">
-          <button onClick={add} className="add btn btn-outline-secondary py-1 px-4">
+          <button onClick={add} className="add btn btn-outline py-1 px-4">
             เพิ่มบุคลากร
           </button>
           <p className="countadmin">จำนวน : {data.length} คน</p>
         </div>
-        <div className="contentcare">
-          <div className="adminall ">
+        <div className="content">
+          <div className="cardall card mb-3">
             <table className="table">
               <thead >
                 <tr>

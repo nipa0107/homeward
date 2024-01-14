@@ -1,13 +1,20 @@
 import React, { useEffect, useState } from "react";
+import "../css/sidebar.css";
+import "../css/alladmin.css"
+import "bootstrap-icons/font/bootstrap-icons.css";
+import logow from "../img/logow.png";
 import { useLocation } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 
-export default function AddEquip({}) {
+export default function AddEquip({ }) {
   const navigate = useNavigate();
   const location = useLocation();
   const [equipment_name, setEquipName] = useState("");
   const [equipment_type, setEquipType] = useState("");
   const [validationMessage, setValidationMessage] = useState("");
+  const [adminData, setAdminData] = useState("");
+  const [isActive, setIsActive] = useState(false);
+  
   useEffect(() => {
     console.log(location);
   }, [location]);
@@ -41,47 +48,105 @@ export default function AddEquip({}) {
         }
       });
   };
-
+  const logOut = () => {
+    window.localStorage.clear();
+    window.location.href = "./";
+  };
+  // bi-list
+  const handleToggleSidebar = () => {
+    setIsActive(!isActive);
+  };
   return (
-    <div className="auth-wrapper">
-      <div className="auth-inner">
-        <form onSubmit={handleSubmit}>
-          <h3>เพิ่มอุปกรณ์</h3>
-
-          <div className="mb-3">
-            <label>ชื่ออุปกรณ์</label>
-            <input
-              type="text"
-              className="form-control"
-              onChange={(e) => setEquipName(e.target.value)}
-            />
+    <main className="body">
+      <div className={`sidebar ${isActive ? 'active' : ''}`}>
+        <div class="logo_content">
+          <div class="logo">
+            <div class="logo_name" >
+              <img src={logow} className="logow" alt="logo" ></img>
+            </div>
           </div>
-          {/* {validationMessage && (
+          <i class='bi bi-list' id="btn" onClick={handleToggleSidebar}></i>
+        </div>
+        <ul class="nav-list">
+          <li>
+            <a href="#" onClick={() => navigate("/home")}>
+              <i class="bi bi-book"></i>
+              <span class="links_name" >จัดการข้อมูลคู่มือการดูแลผู้ป่วย</span>
+            </a>
+          </li>
+          <li>
+            <a href="#" onClick={() => navigate("/allmpersonnel")}>
+              <i class="bi bi-people"></i>
+              <span class="links_name" >จัดการข้อมูลบุคลากร</span>
+            </a>
+          </li>
+          <li>
+            <a href="#" onClick={() => navigate("/allequip", { state: adminData })}>
+              <i class="bi bi-prescription2"></i>
+              <span class="links_name" >จัดการอุปกรณ์ทางการแพทย์</span>
+            </a>
+          </li>
+          <li>
+            <a href="#" onClick={() => navigate("/alladmin")}>
+              <i class="bi bi-person-gear"></i>
+              <span class="links_name" >จัดการแอดมิน</span>
+            </a>
+          </li>
+        </ul>
+        <div class="profile_content">
+          <div className="profile">
+            <div class="profile_details">
+              <i class="bi bi-person" onClick={() => navigate("/profile")}></i>
+              <div class="name_job">
+                <div class="name"><li onClick={() => navigate("/profile")}>{adminData && adminData.username}</li></div>
+              </div>
+            </div>
+            <i class='bi bi-box-arrow-right' id="log_out" onClick={logOut}></i>
+          </div>
+        </div>
+      </div>
+      <div className="home_content">
+        <div className="header">จัดการอุปกรณ์ทางการแพทย์</div>
+        <hr></hr>
+        <h3>เพิ่มอุปกรณ์</h3>
+        <div className="adminall card mb-3">
+          <form onSubmit={handleSubmit}>
+
+            <div className="mb-3">
+              <label>ชื่ออุปกรณ์</label>
+              <input
+                type="text"
+                className="form-control"
+                onChange={(e) => setEquipName(e.target.value)}
+              />
+            </div>
+            {/* {validationMessage && (
             <div style={{ color: "red" }}>{validationMessage}</div>
           )} */}
-          <div className="mb-3">
-            <label>ประเภทอุปกรณ์</label>
-            <select
-              className="form-control"
-              onChange={(e) => setEquipType(e.target.value)}
-            >
-              <option value="">กรุณาเลือก</option>
-              <option value="อุปกรณ์ติดตัว">อุปกรณ์ติดตัว</option>
-              <option value="อุปกรณ์เสริม">อุปกรณ์เสริม</option>
-              <option value="อุปกรณ์อื่นๆ">อุปกรณ์อื่น ๆ</option>
-            </select>
-          </div>
-          {validationMessage && (
-            <div style={{ color: "red" }}>{validationMessage}</div>
-          )}
-          <div className="d-grid">
-            <button type="submit" className="btn btn-primary">
-              Add
-            </button>
-            <br />
-          </div>
-        </form>
+            <div className="mb-3">
+              <label>ประเภทอุปกรณ์</label>
+              <select
+                className="form-control"
+                onChange={(e) => setEquipType(e.target.value)}
+              >
+                <option value="">กรุณาเลือก</option>
+                <option value="อุปกรณ์ติดตัว">อุปกรณ์ติดตัว</option>
+                <option value="อุปกรณ์เสริม">อุปกรณ์เสริม</option>
+                <option value="อุปกรณ์อื่นๆ">อุปกรณ์อื่น ๆ</option>
+              </select>
+            </div>
+            {validationMessage && (
+              <div style={{ color: "red" }}>{validationMessage}</div>
+            )}
+            <div className="d-grid">
+              <button type="submit" className="btn btn-outline py-2">
+                บันทึก
+              </button>
+              <br />
+            </div>
+          </form>
+        </div>
       </div>
-    </div>
+    </main>
   );
 }

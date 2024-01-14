@@ -1,14 +1,25 @@
 import { useEffect, useState } from "react";
+import "../css/sidebar.css";
+import "../css/alladmin.css"
+import "bootstrap-icons/font/bootstrap-icons.css";
+import logow from "../img/logow.png";
+import { useNavigate } from "react-router-dom";
+import deleteimg from "../img/delete.png";
+import editimg from "../img/edit.png";
 
-export default function AddCaremanual({}) {
+
+export default function AddCaremanual({ }) {
   const [caremanual_name, setCaremanualName] = useState("");
   const [file, setFile] = useState(null);
   const [image, setImage] = useState(null);
   const [detail, setDetail] = useState("");
   const defaultImageURL = "https://gnetradio.com/wp-content/uploads/2019/10/no-image.jpg";
+  const navigate = useNavigate();
+  const [adminData, setAdminData] = useState("");
+  const [isActive, setIsActive] = useState(false);
 
   useEffect(() => {
-    const preview= document.getElementById("previewImage");
+    const preview = document.getElementById("previewImage");
     if (preview) {
       preview.src = defaultImageURL;
     }
@@ -48,72 +59,121 @@ export default function AddCaremanual({}) {
         }
       });
   };
+  const logOut = () => {
+    window.localStorage.clear();
+    window.location.href = "./";
+  };
+  // bi-list
+  const handleToggleSidebar = () => {
+    setIsActive(!isActive);
+  };
 
   return (
-    <div className="auth-wrapper">
-      <div className="auth-inner">
-        <form onSubmit={handleSubmit} encType="multipart/form-data">
-          <h3>เพิ่มคู่มือ</h3>
-
-          <div className="mb-3">
-            <label>หัวข้อ</label>
-            <input
-              type="text"
-              className="form-control"
-              onChange={(e) => setCaremanualName(e.target.value)}
-            />
+    <main className="body">
+      <div className={`sidebar ${isActive ? 'active' : ''}`}>
+        <div class="logo_content">
+          <div class="logo">
+            <div class="logo_name" >
+              <img src={logow} className="logow" alt="logo" ></img>
+            </div>
           </div>
-
-          <div className="mb-3">
-            <label>รูปภาพ</label> <br />
-            <br />
-            <br />
-
-            
-            <img
-            // แสดงรูปที่เลือก
-              id="previewImage"
-              src={defaultImageURL} 
-              alt="Preview"
-              style={{ maxWidth: "20%" }}
-            /> <br/><br/>
-            
-            <input
-              type="file"
-              className="form-control"
-              accept="image/*"
-              onChange={onInputimgChange}
-            ></input>
+          <i class='bi bi-list' id="btn" onClick={handleToggleSidebar}></i>
+        </div>
+        <ul class="nav-list">
+          <li>
+            <a href="#" onClick={() => navigate("/home")}>
+              <i class="bi bi-book"></i>
+              <span class="links_name" >จัดการข้อมูลคู่มือการดูแลผู้ป่วย</span>
+            </a>
+          </li>
+          <li>
+            <a href="#" onClick={() => navigate("/allmpersonnel")}>
+              <i class="bi bi-people"></i>
+              <span class="links_name" >จัดการข้อมูลบุคลากร</span>
+            </a>
+          </li>
+          <li>
+            <a href="#" onClick={() => navigate("/allequip", { state: adminData })}>
+              <i class="bi bi-prescription2"></i>
+              <span class="links_name" >จัดการอุปกรณ์ทางการแพทย์</span>
+            </a>
+          </li>
+          <li>
+            <a href="#" onClick={() => navigate("/alladmin")}>
+              <i class="bi bi-person-gear"></i>
+              <span class="links_name" >จัดการแอดมิน</span>
+            </a>
+          </li>
+        </ul>
+        <div class="profile_content">
+          <div className="profile">
+            <div class="profile_details">
+              <i class="bi bi-person" onClick={() => navigate("/profile")}></i>
+              <div class="name_job">
+                <div class="name"><li onClick={() => navigate("/profile")}>{adminData && adminData.username}</li></div>
+              </div>
+            </div>
+            <i class='bi bi-box-arrow-right' id="log_out" onClick={logOut}></i>
           </div>
-
-          <div className="mb-3">
-            <label>แนบไฟล์</label>
-            <input
-              type="file"
-              className="form-control"
-              accept="application/pdf"
-              onChange={onInputfileChange}
-            />
-          </div>
-
-          <div className="mb-3">
-            <label>รายละเอียด</label>
-            <input
-              type="text"
-              className="form-control"
-              onChange={(e) => setDetail(e.target.value)}
-            />
-          </div>
-          <div className="d-grid">
-            <button type="submit" className="btn btn-primary">
-              บันทึก
-            </button>
-            <br />
-          </div>
-        </form>
+        </div>
       </div>
+      <div className="home_content">
+        <div className="header">จัดการข้อมูลคู่มือการดูแลผู้ป่วย</div>
+        <hr></hr>
+        <h3>เพิ่มคู่มือ</h3>
+        <div className="adminall card mb-3">
+          <form onSubmit={handleSubmit} encType="multipart/form-data">
+            <div className="mb-3">
+              <label>หัวข้อ</label>
+              <input
+                type="text"
+                className="form-control"
+                onChange={(e) => setCaremanualName(e.target.value)}
+              />
+            </div>
+            <div className="mb-3">
+              <label>รูปภาพ</label> <br />
+              <img
+                // แสดงรูปที่เลือก
+                id="previewImage"
+                src={defaultImageURL}
+                alt="Preview"
+                style={{ maxWidth: "20%" }}
+              /> <br /><br />
+              <input
+                type="file"
+                className="form-control"
+                accept="image/*"
+                onChange={onInputimgChange}
+              ></input>
+            </div>
+            <div className="mb-3">
+              <label>แนบไฟล์</label>
+              <input
+                type="file"
+                className="form-control"
+                accept="application/pdf"
+                onChange={onInputfileChange}
+              />
+            </div>
+            <div className="mb-3">
+              <label>รายละเอียด</label>
+              <input
+                type="text"
+                className="form-control"
+                onChange={(e) => setDetail(e.target.value)}
+              />
+            </div>
+            <div className="d-grid">
+              <button type="submit" className="add btn btn-outline py-2 ">
+                บันทึก
+              </button>
+              <br />
+            </div>
+          </form>
+        </div>
 
-      <div></div>
-    </div>
+      </div>
+    </main>
   );
 }
