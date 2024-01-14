@@ -151,13 +151,7 @@ export default function AddCaremanual({ }) {
                 onChange={onInputimgChange}
               ></input>
             </div>
-            {selectedFileName && (
-            <div className="mb-3 pdf">
-              <a href={pdfURL} target="_blank" rel="noopener noreferrer">
-                {selectedFileName}
-              </a>
-            </div>
-          )}
+            
             <div className="mb-3">
               <label>แนบไฟล์</label>
               <input
@@ -166,6 +160,15 @@ export default function AddCaremanual({ }) {
                 accept="application/pdf"
                 onChange={onInputfileChange}
               />
+            </div>
+            <div className="filename ">
+              {selectedFileName && (
+                <div className="mb-3 pdf">
+                  <a href={pdfURL} target="_blank" rel="noopener noreferrer">
+                    {selectedFileName}
+                  </a>
+                </div>
+              )}
             </div>
             <div className="mb-3">
               <label>รายละเอียด</label>

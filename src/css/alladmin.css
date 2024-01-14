@@ -66,4 +66,14 @@
     line-height: 50px;
     padding: 20px;
 }
-
+.filename a{
+    text-decoration: none;
+    color: rgb(72, 72, 72);
+    border: 1px solid rgb(228, 228, 228);
+    padding: 7px;
+    border-radius: 8px;
+}
+.filename a:hover{
+    background-color: #7e7e7e;
+    color: white;
+}
