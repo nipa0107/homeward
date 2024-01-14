@@ -4,8 +4,6 @@ import "../css/alladmin.css"
 import "bootstrap-icons/font/bootstrap-icons.css";
 import logow from "../img/logow.png";
 import { useNavigate } from "react-router-dom";
-import deleteimg from "../img/delete.png";
-import editimg from "../img/edit.png";
 
 
 export default function AddCaremanual({ }) {
@@ -17,6 +15,8 @@ export default function AddCaremanual({ }) {
   const navigate = useNavigate();
   const [adminData, setAdminData] = useState("");
   const [isActive, setIsActive] = useState(false);
+  const [selectedFileName, setSelectedFileName] = useState("");
+  const [pdfURL, setPdfURL] = useState(null);
 
   useEffect(() => {
     const preview = document.getElementById("previewImage");
@@ -36,8 +36,12 @@ export default function AddCaremanual({ }) {
   const onInputfileChange = (e) => {
     console.log(e.target.files[0]);
     setFile(e.target.files[0]);
-  };
 
+    setSelectedFileName(e.target.files[0].name);
+
+    const pdfURL = URL.createObjectURL(e.target.files[0]);
+    setPdfURL(pdfURL);
+  };
   const handleSubmit = (e) => {
     e.preventDefault();
     const formData = new FormData();
@@ -147,6 +151,13 @@ export default function AddCaremanual({ }) {
                 onChange={onInputimgChange}
               ></input>
             </div>
+            {selectedFileName && (
+            <div className="mb-3 pdf">
+              <a href={pdfURL} target="_blank" rel="noopener noreferrer">
+                {selectedFileName}
+              </a>
+            </div>
+          )}
             <div className="mb-3">
               <label>แนบไฟล์</label>
               <input

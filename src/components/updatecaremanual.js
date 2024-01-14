@@ -13,7 +13,7 @@ export default function UpdateCareManual() {
   const [image, setImage] = useState(null);
   const [file, setFile] = useState(null);
   const [detail, setDetail] = useState("");
-  const navigate = useNavigate();
+const navigate = useNavigate();
   const [adminData, setAdminData] = useState("");
   const [isActive, setIsActive] = useState(false);
 
@@ -57,24 +57,24 @@ export default function UpdateCareManual() {
 
   const UpdateCareManual = async () => {
     console.log(caremanual_name, image, file, detail);
-
+  
     try {
       const formData = new FormData();
       formData.append("caremanual_name", caremanual_name);
       formData.append("detail", detail);
-
+  
       // ถ้ามีการเลือกรูปภาพใหม่
       if (image) {
         formData.append("image", image);
-      } else {
+} else {
         // ถ้าไม่มีการเลือกรูปภาพใหม่ ให้ใช้ URL ที่มีอยู่แล้ว
         formData.append("image", `../images/${caremanual.image}` || "");
       }
-
+  
       if (file) {
         formData.append("file", file);
       }
-
+  
       const response = await fetch(
         `http://localhost:5000/updatecaremanual/${id}`,
         {
@@ -82,7 +82,7 @@ export default function UpdateCareManual() {
           body: formData,
         }
       );
-
+  
       if (response.ok) {
         const updatedCaremanual = await response.json();
         console.log("แก้ไขคู่มือแล้ว:", updatedCaremanual);
@@ -96,8 +96,8 @@ export default function UpdateCareManual() {
       console.error("การแก้ไขมีปัญหา:", error);
     }
   };
-
-  const logOut = () => {
+  
+const logOut = () => {
     window.localStorage.clear();
     window.location.href = "./";
   };
@@ -159,76 +159,76 @@ export default function UpdateCareManual() {
       <div className="header">จัดการข้อมูลคู่มือการดูแลผู้ป่วย</div>
         <hr></hr>
         <h3>แก้ไขคู่มือ</h3>
-        <div className="adminall card mb-3">
-          <div className="mb-3">
-            <label>หัวข้อ</label>
-            <input
-              type="text"
-              className="form-control"
-              value={caremanual_name}
-              onChange={(e) => setCaremanualName(e.target.value)}
-            />
-          </div>
-
-          <div className="mb-3">
-            <label>รูปภาพ</label> <br />
-            <br />
-            {image ? (
-              <img
-                src={
-                  typeof image === "string"
-                    ? require(`../images/${image}`)
-                    : URL.createObjectURL(image)
-                }
-                alt="Caremanual Image"
-                style={{ maxWidth: "100%", maxHeight: "200px" }}
-              />
-            ) : (
-              <img
-                id="previewImage"
-                src={defaultImageURL}
-                alt="Default Image"
-                style={{ maxWidth: "100%", maxHeight: "200px" }}
-              />
-            )}
-            <br />
-            <input
-              type="file"
-              className="form-control"
-              accept="image/*"
-              onChange={handleImageChange}
-            ></input>
-          </div>
-
-          <div className="mb-3">
-            <label>แนบไฟล์</label>
-
-            <input
-              type="file"
-              className="form-control"
-              accept="application/pdf"
-              onChange={handleFileChange}
-            />
-          </div>
-
-          <div className="mb-3">
-            <label>รายละเอียด</label>
-            <input
-              type="text"
-              value={detail}
-              className="form-control"
-              onChange={(e) => setDetail(e.target.value)}
-            />
-          </div>
-          <div className="d-grid">
-            <button onClick={UpdateCareManual} className="add btn btn-outline py-2">
-              บันทึก
-            </button>
-            <br />
-          </div>
-          </div>
+<div className="adminall card mb-3">
+        <div className="mb-3">
+          <label>หัวข้อ</label>
+          <input
+            type="text"
+            className="form-control"
+            value={caremanual_name}
+            onChange={(e) => setCaremanualName(e.target.value)}
+          />
         </div>
-        <div></div>
+
+        <div className="mb-3">
+          <label>รูปภาพ</label> <br />
+          <br />
+          {image ? (
+            <img
+              src={
+                typeof image === "string"
+                  ? require(`../images/${image}`)
+                  : URL.createObjectURL(image)
+              }
+              alt="Caremanual Image"
+              style={{ maxWidth: "100%", maxHeight: "200px" }}
+            />
+          ) : (
+            <img
+              id="previewImage"
+              src={defaultImageURL}
+              alt="Default Image"
+              style={{ maxWidth: "100%", maxHeight: "200px" }}
+            />
+          )}
+          <br />
+          <input
+            type="file"
+            className="form-control"
+            accept="image/*"
+            onChange={handleImageChange}
+          ></input>
+        </div>
+
+        <div className="mb-3">
+          <label>แนบไฟล์</label>
+
+          <input
+            type="file"
+            className="form-control"
+            accept="application/pdf"
+            onChange={handleFileChange}
+          />
+        </div>
+
+        <div className="mb-3">
+          <label>รายละเอียด</label>
+          <input
+            type="text"
+            value={detail}
+            className="form-control"
+            onChange={(e) => setDetail(e.target.value)}
+          />
+        </div>
+        <div className="d-grid">
+          <button onClick={UpdateCareManual} className="add btn btn-outline py-2">
+            บันทึก
+          </button>
+          <br />
+        </div>
       </div>
-      );
+</div>
+      <div></div>
+    </div>
+  );
 }
