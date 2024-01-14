@@ -145,21 +145,21 @@ export default function Home({ }) {
         <div className="header">จัดการข้อมูลคู่มือการดูแลผู้ป่วย</div>
         <hr></hr>
         <div className="toolbar">
-          <button onClick={() => navigate("/addcaremanual")} className="add btn btn-outline-secondary py-1 px-4">
+          <button onClick={() => navigate("/addcaremanual")} className="bi bi-plus-circle add btn btn-outline py-1 px-4">
             เพิ่มคู่มือ
           </button>
           <p className="countadmin">จำนวน : {data.length} คู่มือ</p>
         </div>
-        <div className="contentcare">
+        <div className="content">
         {data == null
           ? ""
           : data.map((i) => {
             return (
               <div class="adminall card mb-3 ">
                 <div class="card-body">
-                  <h5 class="card-title">{i.caremanual_name}</h5>
                   <img src={deleteimg} className="deleteimg" alt="deleteimg" onClick={() => deleteCaremanual(i._id, i.caremanual_name)}></img><span></span>
                   <img src={editimg} className="editimg" alt="deleteimg" onClick={() => navigate("/updatecaremanual", { state: { id: i._id, caremanual: i } })}></img>
+                  <h5 class="card-title">{i.caremanual_name}</h5>
                 </div>
               </div>
             );

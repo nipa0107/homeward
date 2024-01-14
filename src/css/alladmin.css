@@ -16,15 +16,22 @@
 .deleteimg{
    border-radius: 10px;
    width: 5vh;
-   float: right;
+   /* float: right; */
    margin: auto auto;
 }
-
+.adminall .card-body .deleteimg{
+    float: right;
+}
 .adminall{
-    width: 90% ;
+    width: 70% ;
     margin-left: auto;
     margin-right: auto;
     box-shadow: 0 2px 5px 0 rgba(0,0,0,0.1); 
+    line-height: 50px;
+    padding: 20px;
+}
+.adminall form{
+    padding: 20px;
 }
 .editimg {
     border-radius: 10px;
@@ -32,14 +39,31 @@
     float: right;
     margin: auto auto;
 }
-.contentcare {
-    margin-top: 135px;
+.content {
+    margin-top: 145px;
 }
 
-.adminall th{
+/* .adminall th{
     background: #87CEFA;
+} */
+
+
+.form{
+
+    align-items: center;
+}
+.btn{
+    background-color: #87CEFA;
+    color: white;
+    text-align: center;
+    margin-top: 20px;
+}
+.cardall{
+    width: 70% ;
+    margin-left: auto;
+    margin-right: auto;
+    box-shadow: 0 2px 5px 0 rgba(0,0,0,0.1); 
+    line-height: 50px;
+    padding: 20px;
 }
 
-table{
-    box-shadow: 0 2px 5px 0 rgba(0,0,0,0.1);
-}

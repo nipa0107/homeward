@@ -1,11 +1,22 @@
 import React, { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
+import "../css/sidebar.css";
+import "../css/alladmin.css"
+import "bootstrap-icons/font/bootstrap-icons.css";
+import logow from "../img/logow.png";
+import { useNavigate } from "react-router-dom";
+import deleteimg from "../img/delete.png";
+import editimg from "../img/edit.png";
+
 
 function Updateadmin() {
   const location = useLocation();
+  const navigate = useNavigate();
   const [password, setPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
   const [confirmNewPassword, setConfirmNewPassword] = useState("");
+  const [adminData, setAdminData] = useState("");
+  const [isActive, setIsActive] = useState(false);
 
 useEffect(() => {
     console.log(location);
@@ -44,12 +55,67 @@ useEffect(() => {
         });
     // }
   };
+  const logOut = () => {
+    window.localStorage.clear();
+    window.location.href = "./";
+  };
+
+    // bi-list
+    const handleToggleSidebar = () => {
+      setIsActive(!isActive);
+    };
 
   return (
-    <div>
+    <main className="body">
+      <div className={`sidebar ${isActive ? 'active' : ''}`}>
+        <div class="logo_content">
+          <div class="logo">
+            <div class="logo_name" >
+              <img src={logow} className="logow" alt="logo" ></img>
+            </div>
+          </div>
+          <i class='bi bi-list' id="btn" onClick={handleToggleSidebar}></i>
+        </div>
+        <ul class="nav-list">
+          <li>
+            <a href="#" onClick={() => navigate("/home")}>
+              <i class="bi bi-book"></i>
+              <span class="links_name" >จัดการข้อมูลคู่มือการดูแลผู้ป่วย</span>
+            </a>
+          </li>
+          <li>
+            <a href="#" onClick={() => navigate("/allmpersonnel")}>
+              <i class="bi bi-people"></i>
+              <span class="links_name" >จัดการข้อมูลบุคลากร</span>
+            </a>
+          </li>
+          <li>
+            <a href="#" onClick={() => navigate("/allequip", { state: adminData })}>
+              <i class="bi bi-prescription2"></i>
+              <span class="links_name" >จัดการอุปกรณ์ทางการแพทย์</span>
+            </a>
+          </li>
+          <li>
+            <a href="#" onClick={() => navigate("/alladmin")}>
+              <i class="bi bi-person-gear"></i>
+              <span class="links_name" >จัดการแอดมิน</span>
+            </a>
+          </li>
+        </ul>
+        <div class="profile_content">
+          <div className="profile">
+            <div class="profile_details">
+              <i class="bi bi-person" onClick={() => navigate("/profile")}></i>
+              <div class="name_job">
+                <div class="name"><li onClick={() => navigate("/profile")}>{adminData && adminData.username}</li></div>
+              </div>
+            </div>
+            <i class='bi bi-box-arrow-right' id="log_out" onClick={logOut}></i>
+          </div>
+        </div>
+      </div>
       <h3 className="title">แก้ไขรหัสผ่าน</h3>
     <div className="formcontainerpf">
-      
       <div className="auth-inner">
         รหัสผ่านเก่า
         <input
@@ -85,7 +151,7 @@ useEffect(() => {
     <button onClick={profile} className="btn btn-primary">
         Back
       </button>
-    </div>
+    </main>
 
   );
 }
