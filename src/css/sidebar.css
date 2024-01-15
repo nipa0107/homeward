@@ -240,5 +240,39 @@ hr{
     text-align: center;
     font-size: 25px;
     font-weight: 600;
-    margin-bottom: 20px;
+    margin-bottom: 30px;
+    margin-top: 30px;
+}
+.home_content .breadcrumbs{
+    margin-left: 28px;
+}
+.breadcrumbs{
+    padding: 10px;
+    box-shadow: 0 4px 30px -10px rgba(0, 0, 0, 0.2);
+    border-radius: 15px;
+    width: fit-content;
+}
+.breadcrumbs ul i{
+    vertical-align: middle;
+}
+.breadcrumbs ul{
+    display: flex;
+    list-style-type: none;
+    align-items: center;
+    padding: 0;
+    margin: 0;
+    gap: 8px;
+}
+.breadcrumbs ul li a{
+    text-decoration: none;
+    color: black;
+}
+.breadcrumbs ul li a:hover{
+    color: #87CEFA;
+}
+.breadcrumbs ul li .bihouse:hover{
+    color: #87CEFA;
+}
+.breadcrumbs ul li:last-child a{
+    font-weight: bold;
 }

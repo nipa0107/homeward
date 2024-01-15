@@ -18,7 +18,7 @@ function Updateadmin() {
   const [adminData, setAdminData] = useState("");
   const [isActive, setIsActive] = useState(false);
 
-useEffect(() => {
+  useEffect(() => {
     console.log(location);
   }, [location]);
 
@@ -29,30 +29,30 @@ useEffect(() => {
   const Updateadmin = () => {
     console.log(password, newPassword, confirmNewPassword);
 
-      fetch(`http://localhost:5000/updateadmin/${location.state._id}`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Accept: "application/json",
-          "Access-Control-Allow-Origin": "*",
-        },
-        body: JSON.stringify({
-          id: location.state._id,
-          password: password,
-          newPassword,
-          confirmNewPassword,
-        }),
+    fetch(`http://localhost:5000/updateadmin/${location.state._id}`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Accept: "application/json",
+        "Access-Control-Allow-Origin": "*",
+      },
+      body: JSON.stringify({
+        id: location.state._id,
+        password: password,
+        newPassword,
+        confirmNewPassword,
+      }),
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        console.log(data);
+        if (data.status === "ok") {
+          window.location.href = "./profile";
+        }
       })
-        .then((res) => res.json())
-        .then((data) => {
-          console.log(data);
-          if (data.status === "ok") {
-            window.location.href = "./profile";
-          }
-        })
-        .catch((error) => {
-          console.error(error);
-        });
+      .catch((error) => {
+        console.error(error);
+      });
     // }
   };
   const logOut = () => {
@@ -60,10 +60,10 @@ useEffect(() => {
     window.location.href = "./";
   };
 
-    // bi-list
-    const handleToggleSidebar = () => {
-      setIsActive(!isActive);
-    };
+  // bi-list
+  const handleToggleSidebar = () => {
+    setIsActive(!isActive);
+  };
 
   return (
     <main className="body">
@@ -114,43 +114,62 @@ useEffect(() => {
           </div>
         </div>
       </div>
-      <h3 className="title">แก้ไขรหัสผ่าน</h3>
-    <div className="formcontainerpf">
-      <div className="auth-inner">
-        รหัสผ่านเก่า
-        <input
-          className="form-control"
-          type="password"
-          onChange={(e) => setPassword(e.target.value)}
-        />
-        <br />
-        รหัสผ่านใหม่
-        <input
-          className="form-control"
-          type="password"
-          onChange={(e) => setNewPassword(e.target.value)}
-        />
-        <br />
-        ยืนยันรหัสผ่านใหม่
-        <input
-          className="form-control"
-          type="password"
-          onChange={(e) => setConfirmNewPassword(e.target.value)}
-        />
-        <br />
-      </div>
-      <button onClick={Updateadmin} className="btn bthsave btn-primary">
-        บันทึก
-      </button>
-
-      <br /><br />
-
-
-
-    </div>
-    <button onClick={profile} className="btn btn-primary">
+      <div className="home_content">
+        <div className="header">โปรไฟล์</div>
+        <hr></hr>
+        <div className="breadcrumbs">
+          <ul>
+            <li>
+              <a className="bihouse">
+                <i class="bi bi-house-fill" onClick={() => navigate("/home")}></i>
+              </a>
+            </li>
+            <li className="arrow">
+              <i class="bi bi-chevron-double-right"></i>
+            </li>
+            <li><a href="#" onClick={() => navigate("/profile")}>โปรไฟล์</a>
+            </li>
+            <li className="arrow">
+              <i class="bi bi-chevron-double-right"></i>
+            </li>
+            <li><a>แก้ไขโปรไฟล์</a>
+            </li>
+          </ul>
+        </div>
+        <h3>แก้ไขโปรไฟล์</h3>
+        <div className="formcontainerpf">
+          <div className="auth-inner">
+            รหัสผ่านเก่า
+            <input
+              className="form-control"
+              type="password"
+              onChange={(e) => setPassword(e.target.value)}
+            />
+            <br />
+            รหัสผ่านใหม่
+            <input
+              className="form-control"
+              type="password"
+              onChange={(e) => setNewPassword(e.target.value)}
+            />
+            <br />
+            ยืนยันรหัสผ่านใหม่
+            <input
+              className="form-control"
+              type="password"
+              onChange={(e) => setConfirmNewPassword(e.target.value)}
+            />
+            <br />
+          </div>
+          <button onClick={Updateadmin} className="btn bthsave btn-outline">
+            บันทึก
+          </button>
+          <br /><br />
+        </div>
+        {/* <button onClick={profile} className="btn btn-primary">
         Back
-      </button>
+      </button> */}
+      </div>
     </main>
 
   );

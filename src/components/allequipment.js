@@ -157,9 +157,23 @@ export default function AllEquip({ }) {
       <div className="home_content">
         <div className="header">จัดการอุปกรณ์ทางการแพทย์</div>
         <hr></hr>
+        <div className="breadcrumbs">
+          <ul>
+            <li>
+              <a className="bihouse">
+                <i class="bi bi-house-fill" onClick={() => navigate("/home")}></i>
+              </a>
+            </li>
+            <li className="arrow">
+              <i class="bi bi-chevron-double-right"></i>
+            </li>
+            <li><a>จัดการอุปกรณ์ทางการแพทย์</a>
+            </li>
+          </ul>
+        </div>
         <div className="toolbar">
           <button
-            className="add btn btn-outline py-1 px-4"
+            className="btn btn-outline py-1 px-4"
             onClick={() => navigate("/addequip", { state: adminData })}
           >
             เพิ่มอุปกรณ์

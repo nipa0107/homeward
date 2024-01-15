@@ -119,6 +119,25 @@ export default function AddMpersonnel() {
       <div className="home_content">
         <div className="header">จัดการข้อมูลบุคลากร</div>
         <hr></hr>
+        <div className="breadcrumbs">
+          <ul>
+            <li>
+              <a href="#">
+                <i class="bi bi-house-fill" onClick={() => navigate("/home")}></i>
+              </a>
+            </li>
+            <li className="arrow">
+              <i class="bi bi-chevron-double-right"></i>
+            </li>
+            <li><a href="#" onClick={() => navigate("/allmpersonnel")}>จัดการข้อมูลบุคลากร</a>
+            </li>
+            <li className="arrow">
+              <i class="bi bi-chevron-double-right"></i>
+            </li>
+            <li><a>เพิ่มบุคลากร</a>
+            </li>
+          </ul>
+        </div>
         <h3>เพิ่มบุคลากร</h3>
         <div className="adminall card mb-3">
           <form onSubmit={handleSubmit}>
@@ -177,7 +196,7 @@ export default function AddMpersonnel() {
               />
             </div>
             <div className="d-grid">
-              <button type="submit" className="add btn btn-outline py-1 px-4">
+              <button type="submit" className="btn btn-outline py-1 px-4">
                 บันทึก
               </button>
               <br />

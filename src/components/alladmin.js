@@ -122,8 +122,22 @@ export default function Alladmin({ }) {
       <div className="home_content">
         <div className="header">จัดการแอดมิน</div>
         <hr></hr>
+        <div className="breadcrumbs">
+          <ul>
+            <li>
+              <a className="bihouse">
+                <i class="bi bi-house-fill" onClick={() => navigate("/home")}></i>
+              </a>
+            </li>
+            <li className="arrow">
+              <i class="bi bi-chevron-double-right"></i>
+            </li>
+            <li><a>จัดการแอดมิน</a>
+            </li>
+          </ul>
+        </div>
         <div className="toolbar">
-          <button onClick={add} className="bi bi-plus-circle add btn btn-outline py-1 px-4">
+          <button onClick={add} className="bi bi-plus-circle btn btn-outline py-1 px-4">
             เพิ่มแอดมิน
           </button>
           <p className="countadmin">จำนวน : {data.length} คน</p>

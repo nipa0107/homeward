@@ -111,7 +111,7 @@ export default function UpdateCareManual() {
   };
 
   return (
-    <div className="body">
+    <main className="body">
       <div className={`sidebar ${isActive ? "active" : ""}`}>
         <div class="logo_content">
           <div class="logo">
@@ -169,6 +169,25 @@ export default function UpdateCareManual() {
       <div className="home_content">
         <div className="header">จัดการข้อมูลคู่มือการดูแลผู้ป่วย</div>
         <hr></hr>
+        <div className="breadcrumbs">
+          <ul>
+            <li>
+              <a className="bihouse">
+                <i class="bi bi-house-fill" onClick={() => navigate("/home")}></i>
+              </a>
+            </li>
+            <li className="arrow">
+              <i class="bi bi-chevron-double-right"></i>
+            </li>
+            <li><a href="#" onClick={() => navigate("/home")}>จัดการข้อมูลคู่มือการดูแลผู้ป่วย</a>
+            </li>
+            <li className="arrow">
+              <i class="bi bi-chevron-double-right"></i>
+            </li>
+            <li><a>แก้ไขคู่มือ</a>
+            </li>
+          </ul>
+        </div>
         <h3>แก้ไขคู่มือ</h3>
         <div className="adminall card mb-3">
           <div className="mb-3">
@@ -275,7 +294,7 @@ export default function UpdateCareManual() {
           <div className="d-grid">
             <button
               onClick={UpdateCareManual}
-              className="add btn btn-outline py-2"
+              className="btn btn-outline py-2"
             >
               บันทึก
             </button>
@@ -284,6 +303,6 @@ export default function UpdateCareManual() {
         </div>
       </div>
       <div></div>
-    </div>
+    </main>
   );
 }

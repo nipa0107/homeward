@@ -108,6 +108,25 @@ export default function AddEquip({ }) {
       <div className="home_content">
         <div className="header">จัดการอุปกรณ์ทางการแพทย์</div>
         <hr></hr>
+        <div className="breadcrumbs">
+          <ul>
+            <li>
+              <a className="bihouse">
+                <i class="bi bi-house-fill" onClick={() => navigate("/home")}></i>
+              </a>
+            </li>
+            <li className="arrow">
+              <i class="bi bi-chevron-double-right"></i>
+            </li>
+            <li><a href="#" onClick={() => navigate("/allequip")}>จัดการอุปกรณ์ทางการแพทย์</a>
+            </li>
+            <li className="arrow">
+              <i class="bi bi-chevron-double-right"></i>
+            </li>
+            <li><a>เพิ่มคู่มือ</a>
+            </li>
+          </ul>
+        </div>
         <h3>เพิ่มอุปกรณ์</h3>
         <div className="adminall card mb-3">
           <form onSubmit={handleSubmit}>

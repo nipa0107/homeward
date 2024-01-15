@@ -114,6 +114,25 @@ export default function AddAdmin() {
       <div className="home_content">
         <div className="header">จัดการแอดมิน</div>
         <hr></hr>
+        <div className="breadcrumbs">
+          <ul>
+            <li>
+              <a className="bihouse">
+                <i class="bi bi-house-fill" onClick={() => navigate("/home")}></i>
+              </a>
+            </li>
+            <li className="arrow">
+              <i class="bi bi-chevron-double-right"></i>
+            </li>
+            <li><a href="#" onClick={() => navigate("/alladmin")}>จัดการแอดมิน</a>
+            </li>
+            <li className="arrow">
+              <i class="bi bi-chevron-double-right"></i>
+            </li>
+            <li><a>เพิ่มข้อมูลแอดมิน</a>
+            </li>
+          </ul>
+        </div>
         <h3>เพิ่มข้อมูลแอดมิน</h3>
         <div className="adminall card mb-3">
           <form onSubmit={handleSubmit}>
@@ -145,8 +164,8 @@ export default function AddAdmin() {
             </div>
 
             <div className="d-grid">
-              <button type="submit" className="add btn btn-outline py-2">
-              บันทึก
+              <button type="submit" className="btn btn-outline py-2">
+                บันทึก
               </button>
               <br />
             </div>
