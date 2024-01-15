@@ -60,7 +60,26 @@ export default function UpdateCareManual() {
         console.error("Error fetching caremanual data:", error);
       }
     };
-
+    const token = window.localStorage.getItem("token");
+    if (token) {
+      fetch("http://localhost:5000/profile", {
+        method: "POST",
+        crossDomain: true,
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "application/json",
+          "Access-Control-Allow-Origin": "*",
+        },
+        body: JSON.stringify({
+          token: token,
+        }),
+      })
+        .then((res) => res.json())
+        .then((data) => {
+          console.log(data);
+          setAdminData(data.data);
+        });
+    }
     fetchData();
   }, [id]);
 

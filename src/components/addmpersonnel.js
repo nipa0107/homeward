@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect,useState } from "react";
 // import Alladmin from "./alladmin";
 import "../css/sidebar.css";
 import "../css/alladmin.css"
@@ -24,6 +24,26 @@ export default function AddMpersonnel() {
   const All = () => {
     window.location.href = "./allmpersonnel";
   };
+  const token = window.localStorage.getItem("token");
+    if (token) {
+      fetch("http://localhost:5000/profile", {
+        method: "POST",
+        crossDomain: true,
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "application/json",
+          "Access-Control-Allow-Origin": "*",
+        },
+        body: JSON.stringify({
+          token: token,
+        }),
+      })
+        .then((res) => res.json())
+        .then((data) => {
+          console.log(data);
+          setAdminData(data.data);
+        });
+    }
   const handleSubmit = (e) => {
     e.preventDefault();
 

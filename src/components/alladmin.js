@@ -13,6 +13,26 @@ export default function Alladmin({ }) {
   const [isActive, setIsActive] = useState(false);
 
   useEffect(() => {
+    const token = window.localStorage.getItem("token");
+    if (token) {
+      fetch("http://localhost:5000/profile", {
+        method: "POST",
+        crossDomain: true,
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "application/json",
+          "Access-Control-Allow-Origin": "*",
+        },
+        body: JSON.stringify({
+          token: token,
+        }),
+      })
+        .then((res) => res.json())
+        .then((data) => {
+          console.log(data);
+          setAdminData(data.data);
+        });
+    }
     getAllUser();
   }, []);
 
@@ -112,7 +132,7 @@ export default function Alladmin({ }) {
             <div class="profile_details">
               <i class="bi bi-person" onClick={() => navigate("/profile")}></i>
               <div class="name_job">
-                <div class="name"><li onClick={() => navigate("/profile")}>{adminData && adminData.username}</li></div>
+              <div class="name"><li onClick={() => navigate("/profile")}>{adminData && adminData.username}</li></div>
               </div>
             </div>
             <i class='bi bi-box-arrow-right' id="log_out" onClick={logOut}></i>
