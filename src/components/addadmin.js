@@ -21,26 +21,7 @@ export default function AddAdmin() {
   const All = () => {
     window.location.href = "./alladmin";
   };
-  const token = window.localStorage.getItem("token");
-    if (token) {
-      fetch("http://localhost:5000/profile", {
-        method: "POST",
-        crossDomain: true,
-        headers: {
-          "Content-Type": "application/json",
-          Accept: "application/json",
-          "Access-Control-Allow-Origin": "*",
-        },
-        body: JSON.stringify({
-          token: token,
-        }),
-      })
-        .then((res) => res.json())
-        .then((data) => {
-          console.log(data);
-          setAdminData(data.data);
-        });
-    }
+
   const handleSubmit = (e) => {
     e.preventDefault();
 
