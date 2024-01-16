@@ -23,6 +23,26 @@ export default function AddCaremanual({ }) {
     if (preview) {
       preview.src = defaultImageURL;
     }
+    const token = window.localStorage.getItem("token");
+    if (token) {
+      fetch("http://localhost:5000/profile", {
+        method: "POST",
+        crossDomain: true,
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "application/json",
+          "Access-Control-Allow-Origin": "*",
+        },
+        body: JSON.stringify({
+          token: token,
+        }),
+      })
+        .then((res) => res.json())
+        .then((data) => {
+          console.log(data);
+          setAdminData(data.data);
+        });
+    }
   }, [defaultImageURL]);
 
   const onInputimgChange = (e) => {
@@ -124,6 +144,25 @@ export default function AddCaremanual({ }) {
       <div className="home_content">
         <div className="header">จัดการข้อมูลคู่มือการดูแลผู้ป่วย</div>
         <hr></hr>
+        <div className="breadcrumbs">
+          <ul>
+            <li>
+              <a href="#">
+                <i class="bi bi-house-fill"></i>
+              </a>
+            </li>
+            <li className="arrow">
+              <i class="bi bi-chevron-double-right"></i>
+            </li>
+            <li><a href="#" onClick={() => navigate("/home")}>จัดการข้อมูลคู่มือการดูแลผู้ป่วย</a>
+            </li>
+            <li className="arrow">
+              <i class="bi bi-chevron-double-right"></i>
+            </li>
+            <li><a>เพิ่มคู่มือ</a>
+            </li>
+          </ul>
+        </div>
         <h3>เพิ่มคู่มือ</h3>
         <div className="adminall card mb-3">
           <form onSubmit={handleSubmit} encType="multipart/form-data">

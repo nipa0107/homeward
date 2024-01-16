@@ -13,6 +13,26 @@ export default function Alladmin({ }) {
   const [isActive, setIsActive] = useState(false);
 
   useEffect(() => {
+    const token = window.localStorage.getItem("token");
+    if (token) {
+      fetch("http://localhost:5000/profile", {
+        method: "POST",
+        crossDomain: true,
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "application/json",
+          "Access-Control-Allow-Origin": "*",
+        },
+        body: JSON.stringify({
+          token: token,
+        }),
+      })
+        .then((res) => res.json())
+        .then((data) => {
+          console.log(data);
+          setAdminData(data.data);
+        });
+    }
     getAllUser();
   }, []);
 
@@ -112,7 +132,7 @@ export default function Alladmin({ }) {
             <div class="profile_details">
               <i class="bi bi-person" onClick={() => navigate("/profile")}></i>
               <div class="name_job">
-                <div class="name"><li onClick={() => navigate("/profile")}>{adminData && adminData.username}</li></div>
+              <div class="name"><li onClick={() => navigate("/profile")}>{adminData && adminData.username}</li></div>
               </div>
             </div>
             <i class='bi bi-box-arrow-right' id="log_out" onClick={logOut}></i>
@@ -122,8 +142,22 @@ export default function Alladmin({ }) {
       <div className="home_content">
         <div className="header">จัดการแอดมิน</div>
         <hr></hr>
+        <div className="breadcrumbs">
+          <ul>
+            <li>
+              <a className="bihouse">
+                <i class="bi bi-house-fill" onClick={() => navigate("/home")}></i>
+              </a>
+            </li>
+            <li className="arrow">
+              <i class="bi bi-chevron-double-right"></i>
+            </li>
+            <li><a>จัดการแอดมิน</a>
+            </li>
+          </ul>
+        </div>
         <div className="toolbar">
-          <button onClick={add} className="bi bi-plus-circle add btn btn-outline py-1 px-4">
+          <button onClick={add} className="bi bi-plus-circle btn btn-outline py-1 px-4">
             เพิ่มแอดมิน
           </button>
           <p className="countadmin">จำนวน : {data.length} คน</p>

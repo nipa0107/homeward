@@ -5,7 +5,6 @@ import "../css/sidebar.css";
 import "../css/alladmin.css"
 import "bootstrap-icons/font/bootstrap-icons.css";
 import logow from "../img/logow.png";
-import deleteimg from "../img/delete.png";
 import editimg from "../img/edit.png";
 
 
@@ -42,10 +41,10 @@ export default function Profile() {
     window.location.href = "./";
   };
 
-    // bi-list
-    const handleToggleSidebar = () => {
-      setIsActive(!isActive);
-    };
+  // bi-list
+  const handleToggleSidebar = () => {
+    setIsActive(!isActive);
+  };
 
   return (
     <main className="body">
@@ -96,15 +95,31 @@ export default function Profile() {
           </div>
         </div>
       </div>
-      <h3 className="title">โปรไฟล์ผู้ใช้</h3>
-      <div className="containerprofile">
-        <div className="formcontainerpf">
-          <div>{adminData && adminData.username}</div> <br />
+      <div className="home_content">
+        <div className="header">โปรไฟล์</div>
+        <hr></hr>
+        <div className="breadcrumbs">
+          <ul>
+            <li>
+              <a className="bihouse">
+                <i class="bi bi-house-fill" onClick={() => navigate("/home")}></i>
+              </a>
+            </li>
+            <li className="arrow">
+              <i class="bi bi-chevron-double-right"></i>
+            </li>
+            <li><a>โปรไฟล์</a>
+            </li>
+          </ul>
+        </div>
+        <div className="formcontainerpf card mb-3">
+        <label>ชื่อ</label>
+          <div className="textbox">{adminData && adminData.username}</div> <br />
           <div>
-            {adminData && adminData.password.replace(/./g, "•".repeat(1))}{" "}
-            <p onClick={() => navigate("/updateadmin", { state: adminData })}>
-              แก้ไข
-            </p>
+          <label>รหัสผ่าน</label><br />
+          <div className="textbox">
+            {adminData && adminData.password.replace(/./g, "•".repeat(1))}{" "}</div>
+            <img src={editimg} className="editimg" alt="editimg" onClick={() => navigate("/updateadmin", { state: adminData })}></img>
           </div>
         </div>
       </div>
