@@ -183,7 +183,7 @@ export default function UpdateCareManual() {
 
           <div className="mb-3">
             <label>รูปภาพ</label> <br />
-            <br />
+
             {image ? (
               <img
                 src={
