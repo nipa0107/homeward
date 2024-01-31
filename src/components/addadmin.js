@@ -8,6 +8,8 @@ import { useNavigate } from "react-router-dom";
 
 export default function AddAdmin() {
   const [username, setUsername] = useState("");
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const navigate = useNavigate();
@@ -40,6 +42,8 @@ export default function AddAdmin() {
       },
       body: JSON.stringify({
         username,
+        name,
+        email,
         password,
         confirmPassword,
       }),
@@ -113,6 +117,7 @@ export default function AddAdmin() {
         </div>
       </div>
       <div className="home_content">
+        
         <div className="header">จัดการแอดมิน</div>
         <hr></hr>
         <div className="breadcrumbs">
@@ -143,6 +148,24 @@ export default function AddAdmin() {
                 type="text"
                 className="form-control"
                 onChange={(e) => setUsername(e.target.value)}
+              />
+            </div>
+
+            <div className="mb-3">
+              <label>ชื่อ</label>
+              <input
+                type="text"
+                className="form-control"
+                onChange={(e) => setName(e.target.value)}
+              />
+            </div>
+
+            <div className="mb-3">
+              <label>อีเมล</label>
+              <input
+                type="email"
+                className="form-control"
+                onChange={(e) => setEmail(e.target.value)}
               />
             </div>
 

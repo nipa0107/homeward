@@ -215,6 +215,46 @@
     font-weight: 600;
     margin: 20px;
 }
+
+/* หน้าลืมรหัสผ่าน */
+
+.homereset_content{
+    height: 100%;
+    width: calc(100% - 78px);
+    transition: all 0.5s ease;
+    justify-content: center;
+    align-items: center;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 2%;
+}
+
+.homereset_content .logoreset{
+    width: 45vh;
+    justify-content: center;
+    align-items: center;
+    margin: auto;
+}
+
+.homereset_content .header1{
+    font-size: 25px;
+    font-weight: 600;
+    margin: 20px;
+    text-align: center
+    ;
+}
+
+.homereset_content .header2{
+    font-size: 20px;
+    font-weight: 600;
+    margin: 20px;
+    text-align: center;
+}
+
+
+/* หน้าลืมรหัสผ่าน */
+
+
 .sidebar.active ~ .home_content{
     width: calc(100% - 330px);
     left: 330px;

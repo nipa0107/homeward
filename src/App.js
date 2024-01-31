@@ -20,6 +20,8 @@ import AllEquip from "./components/allequipment";
 import AllMpersonnel from "./components/allmpersonnel";
 import AddMpersonnel from "./components/addmpersonnel";
 import AddCaremanual from "./components/addcaremanual";
+import Reset from "./components/forgetpassword";
+
 import UpdateCareManual from "./components/updatecaremanual";
 
 const PrivateRoute = ({ element, isLoggedIn }) => {
@@ -138,6 +140,9 @@ function App() {
               />
             }
           />
+
+          <Route path="/forgetpassword" element={<Reset />} />
+
           {/* -------------------- */}
           {/* <Route path="/addequip" element={<AddEquip />} /> */}
           {/* <Route path="/home" element={<Home />} />    

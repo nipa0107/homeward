@@ -2,9 +2,7 @@ import React, { Component } from "react";
 import "../css/styles.css";
 import logo from "../img/logo.png";
 
-
 export default class Login extends Component {
-  
   constructor(props) {
     super(props);
     this.state = {
@@ -14,7 +12,6 @@ export default class Login extends Component {
     this.handleSubmit = this.handleSubmit.bind(this);
   }
 
-  
   handleSubmit(e) {
     e.preventDefault();
     const { username, password } = this.state;
@@ -24,7 +21,7 @@ export default class Login extends Component {
       crossDomain: true,
       headers: {
         "Content-Type": "application/json",
-      
+
         Accept: "application/json",
         "Access-Control-Allow-Origin": "*",
       },
@@ -40,15 +37,15 @@ export default class Login extends Component {
           // เก็บข้อมูลเข้าสู่ระบบไว้
           window.localStorage.setItem("token", data.data);
           window.localStorage.setItem("loggedIn", true);
-          
+
           window.location.href = "./home";
         } else {
-        //ถ้าเข้าสู่ระบบไม่สำเร็จ
-        const errorElement = document.getElementById("errormessage");
-        if (errorElement) {
-            errorElement.innerText = "เข้าสู่ระบบไม่สำเร็จ กรุณาลองใหม่อีกครั้ง";
+          //ถ้าเข้าสู่ระบบไม่สำเร็จ
+          const errorElement = document.getElementById("errormessage");
+          if (errorElement) {
+            errorElement.innerText =
+              "เข้าสู่ระบบไม่สำเร็จ กรุณาลองใหม่อีกครั้ง";
           }
-          
         }
       });
   }
@@ -57,17 +54,14 @@ export default class Login extends Component {
     return (
       <div className="logincontainer">
         <div className="formcontainer">
-        <div className="left">
-			<h1>Welcome</h1>
-				
-		</div>
-        <div className="right">
+          <div className="left">
+            <h1>Welcome</h1>
+          </div>
+          <div className="right">
             <form onSubmit={this.handleSubmit}>
-            <div className="logologin">
+              <div className="logologin">
                 <img src={logo} className="logologin" alt="logo"></img>
-            </div>
-            
-            
+              </div>
 
               <div className="mb-3">
                 {/* <label>Username</label> */}
@@ -78,11 +72,10 @@ export default class Login extends Component {
                   onChange={(e) => this.setState({ username: e.target.value })}
                 />
               </div>
-            
 
               <div className="mb-3">
                 {/* <label>Password</label> */}
-                <input 
+                <input
                   type="password"
                   className="form-control"
                   placeholder="รหัสผ่าน"
@@ -102,25 +95,21 @@ export default class Login extends Component {
             </label>
           </div>
         </div> */}
-{/*               
-              <p id="errormessage">xxxxxx</p> */}
             
 
-              <div className="d-grid">
+              <p className="forgot-password">
+                <a href="/forgetpassword">ลืมรหัสผ่าน?</a>
+              </p>
+              
+              <div className="d-grid homesubmit">
                 <button type="submit" className="btn btnlogin">
                   เข้าสู่ระบบ
                 </button>
               </div>
-
-              {/*        
-        <p className="forgot-password text-right">
-          Forgot <a href="#">password?</a>
-        </p> */}
             </form>
-            </div>
           </div>
         </div>
-      
+      </div>
     );
   }
 }
