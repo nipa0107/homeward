@@ -95,6 +95,7 @@ export default function UpdateCareManual() {
       if (image) {
         formData.append("image", image);
       }
+  
       if (file) {
         formData.append("file", file);
       }
@@ -110,7 +111,7 @@ export default function UpdateCareManual() {
       if (response.ok) {
         const updatedCaremanual = await response.json();
         console.log("แก้ไขคู่มือแล้ว:", updatedCaremanual);
-        window.location.href = "./home";
+        // window.location.href = "./home";
         console.log(caremanual_name, image, file, detail);
       } else {
         console.error("แก้ไขไม่ได้:", response.statusText);
