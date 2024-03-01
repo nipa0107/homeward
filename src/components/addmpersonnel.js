@@ -11,6 +11,7 @@ export default function AddMpersonnel() {
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [tel, setTel] = useState("");
+  const [email, setEmail] = useState("");
   const [name, setName] = useState("");
   const [nametitle, setNameTitle] = useState("");
   const [isActive, setIsActive] = useState(false);
@@ -45,6 +46,7 @@ export default function AddMpersonnel() {
         username,
         password,
         confirmPassword,
+        email,
         tel,
         name,
         nametitle
@@ -166,6 +168,14 @@ export default function AddMpersonnel() {
                 type="password"
                 className="form-control"
                 onChange={(e) => setConfirmPassword(e.target.value)}
+              />
+            </div>
+            <div className="mb-3">
+              <label>อีเมล</label>
+              <input
+                type="email"
+                className="form-control"
+                onChange={(e) => setEmail(e.target.value)}
               />
             </div>
             <div className="mb-3">

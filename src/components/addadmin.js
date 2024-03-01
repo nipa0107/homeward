@@ -15,6 +15,7 @@ export default function AddAdmin() {
   const navigate = useNavigate();
   const [adminData, setAdminData] = useState("");
   const [isActive, setIsActive] = useState(false);
+  const [error, setError] = useState(""); 
 
   const home = () => {
     window.location.href = "./home";
@@ -28,10 +29,10 @@ export default function AddAdmin() {
     e.preventDefault();
 
 
-    if (password !== confirmPassword) {
-      console.log("Passwords do not match");
-      return;
-    }
+    // if (password !== confirmPassword) {
+    //   console.log("Passwords do not match");
+    //   return;
+    // }
 
     fetch("http://localhost:5000/addadmin", {
       method: "POST",
@@ -54,6 +55,9 @@ export default function AddAdmin() {
         if (data.status === "ok") {
           console.log(username, password, confirmPassword);
           window.location.href = "./alladmin";
+        }else {
+          // เมื่อเกิดข้อผิดพลาด
+          setError(data.error); // กำหนดข้อความ error ให้กับ state
         }
       });
   };
@@ -186,7 +190,9 @@ export default function AddAdmin() {
                 onChange={(e) => setConfirmPassword(e.target.value)}
               />
             </div>
-
+            <br />
+                {/* แสดงข้อความ error */}
+                <p id="errormessage" className="errormessage">{error}</p>
             <div className="d-grid">
               <button type="submit" className="btn btn-outline py-2">
                 บันทึก

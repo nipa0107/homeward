@@ -137,13 +137,14 @@ export default function Profile() {
             <br />
             <div className="textbox">
               {adminData && adminData.password.replace(/./g, "•".repeat(1))}{" "}
-            </div>
-            <img
+              <img
               src={editimg}
               className="editimg"
               alt="editimg"
               onClick={() => navigate("/updateadmin", { state: adminData })}
             ></img>
+            </div>
+        
           </div>
         </div>
       </div>

@@ -17,6 +17,7 @@ function Updateadmin() {
   const [confirmNewPassword, setConfirmNewPassword] = useState("");
   const [adminData, setAdminData] = useState("");
   const [isActive, setIsActive] = useState(false);
+  const [error, setError] = useState(""); 
 
   useEffect(() => {
     console.log(location);
@@ -48,6 +49,9 @@ function Updateadmin() {
         console.log(data);
         if (data.status === "ok") {
           window.location.href = "./profile";
+        }else {
+          // เมื่อเกิดข้อผิดพลาด
+          setError(data.error); // กำหนดข้อความ error ให้กับ state
         }
       })
       .catch((error) => {
@@ -159,7 +163,8 @@ function Updateadmin() {
               type="password"
               onChange={(e) => setConfirmNewPassword(e.target.value)}
             />
-            <br />
+                {/* แสดงข้อความ error */}
+                <p id="errormessage" className="errormessage">{error}</p>
           </div>
           <button onClick={Updateadmin} className="btn bthsave btn-outline">
             บันทึก

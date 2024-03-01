@@ -8,6 +8,7 @@ export default class Login extends Component {
     this.state = {
       username: "",
       password: "",
+      errorMessage: "", // เพิ่ม state เก็บข้อความผิดพลาด
     };
     this.handleSubmit = this.handleSubmit.bind(this);
   }
@@ -41,11 +42,9 @@ export default class Login extends Component {
           window.location.href = "./home";
         } else {
           //ถ้าเข้าสู่ระบบไม่สำเร็จ
-          const errorElement = document.getElementById("errormessage");
-          if (errorElement) {
-            errorElement.innerText =
-              "เข้าสู่ระบบไม่สำเร็จ กรุณาลองใหม่อีกครั้ง";
-          }
+          this.setState({
+            errorMessage: "เข้าสู่ระบบไม่สำเร็จ กรุณาลองใหม่อีกครั้ง",
+          });
         }
       });
   }
@@ -56,6 +55,7 @@ export default class Login extends Component {
         <div className="formcontainer">
           <div className="left">
             <h1>Welcome</h1>
+            <h5>Admin</h5>
           </div>
           <div className="right">
             <form onSubmit={this.handleSubmit}>
@@ -95,12 +95,16 @@ export default class Login extends Component {
             </label>
           </div>
         </div> */}
-            
 
+              {/* แสดงข้อความผิดพลาด */}
+              <p id="errormessage" className="errormessage">
+                {this.state.errorMessage}
+              </p>
+              
               <p className="forgot-password">
                 <a href="/forgetpassword">ลืมรหัสผ่าน?</a>
               </p>
-              
+
               <div className="d-grid homesubmit">
                 <button type="submit" className="btn btnlogin">
                   เข้าสู่ระบบ
