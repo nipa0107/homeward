@@ -1,5 +1,4 @@
 import React, { useEffect,useState } from "react";
-// import Alladmin from "./alladmin";
 import "../css/sidebar.css";
 import "../css/alladmin.css"
 import "bootstrap-icons/font/bootstrap-icons.css";
@@ -16,24 +15,38 @@ export default function AddMpersonnel() {
   const [nametitle, setNameTitle] = useState("");
   const [isActive, setIsActive] = useState(false);
   const navigate = useNavigate();
+  const [error, setError] = useState(""); 
   const [adminData, setAdminData] = useState("");
+  const [token, setToken] = useState('');
 
-  const home = () => {
-    window.location.href = "./home";
-  };
+  useEffect(() => {
+    const token = window.localStorage.getItem("token");
+    setToken(token); setToken(token); 
+    if (token) {
+      fetch("http://localhost:5000/profile", {
+        method: "POST",
+        crossDomain: true,
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "application/json",
+          "Access-Control-Allow-Origin": "*",
+        },
+        body: JSON.stringify({
+          token: token,
+        }),
+      })
+        .then((res) => res.json())
+        .then((data) => {
+          console.log(data)
+          setAdminData(data.data);
+        });
+    } 
+  }, []); //ส่งไปครั้งเดียว
 
-  const All = () => {
-    window.location.href = "./allmpersonnel";
-  };
+
 
   const handleSubmit = (e) => {
     e.preventDefault();
-
-
-    if (password !== confirmPassword) {
-      console.log("Passwords do not match");
-      return;
-    }
 
     fetch("http://localhost:5000/addmpersonnel", {
       method: "POST",
@@ -41,6 +54,7 @@ export default function AddMpersonnel() {
         "Content-Type": "application/json",
         Accept: "application/json",
         "Access-Control-Allow-Origin": "*",
+        Authorization: `Bearer ${token}`
       },
       body: JSON.stringify({
         username,
@@ -58,6 +72,9 @@ export default function AddMpersonnel() {
         if (data.status === "ok") {
           console.log(username, password, confirmPassword, tel, name, nametitle);
           window.location.href = "./allmpersonnel";
+        }else {
+          // เมื่อเกิดข้อผิดพลาด
+          setError(data.error); // กำหนดข้อความ error ให้กับ state
         }
       });
   };
@@ -206,6 +223,9 @@ export default function AddMpersonnel() {
                 onChange={(e) => setName(e.target.value)}
               />
             </div>
+
+                            {/* แสดงข้อความ error */}
+                            <p id="errormessage" className="errormessage">{error}</p>
             <div className="d-grid">
               <button type="submit" className="btn btn-outline py-1 px-4">
                 บันทึก

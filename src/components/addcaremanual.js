@@ -17,6 +17,7 @@ export default function AddCaremanual({ }) {
   const [isActive, setIsActive] = useState(false);
   const [selectedFileName, setSelectedFileName] = useState("");
   const [pdfURL, setPdfURL] = useState(null);
+  const [token, setToken] = useState('');
 
   useEffect(() => {
     const preview = document.getElementById("previewImage");
@@ -24,6 +25,7 @@ export default function AddCaremanual({ }) {
       preview.src = defaultImageURL;
     }
     const token = window.localStorage.getItem("token");
+    setToken(token); 
     if (token) {
       fetch("http://localhost:5000/profile", {
         method: "POST",
@@ -73,6 +75,9 @@ export default function AddCaremanual({ }) {
     fetch(`http://localhost:5000/addcaremanual`, {
       method: "POST",
       body: formData,
+      headers: {
+        Authorization: `Bearer ${token}` // เพิ่ม Authorization header เพื่อส่ง token ในการร้องขอ
+      }
     })
       .then((res) => res.json())
       .then((data) => {

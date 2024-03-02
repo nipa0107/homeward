@@ -8,13 +8,15 @@ import { useNavigate } from "react-router-dom";
 
 export default function AllMpersonnel({ }) {
   const [data, setData] = useState([]);
-  // const [adminId, setAdminId] = useState('');
   const [isActive, setIsActive] = useState(false);
   const navigate = useNavigate();
+  const [searchKeyword, setSearchKeyword] = useState(""); //ค้นหา
   const [adminData, setAdminData] = useState("");
+  const [token, setToken] = useState('');
 
   useEffect(() => {
     const token = window.localStorage.getItem("token");
+    setToken(token); 
     if (token) {
       fetch("http://localhost:5000/profile", {
         method: "POST",
@@ -37,9 +39,13 @@ export default function AllMpersonnel({ }) {
     getAllMpersonnel();
   }, []);
 
+
   const getAllMpersonnel = () => {
     fetch("http://localhost:5000/allMpersonnel", {
       method: "GET",
+      headers: {
+        Authorization: `Bearer ${token}` // เพิ่ม Authorization header เพื่อส่ง token ในการร้องขอ
+      }
     })
       .then((res) => res.json())
       .then((data) => {
@@ -65,6 +71,7 @@ export default function AllMpersonnel({ }) {
           headers: {
             'Content-Type': 'application/json',
             Accept: 'application/json',
+            Authorization: `Bearer ${token}`
           },
         });
 
@@ -91,7 +98,23 @@ export default function AllMpersonnel({ }) {
   const handleToggleSidebar = () => {
     setIsActive(!isActive);
   };
-
+  const searchMPersonnel = async () => {
+    try {
+      const response = await fetch(`http://localhost:5000/searchmpersonnel?keyword=${searchKeyword}`, {
+        headers: {
+          Authorization: `Bearer ${token}` // เพิ่ม Authorization header เพื่อส่ง token ในการร้องขอค้นหา
+        }
+        });
+      const searchData = await response.json();
+      if (response.ok) {
+        setData(searchData.data); // อัพเดทข้อมูลคู่มือที่ได้จากการค้นหา
+      } else {
+        console.error('Error during search:', searchData.status);
+      }
+    } catch (error) {
+      console.error('Error during search:', error);
+    }
+  };
   return (
     <main className="body">
       <div className={`sidebar ${isActive ? 'active' : ''}`}>
@@ -134,7 +157,7 @@ export default function AllMpersonnel({ }) {
             <div class="profile_details">
               <i class="bi bi-person" onClick={() => navigate("/profile")}></i>
               <div class="name_job">
-                <div class="name"><li onClick={() => navigate("/profile")}>{adminData && adminData.username}</li></div>
+                <div class="name"><li onClick={() => navigate("/profile")}>{adminData ? adminData.username : "Loading..."}</li></div>
               </div>
             </div>
             <i class='bi bi-box-arrow-right' id="log_out" onClick={logOut}></i>
@@ -158,6 +181,18 @@ export default function AllMpersonnel({ }) {
             </li>
           </ul>
         </div>
+
+         {/*ค้นหา */}
+         <div className="search-bar">
+        <input
+          type="text"
+          placeholder="ค้นหา"
+          value={searchKeyword}
+          onChange={(e) => setSearchKeyword(e.target.value) } 
+        />
+        <button onClick={searchMPersonnel}>ค้นหา</button>
+        </div>
+
         <div className="toolbar">
           <button onClick={add} className="bi bi-plus-circle btn btn-outline py-1 px-4">
             เพิ่มบุคลากร

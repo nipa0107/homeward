@@ -12,18 +12,14 @@ export default function Home({ }) {
   const [data, setData] = useState([]);
   const navigate = useNavigate();
   const [adminData, setAdminData] = useState("");
-  const [caremanual, setCaremanual] = useState("");
   const [isActive, setIsActive] = useState(false);
+  const [searchKeyword, setSearchKeyword] = useState(""); //ค้นหา
+  const [token, setToken] = useState('');
 
-  useEffect(() => {
-    getAllCaremanual();
-  }, []);
-
-  const add = () => {
-    window.location.href = "./addcaremanual";
-  };
+ 
   useEffect(() => {
     const token = window.localStorage.getItem("token");
+    setToken(token); 
     if (token) {
       fetch("http://localhost:5000/profile", {
         method: "POST",
@@ -41,15 +37,28 @@ export default function Home({ }) {
         .then((data) => {
           console.log(data)
           setAdminData(data.data);
+        })  
+        .catch((error) => {
+          // เกิดข้อผิดพลาดในการตรวจสอบ token
+          console.error("Error verifying token:", error);
+          // ลบ token ใน localStorage และเปลี่ยนเส้นทางไปยังหน้าเข้าสู่ระบบ
+          logOut();
         });
+    } else {
+      // หากไม่มี token ใน localStorage ให้เปลี่ยนเส้นทางไปยังหน้าเข้าสู่ระบบ
+      logOut();
     }
+    getAllCaremanual();
   }, []); //ส่งไปครั้งเดียว
 
 
 
   const getAllCaremanual = () => {
     fetch("http://localhost:5000/allcaremanual", {
-      method: "GET"
+      method: "GET",
+      headers: {
+        Authorization: `Bearer ${token}` // เพิ่ม Authorization header เพื่อส่ง token ในการร้องขอ
+      }
     })
       .then((res) => res.json())
       .then((data) => {
@@ -62,6 +71,7 @@ export default function Home({ }) {
     window.localStorage.clear();
     window.location.href = "./";
   };
+
   const deleteCaremanual = async (id, caremanual_name) => {
     if (window.confirm(`คุณต้องการลบ ${caremanual_name} หรือไม่ ?`)) {
       try {
@@ -70,6 +80,7 @@ export default function Home({ }) {
           headers: {
             'Content-Type': 'application/json',
             Accept: 'application/json',
+            Authorization: `Bearer ${token}`
           },
         });
 
@@ -90,6 +101,26 @@ export default function Home({ }) {
   // bi-list
   const handleToggleSidebar = () => {
     setIsActive(!isActive);
+  };
+
+  //ค้นหา
+
+  const searchCaremanual = async () => {
+    try {
+      const response = await fetch(`http://localhost:5000/searchcaremanual?keyword=${searchKeyword}`, {
+        headers: {
+          Authorization: `Bearer ${token}` // เพิ่ม Authorization header เพื่อส่ง token ในการร้องขอค้นหา
+        }
+        });
+      const searchData = await response.json();
+      if (response.ok) {
+        setData(searchData.data); // อัพเดทข้อมูลคู่มือที่ได้จากการค้นหา
+      } else {
+        console.error('Error during search:', searchData.status);
+      }
+    } catch (error) {
+      console.error('Error during search:', error);
+    }
   };
 
   return (
@@ -117,7 +148,7 @@ export default function Home({ }) {
             </a>
           </li>
           <li>
-            <a href="#" onClick={() => navigate("/allequip", { state: adminData })}>
+            <a href="#" onClick={() => navigate("/allequip")}>
               <i class="bi bi-prescription2"></i>
               <span class="links_name" >จัดการอุปกรณ์ทางการแพทย์</span>
             </a>
@@ -158,22 +189,48 @@ export default function Home({ }) {
             </li>
           </ul>
         </div>
+       {/*ค้นหา */}
+        <div className="search-bar">
+        <input
+          type="text"
+          placeholder="ค้นหา"
+          value={searchKeyword}
+          onChange={(e) => setSearchKeyword(e.target.value) } 
+        />
+        <button onClick={searchCaremanual}>ค้นหา</button>
+        </div>
+
+
         <div className="toolbar">
+
           <button onClick={() => navigate("/addcaremanual")} className="bi bi-plus-circle btn btn-outline py-1 px-4">
             เพิ่มคู่มือ
           </button>
           <p className="countadmin">จำนวน : {data.length} คู่มือ</p>
         </div>
+
+
+      
         <div className="content">
           {data == null
             ? ""
             : data.map((i) => {
+              //แปลงเวลา
+              const formattedDate = new Intl.DateTimeFormat('th-TH', {
+                day: 'numeric',
+                month: 'long',
+                year: 'numeric',
+                hour: 'numeric',
+                minute: 'numeric',
+                second: 'numeric',
+              }).format(new Date(i.updatedAt));
               return (
                 <div class="adminall card mb-3 ">
                   <div class="card-body">
                     <img src={deleteimg} className="deleteimg" alt="deleteimg" onClick={() => deleteCaremanual(i._id, i.caremanual_name)}></img><span></span>
                     <img src={editimg} className="editimg" alt="editimg" onClick={() => navigate("/updatecaremanual", { state: { id: i._id, caremanual: i } })}></img>
                     <h5 class="card-title">{i.caremanual_name}</h5>
+                    <h5 class="card-title">แก้ไขครั้งล่าสุดเมื่อ : {formattedDate}</h5>
                   </div>
                 </div>
               );

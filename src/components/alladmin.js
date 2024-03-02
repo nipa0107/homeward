@@ -11,9 +11,12 @@ export default function Alladmin({ }) {
   const [data, setData] = useState([]);
   const [adminData, setAdminData] = useState("");
   const [isActive, setIsActive] = useState(false);
+  const [searchKeyword, setSearchKeyword] = useState(""); //ค้นหา
+  const [token, setToken] = useState('');
 
   useEffect(() => {
     const token = window.localStorage.getItem("token");
+    setToken(token); 
     if (token) {
       fetch("http://localhost:5000/profile", {
         method: "POST",
@@ -22,6 +25,7 @@ export default function Alladmin({ }) {
           "Content-Type": "application/json",
           Accept: "application/json",
           "Access-Control-Allow-Origin": "*",
+        
         },
         body: JSON.stringify({
           token: token,
@@ -39,6 +43,9 @@ export default function Alladmin({ }) {
   const getAllUser = () => {
     fetch("http://localhost:5000/alladmin", {
       method: "GET",
+      headers: {
+        Authorization: `Bearer ${token}` // เพิ่ม Authorization header เพื่อส่ง token ในการร้องขอ
+      }
     })
       .then((res) => res.json())
       .then((data) => {
@@ -55,6 +62,7 @@ export default function Alladmin({ }) {
           headers: {
             'Content-Type': 'application/json',
             Accept: 'application/json',
+            Authorization: `Bearer ${token}`
           },
         });
 
@@ -75,9 +83,7 @@ export default function Alladmin({ }) {
 
 
 
-  const home = () => {
-    window.location.href = "./home";
-  };
+
   const add = () => {
     window.location.href = "./addadmin";
   };
@@ -88,6 +94,25 @@ export default function Alladmin({ }) {
   // bi-list
   const handleToggleSidebar = () => {
     setIsActive(!isActive);
+  };
+
+  const searchAdmins = async () => {
+    try {
+      const response = await fetch(`http://localhost:5000/searchadmin?keyword=${searchKeyword}`, {
+      headers: {
+        Authorization: `Bearer ${token}` // เพิ่ม Authorization header เพื่อส่ง token ในการร้องขอค้นหา
+      }
+      });
+      
+      const searchData = await response.json();
+      if (response.ok) {
+        setData(searchData.data); // อัพเดทข้อมูลคู่มือที่ได้จากการค้นหา
+      } else {
+        console.error('Error during search:', searchData.status);
+      }
+    } catch (error) {
+      console.error('Error during search:', error);
+    }
   };
 
   return (
@@ -156,6 +181,19 @@ export default function Alladmin({ }) {
             </li>
           </ul>
         </div>
+
+        
+         {/*ค้นหา */}
+         <div className="search-bar">
+        <input
+          type="text"
+          placeholder="ค้นหา"
+          value={searchKeyword}
+          onChange={(e) => setSearchKeyword(e.target.value) } 
+        />
+        <button onClick={searchAdmins}>ค้นหา</button>
+        </div>
+
         <div className="toolbar">
           <button onClick={add} className="bi bi-plus-circle btn btn-outline py-1 px-4">
             เพิ่มแอดมิน
@@ -165,7 +203,7 @@ export default function Alladmin({ }) {
         <div className="content">
           {data.map((i) => {
             return (
-              <div class="adminall card mb-3 ">
+              <div key={i._id} class="adminall card mb-3 ">
                 <div class="card-body">
                   <img src={deleteimg} className="deleteimg" alt="deleteimg" onClick={() => deleteAdmin(i._id, i.username)}></img>
                   <h5 class="card-title">{i.username}</h5>

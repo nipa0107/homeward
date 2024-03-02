@@ -5,9 +5,6 @@ import "../css/alladmin.css"
 import "bootstrap-icons/font/bootstrap-icons.css";
 import logow from "../img/logow.png";
 import { useNavigate } from "react-router-dom";
-import deleteimg from "../img/delete.png";
-import editimg from "../img/edit.png";
-
 
 function Updateadmin() {
   const location = useLocation();
@@ -18,14 +15,32 @@ function Updateadmin() {
   const [adminData, setAdminData] = useState("");
   const [isActive, setIsActive] = useState(false);
   const [error, setError] = useState(""); 
+  const [token, setToken] = useState('');
 
   useEffect(() => {
-    console.log(location);
-  }, [location]);
-
-  const profile = () => {
-    window.location.href = "./profile";
-  };
+    const token = window.localStorage.getItem("token");
+    setToken(token); 
+    if (token) {
+      fetch("http://localhost:5000/profile", {
+        method: "POST",
+        crossDomain: true,
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "application/json",
+          "Access-Control-Allow-Origin": "*",
+        },
+        body: JSON.stringify({
+          token: token,
+        }),
+      })
+        .then((res) => res.json())
+        .then((data) => {
+          console.log(data)
+          console.log(location);
+          setAdminData(data.data);
+        });
+      }
+      }, [location]);
 
   const Updateadmin = () => {
     console.log(password, newPassword, confirmNewPassword);
@@ -36,6 +51,7 @@ function Updateadmin() {
         "Content-Type": "application/json",
         Accept: "application/json",
         "Access-Control-Allow-Origin": "*",
+        Authorization: `Bearer ${token}`
       },
       body: JSON.stringify({
         id: location.state._id,

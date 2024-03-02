@@ -11,9 +11,11 @@ export default function Profile() {
   const navigate = useNavigate();
   const [adminData, setAdminData] = useState("");
   const [isActive, setIsActive] = useState(false);
+  const [token, setToken] = useState('');
 
   useEffect(() => {
     const token = window.localStorage.getItem("token");
+    setToken(token); 
     if (token) {
       fetch("http://localhost:5000/profile", {
         method: "POST",

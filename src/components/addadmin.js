@@ -1,10 +1,10 @@
-import React, { useState } from "react";
-import Alladmin from "./alladmin";
+import React, { useState, useEffect } from "react";
 import "../css/sidebar.css";
 import "../css/alladmin.css"
 import "bootstrap-icons/font/bootstrap-icons.css";
 import logow from "../img/logow.png";
 import { useNavigate } from "react-router-dom";
+
 
 export default function AddAdmin() {
   const [username, setUsername] = useState("");
@@ -16,30 +16,42 @@ export default function AddAdmin() {
   const [adminData, setAdminData] = useState("");
   const [isActive, setIsActive] = useState(false);
   const [error, setError] = useState(""); 
+  const [token, setToken] = useState('');
 
-  const home = () => {
-    window.location.href = "./home";
-  };
+  useEffect(() => {
+    const token = window.localStorage.getItem("token");
+    setToken(token); 
+    if (token) {
+      fetch("http://localhost:5000/profile", {
+        method: "POST",
+        crossDomain: true,
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "application/json",
+          "Access-Control-Allow-Origin": "*",
+        },
+        body: JSON.stringify({
+          token: token,
+        }),
+      })
+        .then((res) => res.json())
+        .then((data) => {
+          console.log(data)
+          setAdminData(data.data);
+        });
+    }
+  }, []); //ส่งไปครั้งเดียว
 
-  const All = () => {
-    window.location.href = "./alladmin";
-  };
 
   const handleSubmit = (e) => {
     e.preventDefault();
-
-
-    // if (password !== confirmPassword) {
-    //   console.log("Passwords do not match");
-    //   return;
-    // }
-
     fetch("http://localhost:5000/addadmin", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
         Accept: "application/json",
         "Access-Control-Allow-Origin": "*",
+        Authorization: `Bearer ${token}`
       },
       body: JSON.stringify({
         username,
@@ -96,7 +108,7 @@ export default function AddAdmin() {
             </a>
           </li>
           <li>
-            <a href="#" onClick={() => navigate("/allequip", { state: adminData })}>
+            <a href="#" onClick={() => navigate("/allequip")}>
               <i class="bi bi-prescription2"></i>
               <span class="links_name" >จัดการอุปกรณ์ทางการแพทย์</span>
             </a>

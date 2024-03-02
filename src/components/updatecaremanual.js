@@ -19,6 +19,7 @@ export default function UpdateCareManual() {
   const [isActive, setIsActive] = useState(false);
   const [selectedFileName, setSelectedFileName] = useState("");
   const [pdfURL, setPdfURL] = useState(null);
+  const [token, setToken] = useState('');
 
   const defaultImageURL =
     "https://gnetradio.com/wp-content/uploads/2019/10/no-image.jpg";
@@ -60,7 +61,9 @@ export default function UpdateCareManual() {
         console.error("Error fetching caremanual data:", error);
       }
     };
+    
     const token = window.localStorage.getItem("token");
+    setToken(token); 
     if (token) {
       fetch("http://localhost:5000/profile", {
         method: "POST",
@@ -105,13 +108,16 @@ export default function UpdateCareManual() {
         {
           method: "POST",
           body: formData,
+          headers: {
+            Authorization: `Bearer ${token}` // เพิ่ม Authorization header เพื่อส่ง token ในการร้องขอ
+          }
         }
       );
 
       if (response.ok) {
         const updatedCaremanual = await response.json();
         console.log("แก้ไขคู่มือแล้ว:", updatedCaremanual);
-        // window.location.href = "./home";
+        window.location.href = "./home";
         console.log(caremanual_name, image, file, detail);
       } else {
         console.error("แก้ไขไม่ได้:", response.statusText);

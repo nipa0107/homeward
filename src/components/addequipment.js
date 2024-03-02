@@ -3,20 +3,20 @@ import "../css/sidebar.css";
 import "../css/alladmin.css"
 import "bootstrap-icons/font/bootstrap-icons.css";
 import logow from "../img/logow.png";
-import { useLocation } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 
 export default function AddEquip({ }) {
   const navigate = useNavigate();
-  const location = useLocation();
   const [equipment_name, setEquipName] = useState("");
   const [equipment_type, setEquipType] = useState("");
   const [validationMessage, setValidationMessage] = useState("");
   const [adminData, setAdminData] = useState("");
   const [isActive, setIsActive] = useState(false);
-  
+  const [token, setToken] = useState('');
+
   useEffect(() => {
     const token = window.localStorage.getItem("token");
+    setToken(token); 
     if (token) {
       fetch("http://localhost:5000/profile", {
         method: "POST",
@@ -32,12 +32,11 @@ export default function AddEquip({ }) {
       })
         .then((res) => res.json())
         .then((data) => {
-          console.log(data);
+          console.log(data)
           setAdminData(data.data);
         });
-    }
-    console.log(location);
-  }, [location]);
+    } 
+  }, []); //ส่งไปครั้งเดียว
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -53,11 +52,12 @@ export default function AddEquip({ }) {
         "Content-Type": "application/json",
         Accept: "application/json",
         "Access-Control-Allow-Origin": "*",
+        Authorization: `Bearer ${token}`
       },
       body: JSON.stringify({
         equipment_name,
         equipment_type,
-        adminId: location.state._id,
+        // adminId: location.state._id,
       }),
     })
       .then((res) => res.json())
