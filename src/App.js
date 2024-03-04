@@ -16,7 +16,8 @@ import AddMpersonnel from "./components/addmpersonnel";
 import AddCaremanual from "./components/addcaremanual";
 import Reset from "./components/forgetpassword";
 import UpdateCareManual from "./components/updatecaremanual";
-
+import AddUser from "./components/adduser";
+import AllUser from "./components/alluser";
 
 const PrivateRoute = ({ element, isLoggedIn }) => {
   return isLoggedIn === "true" ? (
@@ -111,6 +112,19 @@ function App() {
             }
           />
 
+  {/* ที่เพิ่ม */}
+          <Route
+            path="/adduser"
+            element={
+            <PrivateRoute element={<AddUser/>} isLoggedIn={isLoggedIn} />
+            }
+          />
+           <Route
+            path="/alluser"
+            element={
+            <PrivateRoute element={<AllUser/>} isLoggedIn={isLoggedIn} />
+            }
+          /> 
           <Route path="/forgetpassword" element={<Reset />} />
 
         </Routes>
