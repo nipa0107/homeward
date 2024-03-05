@@ -152,11 +152,11 @@ function Updateadmin() {
             <li className="arrow">
               <i class="bi bi-chevron-double-right"></i>
             </li>
-            <li><a>แก้ไขโปรไฟล์</a>
+            <li><a>แก้ไขรหัสผ่าน</a>
             </li>
           </ul>
         </div>
-        <h3>แก้ไขโปรไฟล์</h3>
+        <h3>แก้ไขรหัสผ่าน</h3>
         <div className="formcontainerpf">
           <div className="auth-inner">
             รหัสผ่านเก่า
