@@ -122,6 +122,12 @@ export default function Home({ }) {
       console.error('Error during search:', error);
     }
   };
+  //ค้นหาโดย กด Enter 
+  const handleKeyDown = (e) => {
+    if (e.key === 'Enter') {
+      searchCaremanual();
+    }
+  };
 
   return (
     <main className="body">
@@ -170,13 +176,13 @@ export default function Home({ }) {
             </a>
           </li>
           <div class="nav-logout">
-          <li>
-            <a href="#" onClick={logOut}>
-            <i class='bi bi-box-arrow-right' id="log_out" onClick={logOut}></i>
-              <span class="links_name" >ออกจากระบบ</span>
-            </a>
-          </li>
-        </div>
+            <li>
+              <a href="#" onClick={logOut}>
+                <i class='bi bi-box-arrow-right' id="log_out" onClick={logOut}></i>
+                <span class="links_name" >ออกจากระบบ</span>
+              </a>
+            </li>
+          </div>
         </ul>
       </div>
       <div className="home_content">
@@ -209,11 +215,12 @@ export default function Home({ }) {
         {/*ค้นหา */}
         <div className="search-bar">
           <input
-          className="search-text"
+            className="search-text"
             type="text"
             placeholder="ค้นหา"
             value={searchKeyword}
-            onChange={(e) => setSearchKeyword(e.target.value) }
+            onChange={(e) => setSearchKeyword(e.target.value)}
+            onKeyDown={handleKeyDown}
           />
           <button onClick={searchCaremanual} className="btn btn-outline py-1 px-4">ค้นหา</button>
         </div>
@@ -230,10 +237,11 @@ export default function Home({ }) {
 
 
         <div className="content">
-          {data == null
-            ? ""
-            : data.map((i) => {
-              //แปลงเวลา
+          {data.length === 0 ? (
+            <p className="not-found-data">ไม่พบข้อมูลที่ค้นหา</p>
+          ) : (
+            data.map((i) => {
+              // แปลงเวลา
               const formattedDate = new Intl.DateTimeFormat('th-TH', {
                 day: 'numeric',
                 month: 'long',
@@ -245,14 +253,26 @@ export default function Home({ }) {
               return (
                 <div class="adminall card mb-3 ">
                   <div class="card-body">
-                    <img src={deleteimg} className="deleteimg" alt="deleteimg" onClick={() => deleteCaremanual(i._id, i.caremanual_name)}></img><span></span>
-                    <img src={editimg} className="editimg" alt="editimg" onClick={() => navigate("/updatecaremanual", { state: { id: i._id, caremanual: i } })}></img>
+                    <img
+                      src={deleteimg}
+                      className="deleteimg"
+                      alt="deleteimg"
+                      onClick={() => deleteCaremanual(i._id, i.caremanual_name)}
+                    ></img>
+                    <span></span>
+                    <img
+                      src={editimg}
+                      className="editimg"
+                      alt="editimg"
+                      onClick={() => navigate("/updatecaremanual", { state: { id: i._id, caremanual: i } })}
+                    ></img>
                     <h5 class="card-title">{i.caremanual_name}</h5>
                     <h5 class="card-title">แก้ไขครั้งล่าสุดเมื่อ : {formattedDate}</h5>
                   </div>
                 </div>
               );
-            })}
+            })
+          )}
         </div>
       </div>
     </main>
