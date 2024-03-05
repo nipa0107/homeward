@@ -134,6 +134,12 @@ export default function AllMpersonnel({ }) {
             </a>
           </li>
           <li>
+            <a href="#" onClick={() => navigate("/alluser")}>
+              <i class="bi bi-person-plus"></i>
+              <span class="links_name" >จัดการข้อมูลผู้ป่วย</span>
+            </a>
+          </li>
+          <li>
             <a href="#" onClick={() => navigate("/allmpersonnel")}>
               <i class="bi bi-people"></i>
               <span class="links_name" >จัดการข้อมูลบุคลากร</span>
@@ -151,21 +157,24 @@ export default function AllMpersonnel({ }) {
               <span class="links_name" >จัดการแอดมิน</span>
             </a>
           </li>
+          <li>
+            <a href="#" onClick={logOut}>
+              <i class="bi bi-box-arrow-right"></i>
+              <span class="links_name" >ออกจากระบบ</span>
+            </a>
+          </li>
         </ul>
-        <div class="profile_content">
-          <div className="profile">
-            <div class="profile_details">
-              <i class="bi bi-person" onClick={() => navigate("/profile")}></i>
-              <div class="name_job">
-                <div class="name"><li onClick={() => navigate("/profile")}>{adminData ? adminData.username : "Loading..."}</li></div>
-              </div>
-            </div>
-            <i class='bi bi-box-arrow-right' id="log_out" onClick={logOut}></i>
-          </div>
-        </div>
       </div>
       <div className="home_content">
         <div className="header">จัดการข้อมูลบุคลากร</div>
+        <div class="profile_details ">
+          <li>
+            <a href="#" onClick={() => navigate("/profile")}>
+              <i class="bi bi-person"></i>
+              <span class="links_name" >{adminData && adminData.username}</span>
+            </a>
+          </li>
+        </div>
         <hr></hr>
         <div className="breadcrumbs">
           <ul>
@@ -185,12 +194,13 @@ export default function AllMpersonnel({ }) {
          {/*ค้นหา */}
          <div className="search-bar">
         <input
+        className="search-text"
           type="text"
           placeholder="ค้นหา"
           value={searchKeyword}
           onChange={(e) => setSearchKeyword(e.target.value) } 
         />
-        <button onClick={searchMPersonnel}>ค้นหา</button>
+        <button onClick={searchMPersonnel} className="btn btn-outline py-1 px-4">ค้นหา</button>
         </div>
 
         <div className="toolbar">
