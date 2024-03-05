@@ -16,10 +16,10 @@ export default function Home({ }) {
   const [searchKeyword, setSearchKeyword] = useState(""); //ค้นหา
   const [token, setToken] = useState('');
 
- 
+
   useEffect(() => {
     const token = window.localStorage.getItem("token");
-    setToken(token); 
+    setToken(token);
     if (token) {
       fetch("http://localhost:5000/profile", {
         method: "POST",
@@ -37,7 +37,7 @@ export default function Home({ }) {
         .then((data) => {
           console.log(data)
           setAdminData(data.data);
-        })  
+        })
         .catch((error) => {
           // เกิดข้อผิดพลาดในการตรวจสอบ token
           console.error("Error verifying token:", error);
@@ -111,7 +111,7 @@ export default function Home({ }) {
         headers: {
           Authorization: `Bearer ${token}` // เพิ่ม Authorization header เพื่อส่ง token ในการร้องขอค้นหา
         }
-        });
+      });
       const searchData = await response.json();
       if (response.ok) {
         setData(searchData.data); // อัพเดทข้อมูลคู่มือที่ได้จากการค้นหา
@@ -142,14 +142,14 @@ export default function Home({ }) {
             </a>
           </li>
 
-{/* เพิ่มเพิ่มผู้ป่วย */}
+          {/* เพิ่มเพิ่มผู้ป่วย */}
           <li>
             <a href="#" onClick={() => navigate("/alluser")}>
               <i class="bi bi-book"></i>
               <span class="links_name" >จัดการข้อมูลผู้ป่วย</span>
             </a>
           </li>
-{/* เพิ่มเพิ่มผู้ป่วย */}
+          {/* เพิ่มเพิ่มผู้ป่วย */}
 
           <li>
             <a href="#" onClick={() => navigate("/allmpersonnel")}>
@@ -169,21 +169,25 @@ export default function Home({ }) {
               <span class="links_name" >จัดการแอดมิน</span>
             </a>
           </li>
+          <li>
+            <a href="#" onClick={logOut}>
+              <i class="bi bi-box-arrow-right"></i>
+              <span class="links_name" >ออกจากระบบ</span>
+            </a>
+          </li>
         </ul>
-        <div class="profile_content">
-          <div className="profile">
-            <div class="profile_details">
-              <i class="bi bi-person" onClick={() => navigate("/profile")}></i>
-              <div class="name_job">
-                <div class="name"><li onClick={() => navigate("/profile")}>{adminData && adminData.username}</li></div>
-              </div>
-            </div>
-            <i class='bi bi-box-arrow-right' id="log_out" onClick={logOut}></i>
-          </div>
-        </div>
       </div>
       <div className="home_content">
-        <div className="header">จัดการข้อมูลคู่มือการดูแลผู้ป่วย</div>
+        <div className="header">จัดการข้อมูลคู่มือการดูแลผู้ป่วย
+        </div>
+        <div class="profile_details ">
+          <li>
+            <a href="#" onClick={() => navigate("/profile")}>
+              <i class="bi bi-person"></i>
+              <span class="links_name" >{adminData && adminData.username}</span>
+            </a>
+          </li>
+        </div>
         <hr></hr>
         <div className="breadcrumbs">
           <ul>
@@ -197,17 +201,18 @@ export default function Home({ }) {
             </li>
             <li><a>จัดการข้อมูลคู่มือการดูแลผู้ป่วย</a>
             </li>
+
           </ul>
         </div>
-       {/*ค้นหา */}
+        {/*ค้นหา */}
         <div className="search-bar">
-        <input
-          type="text"
-          placeholder="ค้นหา"
-          value={searchKeyword}
-          onChange={(e) => setSearchKeyword(e.target.value) } 
-        />
-        <button onClick={searchCaremanual}>ค้นหา</button>
+          <input
+            type="text"
+            placeholder="ค้นหา"
+            value={searchKeyword}
+            onChange={(e) => setSearchKeyword(e.target.value)}
+          />
+          <button onClick={searchCaremanual}>ค้นหา</button>
         </div>
 
 
@@ -220,7 +225,7 @@ export default function Home({ }) {
         </div>
 
 
-      
+
         <div className="content">
           {data == null
             ? ""
