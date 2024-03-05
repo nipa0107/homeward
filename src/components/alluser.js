@@ -94,7 +94,7 @@ export default function AllUser({ }) {
 
   const searchAdmins = async () => {
     try {
-      const response = await fetch(`http://localhost:5000/searchadmin?keyword=${searchKeyword}`, {
+      const response = await fetch(`http://localhost:5000/searchuser?keyword=${searchKeyword}`, {
       headers: {
         Authorization: `Bearer ${token}` // เพิ่ม Authorization header เพื่อส่ง token ในการร้องขอค้นหา
       }
