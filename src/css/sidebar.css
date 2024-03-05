@@ -182,8 +182,24 @@
 .profile_details li a:hover {
     color: #4ab4ec;
 }
+.sidebar .nav-logout {
+    position: absolute;
+    color: white;
+    bottom: 0;
+    left: 88; /* Change this value to 0 */
+    list-style-type: none;
+    width: 93%;
+}
 
-
+.nav-logout li i {
+    margin-top: 4px;
+    min-width: 55px;
+}
+.sidebar .nav-logout li a:hover {
+    color: black; 
+    background-color: transparent; 
+    transition: none; 
+}
 
 
 

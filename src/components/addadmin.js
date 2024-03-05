@@ -102,6 +102,12 @@ export default function AddAdmin() {
             </a>
           </li>
           <li>
+            <a href="#" onClick={() => navigate("/alluser")}>
+              <i class="bi bi-person-plus"></i>
+              <span class="links_name" >จัดการข้อมูลผู้ป่วย</span>
+            </a>
+          </li>
+          <li>
             <a href="#" onClick={() => navigate("/allmpersonnel")}>
               <i class="bi bi-people"></i>
               <span class="links_name" >จัดการข้อมูลบุคลากร</span>
@@ -119,12 +125,14 @@ export default function AddAdmin() {
               <span class="links_name" >จัดการแอดมิน</span>
             </a>
           </li>
+          <div class="nav-logout">
           <li>
             <a href="#" onClick={logOut}>
-              <i class="bi bi-box-arrow-right"></i>
+            <i class='bi bi-box-arrow-right' id="log_out" onClick={logOut}></i>
               <span class="links_name" >ออกจากระบบ</span>
             </a>
           </li>
+        </div>
         </ul>
       </div>
       <div className="home_content">
