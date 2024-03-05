@@ -157,12 +157,14 @@ export default function AllMpersonnel({ }) {
               <span class="links_name" >จัดการแอดมิน</span>
             </a>
           </li>
+          <div class="nav-logout">
           <li>
             <a href="#" onClick={logOut}>
-              <i class="bi bi-box-arrow-right"></i>
+            <i class='bi bi-box-arrow-right' id="log_out" onClick={logOut}></i>
               <span class="links_name" >ออกจากระบบ</span>
             </a>
           </li>
+        </div>
         </ul>
       </div>
       <div className="home_content">
