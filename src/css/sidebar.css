@@ -111,6 +111,22 @@
 /* ค้นหา */
 /* .sidebar ul li{ 
 } */
+.search-bar {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 20px; 
+}
+.search-text{
+    border-radius: 5px;
+    margin-top: 20px;
+    padding: 3px;
+    width: 250px;
+    border: 1.4px solid rgb(187, 186, 186) ;
+}
+.search-bar input {
+    margin-right: 10px; 
+}
 
 .sidebar ul li a {
     color: white;

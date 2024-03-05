@@ -207,12 +207,13 @@ export default function Home({ }) {
         {/*ค้นหา */}
         <div className="search-bar">
           <input
+          className="search-text"
             type="text"
             placeholder="ค้นหา"
             value={searchKeyword}
-            onChange={(e) => setSearchKeyword(e.target.value)}
+            onChange={(e) => setSearchKeyword(e.target.value) }
           />
-          <button onClick={searchCaremanual}>ค้นหา</button>
+          <button onClick={searchCaremanual} className="btn btn-outline py-1 px-4">ค้นหา</button>
         </div>
 
 
