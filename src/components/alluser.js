@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import deleteimg from "../img/delete.png";
+import editimg from "../img/edit.png";
 import "../css/alladmin.css";
 import "../css/sidebar.css";
 import logow from "../img/logow.png";
@@ -54,11 +55,10 @@ export default function AllUser({ }) {
       });
   };
 
-  //แก้ด้วยมันเป็นของ admin
-  const deleteAdmin = async (id, username) => {
+  const deleteUser = async (id, username) => {
     if (window.confirm(`คุณต้องการลบ ${username} หรือไม่ ?`)) {
       try {
-        const response = await fetch(`http://localhost:5000/deleteAdmin/${id}`, {
+        const response = await fetch(`http://localhost:5000/deleteUser/${id}`, {
           method: 'DELETE',
           headers: {
             'Content-Type': 'application/json',
@@ -92,7 +92,7 @@ export default function AllUser({ }) {
     setIsActive(!isActive);
   };
 
-  const searchAdmins = async () => {
+  const searchUser = async () => {
     try {
       const response = await fetch(`http://localhost:5000/searchuser?keyword=${searchKeyword}`, {
       headers: {
@@ -199,7 +199,7 @@ export default function AllUser({ }) {
           value={searchKeyword}
           onChange={(e) => setSearchKeyword(e.target.value) } 
         />
-        <button onClick={searchAdmins} className="btn btn-outline py-1 px-4">ค้นหา</button>
+        <button onClick={searchUser} className="btn btn-outline py-1 px-4">ค้นหา</button>
         </div>
 
         <div className="toolbar">
@@ -208,18 +208,45 @@ export default function AllUser({ }) {
           </button>
           <p className="countadmin">จำนวน : {data.length} คน</p>
         </div>
+
+
         <div className="content">
-          {data.map((i) => {
+          {/* {data.map((i) => {
             return (
               <div key={i._id} class="adminall card mb-3 ">
                 <div class="card-body">
-                  <img src={deleteimg} className="deleteimg" alt="deleteimg" onClick={() => deleteAdmin(i._id, i.username)}></img>
+                  <img src={deleteimg} className="deleteimg" alt="deleteimg" onClick={() => deleteUser(i._id, i.username)}></img>
                   <h5 class="card-title">{i.username}</h5>
                 </div>
               </div>
             );
           })}
-        </div>
+        </div> */}
+
+        <div className="cardall card mb-3">
+            <table className="table">
+              <thead >
+                <tr>
+                  <th>ชื่อผู้ใช้</th>
+                  <th>ชื่อ-สกุล</th>
+                  <th>คำสั่ง</th>
+                </tr>
+              </thead>
+              <tbody>
+                {data.map((i, index) => {
+                  return (
+                    <tr key={index}>
+                      <td>{i.username}</td>
+                      <td>{i.name}</td>
+                      <td><img src={editimg} className="editimg" alt="editimg" onClick={() => navigate("/updateuser", { state: { id: i._id, user: i } })}></img></td>
+                      <td><img src={deleteimg} className="deleteimg" alt="deleteimg" onClick={() => deleteUser(i._id, i.username, i.name)}></img></td>
+                    </tr>
+                  );
+                })}
+              </tbody>
+            </table>
+          </div>
+      </div>
       </div>
     </main>
   );

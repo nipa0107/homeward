@@ -237,25 +237,26 @@ export default function UpdateCareManual() {
 
           <div className="mb-3">
             <label>รูปภาพ</label> <br />
-
+            <div className="centered-image">
             {image ? (
               <img
+              id="previewImage"
                 src={
                   typeof image === "string"
                     ? require(`../images/${image}`)
                     : URL.createObjectURL(image)
                 }
                 alt="Caremanual Image"
-                style={{ maxWidth: "100%", maxHeight: "200px" }}
               />
             ) : (
               <img
                 id="previewImage"
                 src={defaultImageURL}
                 alt="Default Image"
-                style={{ maxWidth: "100%", maxHeight: "200px" }}
               />
             )}
+            </div>
+            
             <br />
             <input
               type="file"

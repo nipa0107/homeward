@@ -212,6 +212,7 @@ export default function AllMpersonnel({ }) {
           <p className="countadmin">จำนวน : {data.length} คน</p>
         </div>
         <div className="content">
+
           <div className="cardall card mb-3">
             <table className="table">
               <thead >
@@ -234,6 +235,7 @@ export default function AllMpersonnel({ }) {
               </tbody>
             </table>
           </div>
+          
         </div>
       </div>
     </main>

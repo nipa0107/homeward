@@ -24,7 +24,7 @@ export default function AddCaremanual({ }) {
     // const preview = document.getElementById("previewImage");
     // if (preview) {
     //   preview.src = defaultImageURL;
-    
+
     setDefaultImageURL(defaultImageURL);
     
     const token = window.localStorage.getItem("token");
@@ -195,13 +195,15 @@ export default function AddCaremanual({ }) {
             </div>
             <div className="mb-3">
               <label>รูปภาพ</label> <br />
+              <div className="centered-image">
               <img
                 // แสดงรูปที่เลือก
                 id="previewImage"
                 src={defaultImageURL}
                 alt="Preview"
-                style={{ maxWidth: "20%" }}
-              /> <br /><br />
+                style={{ }}
+              /></div> <br />
+
               <input
                 type="file"
                 className="form-control"

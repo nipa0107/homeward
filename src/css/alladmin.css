@@ -68,3 +68,16 @@
     background-color: #7e7e7e;
     color: white;
 }
+
+/* รูปที่แสดง */
+.centered-image {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    /* เพิ่มคำสั่งอื่นๆ ตามต้องการ */
+  }
+
+  .centered-image #previewImage{
+   max-width:30%;
+
+  }

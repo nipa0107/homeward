@@ -37,10 +37,10 @@ export default function Alladmin({ }) {
           setAdminData(data.data);
         });
     }
-    getAllUser();
+    getAllAdmin();
   }, []);
 
-  const getAllUser = () => {
+  const getAllAdmin = () => {
     fetch("http://localhost:5000/alladmin", {
       method: "GET",
       headers: {
@@ -70,7 +70,7 @@ export default function Alladmin({ }) {
 
         if (response.ok) {
           alert(data.data);
-          getAllUser();
+          getAllAdmin();
         } else {
           console.error('Error during deletion:', data.data);
         }
