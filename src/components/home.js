@@ -145,7 +145,7 @@ export default function Home({ }) {
           {/* เพิ่มเพิ่มผู้ป่วย */}
           <li>
             <a href="#" onClick={() => navigate("/alluser")}>
-              <i class="bi bi-book"></i>
+              <i class="bi bi-person-plus"></i>
               <span class="links_name" >จัดการข้อมูลผู้ป่วย</span>
             </a>
           </li>
