@@ -13,7 +13,7 @@
    border-radius: 10px;
    width: 5vh;
    /* float: right; */
-   margin: auto auto;
+   margin: auto 0.5vh;
 }
 .adminall .card-body .deleteimg{
     float: right;

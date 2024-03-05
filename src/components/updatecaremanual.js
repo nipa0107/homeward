@@ -5,6 +5,7 @@ import "../css/alladmin.css";
 import "bootstrap-icons/font/bootstrap-icons.css";
 import logow from "../img/logow.png";
 import { useNavigate } from "react-router-dom";
+import imgdefault from "../img/image.png";
 
 
 export default function UpdateCareManual() {
@@ -21,8 +22,9 @@ export default function UpdateCareManual() {
   const [pdfURL, setPdfURL] = useState(null);
   const [token, setToken] = useState('');
 
-  const defaultImageURL =
-    "https://gnetradio.com/wp-content/uploads/2019/10/no-image.jpg";
+  const defaultImageURL = imgdefault
+  // const defaultImageURL =
+  //   "https://gnetradio.com/wp-content/uploads/2019/10/no-image.jpg";
 
   console.log(caremanual);
 

@@ -3,6 +3,7 @@ import "../css/sidebar.css";
 import "../css/alladmin.css"
 import "bootstrap-icons/font/bootstrap-icons.css";
 import logow from "../img/logow.png";
+import imgdefault from "../img/image.png";
 import { useNavigate } from "react-router-dom";
 
 
@@ -11,7 +12,7 @@ export default function AddCaremanual({ }) {
   const [file, setFile] = useState(null);
   const [image, setImage] = useState(null);
   const [detail, setDetail] = useState("");
-  const defaultImageURL = "https://gnetradio.com/wp-content/uploads/2019/10/no-image.jpg";
+  const [defaultImageURL, setDefaultImageURL] = useState(imgdefault); // เปลี่ยน defaultImageURL เป็น imgdefault
   const navigate = useNavigate();
   const [adminData, setAdminData] = useState("");
   const [isActive, setIsActive] = useState(false);
@@ -20,10 +21,12 @@ export default function AddCaremanual({ }) {
   const [token, setToken] = useState('');
 
   useEffect(() => {
-    const preview = document.getElementById("previewImage");
-    if (preview) {
-      preview.src = defaultImageURL;
-    }
+    // const preview = document.getElementById("previewImage");
+    // if (preview) {
+    //   preview.src = defaultImageURL;
+    
+    setDefaultImageURL(defaultImageURL);
+    
     const token = window.localStorage.getItem("token");
     setToken(token); 
     if (token) {
