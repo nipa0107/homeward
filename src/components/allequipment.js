@@ -16,7 +16,7 @@ export default function AllEquip({ }) {
 
   useEffect(() => {
     const token = window.localStorage.getItem("token");
-    setToken(token); 
+    setToken(token);
     if (token) {
       fetch("http://localhost:5000/profile", {
         method: "POST",
@@ -35,7 +35,7 @@ export default function AllEquip({ }) {
           console.log(data)
           setAdminData(data.data);
         });
-    } 
+    }
     getAllEquip();
   }, []); //ส่งไปครั้งเดียว
 
@@ -84,7 +84,7 @@ export default function AllEquip({ }) {
     window.localStorage.clear();
     window.location.href = "./";
   };
-  
+
   // bi-list
   const handleToggleSidebar = () => {
     setIsActive(!isActive);
@@ -96,7 +96,7 @@ export default function AllEquip({ }) {
         headers: {
           Authorization: `Bearer ${token}` // เพิ่ม Authorization header เพื่อส่ง token ในการร้องขอค้นหา
         }
-        });
+      });
       const searchData = await response.json();
       if (response.ok) {
         setData(searchData.data); // อัพเดทข้อมูลคู่มือที่ได้จากการค้นหา
@@ -107,7 +107,12 @@ export default function AllEquip({ }) {
       console.error('Error during search:', error);
     }
   };
-
+  //ค้นหาโดย กด Enter 
+  const handleKeyDown = (e) => {
+    if (e.key === 'Enter') {
+      searchEquipment();
+    }
+  };
   return (
     <main className="body">
       <div className={`sidebar ${isActive ? 'active' : ''}`}>
@@ -151,13 +156,13 @@ export default function AllEquip({ }) {
             </a>
           </li>
           <div class="nav-logout">
-          <li>
-            <a href="#" onClick={logOut}>
-            <i class='bi bi-box-arrow-right' id="log_out" onClick={logOut}></i>
-              <span class="links_name" >ออกจากระบบ</span>
-            </a>
-          </li>
-        </div>
+            <li>
+              <a href="#" onClick={logOut}>
+                <i class='bi bi-box-arrow-right' id="log_out" onClick={logOut}></i>
+                <span class="links_name" >ออกจากระบบ</span>
+              </a>
+            </li>
+          </div>
         </ul>
       </div>
       <div className="home_content">
@@ -186,17 +191,18 @@ export default function AllEquip({ }) {
           </ul>
         </div>
 
- 
-         {/*ค้นหา */}
-         <div className="search-bar">
-        <input
-        className="search-text"
-          type="text"
-          placeholder="ค้นหา"
-          value={searchKeyword}
-          onChange={(e) => setSearchKeyword(e.target.value) } 
-        />
-        <button onClick={searchEquipment} className="btn btn-outline py-1 px-4">ค้นหา</button>
+
+        {/*ค้นหา */}
+        <div className="search-bar">
+          <input
+            className="search-text"
+            type="text"
+            placeholder="ค้นหา"
+            value={searchKeyword}
+            onChange={(e) => setSearchKeyword(e.target.value)}
+            onKeyDown={handleKeyDown}
+          />
+          <button onClick={searchEquipment} className="btn btn-outline py-1 px-4">ค้นหา</button>
         </div>
 
         <div className="toolbar">
@@ -209,29 +215,39 @@ export default function AllEquip({ }) {
           <p className="countadmin">จำนวน : {data.length} ชิ้น</p>
         </div>
         <div className="content">
-          <div className="cardall card mb-3">
-            <table className="table">
-              <thead>
-                <tr>
-                  <th>ชื่ออุปกรณ์</th>
-                  <th>ประเภทอุปกรณ์</th>
-                  <th>คำสั่ง</th>
-                </tr>
-              </thead>
-              <tbody>
-                {data.map((i, index) => {
-                  return (
-                    <tr key={index} >
+          {data.length === 0 ? (
+            <p className="not-found-data">ไม่พบข้อมูลที่ค้นหา</p>
+          ) : (
+            <div className="cardall card mb-3">
+              <table className="table">
+                <thead>
+                  <tr>
+                    <th>ชื่ออุปกรณ์</th>
+                    <th>ประเภทอุปกรณ์</th>
+                    <th>คำสั่ง</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {data.map((i, index) => (
+                    <tr key={index}>
                       <td data-title="">{i.equipment_name}</td>
                       <td>{i.equipment_type}</td>
-                      <td><img src={deleteimg} className="deleteimg" alt="deleteimg" onClick={() => deleteEquipment(i._id, i.equipment_name)}></img></td>
+                      <td>
+                        <img
+                          src={deleteimg}
+                          className="deleteimg"
+                          alt="deleteimg"
+                          onClick={() => deleteEquipment(i._id, i.equipment_name)}
+                        ></img>
+                      </td>
                     </tr>
-                  );
-                })}
-              </tbody>
-            </table>
-          </div>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          )}
         </div>
+
       </div>
     </main>
   );

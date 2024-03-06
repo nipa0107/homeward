@@ -141,16 +141,12 @@ export default function Home({ }) {
               <span class="links_name" >จัดการข้อมูลคู่มือการดูแลผู้ป่วย</span>
             </a>
           </li>
-
-          {/* เพิ่มเพิ่มผู้ป่วย */}
           <li>
             <a href="#" onClick={() => navigate("/alluser")}>
               <i class="bi bi-person-plus"></i>
               <span class="links_name" >จัดการข้อมูลผู้ป่วย</span>
             </a>
           </li>
-          {/* เพิ่มเพิ่มผู้ป่วย */}
-
           <li>
             <a href="#" onClick={() => navigate("/allmpersonnel")}>
               <i class="bi bi-people"></i>

@@ -16,7 +16,7 @@ export default function Alladmin({ }) {
 
   useEffect(() => {
     const token = window.localStorage.getItem("token");
-    setToken(token); 
+    setToken(token);
     if (token) {
       fetch("http://localhost:5000/profile", {
         method: "POST",
@@ -25,7 +25,7 @@ export default function Alladmin({ }) {
           "Content-Type": "application/json",
           Accept: "application/json",
           "Access-Control-Allow-Origin": "*",
-        
+
         },
         body: JSON.stringify({
           token: token,
@@ -99,11 +99,11 @@ export default function Alladmin({ }) {
   const searchAdmins = async () => {
     try {
       const response = await fetch(`http://localhost:5000/searchadmin?keyword=${searchKeyword}`, {
-      headers: {
-        Authorization: `Bearer ${token}` // เพิ่ม Authorization header เพื่อส่ง token ในการร้องขอค้นหา
-      }
+        headers: {
+          Authorization: `Bearer ${token}` // เพิ่ม Authorization header เพื่อส่ง token ในการร้องขอค้นหา
+        }
       });
-      
+
       const searchData = await response.json();
       if (response.ok) {
         setData(searchData.data); // อัพเดทข้อมูลคู่มือที่ได้จากการค้นหา
@@ -114,7 +114,12 @@ export default function Alladmin({ }) {
       console.error('Error during search:', error);
     }
   };
-
+  //ค้นหาโดย กด Enter 
+  const handleKeyDown = (e) => {
+    if (e.key === 'Enter') {
+      searchAdmins();
+    }
+  };
   return (
     <main className="body">
       <div className={`sidebar ${isActive ? 'active' : ''}`}>
@@ -158,13 +163,13 @@ export default function Alladmin({ }) {
             </a>
           </li>
           <div class="nav-logout">
-          <li>
-            <a href="#" onClick={logOut}>
-            <i class='bi bi-box-arrow-right' id="log_out" onClick={logOut}></i>
-              <span class="links_name" >ออกจากระบบ</span>
-            </a>
-          </li>
-        </div>
+            <li>
+              <a href="#" onClick={logOut}>
+                <i class='bi bi-box-arrow-right' id="log_out" onClick={logOut}></i>
+                <span class="links_name" >ออกจากระบบ</span>
+              </a>
+            </li>
+          </div>
         </ul>
       </div>
       <div className="home_content">
@@ -193,17 +198,18 @@ export default function Alladmin({ }) {
           </ul>
         </div>
 
-        
-         {/*ค้นหา */}
-         <div className="search-bar">
-        <input
-        className="search-text"
-          type="text"
-          placeholder="ค้นหา"
-          value={searchKeyword}
-          onChange={(e) => setSearchKeyword(e.target.value) } 
-        />
-        <button onClick={searchAdmins} className="btn btn-outline py-1 px-4">ค้นหา</button>
+
+        {/*ค้นหา */}
+        <div className="search-bar">
+          <input
+            className="search-text"
+            type="text"
+            placeholder="ค้นหา"
+            value={searchKeyword}
+            onChange={(e) => setSearchKeyword(e.target.value)}
+            onKeyDown={handleKeyDown}
+          />
+          <button onClick={searchAdmins} className="btn btn-outline py-1 px-4">ค้นหา</button>
         </div>
 
         <div className="toolbar">
@@ -213,17 +219,25 @@ export default function Alladmin({ }) {
           <p className="countadmin">จำนวน : {data.length} คน</p>
         </div>
         <div className="content">
-          {data.map((i) => {
-            return (
-              <div key={i._id} class="adminall card mb-3 ">
-                <div class="card-body">
-                  <img src={deleteimg} className="deleteimg" alt="deleteimg" onClick={() => deleteAdmin(i._id, i.username)}></img>
-                  <h5 class="card-title">{i.username}</h5>
+          {data.length === 0 ? (
+            <p className="not-found-data">ไม่พบข้อมูลที่ค้นหา</p>
+          ) : (
+            data.map((i) => (
+              <div key={i._id} className="adminall card mb-3 ">
+                <div className="card-body">
+                  <img
+                    src={deleteimg}
+                    className="deleteimg"
+                    alt="deleteimg"
+                    onClick={() => deleteAdmin(i._id, i.username)}
+                  ></img>
+                  <h5 className="card-title">{i.username}</h5>
                 </div>
               </div>
-            );
-          })}
+            ))
+          )}
         </div>
+
       </div>
     </main>
   );
