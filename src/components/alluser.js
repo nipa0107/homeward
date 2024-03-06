@@ -17,7 +17,7 @@ export default function AllUser({ }) {
 
   useEffect(() => {
     const token = window.localStorage.getItem("token");
-    setToken(token); 
+    setToken(token);
     if (token) {
       fetch("http://localhost:5000/profile", {
         method: "POST",
@@ -26,7 +26,7 @@ export default function AllUser({ }) {
           "Content-Type": "application/json",
           Accept: "application/json",
           "Access-Control-Allow-Origin": "*",
-        
+
         },
         body: JSON.stringify({
           token: token,
@@ -95,11 +95,11 @@ export default function AllUser({ }) {
   const searchUser = async () => {
     try {
       const response = await fetch(`http://localhost:5000/searchuser?keyword=${searchKeyword}`, {
-      headers: {
-        Authorization: `Bearer ${token}` // เพิ่ม Authorization header เพื่อส่ง token ในการร้องขอค้นหา
-      }
+        headers: {
+          Authorization: `Bearer ${token}` // เพิ่ม Authorization header เพื่อส่ง token ในการร้องขอค้นหา
+        }
       });
-      
+
       const searchData = await response.json();
       if (response.ok) {
         setData(searchData.data); // อัพเดทข้อมูลคู่มือที่ได้จากการค้นหา
@@ -108,6 +108,12 @@ export default function AllUser({ }) {
       }
     } catch (error) {
       console.error('Error during search:', error);
+    }
+  };
+  //ค้นหาโดย กด Enter 
+  const handleKeyDown = (e) => {
+    if (e.key === 'Enter') {
+      searchUser();
     }
   };
 
@@ -154,13 +160,13 @@ export default function AllUser({ }) {
             </a>
           </li>
           <div class="nav-logout">
-          <li>
-            <a href="#" onClick={logOut}>
-            <i class='bi bi-box-arrow-right' id="log_out" onClick={logOut}></i>
-              <span class="links_name" >ออกจากระบบ</span>
-            </a>
-          </li>
-        </div>
+            <li>
+              <a href="#" onClick={logOut}>
+                <i class='bi bi-box-arrow-right' id="log_out" onClick={logOut}></i>
+                <span class="links_name" >ออกจากระบบ</span>
+              </a>
+            </li>
+          </div>
         </ul>
       </div>
       <div className="home_content">
@@ -189,17 +195,18 @@ export default function AllUser({ }) {
           </ul>
         </div>
 
-        
-         {/*ค้นหา */}
-         <div className="search-bar">
-        <input
-        className="search-text"
-          type="text"
-          placeholder="ค้นหา"
-          value={searchKeyword}
-          onChange={(e) => setSearchKeyword(e.target.value) } 
-        />
-        <button onClick={searchUser} className="btn btn-outline py-1 px-4">ค้นหา</button>
+
+        {/*ค้นหา */}
+        <div className="search-bar">
+          <input
+            className="search-text"
+            type="text"
+            placeholder="ค้นหา"
+            value={searchKeyword}
+            onChange={(e) => setSearchKeyword(e.target.value)}
+            onKeyDown={handleKeyDown}
+          />
+          <button onClick={searchUser} className="btn btn-outline py-1 px-4">ค้นหา</button>
         </div>
 
         <div className="toolbar">
@@ -211,42 +218,47 @@ export default function AllUser({ }) {
 
 
         <div className="content">
-          {/* {data.map((i) => {
-            return (
-              <div key={i._id} class="adminall card mb-3 ">
-                <div class="card-body">
-                  <img src={deleteimg} className="deleteimg" alt="deleteimg" onClick={() => deleteUser(i._id, i.username)}></img>
-                  <h5 class="card-title">{i.username}</h5>
-                </div>
-              </div>
-            );
-          })}
-        </div> */}
-
-        <div className="cardall card mb-3">
-            <table className="table">
-              <thead >
-                <tr>
-                  <th>ชื่อผู้ใช้</th>
-                  <th>ชื่อ-สกุล</th>
-                  <th>คำสั่ง</th>
-                </tr>
-              </thead>
-              <tbody>
-                {data.map((i, index) => {
-                  return (
+          {data.length === 0 ? (
+            <p className="not-found-data">ไม่พบข้อมูลที่ค้นหา</p>
+          ) : (
+            <div className="cardall card mb-3">
+              <table className="table">
+                <thead>
+                  <tr>
+                    <th>ชื่อผู้ใช้</th>
+                    <th>ชื่อ-สกุล</th>
+                    <th>คำสั่ง</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {data.map((i, index) => (
                     <tr key={index}>
                       <td>{i.username}</td>
                       <td>{i.name}</td>
-                      <td><img src={editimg} className="editimg" alt="editimg" onClick={() => navigate("/updateuser", { state: { id: i._id, user: i } })}></img></td>
-                      <td><img src={deleteimg} className="deleteimg" alt="deleteimg" onClick={() => deleteUser(i._id, i.username, i.name)}></img></td>
+                      <td>
+                        <img
+                          src={editimg}
+                          className="editimg"
+                          alt="editimg"
+                          onClick={() => navigate("/updateuser", { state: { id: i._id, user: i } })}
+                        ></img>
+                      </td>
+                      <td>
+                        <img
+                          src={deleteimg}
+                          className="deleteimg"
+                          alt="deleteimg"
+                          onClick={() => deleteUser(i._id, i.username, i.name)}
+                        ></img>
+                      </td>
                     </tr>
-                  );
-                })}
-              </tbody>
-            </table>
-          </div>
-      </div>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          )}
+        </div>
+
       </div>
     </main>
   );
