@@ -70,6 +70,7 @@
     box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.1);
     line-height: 50px;
     padding: 20px;
+    
 }
 
 .filename a {
@@ -97,3 +98,47 @@
     max-width: 30%;
 
   }
+
+
+
+.table-responsive{
+    position: relative; 
+    /* height: 700px */
+} 
+
+.action-icons {
+    /* display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-left: auto;
+    margin-right: auto; */
+  }
+  
+  .action-icons img {
+    margin-right: 5px;
+    border-radius:10px ; /* ปรับระยะห่างระหว่างรูปภาพ */
+    cursor: pointer;
+    width:5vh;
+  }
+  
+
+  .table {
+    width: 100%;
+    table-layout: fixed;
+  }
+  
+  th, td {
+    width: 33.33%;
+  }
+
+.gray-background{
+ background-color: #e9ecef;
+}
+
+.editname{
+    cursor: pointer;
+    color: black;
+}
+.editname:hover{
+    color: #87CEFA;
+}

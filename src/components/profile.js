@@ -155,7 +155,7 @@ export default function Profile() {
           <div className="textbox">
             <span>{name}</span>
             {adminData && (
-              <a onClick={() => navigate("/updatename", { state: adminData })}>
+              <a className="editname" onClick={() => navigate("/updatename", { state: adminData })}>
                 แก้ไขชื่อ
               </a>
             )}
@@ -171,7 +171,7 @@ export default function Profile() {
             </a> */}
           </div>{" "}
           <br />
-          <a onClick={() => navigate("/updateadmin", { state: adminData })}>
+          <a className="editname" onClick={() => navigate("/updateadmin", { state: adminData })}>
             เปลี่ยนรหัสผ่าน
           </a>
           {/* <div>

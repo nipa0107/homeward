@@ -235,8 +235,48 @@ export default function AllMpersonnel({ }) {
               </tbody>
             </table>
           </div>
+           
           
         </div>
+
+        {/* <section class="intro">
+  <div class="bg-image h-100">
+    <div class="mask d-flex align-items-center h-100">
+      <div class="container">
+        <div class="row justify-content-center">
+          <div class="col-10">
+            <div class="card">
+              <div class="card-body p-0">
+                <div class="table-responsive table-scroll" data-mdb-perfect-scrollbar="true">
+                  <table class="table table-striped mb-0">
+                    <thead>
+                      <tr>
+                        <th scope="col">คำนำหน้าชื่อ</th>
+                        <th scope="col">ชื่อ-สกุล</th>
+                        <th scope="col">คำสั่ง</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                    {data.map((i, index) => {
+                  return (
+                    <tr key={index}>
+                      <td>{i.nametitle}</td>
+                      <td>{i.name}</td>
+                      <td><img src={deleteimg} className="deleteimg" alt="deleteimg" onClick={() => deleteMPersonnel(i._id, i.nametitle, i.name)}></img></td>
+                    </tr>
+                  );
+                })}
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section> */}
       </div>
     </main>
   );
