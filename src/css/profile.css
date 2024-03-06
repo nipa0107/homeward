@@ -36,9 +36,36 @@
     border-color: #87CEFA;
 }
 .textbox{
+    display: flex;
+    justify-content: space-between; 
+    align-items: center; 
     text-decoration: none;
     color: rgb(72, 72, 72);
     border: 1px solid rgb(228, 228, 228);
     padding: 7px;
     border-radius: 8px;
 }
+
+.textbox a {
+    margin-left: 10px;
+  }
+.textbox span {
+    flex-grow: 1;
+}
+
+ .profile-container {
+    display: flex;
+    align-items: center;
+    margin-bottom: 1rem;
+  }
+  
+  .profile-container input {
+    flex: 1;
+  }
+  
+  .profile-container a {
+    margin-left: 10px;
+    text-decoration: underline !important;;
+    /* color: #87CEFA !important;;  */
+  }
+  

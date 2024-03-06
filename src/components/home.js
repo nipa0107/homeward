@@ -267,7 +267,7 @@ export default function Home({ }) {
                       onClick={() => navigate("/updatecaremanual", { state: { id: i._id, caremanual: i } })}
                     ></img>
                     <h5 class="card-title">{i.caremanual_name}</h5>
-                    <h5 class="card-title">แก้ไขครั้งล่าสุดเมื่อ : {formattedDate}</h5>
+                    {/* <h5 class="card-title">แก้ไขครั้งล่าสุดเมื่อ : {formattedDate}</h5> */}
                   </div>
                 </div>
               );

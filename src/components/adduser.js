@@ -5,6 +5,8 @@ import "bootstrap-icons/font/bootstrap-icons.css";
 import logow from "../img/logow.png";
 import { useNavigate } from "react-router-dom";
 
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 export default function AddUser() {
   const [username, setUsername] = useState("");
   const [name, setName] = useState("");
@@ -17,7 +19,6 @@ export default function AddUser() {
   const [ID_card_number, setIDCardNumber] = useState("");
   const [nationality, setNationality] = useState("");
   const [Address, setAddress] = useState("");
-
   const navigate = useNavigate();
   const [adminData, setAdminData] = useState("");
   const [isActive, setIsActive] = useState(false);
@@ -77,7 +78,11 @@ export default function AddUser() {
         console.log(data, "Addadmain");
         if (data.status === "ok") {
           console.log(username, password, confirmPassword);
-          window.location.href = "./alluser";
+          toast.success("เพิ่มข้อมูลสำเร็จ");
+        setTimeout(() => {
+          navigate("/alluser");
+        },1100); 
+          // window.location.href = "./alluser";
         } else {
           // เมื่อเกิดข้อผิดพลาด
           setError(data.error); // กำหนดข้อความ error ให้กับ state
@@ -96,6 +101,7 @@ export default function AddUser() {
 
   return (
     <main className="body">
+      <ToastContainer />
       <div className={`sidebar ${isActive ? "active" : ""}`}>
         <div class="logo_content">
           <div class="logo">
@@ -192,15 +198,6 @@ export default function AddUser() {
                 type="text"
                 className="form-control"
                 onChange={(e) => setUsername(e.target.value)}
-              />
-            </div>
-
-            <div className="mb-3">
-              <label>ชื่อ</label>
-              <input
-                type="text"
-                className="form-control"
-                onChange={(e) => setName(e.target.value)}
               />
             </div>
 

@@ -18,6 +18,10 @@ import Reset from "./components/forgetpassword";
 import UpdateCareManual from "./components/updatecaremanual";
 import AddUser from "./components/adduser";
 import AllUser from "./components/alluser";
+import UpdateUser from "./components/updateuser";
+import UpdateName from "./components/updatenameadmin";
+import UpdateEmail from "./components/updateemail";
+import UpdateOTP from "./components/updateotp";
 
 const PrivateRoute = ({ element, isLoggedIn }) => {
   return isLoggedIn === "true" ? (
@@ -123,6 +127,30 @@ function App() {
             path="/alluser"
             element={
             <PrivateRoute element={<AllUser/>} isLoggedIn={isLoggedIn} />
+            }
+          /> 
+            <Route
+            path="/updateuser"
+            element={
+            <PrivateRoute element={<UpdateUser/>} isLoggedIn={isLoggedIn} />
+            }
+          /> 
+               <Route
+            path="/updatename"
+            element={
+            <PrivateRoute element={<UpdateName/>} isLoggedIn={isLoggedIn} />
+            }
+          /> 
+                      <Route
+            path="/updateemail"
+            element={
+            <PrivateRoute element={<UpdateEmail/>} isLoggedIn={isLoggedIn} />
+            }
+          /> 
+            <Route
+            path="/updateotp"
+            element={
+            <PrivateRoute element={<UpdateOTP/>} isLoggedIn={isLoggedIn} />
             }
           /> 
           <Route path="/forgetpassword" element={<Reset />} />

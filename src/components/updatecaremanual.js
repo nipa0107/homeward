@@ -7,6 +7,8 @@ import logow from "../img/logow.png";
 import { useNavigate } from "react-router-dom";
 import imgdefault from "../img/image.png";
 
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 export default function UpdateCareManual() {
   const location = useLocation();
@@ -119,8 +121,10 @@ export default function UpdateCareManual() {
       if (response.ok) {
         const updatedCaremanual = await response.json();
         console.log("แก้ไขคู่มือแล้ว:", updatedCaremanual);
-        window.location.href = "./home";
-        console.log(caremanual_name, image, file, detail);
+        toast.success("แก้ไขข้อมูลสำเร็จ");
+        setTimeout(() => {
+          navigate("/home");
+        },1100); 
       } else {
         console.error("แก้ไขไม่ได้:", response.statusText);
       }
@@ -140,6 +144,7 @@ export default function UpdateCareManual() {
 
   return (
     <main className="body">
+       <ToastContainer />
       <div className={`sidebar ${isActive ? "active" : ""}`}>
         <div class="logo_content">
           <div class="logo">

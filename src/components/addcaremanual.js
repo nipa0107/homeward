@@ -6,6 +6,8 @@ import logow from "../img/logow.png";
 import imgdefault from "../img/image.png";
 import { useNavigate } from "react-router-dom";
 
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 export default function AddCaremanual({ }) {
   const [caremanual_name, setCaremanualName] = useState("");
@@ -20,6 +22,8 @@ export default function AddCaremanual({ }) {
   const [pdfURL, setPdfURL] = useState(null);
   const [token, setToken] = useState('');
 
+
+  
   useEffect(() => {
     // const preview = document.getElementById("previewImage");
     // if (preview) {
@@ -86,8 +90,12 @@ export default function AddCaremanual({ }) {
       .then((data) => {
         console.log(data, "Addcaremanual");
         if (data.status === "ok") {
-          console.log(caremanual_name, image, detail);
-          window.location.href = "./home";
+          // console.log(caremanual_name, image, detail);
+          // window.location.href = "./home";
+          toast.success("เพิ่มข้อมูลสำเร็จ");
+          setTimeout(() => {
+            navigate("/home");
+          },1050); 
         }
       });
   };
@@ -102,6 +110,7 @@ export default function AddCaremanual({ }) {
 
   return (
     <main className="body">
+      <ToastContainer />
       <div className={`sidebar ${isActive ? 'active' : ''}`}>
         <div class="logo_content">
           <div class="logo">

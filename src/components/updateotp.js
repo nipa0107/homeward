@@ -10,6 +10,7 @@ export default function UpdateOTP() {
   const navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [otp, setOtp] = useState("");
+  const [error, setError] = useState("");
 
   useEffect(() => {
     const { state } = location;
@@ -25,7 +26,7 @@ export default function UpdateOTP() {
     e.preventDefault();
 
     try {
-      const response = await fetch("/updateemail", {
+      const response = await fetch(`http://localhost:5000/updateemail`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
