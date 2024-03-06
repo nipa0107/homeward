@@ -5,6 +5,9 @@ import "bootstrap-icons/font/bootstrap-icons.css";
 import logow from "../img/logow.png";
 import { useNavigate } from "react-router-dom";
 
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+
 export default function AddMpersonnel() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
@@ -70,8 +73,12 @@ export default function AddMpersonnel() {
       .then((data) => {
         console.log(data, "Addmpersonnel");
         if (data.status === "ok") {
-          console.log(username, password, confirmPassword, tel, name, nametitle);
-          window.location.href = "./allmpersonnel";
+          // console.log(username, password, confirmPassword, tel, name, nametitle);
+          // window.location.href = "./allmpersonnel";
+          toast.success("เพิ่มข้อมูลสำเร็จ");
+          setTimeout(() => {
+            navigate("/allmpersonnel");
+          },1100);
         }else {
           // เมื่อเกิดข้อผิดพลาด
           setError(data.error); // กำหนดข้อความ error ให้กับ state
@@ -89,6 +96,7 @@ export default function AddMpersonnel() {
   };
   return (
     <main className="body">
+      <ToastContainer />
       <div className={`sidebar ${isActive ? 'active' : ''}`}>
         <div class="logo_content">
           <div class="logo">

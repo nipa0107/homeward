@@ -1,19 +1,22 @@
 import React, { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
-import "../css/profile.css";
+import { useLocation } from "react-router-dom";
 import "../css/sidebar.css";
 import "../css/alladmin.css";
 import "bootstrap-icons/font/bootstrap-icons.css";
 import logow from "../img/logow.png";
+import { useNavigate } from "react-router-dom";
 
-export default function Profile() {
+export default function UpdateEmail() {
+  const location = useLocation();
+  const { id, user } = location.state;
   const navigate = useNavigate();
-  const [adminData, setAdminData] = useState("");
-  const [isActive, setIsActive] = useState(false);
-  const [token, setToken] = useState("");
   const [name, setName] = useState("");
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
+  const [adminData, setAdminData] = useState("");
+  const [isActive, setIsActive] = useState(false);
+  const [error, setError] = useState("");
+  const [token, setToken] = useState("");
 
   useEffect(() => {
     const token = window.localStorage.getItem("token");
@@ -40,7 +43,37 @@ export default function Profile() {
           setEmail(data.data.email);
         });
     }
-  }, []); //ส่งไปครั้งเดียว
+    //   fetchData();
+  }, [location]);
+
+  const sendOTP = async () => {
+    try {
+      const response = await fetch("http://localhost:5000/sendotp", {
+        method: "POST",
+        crossDomain: true,
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "application/json",
+          "Access-Control-Allow-Origin": "*",
+        },
+        body: JSON.stringify({
+          email: email, // อีเมลใหม่ที่ผู้ใช้ป้อน
+        }),
+      });
+      const data = await response.json();
+      if (data.success) {
+        navigate('/updateotp', { state: { email } });        
+        // navigate("/updateotp");     
+       } else {
+        // มีข้อผิดพลาดในการส่ง OTP
+        setError(data.error);
+      }
+    } catch (error) {
+      console.error("เกิดข้อผิดพลาดในการส่ง OTP:", error);
+      setError("เกิดข้อผิดพลาดในการส่ง OTP");
+    }
+  };
+  
 
   const logOut = () => {
     window.localStorage.clear();
@@ -51,7 +84,6 @@ export default function Profile() {
   const handleToggleSidebar = () => {
     setIsActive(!isActive);
   };
-
   return (
     <main className="body">
       <div className={`sidebar ${isActive ? "active" : ""}`}>
@@ -136,57 +168,37 @@ export default function Profile() {
               <i class="bi bi-chevron-double-right"></i>
             </li>
             <li>
-              <a>โปรไฟล์</a>
+              <a href="#" onClick={() => navigate("/profile")}>
+                โปรไฟล์
+              </a>
+            </li>
+            <li className="arrow">
+              <i class="bi bi-chevron-double-right"></i>
+            </li>
+            <li>
+              <a>เปลี่ยนอีเมล</a>
             </li>
           </ul>
         </div>
-        <h3>โปรไฟล์</h3>
+
+        <h3>เปลี่ยนอีเมล</h3>
         <div className="formcontainerpf card mb-3">
-        <div className="mb-3">
-          <label>ชื่อผู้ใช้</label>
-          <div className="textbox gray-background">
-            {username}
-          </div>{" "}
-          </div>
           <div className="mb-3">
-          <label>ชื่อ-นามสกุล</label>
-          {/* <div className="textbox">{adminData && adminData.name} <a onClick={() => navigate("/updatenameadmin", { state: adminData })}>แก้ไขชื่อ</a></div>{" "}
-          <br /> */}
-          <div className="textbox">
-            <span>{name}</span>
-            {adminData && (
-              <a onClick={() => navigate("/updatename", { state: adminData })}>
-                แก้ไขชื่อ
-              </a>
-            )}
-          </div>
-          </div>
-          <div>
-          <label>อีเมล</label>
-          <div className="textbox gray-background">
-            {email}
-            {/* <a
-              onClick={() => navigate("/updateemail", { state: adminData })}>
-              เปลี่ยนอีเมล
-            </a> */}
-          </div>{" "}
-          <br />
-          <a onClick={() => navigate("/updateadmin", { state: adminData })}>
-            เปลี่ยนรหัสผ่าน
-          </a>
-          {/* <div>
-            <label>รหัสผ่าน</label>
-            <br />
-            <div className="textbox">
-              <img
-              src={editimg}
-              className="editimg"
-              alt="editimg"
-              onClick={() => navigate("/updateadmin", { state: adminData })}
+            <label>อีเมลใหม่</label>
+            <input
+              type="text"
+              className="form-control"
+            //   value={email}
+              onChange={(e) => setEmail(e.target.value)}
             />
-            </div>
-        
-          </div> */}
+          </div>
+          <div className="d-grid">
+            <button
+                onClick={sendOTP} 
+              className="btn btn-outline py-2">
+              ถัดไป
+            </button>
+            <br />
           </div>
         </div>
       </div>

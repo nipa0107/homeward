@@ -5,6 +5,10 @@ import "bootstrap-icons/font/bootstrap-icons.css";
 import logow from "../img/logow.png";
 import { useNavigate } from "react-router-dom";
 
+
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+
 export default function AddEquip({ }) {
   const navigate = useNavigate();
   const [equipment_name, setEquipName] = useState("");
@@ -64,7 +68,11 @@ export default function AddEquip({ }) {
       .then((data) => {
         console.log(data);
         if (data.status === "ok") {
-          window.location.href = "./allequip";
+          // window.location.href = "./allequip";
+          toast.success("เพิ่มข้อมูลสำเร็จ");
+          setTimeout(() => {
+            navigate("/allequip");
+          },1100); 
         }
       });
   };

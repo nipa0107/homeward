@@ -6,6 +6,8 @@ import "bootstrap-icons/font/bootstrap-icons.css";
 import logow from "../img/logow.png";
 import { useNavigate } from "react-router-dom";
 
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 function Updateadmin() {
   const location = useLocation();
   const navigate = useNavigate();
@@ -64,9 +66,15 @@ function Updateadmin() {
       .then((data) => {
         console.log(data);
         if (data.status === "ok") {
-          window.location.href = "./profile";
+          toast.success("แก้ไขข้อมูลสำเร็จ");
+        setTimeout(() => {
+          navigate("/profile");
+        },1100); 
+          // window.location.href = "./profile";
         }else {
           // เมื่อเกิดข้อผิดพลาด
+          // toast.error("ไม่สามารถแก้ไขผู้ใช้ได้:",data.error);
+
           setError(data.error); // กำหนดข้อความ error ให้กับ state
         }
       })
@@ -87,6 +95,7 @@ function Updateadmin() {
 
   return (
     <main className="body">
+      <ToastContainer />
       <div className={`sidebar ${isActive ? 'active' : ''}`}>
         <div class="logo_content">
           <div class="logo">
@@ -193,10 +202,14 @@ function Updateadmin() {
                 {/* แสดงข้อความ error */}
                 <p id="errormessage" className="errormessage">{error}</p>
           </div>
-          <button onClick={Updateadmin} className="btn bthsave btn-outline">
-            บันทึก
-          </button>
-          <br /><br />
+            <div className="d-grid">
+            <button
+              onClick={Updateadmin}
+              className="btn btn-outline py-2"
+            >
+              บันทึก
+            </button>
+            </div>
         </div>
         {/* <button onClick={profile} className="btn btn-primary">
         Back

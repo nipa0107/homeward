@@ -81,3 +81,7 @@
    max-width:30%;
 
   }
+
+  .gray-background {
+    background-color: #F1F1F1 /* เปลี่ยนสีพื้นหลังเป็นสีเทา */
+  }

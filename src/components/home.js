@@ -248,7 +248,7 @@ export default function Home({ }) {
                     <img src={deleteimg} className="deleteimg" alt="deleteimg" onClick={() => deleteCaremanual(i._id, i.caremanual_name)}></img><span></span>
                     <img src={editimg} className="editimg" alt="editimg" onClick={() => navigate("/updatecaremanual", { state: { id: i._id, caremanual: i } })}></img>
                     <h5 class="card-title">{i.caremanual_name}</h5>
-                    <h5 class="card-title">แก้ไขครั้งล่าสุดเมื่อ : {formattedDate}</h5>
+                    {/* <h5 class="card-title">แก้ไขครั้งล่าสุดเมื่อ : {formattedDate}</h5> */}
                   </div>
                 </div>
               );
