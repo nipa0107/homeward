@@ -13,9 +13,8 @@ export default function Home({ }) {
   const navigate = useNavigate();
   const [adminData, setAdminData] = useState("");
   const [isActive, setIsActive] = useState(false);
-  const [searchKeyword, setSearchKeyword] = useState(""); //ค้นหา
+  const [searchKeyword, setSearchKeyword] = useState(""); // ค้นหา
   const [token, setToken] = useState('');
-
 
   useEffect(() => {
     const token = window.localStorage.getItem("token");
@@ -49,9 +48,7 @@ export default function Home({ }) {
       logOut();
     }
     getAllCaremanual();
-  }, []); //ส่งไปครั้งเดียว
-
-
+  }, []); // ส่งไปครั้งเดียว
 
   const getAllCaremanual = () => {
     fetch("http://localhost:5000/allcaremanual", {
@@ -103,25 +100,30 @@ export default function Home({ }) {
     setIsActive(!isActive);
   };
 
-  //ค้นหา
-
-  const searchCaremanual = async () => {
-    try {
-      const response = await fetch(`http://localhost:5000/searchcaremanual?keyword=${searchKeyword}`, {
-        headers: {
-          Authorization: `Bearer ${token}` // เพิ่ม Authorization header เพื่อส่ง token ในการร้องขอค้นหา
+  useEffect(() => {
+    const searchCaremanual = async () => {
+      try {
+        const response = await fetch(`http://localhost:5000/searchcaremanual?keyword=${encodeURIComponent(searchKeyword)}`, {
+          headers: {
+            Authorization: `Bearer ${token}` // เพิ่ม Authorization header เพื่อส่ง token ในการร้องขอค้นหา
+          }
+        });
+        const searchData = await response.json();
+        if (response.ok) {
+          if (searchData.data.length > 0) {
+            setData(searchData.data);
+          } else {
+            setData([]); // ล้างข้อมูลเดิมในกรณีไม่พบข้อมูล
+          }
+        } else {
+          console.error('Error during search:', searchData.status);
         }
-      });
-      const searchData = await response.json();
-      if (response.ok) {
-        setData(searchData.data); // อัพเดทข้อมูลคู่มือที่ได้จากการค้นหา
-      } else {
-        console.error('Error during search:', searchData.status);
+      } catch (error) {
+        console.error('Error during search:', error);
       }
-    } catch (error) {
-      console.error('Error during search:', error);
-    }
-  };
+    };
+    searchCaremanual();
+  }, [searchKeyword, token]);
 
   return (
     <main className="body">
@@ -166,13 +168,13 @@ export default function Home({ }) {
             </a>
           </li>
           <div class="nav-logout">
-          <li>
-            <a href="#" onClick={logOut}>
-            <i class='bi bi-box-arrow-right' id="log_out" onClick={logOut}></i>
-              <span class="links_name" >ออกจากระบบ</span>
-            </a>
-          </li>
-        </div>
+            <li>
+              <a href="#" onClick={logOut}>
+                <i class='bi bi-box-arrow-right' id="log_out" onClick={logOut}></i>
+                <span class="links_name" >ออกจากระบบ</span>
+              </a>
+            </li>
+          </div>
         </ul>
       </div>
       <div className="home_content">
@@ -202,16 +204,15 @@ export default function Home({ }) {
 
           </ul>
         </div>
-        {/*ค้นหา */}
+        {/* ค้นหา */}
         <div className="search-bar">
           <input
-          className="search-text"
+            className="search-text"
             type="text"
             placeholder="ค้นหา"
             value={searchKeyword}
-            onChange={(e) => setSearchKeyword(e.target.value) }
+            onChange={(e) => setSearchKeyword(e.target.value)}
           />
-          <button onClick={searchCaremanual} className="btn btn-outline py-1 px-4">ค้นหา</button>
         </div>
 
 
@@ -229,7 +230,7 @@ export default function Home({ }) {
           {data == null
             ? ""
             : data.map((i) => {
-              //แปลงเวลา
+              // แปลงเวลา
               const formattedDate = new Intl.DateTimeFormat('th-TH', {
                 day: 'numeric',
                 month: 'long',

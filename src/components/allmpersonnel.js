@@ -98,29 +98,31 @@ export default function AllMpersonnel({ }) {
   const handleToggleSidebar = () => {
     setIsActive(!isActive);
   };
-  const searchMPersonnel = async () => {
-    try {
-      const response = await fetch(`http://localhost:5000/searchmpersonnel?keyword=${searchKeyword}`, {
-        headers: {
-          Authorization: `Bearer ${token}` // เพิ่ม Authorization header เพื่อส่ง token ในการร้องขอค้นหา
+  useEffect(() => {
+    const searchMPersonnel = async () => {
+      try {
+        const response = await fetch(`http://localhost:5000/searchmpersonnel?keyword=${encodeURIComponent(searchKeyword)}`, {
+          headers: {
+            Authorization: `Bearer ${token}` // เพิ่ม Authorization header เพื่อส่ง token ในการร้องขอค้นหา
+          }
+        });
+        const searchData = await response.json();
+        if (response.ok) {
+          if (searchData.data.length > 0) {
+            setData(searchData.data);
+          } else {
+            setData([]); // ล้างข้อมูลเดิมในกรณีไม่พบข้อมูล
+          }
+        } else {
+          console.error('Error during search:', searchData.status);
         }
-      });
-      const searchData = await response.json();
-      if (response.ok) {
-        setData(searchData.data); // อัพเดทข้อมูลคู่มือที่ได้จากการค้นหา
-      } else {
-        console.error('Error during search:', searchData.status);
+      } catch (error) {
+        console.error('Error during search:', error);
       }
-    } catch (error) {
-      console.error('Error during search:', error);
-    }
-  };
-  //ค้นหาโดย กด Enter 
-  const handleKeyDown = (e) => {
-    if (e.key === 'Enter') {
-      searchMPersonnel();
-    }
-  };
+    };
+    searchMPersonnel();
+  }, [searchKeyword, token]);
+
   return (
     <main className="body">
       <div className={`sidebar ${isActive ? 'active' : ''}`}>
@@ -207,9 +209,7 @@ export default function AllMpersonnel({ }) {
             placeholder="ค้นหา"
             value={searchKeyword}
             onChange={(e) => setSearchKeyword(e.target.value)}
-            onKeyDown={handleKeyDown}
           />
-          <button onClick={searchMPersonnel} className="btn btn-outline py-1 px-4">ค้นหา</button>
         </div>
 
         <div className="toolbar">
@@ -218,40 +218,38 @@ export default function AllMpersonnel({ }) {
           </button>
           <p className="countadmin">จำนวน : {data.length} คน</p>
         </div>
+
         <div className="content">
-          {data.length === 0 ? (
-            <p className="not-found-data">ไม่พบข้อมูลที่ค้นหา</p>
-          ) : (
-            <div className="cardall card mb-3">
-              <table className="table">
-                <thead>
-                  <tr>
-                    <th>คำนำหน้าชื่อ</th>
-                    <th>ชื่อ-สกุล</th>
-                    <th>คำสั่ง</th>
+          <div className="cardall card mb-3">
+            <table className="table">
+              <thead>
+                <tr>
+                  <th>คำนำหน้าชื่อ</th>
+                  <th>ชื่อ-สกุล</th>
+                  <th>คำสั่ง</th>
+                </tr>
+              </thead>
+              <tbody>
+                {data.map((i, index) => (
+                  <tr key={index}>
+                    <td>{i.nametitle}</td>
+                    <td>{i.name}</td>
+                    <td>
+                      <img
+                        src={deleteimg}
+                        className="deleteimg"
+                        alt="deleteimg"
+                        onClick={() => deleteMPersonnel(i._id, i.nametitle, i.name)}
+                      ></img>
+                    </td>
                   </tr>
-                </thead>
-                <tbody>
-                  {data.map((i, index) => (
-                    <tr key={index}>
-                      <td>{i.nametitle}</td>
-                      <td>{i.name}</td>
-                      <td>
-                        <img
-                          src={deleteimg}
-                          className="deleteimg"
-                          alt="deleteimg"
-                          onClick={() => deleteMPersonnel(i._id, i.nametitle, i.name)}
-                        ></img>
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-          )}
-        </div>             
-      </div> 
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+      </div>
     </main>
   );
 }

@@ -6,7 +6,7 @@ import "../css/sidebar.css";
 import logow from "../img/logow.png";
 import { useNavigate } from "react-router-dom";
 
-export default function AllUser({}) {
+export default function AllUser({ }) {
   const navigate = useNavigate();
   const [data, setData] = useState([]);
   const [adminData, setAdminData] = useState("");
@@ -88,10 +88,11 @@ export default function AllUser({}) {
     setIsActive(!isActive);
   };
 
+  useEffect(() => {
   const searchUser = async () => {
     try {
       const response = await fetch(
-        `http://localhost:5000/searchuser?keyword=${searchKeyword}`,
+        `http://localhost:5000/searchuser?keyword=${encodeURIComponent(searchKeyword)}`,
         {
           headers: {
             Authorization: `Bearer ${token}`, // เพิ่ม Authorization header เพื่อส่ง token ในการร้องขอค้นหา
@@ -101,14 +102,21 @@ export default function AllUser({}) {
 
       const searchData = await response.json();
       if (response.ok) {
-        setData(searchData.data); // อัพเดทข้อมูลคู่มือที่ได้จากการค้นหา
+        if (searchData.data.length > 0) {
+          setData(searchData.data);
+        } else {
+          setData([]); // ล้างข้อมูลเดิมในกรณีไม่พบข้อมูล
+        }
       } else {
-        console.error("Error during search:", searchData.status);
+        console.error('Error during search:', searchData.status);
       }
     } catch (error) {
       console.error("Error during search:", error);
     }
   };
+  searchUser();
+}, [searchKeyword, token]);
+
 
   return (
     <main className="body">
@@ -208,9 +216,6 @@ export default function AllUser({}) {
             value={searchKeyword}
             onChange={(e) => setSearchKeyword(e.target.value)}
           />
-          <button onClick={searchUser} className="btn btn-outline py-1 px-4">
-            ค้นหา
-          </button>
         </div>
 
         <div className="toolbar">
@@ -224,18 +229,6 @@ export default function AllUser({}) {
         </div>
 
         <div className="content">
-          {/* {data.map((i) => {
-            return (
-              <div key={i._id} class="adminall card mb-3 ">
-                <div class="card-body">
-                  <img src={deleteimg} className="deleteimg" alt="deleteimg" onClick={() => deleteUser(i._id, i.username)}></img>
-                  <h5 class="card-title">{i.username}</h5>
-                </div>
-              </div>
-            );
-          })}
-        </div> */}
-
           <div className="cardall card mb-3">
             <table className="table">
               <thead>
