@@ -262,7 +262,8 @@ export default function AllUser({ }) {
                       <td>{i.username}</td>
                       <td>{i.name}</td>
                       <td className="action-icons">
-                        <img
+                      <a href="allinfo" className="info">รายละเอียด</a>
+                        {/* <img
                           src={editimg}
                           className="editimg1"
                           alt="editimg"
@@ -277,14 +278,14 @@ export default function AllUser({ }) {
                           className="deleteimg1"
                           alt="deleteimg"
                           onClick={() => deleteUser(i._id, i.username, i.name)}
-                        ></img>
+                        ></img> */}
                       </td>
                     </tr>
                   );
                 })}
               </tbody>
             </table>
-            <button onClick={() => navigate("/allinfo")}>รายละเอียด</button>
+            
           </div>
         </div>
       </div>

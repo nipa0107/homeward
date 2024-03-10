@@ -55,7 +55,7 @@ export default class Login extends Component {
         <div className="formcontainer">
           <div className="left">
             <h1>Welcome</h1>
-            <h5>Admin</h5>
+            <h5 style={{ color: 'white' }}>Admin</h5>
           </div>
           <div className="right">
             <form onSubmit={this.handleSubmit}>

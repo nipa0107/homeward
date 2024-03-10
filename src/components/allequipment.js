@@ -92,6 +92,7 @@ export default function AllEquip({}) {
     setIsActive(!isActive);
   };
 
+  useEffect(() => {
     const searchEquipment = async () => {
       try {
         const response = await fetch(
@@ -116,7 +117,8 @@ export default function AllEquip({}) {
         console.error("Error during search:", error);
       }
     };
-  
+    searchEquipment();
+}, [searchKeyword, token]);
 
   return (
     <main className="body">

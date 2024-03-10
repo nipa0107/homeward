@@ -41,9 +41,11 @@
 }
 
 .content {
-    margin-top: 145px;
+    margin-top: 125px;
 }
-
+.content1{
+    margin-top: 100px;
+}
 .not-found-data {
     display: 'flex';
     text-align: center;
@@ -70,7 +72,6 @@
     box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.1);
     line-height: 50px;
     padding: 20px;
-
 }
 
 .filename a {
@@ -172,3 +173,6 @@ td {
   .btn-next button {
     padding: 10px 30px;
   }
+.info{
+    text-decoration: none;
+}

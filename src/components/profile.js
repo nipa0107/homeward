@@ -118,7 +118,7 @@ export default function Profile() {
         <div className="breadcrumbs">
           <ul>
             <li>
-            <a href="home">
+              <a href="home">
                 <i class="bi bi-house-fill"></i>
               </a>
             </li>
@@ -132,39 +132,39 @@ export default function Profile() {
         </div>
         <h3>โปรไฟล์</h3>
         <div className="formcontainerpf card mb-3">
-        <div className="mb-3">
-          <label>ชื่อผู้ใช้</label>
-          <div className="textbox gray-background">
-            {username}
-          </div>{" "}
+          <div className="mb-3">
+            <label>ชื่อผู้ใช้</label>
+            <div className="textbox gray-background">
+              {username}
+            </div>{" "}
           </div>
           <div className="mb-3">
-          <label>ชื่อ-นามสกุล</label>
-          {/* <div className="textbox">{adminData && adminData.name} <a onClick={() => navigate("/updatenameadmin", { state: adminData })}>แก้ไขชื่อ</a></div>{" "}
+            <label>ชื่อ-นามสกุล</label>
+            {/* <div className="textbox">{adminData && adminData.name} <a onClick={() => navigate("/updatenameadmin", { state: adminData })}>แก้ไขชื่อ</a></div>{" "}
           <br /> */}
-          <div className="textbox">
-            <span>{name}</span>
-            {adminData && (
-              <a className="editname" onClick={() => navigate("/updatename", { state: adminData })}>
-                แก้ไขชื่อ
-              </a>
-            )}
-          </div>
+            <div className="textbox">
+              <span>{name}</span>
+              {adminData && (
+                <a className="editname" onClick={() => navigate("/updatename", { state: adminData })}>
+                  แก้ไขชื่อ
+                </a>
+              )}
+            </div>
           </div>
           <div>
-          <label>อีเมล</label>
-          <div className="textbox gray-background">
-            {email}
-            {/* <a
+            <label>อีเมล</label>
+            <div className="textbox gray-background">
+              {email}
+              {/* <a
               onClick={() => navigate("/updateemail", { state: adminData })}>
               เปลี่ยนอีเมล
             </a> */}
-          </div>{" "}
-          <br />
-          <a className="editname" onClick={() => navigate("/updateadmin", { state: adminData })}>
-            เปลี่ยนรหัสผ่าน
-          </a>
-          {/* <div>
+            </div>{" "}
+            <br />
+            <a className="editname" onClick={() => navigate("/updateadmin", { state: adminData })}>
+              เปลี่ยนรหัสผ่าน
+            </a>
+            {/* <div>
             <label>รหัสผ่าน</label>
             <br />
             <div className="textbox">

@@ -253,7 +253,14 @@ const UpdateUser = async () => {
             <li className="arrow">
               <i class="bi bi-chevron-double-right"></i>
             </li>
-            <li><a>แก้ไขข้อมูลผู้ป่วย</a>
+            <li>
+              <a href="allinfo">ข้อมูลการดูแลผู้ป่วย</a>
+            </li>
+            <li className="arrow">
+              <i class="bi bi-chevron-double-right"></i>
+            </li>
+            <li>
+              <a>แก้ไขข้อมูลผู้ป่วย</a>
             </li>
           </ul>
         </div>
@@ -353,9 +360,6 @@ const UpdateUser = async () => {
                 onChange={(e) => setAddress(e.target.value)}
               />
             </div>
-
-
-
           <div className="d-grid">
             <button
               onClick={UpdateUser}

@@ -8,6 +8,7 @@ import { useNavigate } from "react-router-dom";
 
 export default function AllUser({ }) {
   const navigate = useNavigate();
+  const [equipData, setEquipData] = useState([]);
   const [data, setData] = useState([]);
   const [adminData, setAdminData] = useState("");
   const [isActive, setIsActive] = useState(false);
@@ -37,6 +38,7 @@ export default function AllUser({ }) {
         });
     }
     getAllUser();
+    getAllEquip();
   }, []);
 
   const getAllUser = () => {
@@ -52,7 +54,19 @@ export default function AllUser({ }) {
         setData(data.data);
       });
   };
-
+  const getAllEquip = () => {
+    fetch("http://localhost:5000/allequip", {
+      method: "GET",
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        console.log(data, "AllEquip");
+        setEquipData(data.data);
+      });
+  };
   const deleteUser = async (id, username) => {
     if (window.confirm(`คุณต้องการลบ ${username} หรือไม่ ?`)) {
       try {
@@ -144,6 +158,34 @@ export default function AllUser({ }) {
     searchUser();
   }, [searchKeyword, token]);
 
+  useEffect(() => {
+    const searchEquipment = async () => {
+      try {
+        const response = await fetch(
+          `http://localhost:5000/searchequipment?keyword=${encodeURIComponent(searchKeyword)}`,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+        const searchData = await response.json();
+        if (response.ok) {
+          if (searchData.data.length > 0) {
+            setEquipData(searchData.data);
+          } else {
+            setEquipData([]); // ล้างข้อมูลเดิมในกรณีไม่พบข้อมูล
+          }
+        } else {
+          console.error('Error during equipment search:', searchData.status);
+        }
+      } catch (error) {
+        console.error("Error during equipment search:", error);
+      }
+    };
+    searchEquipment();
+  }, [searchKeyword, token]);
+
 
   return (
     <main className="body">
@@ -219,11 +261,19 @@ export default function AllUser({ }) {
               <i class="bi bi-chevron-double-right"></i>
             </li>
             <li>
-              <a>จัดการข้อมูลผู้ป่วย</a>
+              <a href="alluser">
+                จัดการข้อมูลผู้ป่วย
+              </a>
+            </li>
+            <li className="arrow">
+              <i class="bi bi-chevron-double-right"></i>
+            </li>
+            <li>
+              <a>ข้อมูลการดูแลผู้ป่วย</a>
             </li>
           </ul>
         </div>
-
+        <h3>ข้อมูลการดูแลผู้ป่วย</h3>
         {/*ค้นหา */}
         <div className="search-bar">
           <input
@@ -236,19 +286,20 @@ export default function AllUser({ }) {
         </div>
 
         <div className="toolbar">
-          <button
+          {/* <button
             onClick={() => navigate("/adduser")}
             className="bi bi-plus-circle btn btn-outline py-1 px-4"
           >
             เพิ่มข้อมูลผู้ป่วย
-          </button>
-          <p className="countadmin">จำนวน : {data.length} คน</p>
+          </button> */}
+          <p className="countadmin">จำนวนผู้ป่วย : {data.length} คน</p>
         </div>
 
-        <div className="content">
+        <div className="content1">
           <div className="cardall card mb-3">
             <table className="table">
               <thead>
+                <th>1.ข้อมูลทั่วไป</th>
                 <tr>
                   <th>ชื่อผู้ใช้</th>
                   <th>ชื่อ-สกุล</th>
@@ -282,6 +333,34 @@ export default function AllUser({ }) {
                     </tr>
                   );
                 })}
+              </tbody>
+            </table>
+          </div>
+          <div className="cardall card mb-3">
+            <table className="table">
+              <thead>
+                <th>3.อุปกรณ์ทางการแพทย์</th>
+                <tr>
+                  <th>ชื่ออุปกรณ์</th>
+                  <th>ประเภทอุปกรณ์</th>
+                  <th>คำสั่ง</th>
+                </tr>
+              </thead>
+              <tbody>
+                {equipData.map((i, index) => (
+                  <tr key={index}>
+                    <td data-title="">{i.equipment_name}</td>
+                    <td>{i.equipment_type}</td>
+                    <td>
+                      <img
+                        src={deleteimg}
+                        className="deleteimg"
+                        alt="deleteimg"
+                        onClick={() => deleteEquipment(i._id, i.equipment_name)}
+                      ></img>
+                    </td>
+                  </tr>
+                ))}
               </tbody>
             </table>
           </div>
