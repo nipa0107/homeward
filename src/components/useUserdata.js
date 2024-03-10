@@ -58,15 +58,15 @@ export default function UpdateOTP() {
         <div className="breadcrumbs">
           <ul>
             <li>
-              <a className="bihouse">
-                <i className="bi bi-house-fill" onClick={() => navigate("/home")}></i>
+            <a href="home">
+                <i class="bi bi-house-fill"></i>
               </a>
             </li>
             <li className="arrow">
               <i className="bi bi-chevron-double-right"></i>
             </li>
             <li>
-              <a href="#" onClick={() => navigate("/profile")}>
+              <a href="profile">
                 โปรไฟล์
               </a>
             </li>

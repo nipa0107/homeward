@@ -1,7 +1,7 @@
 import React from "react";
 import "../node_modules/bootstrap/dist/css/bootstrap.min.css";
 // import "./App.css";
-import {BrowserRouter as Router, Routes, Route, Navigate,} from "react-router-dom";
+import { BrowserRouter as Router, Routes, Route, Navigate, } from "react-router-dom";
 
 import Login from "./components/login";
 import Home from "./components/home";
@@ -22,6 +22,9 @@ import UpdateUser from "./components/updateuser";
 import UpdateName from "./components/updatenameadmin";
 import UpdateEmail from "./components/updateemail";
 import UpdateOTP from "./components/updateotp";
+import AddMDinformation from "./components/addmdinformation"
+import AddEquipment from "./components/addequipment"
+import AllInfo from "./components/allinfo"
 
 const PrivateRoute = ({ element, isLoggedIn }) => {
   return isLoggedIn === "true" ? (
@@ -43,7 +46,7 @@ function App() {
             element={isLoggedIn === "true" ? <Home /> : <Login />}
           />
 
-         <Route
+          <Route
             path="/home"
             element={
               <PrivateRoute element={<Home />} isLoggedIn={isLoggedIn} />
@@ -112,49 +115,66 @@ function App() {
           <Route
             path="/updatecaremanual"
             element={
-            <PrivateRoute element={<UpdateCareManual />} isLoggedIn={isLoggedIn} />
+              <PrivateRoute element={<UpdateCareManual />} isLoggedIn={isLoggedIn} />
             }
           />
 
-  {/* ที่เพิ่ม */}
+          {/* ที่เพิ่ม */}
           <Route
             path="/adduser"
             element={
-            <PrivateRoute element={<AddUser/>} isLoggedIn={isLoggedIn} />
+              <PrivateRoute element={<AddUser />} isLoggedIn={isLoggedIn} />
             }
           />
-           <Route
+          <Route
             path="/alluser"
             element={
-            <PrivateRoute element={<AllUser/>} isLoggedIn={isLoggedIn} />
+              <PrivateRoute element={<AllUser />} isLoggedIn={isLoggedIn} />
             }
-          /> 
-            <Route
+          />
+          <Route
             path="/updateuser"
             element={
-            <PrivateRoute element={<UpdateUser/>} isLoggedIn={isLoggedIn} />
+              <PrivateRoute element={<UpdateUser />} isLoggedIn={isLoggedIn} />
             }
-          /> 
-               <Route
+          />
+          <Route
             path="/updatename"
             element={
-            <PrivateRoute element={<UpdateName/>} isLoggedIn={isLoggedIn} />
+              <PrivateRoute element={<UpdateName />} isLoggedIn={isLoggedIn} />
             }
-          /> 
-                      <Route
+          />
+          <Route
             path="/updateemail"
             element={
-            <PrivateRoute element={<UpdateEmail/>} isLoggedIn={isLoggedIn} />
+              <PrivateRoute element={<UpdateEmail />} isLoggedIn={isLoggedIn} />
             }
-          /> 
-            <Route
+          />
+          <Route
             path="/updateotp"
             element={
-            <PrivateRoute element={<UpdateOTP/>} isLoggedIn={isLoggedIn} />
+              <PrivateRoute element={<UpdateOTP />} isLoggedIn={isLoggedIn} />
             }
-          /> 
+          />
           <Route path="/forgetpassword" element={<Reset />} />
-
+          <Route
+            path="/addmdinformation"
+            element={
+              <PrivateRoute element={<AddMDinformation />} isLoggedIn={isLoggedIn} />
+            }
+          />
+          <Route
+            path="/addequipment"
+            element={
+              <PrivateRoute element={<AddEquipment />} isLoggedIn={isLoggedIn} />
+            }
+          />
+          <Route
+            path="/allinfo"
+            element={
+              <PrivateRoute element={<AllInfo />} isLoggedIn={isLoggedIn} />
+            }
+          />
         </Routes>
       </div>
     </Router>

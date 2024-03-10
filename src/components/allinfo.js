@@ -1,18 +1,18 @@
 import React, { useEffect, useState } from "react";
-import "../css/alladmin.css"
 import deleteimg from "../img/delete.png";
+import editimg from "../img/edit.png";
+import "../css/alladmin.css";
 import "../css/sidebar.css";
-import "bootstrap-icons/font/bootstrap-icons.css";
 import logow from "../img/logow.png";
 import { useNavigate } from "react-router-dom";
 
-export default function AllMpersonnel({ }) {
-  const [data, setData] = useState([]);
-  const [isActive, setIsActive] = useState(false);
+export default function AllUser({ }) {
   const navigate = useNavigate();
-  const [searchKeyword, setSearchKeyword] = useState(""); //ค้นหา
+  const [data, setData] = useState([]);
   const [adminData, setAdminData] = useState("");
-  const [token, setToken] = useState('');
+  const [isActive, setIsActive] = useState(false);
+  const [searchKeyword, setSearchKeyword] = useState(""); //ค้นหา
+  const [token, setToken] = useState("");
 
   useEffect(() => {
     const token = window.localStorage.getItem("token");
@@ -36,40 +36,32 @@ export default function AllMpersonnel({ }) {
           setAdminData(data.data);
         });
     }
-    getAllMpersonnel();
+    getAllUser();
   }, []);
 
-
-  const getAllMpersonnel = () => {
-    fetch("http://localhost:5000/allMpersonnel", {
+  const getAllUser = () => {
+    fetch("http://localhost:5000/alluser", {
       method: "GET",
       headers: {
-        Authorization: `Bearer ${token}` // เพิ่ม Authorization header เพื่อส่ง token ในการร้องขอ
-      }
+        Authorization: `Bearer ${token}`, // เพิ่ม Authorization header เพื่อส่ง token ในการร้องขอ
+      },
     })
       .then((res) => res.json())
       .then((data) => {
-        console.log(data, "AllMpersonnel");
+        console.log(data, "AllUser");
         setData(data.data);
       });
   };
 
-  const home = () => {
-    window.location.href = "./home";
-  };
-  const add = () => {
-    window.location.href = "./addmpersonnel";
-  };
-
-  const deleteMPersonnel = async (id, nametitle, name) => {
-    if (window.confirm(`คุณต้องการลบ ${nametitle} ${name} หรือไม่ ?`)) {
+  const deleteUser = async (id, username) => {
+    if (window.confirm(`คุณต้องการลบ ${username} หรือไม่ ?`)) {
       try {
-        const response = await fetch(`http://localhost:5000/deleteMPersonnel/${id} `, {
-          method: 'DELETE',
+        const response = await fetch(`http://localhost:5000/deleteUser/${id}`, {
+          method: "DELETE",
           headers: {
-            'Content-Type': 'application/json',
-            Accept: 'application/json',
-            Authorization: `Bearer ${token}`
+            "Content-Type": "application/json",
+            Accept: "application/json",
+            Authorization: `Bearer ${token}`,
           },
         });
 
@@ -77,33 +69,64 @@ export default function AllMpersonnel({ }) {
 
         if (response.ok) {
           alert(data.data);
-          getAllMpersonnel();
+          getAllUser();
         } else {
-          console.error('Error during deletion:', data.data);
+          console.error("Error during deletion:", data.data);
         }
       } catch (error) {
-        console.error('Error during fetch:', error);
+        console.error("Error during fetch:", error);
       }
     }
   };
+  const deleteEquipment = async (id, equipment_name) => {
+    if (window.confirm(`คุณต้องการลบ ${equipment_name} หรือไม่ ?`)) {
+      try {
+        const response = await fetch(
+          `http://localhost:5000/deleteEquipment/${id}`,
+          {
+            method: "DELETE",
+            headers: {
+              "Content-Type": "application/json",
+              Accept: "application/json",
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
 
+        const data = await response.json();
+
+        if (response.ok) {
+          alert(data.data);
+          getAllUser();
+        } else {
+          console.error("Error during deletion:", data.data);
+        }
+      } catch (error) {
+        console.error("Error during fetch:", error);
+      }
+    }
+  };
   const logOut = () => {
     window.localStorage.clear();
     window.location.href = "./";
   };
-
   // bi-list
   const handleToggleSidebar = () => {
     setIsActive(!isActive);
   };
+
   useEffect(() => {
-    const searchMPersonnel = async () => {
+    const searchUser = async () => {
       try {
-        const response = await fetch(`http://localhost:5000/searchmpersonnel?keyword=${encodeURIComponent(searchKeyword)}`, {
-          headers: {
-            Authorization: `Bearer ${token}` // เพิ่ม Authorization header เพื่อส่ง token ในการร้องขอค้นหา
+        const response = await fetch(
+          `http://localhost:5000/searchuser?keyword=${encodeURIComponent(searchKeyword)}`,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`, // เพิ่ม Authorization header เพื่อส่ง token ในการร้องขอค้นหา
+            },
           }
-        });
+        );
+
         const searchData = await response.json();
         if (response.ok) {
           if (searchData.data.length > 0) {
@@ -115,22 +138,23 @@ export default function AllMpersonnel({ }) {
           console.error('Error during search:', searchData.status);
         }
       } catch (error) {
-        console.error('Error during search:', error);
+        console.error("Error during search:", error);
       }
     };
-    searchMPersonnel();
+    searchUser();
   }, [searchKeyword, token]);
+
 
   return (
     <main className="body">
-      <div className={`sidebar ${isActive ? 'active' : ''}`}>
+      <div className={`sidebar ${isActive ? "active" : ""}`}>
         <div class="logo_content">
           <div class="logo">
             <div class="logo_name">
-              <img src={logow} className="logow" alt="logo" ></img>
+              <img src={logow} className="logow" alt="logo"></img>
             </div>
           </div>
-          <i class='bi bi-list' id="btn" onClick={handleToggleSidebar}></i>
+          <i class="bi bi-list" id="btn" onClick={handleToggleSidebar}></i>
         </div>
         <ul class="nav-list">
           <li>
@@ -174,7 +198,7 @@ export default function AllMpersonnel({ }) {
         </ul>
       </div>
       <div className="home_content">
-        <div className="header">จัดการข้อมูลบุคลากร</div>
+        <div className="header">จัดการข้อมูลผู้ป่วย</div>
         <div class="profile_details ">
           <li>
             <a href="profile" >
@@ -187,14 +211,15 @@ export default function AllMpersonnel({ }) {
         <div className="breadcrumbs">
           <ul>
             <li>
-            <a href="home">
+              <a href="home">
                 <i class="bi bi-house-fill"></i>
               </a>
             </li>
             <li className="arrow">
               <i class="bi bi-chevron-double-right"></i>
             </li>
-            <li><a>จัดการข้อมูลบุคลากร</a>
+            <li>
+              <a>จัดการข้อมูลผู้ป่วย</a>
             </li>
           </ul>
         </div>
@@ -211,8 +236,11 @@ export default function AllMpersonnel({ }) {
         </div>
 
         <div className="toolbar">
-          <button onClick={add} className="bi bi-plus-circle btn btn-outline py-1 px-4">
-            เพิ่มบุคลากร
+          <button
+            onClick={() => navigate("/adduser")}
+            className="bi bi-plus-circle btn btn-outline py-1 px-4"
+          >
+            เพิ่มข้อมูลผู้ป่วย
           </button>
           <p className="countadmin">จำนวน : {data.length} คน</p>
         </div>
@@ -222,31 +250,42 @@ export default function AllMpersonnel({ }) {
             <table className="table">
               <thead>
                 <tr>
-                  <th>คำนำหน้าชื่อ</th>
+                  <th>ชื่อผู้ใช้</th>
                   <th>ชื่อ-สกุล</th>
                   <th>คำสั่ง</th>
                 </tr>
               </thead>
               <tbody>
-                {data.map((i, index) => (
-                  <tr key={index}>
-                    <td>{i.nametitle}</td>
-                    <td>{i.name}</td>
-                    <td>
-                      <img
-                        src={deleteimg}
-                        className="deleteimg"
-                        alt="deleteimg"
-                        onClick={() => deleteMPersonnel(i._id, i.nametitle, i.name)}
-                      ></img>
-                    </td>
-                  </tr>
-                ))}
+                {data.map((i, index) => {
+                  return (
+                    <tr key={index}>
+                      <td>{i.username}</td>
+                      <td>{i.name}</td>
+                      <td className="action-icons">
+                        <img
+                          src={editimg}
+                          className="editimg1"
+                          alt="editimg"
+                          onClick={() =>
+                            navigate("/updateuser", {
+                              state: { id: i._id, user: i },
+                            })
+                          }
+                        ></img>
+                        <img
+                          src={deleteimg}
+                          className="deleteimg1"
+                          alt="deleteimg"
+                          onClick={() => deleteUser(i._id, i.username, i.name)}
+                        ></img>
+                      </td>
+                    </tr>
+                  );
+                })}
               </tbody>
             </table>
           </div>
         </div>
-
       </div>
     </main>
   );

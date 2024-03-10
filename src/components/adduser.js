@@ -79,10 +79,9 @@ export default function AddUser() {
         if (data.status === "ok") {
           console.log(username, password, confirmPassword);
           toast.success("เพิ่มข้อมูลสำเร็จ");
-        setTimeout(() => {
-          navigate("/alluser");
-        },1100); 
-          // window.location.href = "./alluser";
+          setTimeout(() => {
+            navigate("/alluser");
+          }, 1100);
         } else {
           // เมื่อเกิดข้อผิดพลาด
           setError(data.error); // กำหนดข้อความ error ให้กับ state
@@ -113,50 +112,50 @@ export default function AddUser() {
         </div>
         <ul class="nav-list">
           <li>
-            <a href="#" onClick={() => navigate("/home")}>
+            <a href="home">
               <i class="bi bi-book"></i>
-              <span class="links_name">จัดการข้อมูลคู่มือการดูแลผู้ป่วย</span>
+              <span class="links_name" >จัดการข้อมูลคู่มือการดูแลผู้ป่วย</span>
             </a>
           </li>
           <li>
-            <a href="#" onClick={() => navigate("/alluser")}>
+            <a href="alluser">
               <i class="bi bi-person-plus"></i>
               <span class="links_name" >จัดการข้อมูลผู้ป่วย</span>
             </a>
           </li>
           <li>
-            <a href="#" onClick={() => navigate("/allmpersonnel")}>
+            <a href="allmpersonnel">
               <i class="bi bi-people"></i>
-              <span class="links_name">จัดการข้อมูลบุคลากร</span>
+              <span class="links_name" >จัดการข้อมูลบุคลากร</span>
             </a>
           </li>
           <li>
-            <a href="#" onClick={() => navigate("/allequip")}>
+            <a href="allequip">
               <i class="bi bi-prescription2"></i>
-              <span class="links_name">จัดการอุปกรณ์ทางการแพทย์</span>
+              <span class="links_name" >จัดการอุปกรณ์ทางการแพทย์</span>
             </a>
           </li>
           <li>
-            <a href="#" onClick={() => navigate("/alladmin")}>
+            <a href="alladmin" onClick={() => navigate("/alladmin")}>
               <i class="bi bi-person-gear"></i>
-              <span class="links_name">จัดการแอดมิน</span>
+              <span class="links_name" >จัดการแอดมิน</span>
             </a>
           </li>
           <div class="nav-logout">
-          <li>
-            <a href="#" onClick={logOut}>
-            <i class='bi bi-box-arrow-right' id="log_out" onClick={logOut}></i>
-              <span class="links_name" >ออกจากระบบ</span>
-            </a>
-          </li>
-        </div>
+            <li>
+              <a href="./" onClick={logOut}>
+                <i class='bi bi-box-arrow-right' id="log_out" onClick={logOut}></i>
+                <span class="links_name" >ออกจากระบบ</span>
+              </a>
+            </li>
+          </div>
         </ul>
       </div>
       <div className="home_content">
         <div className="header">จัดการข้อมูลผู้ป่วย</div>
         <div class="profile_details ">
           <li>
-            <a href="#" onClick={() => navigate("/profile")}>
+            <a href="profile" >
               <i class="bi bi-person"></i>
               <span class="links_name" >{adminData && adminData.username}</span>
             </a>
@@ -166,18 +165,15 @@ export default function AddUser() {
         <div className="breadcrumbs">
           <ul>
             <li>
-              <a className="bihouse">
-                <i
-                  class="bi bi-house-fill"
-                  onClick={() => navigate("/home")}
-                ></i>
+            <a href="home">
+                <i class="bi bi-house-fill"></i>
               </a>
             </li>
             <li className="arrow">
               <i class="bi bi-chevron-double-right"></i>
             </li>
             <li>
-              <a href="#" onClick={() => navigate("/alluser")}>
+              <a href="alluser">
                 จัดการข้อมูลผู้ป่วย
               </a>
             </li>
@@ -185,11 +181,11 @@ export default function AddUser() {
               <i class="bi bi-chevron-double-right"></i>
             </li>
             <li>
-              <a>เพิ่มข้อมูลผู้ป่วย</a>
+              <a>เพิ่มข้อมูลผู้ป่วยทั่วไป</a>
             </li>
           </ul>
         </div>
-        <h3>เพิ่มข้อมูลผู้ป่วย</h3>
+        <h3>เพิ่มข้อมูลผู้ป่วยทั่วไป</h3>
         <div className="adminall card mb-3">
           <form onSubmit={handleSubmit}>
             <div className="mb-3">
@@ -285,7 +281,6 @@ export default function AddUser() {
                 onChange={(e) => setAddress(e.target.value)}
               />
             </div>
-            <br />
             {/* แสดงข้อความ error */}
             <p id="errormessage" className="errormessage">
               {error}
@@ -294,16 +289,16 @@ export default function AddUser() {
               <button type="submit" className="btn btn-outline py-2">
                 บันทึก
               </button>
-              <br />
             </div>
           </form>
         </div>
-        {/* <button onClick={All} className="btn btn-primary">
-          Back
-        </button>
-        <button onClick={home} className="btn btn-primary">
-          Home
-        </button> */}
+        <div className="btn-group">
+          <div className="btn-next">
+            <button onClick={() => navigate("/addmdinformation")} className="btn btn-outline py-2">
+              ถัดไป
+            </button>
+          </div>
+        </div>
       </div>
     </main>
   );

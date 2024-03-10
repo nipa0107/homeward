@@ -70,7 +70,7 @@
     box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.1);
     line-height: 50px;
     padding: 20px;
-    
+
 }
 
 .filename a {
@@ -97,14 +97,14 @@
 .centered-image #previewImage {
     max-width: 30%;
 
-  }
+}
 
 
 
-.table-responsive{
-    position: relative; 
+.table-responsive {
+    position: relative;
     /* height: 700px */
-} 
+}
 
 .action-icons {
     /* display: flex;
@@ -112,33 +112,63 @@
     align-items: center;
     margin-left: auto;
     margin-right: auto; */
-  }
-  
-  .action-icons img {
-    margin-right: 5px;
-    border-radius:10px ; /* ปรับระยะห่างระหว่างรูปภาพ */
-    cursor: pointer;
-    width:5vh;
-  }
-  
-
-  .table {
-    width: 100%;
-    table-layout: fixed;
-  }
-  
-  th, td {
-    width: 33.33%;
-  }
-
-.gray-background{
- background-color: #e9ecef;
 }
 
-.editname{
+.action-icons img {
+    margin-right: 5px;
+    border-radius: 10px;
+    /* ปรับระยะห่างระหว่างรูปภาพ */
+    cursor: pointer;
+    width: 5vh;
+}
+
+
+.table {
+    width: 100%;
+    table-layout: fixed;
+}
+
+th,
+td {
+    width: 33.33%;
+}
+
+.gray-background {
+    background-color: #e9ecef;
+}
+
+.editname {
     cursor: pointer;
     color: black;
 }
-.editname:hover{
+
+.editname:hover {
     color: #87CEFA;
 }
+
+.d-grid {
+    margin-top: 20px;
+}
+
+.btn-group {
+    gap: 10px;
+    display: flex;
+    justify-content: center;
+    margin-bottom: 30px;
+}
+
+.btn-pre button {
+    color: #000; /* ตั้งค่าสีของตัวหนังสือเป็นสีดำ */
+    background-color: #fff; /* ตั้งค่าสีพื้นหลังเป็นสีขาว */
+    border: 1px solid #ccc; /* ตั้งค่าขอบเป็นสีเทา */
+    padding: 10px 20px; /* ตั้งค่าการระบุช่องว่างภายในปุ่ม */
+    cursor: pointer; /* เพิ่ม cursor เมื่อนำเมาส์ไปวางที่ปุ่ม */
+    outline: none; /* ลบเส้นขอบน้ำเงินเมื่อกด */
+  }
+  
+  .btn-pre button:hover {
+    background-color: #eee; /* สีพื้นหลังเมื่อโฮเวอร์ปุ่ม */
+  }
+  .btn-next button {
+    padding: 10px 30px;
+  }

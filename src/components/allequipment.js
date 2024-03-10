@@ -131,40 +131,40 @@ export default function AllEquip({}) {
         </div>
         <ul class="nav-list">
           <li>
-            <a href="#" onClick={() => navigate("/home")}>
+            <a href="home">
               <i class="bi bi-book"></i>
-              <span class="links_name">จัดการข้อมูลคู่มือการดูแลผู้ป่วย</span>
+              <span class="links_name" >จัดการข้อมูลคู่มือการดูแลผู้ป่วย</span>
             </a>
           </li>
           <li>
-            <a href="#" onClick={() => navigate("/alluser")}>
+            <a href="alluser">
               <i class="bi bi-person-plus"></i>
-              <span class="links_name">จัดการข้อมูลผู้ป่วย</span>
+              <span class="links_name" >จัดการข้อมูลผู้ป่วย</span>
             </a>
           </li>
           <li>
-            <a href="#" onClick={() => navigate("/allmpersonnel")}>
+            <a href="allmpersonnel">
               <i class="bi bi-people"></i>
-              <span class="links_name">จัดการข้อมูลบุคลากร</span>
+              <span class="links_name" >จัดการข้อมูลบุคลากร</span>
             </a>
           </li>
           <li>
-            <a href="#" onClick={() => navigate("/allequip", { state: adminData })}>
+            <a href="allequip">
               <i class="bi bi-prescription2"></i>
-              <span class="links_name">จัดการอุปกรณ์ทางการแพทย์</span>
+              <span class="links_name" >จัดการอุปกรณ์ทางการแพทย์</span>
             </a>
           </li>
           <li>
-            <a href="#" onClick={() => navigate("/alladmin")}>
+            <a href="alladmin" onClick={() => navigate("/alladmin")}>
               <i class="bi bi-person-gear"></i>
-              <span class="links_name">จัดการแอดมิน</span>
+              <span class="links_name" >จัดการแอดมิน</span>
             </a>
           </li>
           <div class="nav-logout">
             <li>
-              <a href="#" onClick={logOut}>
-                <i class="bi bi-box-arrow-right" id="log_out" onClick={logOut}></i>
-                <span class="links_name">ออกจากระบบ</span>
+              <a href="./" onClick={logOut}>
+                <i class='bi bi-box-arrow-right' id="log_out" onClick={logOut}></i>
+                <span class="links_name" >ออกจากระบบ</span>
               </a>
             </li>
           </div>
@@ -174,9 +174,9 @@ export default function AllEquip({}) {
         <div className="header">จัดการอุปกรณ์ทางการแพทย์</div>
         <div class="profile_details ">
           <li>
-            <a href="#" onClick={() => navigate("/profile")}>
+            <a href="profile" >
               <i class="bi bi-person"></i>
-              <span class="links_name">{adminData && adminData.username}</span>
+              <span class="links_name" >{adminData && adminData.username}</span>
             </a>
           </li>
         </div>
@@ -184,8 +184,8 @@ export default function AllEquip({}) {
         <div className="breadcrumbs">
           <ul>
             <li>
-              <a className="bihouse">
-                <i class="bi bi-house-fill" onClick={() => navigate("/home")}></i>
+            <a href="home">
+                <i class="bi bi-house-fill"></i>
               </a>
             </li>
             <li className="arrow">
