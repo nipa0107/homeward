@@ -225,6 +225,7 @@ export default function AllUser({ }) {
         </div>
 
         {/*ค้นหา */}
+        <h3>จัดการข้อมูลผู้ป่วย</h3>
         <div className="search-bar">
           <input
             className="search-text"
