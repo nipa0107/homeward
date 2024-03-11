@@ -275,7 +275,7 @@ export default function AllUser({ }) {
         </div>
         <h3>ข้อมูลการดูแลผู้ป่วย</h3>
         {/*ค้นหา */}
-        <div className="search-bar">
+        {/* <div className="search-bar">
           <input
             className="search-text"
             type="text"
@@ -283,7 +283,7 @@ export default function AllUser({ }) {
             value={searchKeyword}
             onChange={(e) => setSearchKeyword(e.target.value)}
           />
-        </div>
+        </div> */}
 
         <div className="toolbar">
           {/* <button
@@ -292,7 +292,7 @@ export default function AllUser({ }) {
           >
             เพิ่มข้อมูลผู้ป่วย
           </button> */}
-          <p className="countadmin">จำนวนผู้ป่วย : {data.length} คน</p>
+          {/* <p className="countadmin">จำนวนผู้ป่วย : {data.length} คน</p> */}
         </div>
 
         <div className="content1">
