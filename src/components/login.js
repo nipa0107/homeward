@@ -38,7 +38,6 @@ export default class Login extends Component {
           // เก็บข้อมูลเข้าสู่ระบบไว้
           window.localStorage.setItem("token", data.data);
           window.localStorage.setItem("loggedIn", true);
-
           window.location.href = "./home";
         } else {
           //ถ้าเข้าสู่ระบบไม่สำเร็จ
@@ -110,6 +109,7 @@ export default class Login extends Component {
                   เข้าสู่ระบบ
                 </button>
               </div>
+
             </form>
           </div>
         </div>
