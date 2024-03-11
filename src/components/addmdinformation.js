@@ -409,7 +409,6 @@ export default function AddUser() {
   const [selectedFileName1, setSelectedFileName1] = useState("");
   const [selectedFileName2, setSelectedFileName2] = useState("");
   const [selectedFileName3, setSelectedFileName3] = useState("");
-
   const [pdfURL1, setPdfURL1] = useState(null);
   const [pdfURL2, setPdfURL2] = useState(null);
   const [pdfURL3, setPdfURL3] = useState(null);
