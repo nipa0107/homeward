@@ -4,7 +4,7 @@ import "../css/alladmin.css";
 import "bootstrap-icons/font/bootstrap-icons.css";
 import logow from "../img/logow.png";
 import { useNavigate } from "react-router-dom";
-
+import { useLocation } from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
@@ -33,8 +33,10 @@ export default function AddUser() {
   const [pdfURL1, setPdfURL1] = useState(null);
   const [pdfURL2, setPdfURL2] = useState(null);
   const [pdfURL3, setPdfURL3] = useState(null);
-
+  const [userId, setUserId] = useState("");
   const [selectedPersonnel, setSelectedPersonnel] = useState("");
+  const { state } = useLocation();
+  const lastAddedUser = state && state.lastAddedUser;
 
   useEffect(() => {
     const token = window.localStorage.getItem("token");
@@ -55,11 +57,16 @@ export default function AddUser() {
         .then((res) => res.json())
         .then((data) => {
           console.log(data);
-          setAdminData(data.data);
+          setUserId(data.data._id);
         });
     }
     getAllMpersonnel();
-  }, []); //ส่งไปครั้งเดียว
+
+if (lastAddedUser) {
+      // Display toast notification if lastAddedUser exists
+      toast.success(`Last added user: ${lastAddedUser}`);
+    }
+  }, [lastAddedUser]);//ส่งไปครั้งเดียว
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -77,6 +84,7 @@ export default function AddUser() {
     formData.append("fileM", fileM);
     formData.append("filePhy", filePhy);
 
+    
     fetch(`http://localhost:5000/addmedicalinformation`, {
       method: "POST",
       headers: {

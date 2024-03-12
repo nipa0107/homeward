@@ -24,6 +24,7 @@ export default function AddUser() {
   const [isActive, setIsActive] = useState(false);
   const [error, setError] = useState("");
   const [token, setToken] = useState("");
+  const [lastAddedUser, setlastAddedUser] = useState("");
 
   useEffect(() => {
     const token = window.localStorage.getItem("token");
@@ -60,6 +61,7 @@ export default function AddUser() {
         Authorization: `Bearer ${token}`,
       },
       body: JSON.stringify({
+        // ข้อมูลที่ต้องการบันทึก
         username,
         name,
         email,
@@ -71,6 +73,8 @@ export default function AddUser() {
         ID_card_number,
         nationality,
         Address,
+        // ส่ง user ID ไปด้วย
+        userId: lastAddedUser._id
       }),
     })
       .then((res) => res.json())
@@ -79,8 +83,9 @@ export default function AddUser() {
         if (data.status === "ok") {
           console.log(username, password, confirmPassword);
           toast.success("เพิ่มข้อมูลสำเร็จ");
+          setlastAddedUser(data.data);
           setTimeout(() => {
-            navigate("/alluser");
+            navigate("/addmdinformation")
           }, 1100);
         } else {
           // เมื่อเกิดข้อผิดพลาด
@@ -294,16 +299,16 @@ export default function AddUser() {
             </p>
             <div className="d-grid">
               <button type="submit" className="btn btn-outline py-2">
-                บันทึก
+                ถัดไป
               </button>
             </div>
           </form>
         </div>
         <div className="btn-group">
           <div className="btn-next">
-            <button onClick={() => navigate("/addmdinformation")} className="btn btn-outline py-2">
+            {/* <button onClick={() => navigate("/addmdinformation")} className="btn btn-outline py-2">
               ถัดไป
-            </button>
+            </button> */}
           </div>
         </div>
       </div>
