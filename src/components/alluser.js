@@ -262,8 +262,9 @@ export default function AllUser({ }) {
                     <tr key={index}>
                       <td>{i.username}</td>
                       <td>{i.name}</td>
-                      <td className="action-icons">
-                      <a href="allinfo" className="info">รายละเอียด</a>
+                      <td>
+                      <a onClick={() => navigate("/allinfo", { state: { id: i._id } })} className="info">รายละเอียด</a>
+                      {/* <a href="allinfo" className="info">รายละเอียด</a> */}
                         {/* <img
                           src={editimg}
                           className="editimg1"

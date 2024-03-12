@@ -175,4 +175,35 @@ td {
   }
 .info{
     text-decoration: none;
+    cursor: pointer;
 }
+
+
+.user-info {
+    display: flex;
+    justify-content: space-between;
+    padding-left: 5%;
+
+}
+  
+  .left-info,
+  .right-info {
+    flex: 1;
+  }
+  
+  .user-info p {
+    margin-bottom: 10px;
+  }
+  
+
+  .action-icons {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+
+  }
+  
+  .editimg1,
+  .deleteimg1 {
+    margin-left: 5px;
+  }

@@ -280,6 +280,14 @@ export default function AddUser() {
                 onChange={(e) => setAddress(e.target.value)}
               />
             </div>
+            <div className="mb-3">
+              <label>เบอร์โทรศัพท์</label>
+              <input
+                type="text"
+                className="form-control"
+                onChange={(e) => setTel(e.target.value)}
+              />
+            </div>
             {/* แสดงข้อความ error */}
             <p id="errormessage" className="errormessage">
               {error}

@@ -152,7 +152,9 @@ const UpdateUser = async () => {
         // window.location.href = "./alluser";
         toast.success("แก้ไขข้อมูลสำเร็จ");
         setTimeout(() => {
-          navigate("/alluser");
+          // navigate("/allinfo");
+          navigate("/allinfo", { state: { id: id, user: user } });
+
         },1100); 
       } else {
         toast.error("ไม่สามารถแก้ไขผู้ใช้ได้:", response.statusText);
@@ -165,6 +167,7 @@ const UpdateUser = async () => {
       console.error("เกิดข้อผิดพลาดในการแก้ไขผู้ใช้:", error);
     }
   };
+
   
   const logOut = () => {
     window.localStorage.clear();
@@ -173,6 +176,11 @@ const UpdateUser = async () => {
   // bi-list
   const handleToggleSidebar = () => {
     setIsActive(!isActive);
+  };
+
+
+  const handleBreadcrumbClick = () => {
+    navigate("/allinfo", { state: { id: id, user: user } });
   };
 
   return (
@@ -254,7 +262,8 @@ const UpdateUser = async () => {
               <i class="bi bi-chevron-double-right"></i>
             </li>
             <li>
-              <a href="allinfo">ข้อมูลการดูแลผู้ป่วย</a>
+               <a onClick={handleBreadcrumbClick} className="info">ข้อมูลการดูแลผู้ป่วย</a>
+              {/* <a href="allinfo">ข้อมูลการดูแลผู้ป่วย</a> */}
             </li>
             <li className="arrow">
               <i class="bi bi-chevron-double-right"></i>
@@ -288,7 +297,7 @@ const UpdateUser = async () => {
             />
           </div>
 
-          <div className="mb-3">
+          {/* <div className="mb-3">
               <label>รหัสผ่าน</label>
               <input
                 type="password"
@@ -296,7 +305,7 @@ const UpdateUser = async () => {
                 className="form-control gray-background"
                 onChange={(e) => setPassword(e.target.value)}
               />
-            </div>
+            </div> */}
             <div className="mb-3">
               <label>ชื่อ-นามสกุล</label>
               <input
@@ -360,9 +369,19 @@ const UpdateUser = async () => {
                 onChange={(e) => setAddress(e.target.value)}
               />
             </div>
+            <div className="mb-3">
+            <label>เบอร์โทรศัพท์</label>
+            <input
+              type="text"
+              value={tel}
+              className="form-control"
+              onChange={(e) => setTel(e.target.value)}
+            />
+          </div>
           <div className="d-grid">
             <button
               onClick={UpdateUser}
+              // onClick={() => UpdateUser(id)}
               className="btn btn-outline py-2"
             >
               บันทึก

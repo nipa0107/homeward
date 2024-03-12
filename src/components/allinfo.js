@@ -5,8 +5,9 @@ import "../css/alladmin.css";
 import "../css/sidebar.css";
 import logow from "../img/logow.png";
 import { useNavigate } from "react-router-dom";
+import { useLocation } from "react-router-dom";
 
-export default function AllUser({ }) {
+export default function AllUser({}) {
   const navigate = useNavigate();
   const [equipData, setEquipData] = useState([]);
   const [data, setData] = useState([]);
@@ -14,8 +15,17 @@ export default function AllUser({ }) {
   const [isActive, setIsActive] = useState(false);
   const [searchKeyword, setSearchKeyword] = useState(""); //ค้นหา
   const [token, setToken] = useState("");
-  
-
+  const location = useLocation();
+  const { id } = location.state;
+  const [username, setUsername] = useState("");
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [tel, setTel] = useState("");
+  const [gender, setGender] = useState("");
+  const [birthday, setBirthday] = useState("");
+  const [ID_card_number, setIDCardNumber] = useState("");
+  const [nationality, setNationality] = useState("");
+  const [Address, setAddress] = useState("");
   useEffect(() => {
     const token = window.localStorage.getItem("token");
     setToken(token);
@@ -38,37 +48,29 @@ export default function AllUser({ }) {
           setAdminData(data.data);
         });
     }
-    getAllUser();
-    getAllEquip();
   }, []);
+  useEffect(() => {
+    const fetchUserId = async () => {
+      try {
+        const response = await fetch(`http://localhost:5000/user/${id}`);
+        const userdata = await response.json();
+        setData([data.data]);
+        setUsername(userdata.data.username);
+        setName(userdata.data.name);
+        setBirthday(userdata.data.birthday);
+        setGender(userdata.data.gender);
+        setNationality(userdata.data.nationality);
+        setIDCardNumber(userdata.data.ID_card_number);
+        setTel(userdata.data.tel);
+        setAddress(userdata.data.Address)
+      } catch (error) {
+        console.error("Error fetching user ID:", error);
+      }
+    };
+    fetchUserId();
+  }, [id]);
 
-  const getAllUser = () => {
-    fetch("http://localhost:5000/alluser", {
-      method: "GET",
-      headers: {
-        Authorization: `Bearer ${token}`, // เพิ่ม Authorization header เพื่อส่ง token ในการร้องขอ
-      },
-    })
-      .then((res) => res.json())
-      .then((data) => {
-        console.log(data, "AllUser");
-        setData(data.data);
-      });
-  };
-  const getAllEquip = () => {
-    fetch("http://localhost:5000/allequip", {
-      method: "GET",
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    })
-      .then((res) => res.json())
-      .then((data) => {
-        console.log(data, "AllEquip");
-        setEquipData(data.data);
-      });
-  };
-  const deleteUser = async (id, username) => {
+  const deleteUser = async () => {
     if (window.confirm(`คุณต้องการลบ ${username} หรือไม่ ?`)) {
       try {
         const response = await fetch(`http://localhost:5000/deleteUser/${id}`, {
@@ -84,35 +86,7 @@ export default function AllUser({ }) {
 
         if (response.ok) {
           alert(data.data);
-          getAllUser();
-        } else {
-          console.error("Error during deletion:", data.data);
-        }
-      } catch (error) {
-        console.error("Error during fetch:", error);
-      }
-    }
-  };
-  const deleteEquipment = async (id, equipment_name) => {
-    if (window.confirm(`คุณต้องการลบ ${equipment_name} หรือไม่ ?`)) {
-      try {
-        const response = await fetch(
-          `http://localhost:5000/deleteEquipment/${id}`,
-          {
-            method: "DELETE",
-            headers: {
-              "Content-Type": "application/json",
-              Accept: "application/json",
-              Authorization: `Bearer ${token}`,
-            },
-          }
-        );
-
-        const data = await response.json();
-
-        if (response.ok) {
-          alert(data.data);
-          getAllUser();
+          navigate("/alluser");
         } else {
           console.error("Error during deletion:", data.data);
         }
@@ -130,63 +104,24 @@ export default function AllUser({ }) {
     setIsActive(!isActive);
   };
 
-  useEffect(() => {
-    const searchUser = async () => {
-      try {
-        const response = await fetch(
-          `http://localhost:5000/searchuser?keyword=${encodeURIComponent(searchKeyword)}`,
-          {
-            headers: {
-              Authorization: `Bearer ${token}`, // เพิ่ม Authorization header เพื่อส่ง token ในการร้องขอค้นหา
-            },
-          }
-        );
+  // กำหนดวันที่ปัจจุบัน
+  const currentDate = new Date();
 
-        const searchData = await response.json();
-        if (response.ok) {
-          if (searchData.data.length > 0) {
-            setData(searchData.data);
-          } else {
-            setData([]); // ล้างข้อมูลเดิมในกรณีไม่พบข้อมูล
-          }
-        } else {
-          console.error('Error during search:', searchData.status);
-        }
-      } catch (error) {
-        console.error("Error during search:", error);
-      }
-    };
-    searchUser();
-  }, [searchKeyword, token]);
+  // แปลงวันเกิดของผู้ใช้เป็นวัตถุ Date
+  const userBirthday = new Date(birthday);
 
-  useEffect(() => {
-    const searchEquipment = async () => {
-      try {
-        const response = await fetch(
-          `http://localhost:5000/searchequipment?keyword=${encodeURIComponent(searchKeyword)}`,
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          }
-        );
-        const searchData = await response.json();
-        if (response.ok) {
-          if (searchData.data.length > 0) {
-            setEquipData(searchData.data);
-          } else {
-            setEquipData([]); // ล้างข้อมูลเดิมในกรณีไม่พบข้อมูล
-          }
-        } else {
-          console.error('Error during equipment search:', searchData.status);
-        }
-      } catch (error) {
-        console.error("Error during equipment search:", error);
-      }
-    };
-    searchEquipment();
-  }, [searchKeyword, token]);
+  // คำนวณความแตกต่างระหว่างปีปัจจุบันกับปีเกิดของผู้ใช้
+  const ageDiff = currentDate.getFullYear() - userBirthday.getFullYear();
 
+  // ตรวจสอบว่าวันเกิดของผู้ใช้มีเกินวันปัจจุบันหรือไม่
+  // ถ้ายังไม่เกิน แสดงอายุเป็นผลลัพธ์
+  // ถ้าเกินแล้ว ลดอายุลง 1 ปี
+  const isBeforeBirthday =
+    currentDate.getMonth() < userBirthday.getMonth() ||
+    (currentDate.getMonth() === userBirthday.getMonth() &&
+      currentDate.getDate() < userBirthday.getDate());
+
+  const userAge = isBeforeBirthday ? ageDiff - 1 : ageDiff;
 
   return (
     <main className="body">
@@ -203,38 +138,42 @@ export default function AllUser({ }) {
           <li>
             <a href="home">
               <i class="bi bi-book"></i>
-              <span class="links_name" >จัดการข้อมูลคู่มือการดูแลผู้ป่วย</span>
+              <span class="links_name">จัดการข้อมูลคู่มือการดูแลผู้ป่วย</span>
             </a>
           </li>
           <li>
             <a href="alluser">
               <i class="bi bi-person-plus"></i>
-              <span class="links_name" >จัดการข้อมูลผู้ป่วย</span>
+              <span class="links_name">จัดการข้อมูลผู้ป่วย</span>
             </a>
           </li>
           <li>
             <a href="allmpersonnel">
               <i class="bi bi-people"></i>
-              <span class="links_name" >จัดการข้อมูลบุคลากร</span>
+              <span class="links_name">จัดการข้อมูลบุคลากร</span>
             </a>
           </li>
           <li>
             <a href="allequip">
               <i class="bi bi-prescription2"></i>
-              <span class="links_name" >จัดการอุปกรณ์ทางการแพทย์</span>
+              <span class="links_name">จัดการอุปกรณ์ทางการแพทย์</span>
             </a>
           </li>
           <li>
             <a href="alladmin" onClick={() => navigate("/alladmin")}>
               <i class="bi bi-person-gear"></i>
-              <span class="links_name" >จัดการแอดมิน</span>
+              <span class="links_name">จัดการแอดมิน</span>
             </a>
           </li>
           <div class="nav-logout">
             <li>
               <a href="./" onClick={logOut}>
-                <i class='bi bi-box-arrow-right' id="log_out" onClick={logOut}></i>
-                <span class="links_name" >ออกจากระบบ</span>
+                <i
+                  class="bi bi-box-arrow-right"
+                  id="log_out"
+                  onClick={logOut}
+                ></i>
+                <span class="links_name">ออกจากระบบ</span>
               </a>
             </li>
           </div>
@@ -244,9 +183,9 @@ export default function AllUser({ }) {
         <div className="header">จัดการข้อมูลผู้ป่วย</div>
         <div class="profile_details ">
           <li>
-            <a href="profile" >
+            <a href="profile">
               <i class="bi bi-person"></i>
-              <span class="links_name" >{adminData && adminData.username}</span>
+              <span class="links_name">{adminData && adminData.username}</span>
             </a>
           </li>
         </div>
@@ -262,9 +201,7 @@ export default function AllUser({ }) {
               <i class="bi bi-chevron-double-right"></i>
             </li>
             <li>
-              <a href="alluser">
-                จัดการข้อมูลผู้ป่วย
-              </a>
+              <a href="alluser">จัดการข้อมูลผู้ป่วย</a>
             </li>
             <li className="arrow">
               <i class="bi bi-chevron-double-right"></i>
@@ -275,30 +212,42 @@ export default function AllUser({ }) {
           </ul>
         </div>
         <h3>ข้อมูลการดูแลผู้ป่วย</h3>
-        {/*ค้นหา */}
-        {/* <div className="search-bar">
-          <input
-            className="search-text"
-            type="text"
-            placeholder="ค้นหา"
-            value={searchKeyword}
-            onChange={(e) => setSearchKeyword(e.target.value)}
-          />
-        </div> */}
-
-        <div className="toolbar">
-          {/* <button
-            onClick={() => navigate("/adduser")}
-            className="bi bi-plus-circle btn btn-outline py-1 px-4"
-          >
-            เพิ่มข้อมูลผู้ป่วย
-          </button> */}
-          {/* <p className="countadmin">จำนวนผู้ป่วย : {data.length} คน</p> */}
-        </div>
-
-        <div className="content1">
+        <div >
           <div className="cardall card mb-3">
-            <table className="table">
+            <h6>1.ข้อมูลทั่วไป</h6>
+            <div className="user-info">
+              <div className="left-info">
+                {/* {username ? (<p>ชื่อผู้ใช้: {username}</p>) : (<p>ชื่อผู้ใช้: -</p>)} */}
+                {name ? <p>ชื่อ-สกุล: {name}</p> : <p>ชื่อ-สกุล: -</p>}
+                {birthday ? <p>อายุ: {userAge} ปี</p> : <p>อายุ: - ปี</p>}
+                {ID_card_number ? (<p>เลขบัตรประชาชน: {ID_card_number}</p>) : (<p>เลขบัตรประชาชน: -</p>)}
+                {Address ? <p>ที่อยู่: {Address}</p> : <p>ที่อยู่: -</p>}
+              </div>
+              <div className="right-info">
+                {gender ? <p>เพศ: {gender}</p> : <p>เพศ: -</p>}
+                {nationality ? (<p>สัญชาติ: {nationality}</p>) : (<p>สัญชาติ: -</p>)}
+                {tel ? <p>เบอร์โทรศัพท์: {tel}</p> : <p>เบอร์โทรศัพท์: -</p>}
+              </div>
+            </div>
+            <div className="action-icons">
+              <img
+                src={editimg}
+                className="editimg1"
+                alt="editimg"
+                onClick={() =>
+                  navigate("/updateuser", {
+                    state: { id },
+                  })
+                }
+              ></img>
+              <img
+                src={deleteimg}
+                className="deleteimg1"
+                alt="deleteimg"
+                onClick={() => deleteUser()}
+              ></img>
+            </div>
+            {/* <table className="table">
               <thead>
                 <th>1.ข้อมูลทั่วไป</th>
                 <tr>
@@ -308,19 +257,17 @@ export default function AllUser({ }) {
                 </tr>
               </thead>
               <tbody>
-                {data.map((i, index) => {
-                  return (
-                    <tr key={index}>
-                      <td>{i.username}</td>
-                      <td>{i.name}</td>
-                      <td className="action-icons">
+                <tr>
+                <td>{username}</td>
+                <td>{name}</td>
+                <td className="action-icons">
                         <img
                           src={editimg}
                           className="editimg1"
                           alt="editimg"
                           onClick={() =>
                             navigate("/updateuser", {
-                              state: { id: i._id, user: i },
+                              state: { id },
                             })
                           }
                         ></img>
@@ -328,44 +275,24 @@ export default function AllUser({ }) {
                           src={deleteimg}
                           className="deleteimg1"
                           alt="deleteimg"
-                          onClick={() => deleteUser(i._id, i.username, i.name)}
+                          onClick={() => deleteUser()}
                         ></img>
                       </td>
-                    </tr>
-                  );
-                })}
+                </tr>
+              
+
               </tbody>
-            </table>
+            </table> */}
+             
           </div>
           <div className="cardall card mb-3">
-            <table className="table">
-              <thead>
-                <th>3.อุปกรณ์ทางการแพทย์</th>
-                <tr>
-                  <th>ชื่ออุปกรณ์</th>
-                  <th>ประเภทอุปกรณ์</th>
-                  <th>คำสั่ง</th>
-                </tr>
-              </thead>
-              <tbody>
-                {equipData.map((i, index) => (
-                  <tr key={index}>
-                    <td data-title="">{i.equipment_name}</td>
-                    <td>{i.equipment_type}</td>
-                    <td>
-                      <img
-                        src={deleteimg}
-                        className="deleteimg"
-                        alt="deleteimg"
-                        onClick={() => deleteEquipment(i._id, i.equipment_name)}
-                      ></img>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
+            <h6>2.ข้อมูลการเจ็บป่วย</h6>
         </div>
+        <div className="cardall card mb-3">
+            <h6>3.อุปกรณ์ทางการแพทย์</h6>
+        </div>
+        </div>
+    
       </div>
     </main>
   );
