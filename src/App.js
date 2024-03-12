@@ -45,7 +45,6 @@ function App() {
             path="/"
             element={isLoggedIn === "true" ? <Home /> : <Login />}
           />
-
           <Route
             path="/home"
             element={

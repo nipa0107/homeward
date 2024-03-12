@@ -222,6 +222,24 @@ export default function AddEquip({ }) {
             </div>
           </form>
         </div>
+        <div className="btn-group">
+          <div className="btn-pre">
+            <button
+              onClick={() => navigate("/addmdinformation")}
+              className="btn btn-outline py-2"
+            >
+              ก่อนหน้า
+            </button>
+          </div>
+          {/* <div className="btn-next">
+            <button
+              onClick={() => navigate("/addequipment")}
+              className="btn btn-outline py-2"
+            >
+              ถัดไป
+            </button>
+          </div> */}
+        </div>
       </div>
     </main>
   );

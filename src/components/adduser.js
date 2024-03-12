@@ -88,7 +88,6 @@ export default function AddUser() {
         }
       });
   };
-
   const logOut = () => {
     window.localStorage.clear();
     window.location.href = "./";
