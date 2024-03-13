@@ -197,6 +197,7 @@ export default function AllEquip({}) {
             </li>
           </ul>
         </div>
+        <h3>จัดการอุปกรณ์ทางการแพทย์</h3>
 
         {/* ค้นหา */}
         <div className="search-bar">

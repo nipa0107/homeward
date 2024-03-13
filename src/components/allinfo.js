@@ -26,6 +26,8 @@ export default function AllUser({}) {
   const [ID_card_number, setIDCardNumber] = useState("");
   const [nationality, setNationality] = useState("");
   const [Address, setAddress] = useState("");
+  const [medicalInfo, setMedicalInfo] = useState(null); // เพิ่ม state สำหรับเก็บข้อมูลการดูแลผู้ป่วย
+
   useEffect(() => {
     const token = window.localStorage.getItem("token");
     setToken(token);
@@ -62,12 +64,48 @@ export default function AllUser({}) {
         setNationality(userdata.data.nationality);
         setIDCardNumber(userdata.data.ID_card_number);
         setTel(userdata.data.tel);
-        setAddress(userdata.data.Address)
+        setAddress(userdata.data.Address);
       } catch (error) {
         console.error("Error fetching user ID:", error);
       }
     };
     fetchUserId();
+  }, [id]);
+
+  // useEffect(() => {
+  //   const fetchMedicalInformation = async () => {
+  //     try {
+  //       const response = await fetch(`http://localhost:5000/medicalInformation/${id}`); // ใช้ id เป็น userId ใน URL
+  //       const medicalData = await response.json();
+  //       console.log(medicalData);
+  //       setMedicalInfo([medicalData.data]);
+  //       setHn(medicalData.data.HN);
+  //     } catch (error) {
+  //       console.error("Error fetching medical information:", error);
+  //     }
+  //   };
+  //   fetchMedicalInformation();
+  // }, [id]);
+
+  useEffect(() => {
+    const fetchMedicalInformation = async () => {
+      try {
+        console.log("UserID:", id);
+        const response = await fetch(
+          `http://localhost:5000/medicalInformation/${id}`
+        );
+        const medicalData = await response.json();
+        console.log("Medical Data:", medicalData);
+        if (medicalData && medicalData.data) {
+          setMedicalInfo(medicalData.data);
+        } else {
+          console.error("Medical information not found for this user");
+        }
+      } catch (error) {
+        console.error("Error fetching medical information:", error);
+      }
+    };
+    fetchMedicalInformation();
   }, [id]);
 
   const deleteUser = async () => {
@@ -212,7 +250,7 @@ export default function AllUser({}) {
           </ul>
         </div>
         <h3>ข้อมูลการดูแลผู้ป่วย</h3>
-        <div >
+        <div>
           <div className="cardall card mb-3">
             <h6>1.ข้อมูลทั่วไป</h6>
             <div className="user-info">
@@ -220,12 +258,20 @@ export default function AllUser({}) {
                 {/* {username ? (<p>ชื่อผู้ใช้: {username}</p>) : (<p>ชื่อผู้ใช้: -</p>)} */}
                 {name ? <p>ชื่อ-สกุล: {name}</p> : <p>ชื่อ-สกุล: -</p>}
                 {birthday ? <p>อายุ: {userAge} ปี</p> : <p>อายุ: - ปี</p>}
-                {ID_card_number ? (<p>เลขบัตรประชาชน: {ID_card_number}</p>) : (<p>เลขบัตรประชาชน: -</p>)}
+                {ID_card_number ? (
+                  <p>เลขบัตรประชาชน: {ID_card_number}</p>
+                ) : (
+                  <p>เลขบัตรประชาชน: -</p>
+                )}
                 {Address ? <p>ที่อยู่: {Address}</p> : <p>ที่อยู่: -</p>}
               </div>
               <div className="right-info">
                 {gender ? <p>เพศ: {gender}</p> : <p>เพศ: -</p>}
-                {nationality ? (<p>สัญชาติ: {nationality}</p>) : (<p>สัญชาติ: -</p>)}
+                {nationality ? (
+                  <p>สัญชาติ: {nationality}</p>
+                ) : (
+                  <p>สัญชาติ: -</p>
+                )}
                 {tel ? <p>เบอร์โทรศัพท์: {tel}</p> : <p>เบอร์โทรศัพท์: -</p>}
               </div>
             </div>
@@ -247,52 +293,92 @@ export default function AllUser({}) {
                 onClick={() => deleteUser()}
               ></img>
             </div>
-            {/* <table className="table">
-              <thead>
-                <th>1.ข้อมูลทั่วไป</th>
-                <tr>
-                  <th>ชื่อผู้ใช้</th>
-                  <th>ชื่อ-สกุล</th>
-                  <th>คำสั่ง</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                <td>{username}</td>
-                <td>{name}</td>
-                <td className="action-icons">
-                        <img
-                          src={editimg}
-                          className="editimg1"
-                          alt="editimg"
-                          onClick={() =>
-                            navigate("/updateuser", {
-                              state: { id },
-                            })
-                          }
-                        ></img>
-                        <img
-                          src={deleteimg}
-                          className="deleteimg1"
-                          alt="deleteimg"
-                          onClick={() => deleteUser()}
-                        ></img>
-                      </td>
-                </tr>
-              
-
-              </tbody>
-            </table> */}
-             
           </div>
+
+          {/* <div className="cardall card mb-3">
+            <h6>2.ข้อมูลการเจ็บป่วย</h6>
+            {medicalInfo && (
+              <div>
+                <p>HN: {medicalInfo.HN}</p>
+                <p>AN: {medicalInfo.AN}</p>
+                <p>
+                  วันที่ Admit:{" "}
+                  {new Date(medicalInfo.Date_Admit).toLocaleDateString(
+                    "th-TH",
+                    { day: "numeric", month: "long", year: "numeric" }
+                  )}
+                </p>
+                <p>
+                  วันที่ D/C:{" "}
+                  {new Date(medicalInfo.Date_DC).toLocaleDateString("th-TH", {
+                    day: "numeric",
+                    month: "long",
+                    year: "numeric",
+                  })}
+                </p>
+                <p>Diagnoosis: {medicalInfo.Diagnosis}</p>
+                <p>Chief complaint: {medicalInfo.Chief_complaint}</p>
+                <p>
+                  Phychosocial assessment: {medicalInfo.Phychosocial_assessment}
+                </p>
+                <p>Present illness: {medicalInfo.Present_illness}</p>
+              </div>
+            )}
+          </div> */}
+
           <div className="cardall card mb-3">
             <h6>2.ข้อมูลการเจ็บป่วย</h6>
-        </div>
-        <div className="cardall card mb-3">
+            {medicalInfo && (
+              <div className="user-info">
+                <div className="left-info">
+                  <p>HN: {medicalInfo.HN || "-"}</p>
+                  <p>
+                    วันที่ Admit:
+                    {medicalInfo.Date_Admit
+                      ? new Date(medicalInfo.Date_Admit).toLocaleDateString(
+                          "th-TH",
+                          { day: "numeric", month: "long", year: "numeric" }
+                        )
+                      : "-"}
+                  </p>
+                  <p>Diagnosis: {medicalInfo.Diagnosis || "-"}</p>
+                  <p>Chief complaint: {medicalInfo.Chief_complaint || "-"}</p>
+                </div>
+                <div className="right-info">
+                  <p>AN: {medicalInfo.AN || "-"}</p>
+                  <p>
+                    {" "}
+                    วันที่ D/C:
+                    {medicalInfo.Date_DC
+                      ? new Date(medicalInfo.Date_DC).toLocaleDateString(
+                          "th-TH",
+                          { day: "numeric", month: "long", year: "numeric" }
+                        )
+                      : "-"}
+                  </p>
+                  <p>Present illness: {medicalInfo.Present_illness || "-"}</p>
+                  <p>
+                    Phychosocial assessment:{" "}
+                    {medicalInfo.Phychosocial_assessment || "-"}
+                  </p>
+                </div>
+{/* 
+                <div className="pdf-link">
+                  <a
+                    href={`http://localhost:5000/file/${medicalInfo.fileM}`}
+                    target="_blank"
+                    rel="noopener noreferrer">
+                    ดูไฟล์ PDF
+                  </a>
+                </div> */}
+              </div>
+            )}
+          </div>
+
+          <div className="cardall card mb-3">
             <h6>3.อุปกรณ์ทางการแพทย์</h6>
+          </div>
         </div>
-        </div>
-    
       </div>
     </main>
   );

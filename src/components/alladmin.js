@@ -202,6 +202,8 @@ useEffect(() => {
 
 
         {/*ค้นหา */}
+        <h3>จัดการแอดมิน</h3>
+
         <div className="search-bar">
           <input
             className="search-text"

@@ -204,6 +204,8 @@ export default function Home({ }) {
 
           </ul>
         </div>
+        <h3>จัดการข้อมูลคู่มือการดูแลผู้ป่วย</h3>
+
         {/* ค้นหา */}
         <div className="search-bar">
           <input
