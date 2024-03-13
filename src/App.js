@@ -25,6 +25,7 @@ import UpdateOTP from "./components/updateotp";
 import AddMDinformation from "./components/addmdinformation"
 import AddEquipment from "./components/addequipment"
 import AllInfo from "./components/allinfo"
+import AddEquipUser from "./components/addequipuser"
 
 const PrivateRoute = ({ element, isLoggedIn }) => {
   return isLoggedIn === "true" ? (
@@ -172,6 +173,12 @@ function App() {
             path="/allinfo"
             element={
               <PrivateRoute element={<AllInfo />} isLoggedIn={isLoggedIn} />
+            }
+          />
+          <Route
+            path="/addequipuser"
+            element={
+              <PrivateRoute element={<AddEquipUser />} isLoggedIn={isLoggedIn} />
             }
           />
         </Routes>

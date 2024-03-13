@@ -4,8 +4,6 @@ import "../css/alladmin.css"
 import "bootstrap-icons/font/bootstrap-icons.css";
 import logow from "../img/logow.png";
 import { useNavigate } from "react-router-dom";
-
-
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
@@ -138,7 +136,7 @@ export default function AddEquip({ }) {
         </ul>
       </div>
       <div className="home_content">
-        <div className="header">จัดการข้อมูลผู้ป่วย</div>
+        <div className="header">จัดการอุปกรณ์ทางการแพทย์</div>
         <div class="profile_details ">
           <li>
             <a href="profile" >
@@ -160,23 +158,7 @@ export default function AddEquip({ }) {
             </li>
             <li>
               <a href="alluser">
-                จัดการข้อมูลผู้ป่วย
-              </a>
-            </li>
-            <li className="arrow">
-              <i class="bi bi-chevron-double-right"></i>
-            </li>
-            <li>
-              <a href="adduser">
-                เพิ่มข้อมูลผู้ป่วยทั่วไป
-              </a>
-            </li>
-            <li className="arrow">
-              <i class="bi bi-chevron-double-right"></i>
-            </li>
-            <li>
-              <a href="addmdinformation">
-                เพิ่มข้อมูลการเจ็บป่วย
+                จัดการอุปกรณ์ทางการแพทย์
               </a>
             </li>
             <li className="arrow">

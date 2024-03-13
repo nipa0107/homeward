@@ -425,7 +425,7 @@ if (lastAddedUser) {
           </div>
           <div className="btn-next">
             <button
-              onClick={() => navigate("/addequipment")}
+              onClick={() => navigate("/addequipuser")}
               className="btn btn-outline py-2"
             >
               ถัดไป
