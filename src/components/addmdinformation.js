@@ -97,6 +97,7 @@ export default function AddUser() {
         console.log(data, "Addmdinformation");
         if (data.status === "ok") {
           toast.success("เพิ่มข้อมูลสำเร็จ");
+          navigate("/addequipuser")
         }
       })
       .catch((error) => {
@@ -408,12 +409,12 @@ export default function AddUser() {
             </div>
             <div className="d-grid">
               <button type="submit" className="btn btn-outline py-2">
-                บันทึก
+                ถัดไป
               </button>
             </div>
           </form>
         </div>
-        <div className="btn-group">
+        {/* <div className="btn-group">
           <div className="btn-pre">
             <button
               onClick={() => navigate("/adduser")}
@@ -430,7 +431,7 @@ export default function AddUser() {
               ถัดไป
             </button>
           </div>
-        </div>
+        </div> */}
       </div>
     </main>
   );

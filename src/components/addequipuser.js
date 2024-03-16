@@ -315,12 +315,12 @@ export default function AddEquip({ }) {
                 </div>
                 <div className="btn-group">
                     <div className="btn-pre">
-                        <button
+                        {/* <button
                             onClick={() => navigate("/addmdinformation")}
                             className="btn btn-outline py-2"
                         >
                             ก่อนหน้า
-                        </button>
+                        </button> */}
                     </div>
                     {/* <div className="btn-next">
             <button
