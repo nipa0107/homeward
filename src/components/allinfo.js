@@ -3,11 +3,12 @@ import deleteimg from "../img/delete.png";
 import editimg from "../img/edit.png";
 import "../css/alladmin.css";
 import "../css/sidebar.css";
+import "../css/styles.css";
 import logow from "../img/logow.png";
 import { useNavigate } from "react-router-dom";
 import { useLocation } from "react-router-dom";
 
-export default function AllUser({}) {
+export default function AllUser({ }) {
   const navigate = useNavigate();
   const [equipData, setEquipData] = useState([]);
   const [data, setData] = useState([]);
@@ -252,47 +253,50 @@ export default function AllUser({}) {
         <h3>ข้อมูลการดูแลผู้ป่วย</h3>
         <div>
           <div className="cardall card mb-3">
-            <h6>1.ข้อมูลทั่วไป</h6>
+            <h6><b>1.ข้อมูลทั่วไป</b></h6>
             <div className="user-info">
               <div className="left-info">
                 {/* {username ? (<p>ชื่อผู้ใช้: {username}</p>) : (<p>ชื่อผู้ใช้: -</p>)} */}
-                {name ? <p>ชื่อ-สกุล: {name}</p> : <p>ชื่อ-สกุล: -</p>}
-                {birthday ? <p>อายุ: {userAge} ปี</p> : <p>อายุ: - ปี</p>}
+                {name ? <p><b>ชื่อ-สกุล: </b>{name}</p> : <p><b>ชื่อ-สกุล:</b> -</p>}
+                {birthday ? <p><b>อายุ:</b> {userAge} ปี</p> : <p><b>อายุ:</b> - ปี</p>}
                 {ID_card_number ? (
-                  <p>เลขบัตรประชาชน: {ID_card_number}</p>
+                  <p><b>เลขบัตรประชาชน:</b> {ID_card_number}</p>
                 ) : (
-                  <p>เลขบัตรประชาชน: -</p>
+                  <p><b>เลขบัตรประชาชน:</b> -</p>
                 )}
-                {Address ? <p>ที่อยู่: {Address}</p> : <p>ที่อยู่: -</p>}
+                {Address ? <p><b>ที่อยู่:</b> {Address}</p> : <p><b>ที่อยู่:</b> -</p>}
               </div>
               <div className="right-info">
-                {gender ? <p>เพศ: {gender}</p> : <p>เพศ: -</p>}
+                {gender ? <p><b>เพศ:</b> {gender}</p> : <p><b>เพศ:</b> -</p>}
                 {nationality ? (
-                  <p>สัญชาติ: {nationality}</p>
+                  <p><b>สัญชาติ:</b> {nationality}</p>
                 ) : (
-                  <p>สัญชาติ: -</p>
+                  <p><b>สัญชาติ:</b> -</p>
                 )}
-                {tel ? <p>เบอร์โทรศัพท์: {tel}</p> : <p>เบอร์โทรศัพท์: -</p>}
+                {tel ? <p><b>เบอร์โทรศัพท์:</b> {tel}</p> : <p><b>เบอร์โทรศัพท์:</b> -</p>}
               </div>
             </div>
-            <div className="action-icons">
-              <img
-                src={editimg}
-                className="editimg1"
-                alt="editimg"
-                onClick={() =>
-                  navigate("/updateuser", {
-                    state: { id },
-                  })
-                }
-              ></img>
-              <img
-                src={deleteimg}
-                className="deleteimg1"
-                alt="deleteimg"
-                onClick={() => deleteUser()}
-              ></img>
+            <div className="btn-group">
+              <div className="editimg1">
+                <button
+                  onClick={() =>
+                    navigate("/updateuser", {
+                      state: { id },
+                    })
+                  }
+                >
+                  แก้ไข
+                </button>
+              </div>
+              <div className="deleteimg1">
+                <button
+                  onClick={() => deleteUser()}
+                >
+                  ลบ
+                </button>
+              </div>
             </div>
+
           </div>
 
           {/* <div className="cardall card mb-3">
@@ -327,18 +331,18 @@ export default function AllUser({}) {
           </div> */}
 
           <div className="cardall card mb-3">
-            <h6>2.ข้อมูลการเจ็บป่วย</h6>
+            <h6><b>2.ข้อมูลการเจ็บป่วย</b></h6>
             {medicalInfo && (
               <div className="user-info">
                 <div className="left-info">
-                  <p>HN: {medicalInfo.HN || "-"}</p>
+                  <p><b>HN:</b> {medicalInfo.HN || "-"}</p>
                   <p>
                     วันที่ Admit:
                     {medicalInfo.Date_Admit
                       ? new Date(medicalInfo.Date_Admit).toLocaleDateString(
-                          "th-TH",
-                          { day: "numeric", month: "long", year: "numeric" }
-                        )
+                        "th-TH",
+                        { day: "numeric", month: "long", year: "numeric" }
+                      )
                       : "-"}
                   </p>
                   <p>Diagnosis: {medicalInfo.Diagnosis || "-"}</p>
@@ -351,9 +355,9 @@ export default function AllUser({}) {
                     วันที่ D/C:
                     {medicalInfo.Date_DC
                       ? new Date(medicalInfo.Date_DC).toLocaleDateString(
-                          "th-TH",
-                          { day: "numeric", month: "long", year: "numeric" }
-                        )
+                        "th-TH",
+                        { day: "numeric", month: "long", year: "numeric" }
+                      )
                       : "-"}
                   </p>
                   <p>Present illness: {medicalInfo.Present_illness || "-"}</p>
@@ -362,7 +366,7 @@ export default function AllUser({}) {
                     {medicalInfo.Phychosocial_assessment || "-"}
                   </p>
                 </div>
-{/* 
+                {/* 
                 <div className="pdf-link">
                   <a
                     href={`http://localhost:5000/file/${medicalInfo.fileM}`}

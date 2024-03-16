@@ -235,12 +235,11 @@ export default function AllEquip({}) {
                     <td data-title="">{i.equipment_name}</td>
                     <td>{i.equipment_type}</td>
                     <td>
-                      <img
-                        src={deleteimg}
+                      <button
                         className="deleteimg"
                         alt="deleteimg"
                         onClick={() => deleteEquipment(i._id, i.equipment_name)}
-                      ></img>
+                      >ลบ</button>
                     </td>
                   </tr>
                 ))}

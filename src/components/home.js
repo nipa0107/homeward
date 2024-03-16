@@ -219,7 +219,6 @@ export default function Home({ }) {
 
 
         <div className="toolbar">
-
           <button onClick={() => navigate("/addcaremanual")} className="bi bi-plus-circle btn btn-outline py-1 px-4">
             เพิ่มคู่มือ
           </button>
@@ -227,7 +226,7 @@ export default function Home({ }) {
         </div>
 
 
-
+ 
         <div className="content">
           {data == null
             ? ""
@@ -244,8 +243,8 @@ export default function Home({ }) {
               return (
                 <div class="adminall card mb-3 ">
                   <div class="card-body">
-                    <img src={deleteimg} className="deleteimg" alt="deleteimg" onClick={() => deleteCaremanual(i._id, i.caremanual_name)}></img><span></span>
-                    <img src={editimg} className="editimg" alt="editimg" onClick={() => navigate("/updatecaremanual", { state: { id: i._id, caremanual: i } })}></img>
+                    <button className="deleteimg" onClick={() => deleteCaremanual(i._id, i.caremanual_name)}>ลบ</button>
+                    <button className="editimg" onClick={() => navigate("/updatecaremanual", { state: { id: i._id, caremanual: i } })}>แก้ไข</button>
                     <h5 class="card-title">{i.caremanual_name}</h5>
                     {/* <h5 class="card-title">แก้ไขครั้งล่าสุดเมื่อ : {formattedDate}</h5> */}
                   </div>

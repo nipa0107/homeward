@@ -10,8 +10,8 @@ import 'react-toastify/dist/ReactToastify.css';
 export default function AddEquip({ }) {
     const navigate = useNavigate();
     const [data, setData] = useState([]);
-    const [equipment_name, setEquipName] = useState("");
-    const [equipment_type, setEquipType] = useState("");
+    const [equipmentname_forUser, setEquipName] = useState("");
+    const [equipmenttype_forUser, setEquipType] = useState("");
     const [validationMessage, setValidationMessage] = useState("");
     const [adminData, setAdminData] = useState("");
     const [isActive, setIsActive] = useState(false);
@@ -66,7 +66,7 @@ export default function AddEquip({ }) {
         //     return;
         // }
 
-        fetch("http://localhost:5000/addequip", {
+        fetch("http://localhost:5000/addequipuser", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
@@ -75,8 +75,8 @@ export default function AddEquip({ }) {
                 Authorization: `Bearer ${token}`
             },
             body: JSON.stringify({
-                equipment_name,
-                equipment_type,
+                equipmentname_forUser: equipmentname_forUser,
+                equipmenttype_forUser: equipmenttype_forUser,
             }),
         })
             .then((res) => res.json())
@@ -85,7 +85,7 @@ export default function AddEquip({ }) {
                 if (data.status === "ok") {
                     toast.success("เพิ่มข้อมูลสำเร็จ");
                     setTimeout(() => {
-                        navigate("/alleuser");
+                        navigate("/alluser");
                     }, 1100);
                 }
             });
