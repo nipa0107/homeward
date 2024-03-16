@@ -4,14 +4,13 @@ import "../css/alladmin.css"
 import "bootstrap-icons/font/bootstrap-icons.css";
 import logow from "../img/logow.png";
 import { useNavigate } from "react-router-dom";
+import { useLocation } from "react-router-dom";
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
 export default function AddEquip({ }) {
     const navigate = useNavigate();
     const [data, setData] = useState([]);
-    const [equipment_name, setEquipName] = useState("");
-    const [equipment_type, setEquipType] = useState("");
     const [validationMessage, setValidationMessage] = useState("");
     const [adminData, setAdminData] = useState("");
     const [isActive, setIsActive] = useState(false);
@@ -19,6 +18,8 @@ export default function AddEquip({ }) {
     const [selectedEquipType1, setSelectedEquipType1] = useState("");
     const [selectedEquipType2, setSelectedEquipType2] = useState("");
     const [selectedEquipType3, setSelectedEquipType3] = useState("");
+    const { state } = useLocation();
+    const lastAddedUser = state && state.lastAddedUser;
 
     useEffect(() => {
         const token = window.localStorage.getItem("token");
@@ -42,7 +43,11 @@ export default function AddEquip({ }) {
                     setAdminData(data.data);
                 });
         } getAllEquip();
-    }, []); //ส่งไปครั้งเดียว
+        if (lastAddedUser) {
+            // Display toast notification if lastAddedUser exists
+            toast.success(`Last added user: ${lastAddedUser}`);
+        }
+    }, [lastAddedUser]);//ส่งไปครั้งเดียว
 
     const getAllEquip = () => {
         fetch("http://localhost:5000/allequip", {
@@ -60,13 +65,36 @@ export default function AddEquip({ }) {
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        // if (!equipment_name.trim() || !equipment_type) {
-        //     console.log("Please fill in all fields");
-        //     setValidationMessage("ชื่ออุปกรณ์และประเภทอุปกรณ์ไม่ควรเป็นค่าว่าง");
-        //     return;
-        // }
+        const selectedEquipments = [];
 
-        fetch("http://localhost:5000/addequip", {
+    // ตรวจสอบและเพิ่มข้อมูลอุปกรณ์ที่ผู้ใช้เลือกเข้าในอาร์เรย์ selectedEquipments
+    if (selectedEquipType1) {
+        selectedEquipments.push({
+            equipmentname_forUser: selectedEquipType1,
+            equipmenttype_forUser: "อุปกรณ์ติดตัว"
+        });
+    }
+    if (selectedEquipType2) {
+        selectedEquipments.push({
+            equipmentname_forUser: selectedEquipType2,
+            equipmenttype_forUser: "อุปกรณ์เสริม"
+        });
+    }
+    if (selectedEquipType3) {
+        selectedEquipments.push({
+            equipmentname_forUser: selectedEquipType3,
+            equipmenttype_forUser: "อุปกรณ์อื่นๆ"
+        });
+    }
+
+    // ตรวจสอบว่าผู้ใช้เลือกอุปกรณ์หรือไม่
+    if (selectedEquipments.length === 0) {
+        console.log("Please select at least one equipment");
+        setValidationMessage("โปรดเลือกอุปกรณ์อย่างน้อยหนึ่งรายการ");
+        return;
+    }
+    selectedEquipments.forEach((equipment) => {
+        fetch("http://localhost:5000/addequipuser", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
@@ -75,8 +103,8 @@ export default function AddEquip({ }) {
                 Authorization: `Bearer ${token}`
             },
             body: JSON.stringify({
-                equipment_name,
-                equipment_type,
+                equipmentname_forUser: equipment.equipmentname_forUser,
+                equipmenttype_forUser: equipment.equipmenttype_forUser,
             }),
         })
             .then((res) => res.json())
@@ -85,10 +113,11 @@ export default function AddEquip({ }) {
                 if (data.status === "ok") {
                     toast.success("เพิ่มข้อมูลสำเร็จ");
                     setTimeout(() => {
-                        navigate("/alleuser");
+                        navigate("/alluser");
                     }, 1100);
                 }
             });
+        });
     };
 
     const logOut = () => {
@@ -99,6 +128,7 @@ export default function AddEquip({ }) {
     const handleToggleSidebar = () => {
         setIsActive(!isActive);
     };
+
     return (
         <main className="body">
             <div className={`sidebar ${isActive ? 'active' : ''}`}>

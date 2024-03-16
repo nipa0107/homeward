@@ -234,12 +234,11 @@ export default function AllMpersonnel({ }) {
                     <td>{i.nametitle}</td>
                     <td>{i.name}</td>
                     <td>
-                      <img
-                        src={deleteimg}
+                      <button
                         className="deleteimg"
                         alt="deleteimg"
                         onClick={() => deleteMPersonnel(i._id, i.nametitle, i.name)}
-                      ></img>
+                      >ลบ</button>
                     </td>
                   </tr>
                 ))}

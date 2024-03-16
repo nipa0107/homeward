@@ -33,7 +33,6 @@ export default function AddUser() {
   const [pdfURL1, setPdfURL1] = useState(null);
   const [pdfURL2, setPdfURL2] = useState(null);
   const [pdfURL3, setPdfURL3] = useState(null);
-  const [userId, setUserId] = useState("");
   const [selectedPersonnel, setSelectedPersonnel] = useState("");
   const { state } = useLocation();
   const lastAddedUser = state && state.lastAddedUser;
@@ -57,12 +56,12 @@ export default function AddUser() {
         .then((res) => res.json())
         .then((data) => {
           console.log(data);
-          setUserId(data.data._id);
+          setAdminData(data.data);
         });
     }
     getAllMpersonnel();
 
-if (lastAddedUser) {
+    if (lastAddedUser) {
       // Display toast notification if lastAddedUser exists
       toast.success(`Last added user: ${lastAddedUser}`);
     }
@@ -85,7 +84,7 @@ if (lastAddedUser) {
     formData.append("fileM", fileM);
     formData.append("filePhy", filePhy);
 
-    
+
     fetch(`http://localhost:5000/addmedicalinformation`, {
       method: "POST",
       headers: {
@@ -348,7 +347,7 @@ if (lastAddedUser) {
                   </div>
                 )}
               </div>
-              
+
               <textarea
                 className="form-control"
                 rows="3" // กำหนดจำนวนแถวเริ่มต้น
@@ -384,7 +383,7 @@ if (lastAddedUser) {
 
             <div className="mb-1">
               <label>Phychosocial assessment</label>
-              
+
               <input
                 type="file"
                 className="form-control"
