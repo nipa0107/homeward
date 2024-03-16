@@ -80,7 +80,7 @@ if (lastAddedUser) {
     formData.append("Chief_complaint", Chief_complaint);
     formData.append("Present_illness", Present_illness);
     formData.append("Phychosocial_assessment", Phychosocial_assessment);
-    formData.append("Panagement_plan", Management_plan);
+    formData.append("Management_plan", Management_plan);
     formData.append("fileP", fileP);
     formData.append("fileM", fileM);
     formData.append("filePhy", filePhy);
@@ -298,10 +298,10 @@ if (lastAddedUser) {
                 value={selectedPersonnel}
                 onChange={(e) => setSelectedPersonnel(e.target.value)}
               >
-                {/* ตรวจสอบว่าข้อมูลแพทย์มีข้อมูลหรือไม่ก่อนที่จะแสดงผล */}
+                <option value="">โปรดเลือกแพทย์</option>
                 {data.length > 0 ? (
                   data.map((personnel) => (
-                    <option key={personnel._id} value={personnel.name}>
+                    <option key={personnel._id} value={personnel._id}>
                       {`${personnel.nametitle} ${personnel.name}`}
                     </option>
                   ))

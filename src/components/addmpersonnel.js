@@ -223,7 +223,7 @@ export default function AddMpersonnel() {
               />
             </div>
             <div className="mb-3">
-              <label>คำนำหน้าชื่อ</label>
+              <label>คำนำหน้าชื่อ<span className="required">*</span></label>
               <select
                 className="form-control"
                 onChange={(e) => setNameTitle(e.target.value)}
@@ -231,7 +231,6 @@ export default function AddMpersonnel() {
                 <option value="">กรุณาเลือก</option>
                 <option value="แพทย์หญิง">แพทย์หญิง</option>
                 <option value="นายแพทย์">นายแพทย์</option>
-                {/* <option value="อุปกรณ์อื่นๆ">อุปกรณ์อื่น ๆ</option> */}
               </select>
             </div>
             <div className="mb-3">
@@ -243,7 +242,7 @@ export default function AddMpersonnel() {
               />
             </div>
 
-                            {/* แสดงข้อความ error */}
+            {/* แสดงข้อความ error */}
             <p id="errormessage" className="errormessage">{error}</p>
             <div className="d-grid">
               <button type="submit"className="btn btn-outline py-2">

@@ -85,6 +85,7 @@
 .filename a:hover {
     background-color: #7e7e7e;
     color: white;
+    cursor: pointer;
 }
 
 /* รูปที่แสดง */

@@ -9,7 +9,7 @@ import { useLocation } from "react-router-dom";
 
 export default function AllUser({}) {
   const navigate = useNavigate();
-  const [equipData, setEquipData] = useState([]);
+
   const [data, setData] = useState([]);
   const [adminData, setAdminData] = useState("");
   const [isActive, setIsActive] = useState(false);
@@ -19,7 +19,7 @@ export default function AllUser({}) {
   const { id } = location.state;
   const [username, setUsername] = useState("");
   const [name, setName] = useState("");
-  const [email, setEmail] = useState("");
+  // const [email, setEmail] = useState("");
   const [tel, setTel] = useState("");
   const [gender, setGender] = useState("");
   const [birthday, setBirthday] = useState("");
@@ -27,6 +27,8 @@ export default function AllUser({}) {
   const [nationality, setNationality] = useState("");
   const [Address, setAddress] = useState("");
   const [medicalInfo, setMedicalInfo] = useState(null); // เพิ่ม state สำหรับเก็บข้อมูลการดูแลผู้ป่วย
+  const [mdata, setMData] = useState([]);
+  const [docter, setDocter] = useState("");
 
   useEffect(() => {
     const token = window.localStorage.getItem("token");
@@ -51,6 +53,7 @@ export default function AllUser({}) {
         });
     }
   }, []);
+
   useEffect(() => {
     const fetchUserId = async () => {
       try {
@@ -108,6 +111,41 @@ export default function AllUser({}) {
     fetchMedicalInformation();
   }, [id]);
 
+  //   useEffect(() => {
+  //     const fetchData = async () => {
+  //     try {
+  //       const response = await fetch(
+  //         `http://localhost:5000/getmpersonnel/${medicalInfo.selectedPersonnel}`
+  //       );
+  //       const mdata = await response.json();
+  //           setMData(mdata.mData)
+  //         console.log("Data:", mdata);        // setCaremanualName(data.caremanual_name);
+
+  //     } catch (error) {
+  //       console.error("Error fetching caremanual data:", error);
+  //     }
+  //   };
+  //     fetchData();
+  // });
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        if (medicalInfo && medicalInfo.selectedPersonnel) {
+          const response = await fetch(
+            `http://localhost:5000/getmpersonnel/${medicalInfo.selectedPersonnel}`
+          );
+          const mdata = await response.json();
+          setMData(mdata);
+          console.log("Data:", mdata);
+        }
+      } catch (error) {
+        console.error("Error fetching caremanual data:", error);
+      }
+    };
+    fetchData();
+  }, [medicalInfo]);
+
   const deleteUser = async () => {
     if (window.confirm(`คุณต้องการลบ ${username} หรือไม่ ?`)) {
       try {
@@ -133,6 +171,11 @@ export default function AllUser({}) {
       }
     }
   };
+
+  const handleViewPDF = () => {
+    // ทำการเรียกดูไฟล์ PDF ที่เกี่ยวข้อง
+  };
+
   const logOut = () => {
     window.localStorage.clear();
     window.location.href = "./";
@@ -328,6 +371,7 @@ export default function AllUser({}) {
 
           <div className="cardall card mb-3">
             <h6>2.ข้อมูลการเจ็บป่วย</h6>
+
             {medicalInfo && (
               <div className="user-info">
                 <div className="left-info">
@@ -343,7 +387,32 @@ export default function AllUser({}) {
                   </p>
                   <p>Diagnosis: {medicalInfo.Diagnosis || "-"}</p>
                   <p>Chief complaint: {medicalInfo.Chief_complaint || "-"}</p>
+                  <p>Management plan: {medicalInfo.Management_plan || "-"}</p>
+                  <div className="filename">
+                  {medicalInfo.fileM && (
+                    <p>
+                      <a
+                        onClick={() => {
+                          const filePath = medicalInfo.fileM.replace(
+                            /\\/g,
+                            "/"
+                          );
+                          const fileName = filePath.split("/").pop();
+                          console.log("fileName:", fileName); // เพิ่มบรรทัดนี้เพื่อตรวจสอบค่า fileName ใน console
+                          window.open(
+                            `http://localhost:5000/file/${fileName}`,
+                            "_blank"
+                          );
+                        }}
+                      >
+                        {medicalInfo.fileM.split("/").pop().split("\\").pop()}
+                      </a>
+                    </p>
+                  )}
+                  </div>
                 </div>
+
+
                 <div className="right-info">
                   <p>AN: {medicalInfo.AN || "-"}</p>
                   <p>
@@ -357,20 +426,110 @@ export default function AllUser({}) {
                       : "-"}
                   </p>
                   <p>Present illness: {medicalInfo.Present_illness || "-"}</p>
+                  <div className="filename">
+                  {medicalInfo.fileP && (
+                    <p>
+                      <a
+                        onClick={() => {
+                          const filePath = medicalInfo.fileP.replace(
+                            /\\/g,
+                            "/"
+                          );
+                          const fileName = filePath.split("/").pop();
+                          console.log("fileName:", fileName); // เพิ่มบรรทัดนี้เพื่อตรวจสอบค่า fileName ใน console
+                          window.open(
+                            `http://localhost:5000/file/${fileName}`,
+                            "_blank"
+                          );
+                        }}
+                      >
+                        {medicalInfo.fileP.split("/").pop().split("\\").pop()}
+                      </a>
+                    </p>
+                  )}
+                  </div>
                   <p>
-                    Phychosocial assessment:{" "}
+                    Phychosocial assessment:
                     {medicalInfo.Phychosocial_assessment || "-"}
                   </p>
+                  {/* <div className="filename">
+                  {medicalInfo.filePhy && (
+                    <p>
+                      <a
+                        onClick={() => {
+                          const filePath = medicalInfo.filePhy.replace(
+                            /\\/g,
+                            "/"
+                          );
+                          const fileName = filePath.split("/").pop();
+                          console.log("fileName:", fileName);
+                          const encodedFileName = encodeURIComponent(fileName);
+                          window.open(
+                            `http://localhost:5000/file/${encodedFileName}`,
+                            "_blank"
+                          );
+                        }}
+                      >
+                        {medicalInfo.filePhy.split("/").pop().split("\\").pop()}
+                      </a>
+                    </p>
+                  )}
+                  </div> */}
+                  {/* <div className="filename">
+  {medicalInfo.filePhy && (
+    <p>
+      <a
+        onClick={() => {
+          const filePath = medicalInfo.filePhy.replace(/\\/g, "/");
+          const fileName = filePath.split("/").pop();
+          console.log("fileName:", fileName);
+          const encodedFileName = encodeURIComponent(fileName);
+          window.open(
+            `http://localhost:5000/file/${encodedFileName}`,
+            "_blank"
+          );
+        }}
+      >
+        {decodeURI(medicalInfo.filePhy.split("/").pop().split("\\").pop())}
+      </a>
+    </p>
+  )}
+</div> */}
+<div className="filename">
+  {medicalInfo.filePhy && (
+    <p>
+      <a
+        onClick={() => {
+          const filePath = medicalInfo.filePhy.replace(/\\/g, "/");
+          const fileName = filePath.split("/").pop();
+          console.log("fileName:", fileName);
+          const cleanedFileName = fileName.replace(/[^\x00-\x7F]/g, ""); // ทำการลบอักขระพิเศษ
+          const encodedFileName = encodeURIComponent(cleanedFileName);
+          window.open(
+            `http://localhost:5000/file/${encodedFileName}`,
+            "_blank"
+          );
+        }}
+      >
+        {decodeURI(medicalInfo.filePhy.split("/").pop().split("\\").pop().replace(/[^\x00-\x7F]/g, ""))}
+      </a>
+    </p>
+  )}
+</div>
+
+
+                  
+                  <div>
+                    {mdata && (
+                      <div>
+                        <p>
+                          แพทย์ผู้ดูแล: {mdata.nametitle}
+                          {mdata.name}
+                        </p>
+                      </div>
+                    )}
+                  </div>
                 </div>
-{/* 
-                <div className="pdf-link">
-                  <a
-                    href={`http://localhost:5000/file/${medicalInfo.fileM}`}
-                    target="_blank"
-                    rel="noopener noreferrer">
-                    ดูไฟล์ PDF
-                  </a>
-                </div> */}
               </div>
             )}
           </div>

@@ -170,10 +170,10 @@ export default function AddEquip({ }) {
           </ul>
         </div>
         <h3>เพิ่มอุปกรณ์</h3>
-        <div className="adminall card mb-3">
+        <div className="adminall card mb-1">
           <form onSubmit={handleSubmit}>
 
-            <div className="mb-3">
+            <div className="mb-1">
               <label>ชื่ออุปกรณ์<span className="required">*</span></label>
               <input
                 type="text"
@@ -181,7 +181,7 @@ export default function AddEquip({ }) {
                 onChange={(e) => setEquipName(e.target.value)}
               />
             </div>
-            <div className="mb-3">
+            <div className="mb-1">
               <label>ประเภทอุปกรณ์<span className="required">*</span></label>
               <select
                 className="form-control"

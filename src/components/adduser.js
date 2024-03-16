@@ -4,6 +4,9 @@ import "../css/alladmin.css";
 import "bootstrap-icons/font/bootstrap-icons.css";
 import logow from "../img/logow.png";
 import { useNavigate } from "react-router-dom";
+import DatePicker from 'react-datepicker';
+import 'react-datepicker/dist/react-datepicker.css';
+import th from 'date-fns/locale/th';
 
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
@@ -82,11 +85,12 @@ export default function AddUser() {
         console.log(data, "Addadmain");
         if (data.status === "ok") {
           console.log(username, password, confirmPassword);
-          toast.success("เพิ่มข้อมูลสำเร็จ");
+          // toast.success("เพิ่มข้อมูลสำเร็จ");
           setlastAddedUser(data.data);
-          setTimeout(() => {
-            navigate("/addmdinformation")
-          }, 1100);
+          navigate("/addmdinformation")
+          // setTimeout(() => {
+          //   navigate("/addmdinformation")
+          // }, 1100);
         } else {
           // เมื่อเกิดข้อผิดพลาด
           setError(data.error); // กำหนดข้อความ error ให้กับ state
@@ -190,9 +194,9 @@ export default function AddUser() {
           </ul>
         </div>
         <h3>เพิ่มข้อมูลผู้ป่วยทั่วไป</h3>
-        <div className="adminall card mb-3">
+        <div className="adminall card mb-1">
           <form onSubmit={handleSubmit}>
-            <div className="mb-3">
+            <div className="mb-1">
               <label>ชื่อผู้ใช้<span className="required">*</span></label>
               <input
                 type="text"
@@ -201,7 +205,7 @@ export default function AddUser() {
               />
             </div>
 
-            <div className="mb-3">
+            <div className="mb-1">
               <label>อีเมล<span className="required">*</span></label>
               <input
                 type="email"
@@ -210,7 +214,7 @@ export default function AddUser() {
               />
             </div>
 
-            <div className="mb-3">
+            <div className="mb-1">
               <label>รหัสผ่าน<span className="required">*</span></label>
               <input
                 type="password"
@@ -219,7 +223,7 @@ export default function AddUser() {
               />
             </div>
 
-            <div className="mb-3">
+            <div className="mb-1">
               <label>ยืนยันรหัสผ่าน<span className="required">*</span></label>
               <input
                 type="password"
@@ -228,7 +232,7 @@ export default function AddUser() {
               />
             </div>
 
-            <div className="mb-3">
+            <div className="mb-1">
               <label>ชื่อ-นามสกุล<span className="required">*</span></label>
               <input
                 type="text"
@@ -237,7 +241,7 @@ export default function AddUser() {
               />
             </div>
 
-            <div className="mb-3">
+            <div className="mb-1">
               <label>เพศ</label>
               <select
                 id="gender"
@@ -250,7 +254,7 @@ export default function AddUser() {
                 <option value="อื่นๆ">อื่น ๆ</option>
               </select>
             </div>
-            <div className="mb-3">
+            <div className="mb-1">
               <label>วันเกิด</label>
               <input
                 type="date"
@@ -259,7 +263,7 @@ export default function AddUser() {
               />
             </div>
 
-            <div className="mb-3">
+            <div className="mb-1">
               <label>เลขประจำตัวบัตรประชาชน</label>
               <input
                 type="text"
@@ -268,7 +272,7 @@ export default function AddUser() {
               />
             </div>
 
-            <div className="mb-3">
+            <div className="mb-1">
               <label>สัญชาติ</label>
               <input
                 type="text"
@@ -277,7 +281,7 @@ export default function AddUser() {
               />
             </div>
 
-            <div className="mb-3">
+            <div className="mb-1">
               <label>ที่อยู่</label>
               <input
                 type="text"
@@ -285,7 +289,7 @@ export default function AddUser() {
                 onChange={(e) => setAddress(e.target.value)}
               />
             </div>
-            <div className="mb-3">
+            <div className="mb-1">
               <label>เบอร์โทรศัพท์</label>
               <input
                 type="text"
