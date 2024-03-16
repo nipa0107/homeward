@@ -193,7 +193,7 @@ export default function AddUser() {
         <div className="adminall card mb-3">
           <form onSubmit={handleSubmit}>
             <div className="mb-3">
-              <label>ชื่อผู้ใช้</label>
+              <label>ชื่อผู้ใช้<span className="required">*</span></label>
               <input
                 type="text"
                 className="form-control"
@@ -202,7 +202,7 @@ export default function AddUser() {
             </div>
 
             <div className="mb-3">
-              <label>อีเมล</label>
+              <label>อีเมล<span className="required">*</span></label>
               <input
                 type="email"
                 className="form-control"
@@ -211,7 +211,7 @@ export default function AddUser() {
             </div>
 
             <div className="mb-3">
-              <label>รหัสผ่าน</label>
+              <label>รหัสผ่าน<span className="required">*</span></label>
               <input
                 type="password"
                 className="form-control"
@@ -220,7 +220,7 @@ export default function AddUser() {
             </div>
 
             <div className="mb-3">
-              <label>ยืนยันรหัสผ่าน</label>
+              <label>ยืนยันรหัสผ่าน<span className="required">*</span></label>
               <input
                 type="password"
                 className="form-control"
@@ -229,7 +229,7 @@ export default function AddUser() {
             </div>
 
             <div className="mb-3">
-              <label>ชื่อ-นามสกุล</label>
+              <label>ชื่อ-นามสกุล<span className="required">*</span></label>
               <input
                 type="text"
                 className="form-control"

@@ -148,14 +148,14 @@ td {
 }
 
 .d-grid {
-    margin-top: 20px;
+    margin-top: 10px;
 }
 
 .btn-group {
     gap: 10px;
     display: flex;
     justify-content: center;
-    margin-bottom: 30px;
+    /* margin-bottom: 30px; */
 }
 
 .btn-pre button {
@@ -212,4 +212,100 @@ td {
     clear: both;
   }
 
+  .required {
+    color: red;
+  }
+
+
+  /* .home_content {
+    padding: 20px;
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    background-color: #fff;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  }
+   */
+  .profile_details {
+    margin-bottom: 20px;
+  }
+  
+  .breadcrumbs {
+    margin-bottom: 20px;
+  }
+  
+  .breadcrumbs ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+  
+  .breadcrumbs ul li {
+    display: inline-block;
+    font-size: 14px;
+    margin-right: 5px;
+    color: #666;
+  }
+  
+  .breadcrumbs ul li i {
+    margin-right: 5px;
+  }
+  
+  .breadcrumbs ul li.arrow {
+    margin: 0 5px;
+  }
+  
+  .adminall {
+    padding: 20px;
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    background-color: #fff;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  }
+  
+  /* .adminall form {
+    margin-bottom: 20px;
+  } */
+  
+  .adminall label {
+    font-weight: 500;
+  }
+  
+  .adminall input[type="text"],
+  .adminall input[type="file"] {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    /* margin-bottom: 10px; */
+  }
+  
+  .adminall .centered-image {
+    text-align: center;
+  }
+  
+  .adminall .filename {
+    margin-bottom: 10px;
+  }
+  
+  .adminall .pdf {
+    margin-top: 5px;
+  }
+  
+  .errormessage {
+    color: red;
+    margin-top: 10px;
+  }
+  
+  /* .add {
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+  
+  .add:hover {
+    background-color: #45a049;
+  } */
   

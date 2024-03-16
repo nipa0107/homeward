@@ -78,7 +78,7 @@ export default function AddMpersonnel() {
           toast.success("เพิ่มข้อมูลสำเร็จ");
           setTimeout(() => {
             navigate("/allmpersonnel");
-          },1100);
+          },1000);
         }else {
           // เมื่อเกิดข้อผิดพลาด
           setError(data.error); // กำหนดข้อความ error ให้กับ state
@@ -181,7 +181,7 @@ export default function AddMpersonnel() {
         <div className="adminall card mb-3">
           <form onSubmit={handleSubmit}>
             <div className="mb-3">
-              <label>เลขที่ใบประกอบวิชาชีพ</label>
+              <label>เลขที่ใบประกอบวิชาชีพ<span className="required">*</span></label>
               <input
                 type="text"
                 className="form-control"
@@ -190,7 +190,7 @@ export default function AddMpersonnel() {
             </div>
 
             <div className="mb-3">
-              <label>รหัสผ่าน</label>
+              <label>รหัสผ่าน<span className="required">*</span></label>
               <input
                 type="password"
                 className="form-control"
@@ -199,7 +199,7 @@ export default function AddMpersonnel() {
             </div>
 
             <div className="mb-3">
-              <label>ยืนยันรหัสผ่าน</label>
+              <label>ยืนยันรหัสผ่าน<span className="required">*</span></label>
               <input
                 type="password"
                 className="form-control"
@@ -207,7 +207,7 @@ export default function AddMpersonnel() {
               />
             </div>
             <div className="mb-3">
-              <label>อีเมล</label>
+              <label>อีเมล<span className="required">*</span></label>
               <input
                 type="email"
                 className="form-control"
@@ -235,7 +235,7 @@ export default function AddMpersonnel() {
               </select>
             </div>
             <div className="mb-3">
-              <label>ชื่อ - นามสกุล</label>
+              <label>ชื่อ - นามสกุล<span className="required">*</span></label>
               <input
                 type="text"
                 className="form-control"
@@ -244,13 +244,12 @@ export default function AddMpersonnel() {
             </div>
 
                             {/* แสดงข้อความ error */}
-                            <p id="errormessage" className="errormessage">{error}</p>
+            <p id="errormessage" className="errormessage">{error}</p>
             <div className="d-grid">
-              <button type="submit" className="btn btn-outline py-1 px-4">
+              <button type="submit"className="btn btn-outline py-2">
                 บันทึก
               </button>
-              <br />
-            </div>
+         </div>
           </form>
           {/* <button onClick={All} className="btn btn-primary">
             Back

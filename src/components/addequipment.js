@@ -70,7 +70,7 @@ export default function AddEquip({ }) {
           toast.success("เพิ่มข้อมูลสำเร็จ");
           setTimeout(() => {
             navigate("/allequip");
-          }, 1100);
+          }, 1000);
         }
       });
   };
@@ -174,7 +174,7 @@ export default function AddEquip({ }) {
           <form onSubmit={handleSubmit}>
 
             <div className="mb-3">
-              <label>ชื่ออุปกรณ์</label>
+              <label>ชื่ออุปกรณ์<span className="required">*</span></label>
               <input
                 type="text"
                 className="form-control"
@@ -182,7 +182,7 @@ export default function AddEquip({ }) {
               />
             </div>
             <div className="mb-3">
-              <label>ประเภทอุปกรณ์</label>
+              <label>ประเภทอุปกรณ์<span className="required">*</span></label>
               <select
                 className="form-control"
                 onChange={(e) => setEquipType(e.target.value)}
@@ -196,32 +196,14 @@ export default function AddEquip({ }) {
             {validationMessage && (
               <div style={{ color: "red" }}>{validationMessage}</div>
             )}
-            <div className="d-grid">
-              <button type="submit" className="btn btn-outline py-2">
+                        <div className="d-grid">
+              <button type="submit"className="btn btn-outline py-2">
                 บันทึก
               </button>
-              <br />
-            </div>
+         </div>
           </form>
         </div>
-        <div className="btn-group">
-          <div className="btn-pre">
-            <button
-              onClick={() => navigate("/addmdinformation")}
-              className="btn btn-outline py-2"
-            >
-              ก่อนหน้า
-            </button>
-          </div>
-          {/* <div className="btn-next">
-            <button
-              onClick={() => navigate("/addequipment")}
-              className="btn btn-outline py-2"
-            >
-              ถัดไป
-            </button>
-          </div> */}
-        </div>
+
       </div>
     </main>
   );

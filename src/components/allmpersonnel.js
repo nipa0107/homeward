@@ -198,7 +198,7 @@ export default function AllMpersonnel({ }) {
             </li>
           </ul>
         </div>
-        <h3>จัดการข้อมูลบุคลากร</h3>
+        {/* <h3>จัดการข้อมูลบุคลากร</h3> */}
 
         {/*ค้นหา */}
         <div className="search-bar">
@@ -215,7 +215,7 @@ export default function AllMpersonnel({ }) {
           <button onClick={add} className="bi bi-plus-circle btn btn-outline py-1 px-4">
             เพิ่มบุคลากร
           </button>
-          <p className="countadmin">จำนวน : {data.length} คน</p>
+          <p className="countadmin">จำนวนบุคลากรทั้งหมด : {data.length} คน</p>
         </div>
 
         <div className="content">

@@ -256,7 +256,7 @@ if (lastAddedUser) {
         <h3>เพิ่มข้อมูลการเจ็บป่วย</h3>
         <div className="adminall card mb-3">
           <form onSubmit={handleSubmit}>
-            <div className="mb-3">
+            <div className="mb-1">
               <label>HN</label>
               <input
                 type="text"
@@ -264,7 +264,7 @@ if (lastAddedUser) {
                 onChange={(e) => setHN(e.target.value)}
               />
             </div>
-            <div className="mb-3">
+            <div className="mb-1">
               <label>AN</label>
               <input
                 type="text"
@@ -273,7 +273,7 @@ if (lastAddedUser) {
               />
             </div>
 
-            <div className="mb-3">
+            <div className="mb-1">
               <label>วันที่ Admit </label>
               <input
                 type="date"
@@ -282,7 +282,7 @@ if (lastAddedUser) {
               />
             </div>
 
-            <div className="mb-3">
+            <div className="mb-1">
               <label>วันที่ D/C</label>
               <input
                 type="date"
@@ -291,7 +291,7 @@ if (lastAddedUser) {
               />
             </div>
 
-            <div className="mb-3">
+            <div className="mb-1">
               <label>แพทย์ผู้ดูแล</label>
               <select
                 className="form-select"
@@ -311,7 +311,7 @@ if (lastAddedUser) {
               </select>
             </div>
 
-            <div className="mb-3">
+            <div className="mb-1">
               <label>Diagnosis</label>
               <textarea
                 className="form-control"
@@ -321,7 +321,7 @@ if (lastAddedUser) {
               />
             </div>
 
-            <div className="mb-3">
+            <div className="mb-1">
               <label>Chief complaint</label>
               <textarea
                 className="form-control"
@@ -331,7 +331,7 @@ if (lastAddedUser) {
               />
             </div>
 
-            <div className="mb-3">
+            <div className="mb-1">
               <label>Present illness</label>
               <input
                 type="file"
@@ -357,7 +357,7 @@ if (lastAddedUser) {
               />
             </div>
 
-            <div className="mb-3">
+            <div className="mb-1">
               <label>Management plan</label>
               <input
                 type="file"
@@ -382,7 +382,7 @@ if (lastAddedUser) {
               />
             </div>
 
-            <div className="mb-3">
+            <div className="mb-1">
               <label>Phychosocial assessment</label>
               
               <input

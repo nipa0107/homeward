@@ -21,6 +21,7 @@ export default function AddCaremanual({ }) {
   const [selectedFileName, setSelectedFileName] = useState("");
   const [pdfURL, setPdfURL] = useState(null);
   const [token, setToken] = useState('');
+  const [error, setError] = useState("");
 
 
   
@@ -50,6 +51,7 @@ export default function AddCaremanual({ }) {
         .then((data) => {
           console.log(data);
           setAdminData(data.data);
+          setError()
         });
     }
   }, [defaultImageURL]);
@@ -97,6 +99,9 @@ export default function AddCaremanual({ }) {
           setTimeout(() => {
             navigate("/home");
           },1050); 
+        } else {
+          // เมื่อเกิดข้อผิดพลาด
+          setError(data.error); // กำหนดข้อความ error ให้กับ state
         }
       });
   };
@@ -193,18 +198,18 @@ export default function AddCaremanual({ }) {
           </ul>
         </div>
         <h3>เพิ่มคู่มือ</h3>
-        <div className="adminall card mb-3">
+        <div className="adminall card">
           <form onSubmit={handleSubmit} encType="multipart/form-data">
-            <div className="mb-3">
-              <label>หัวข้อ</label>
+            <div className="mb-1">
+              <label>หัวข้อ<span className="required">*</span></label>
               <input
                 type="text"
                 className="form-control"
                 onChange={(e) => setCaremanualName(e.target.value)}
               />
             </div>
-            <div className="mb-3">
-              <label>รูปภาพ</label> <br />
+            <div className="mb-1">
+              <label>รูปภาพ<span className="required">*</span></label> <br />
               <div className="centered-image">
               <img
                 // แสดงรูปที่เลือก
@@ -222,7 +227,7 @@ export default function AddCaremanual({ }) {
               ></input>
             </div>
             
-            <div className="mb-3">
+            <div className="mb-1">
               <label>แนบไฟล์</label>
               <input
                 type="file"
@@ -231,16 +236,16 @@ export default function AddCaremanual({ }) {
                 onChange={onInputfileChange}
               />
             </div>
-            <div className="filename ">
+            <div className="filename">
               {selectedFileName && (
-                <div className="mb-3 pdf">
+                <div className="pdf">
                   <a href={pdfURL} target="_blank" rel="noopener noreferrer">
                     {selectedFileName}
                   </a>
                 </div>
               )}
             </div>
-            <div className="mb-3">
+            <div className="mb-1">
               <label>รายละเอียด</label>
               <input
                 type="text"
@@ -248,12 +253,14 @@ export default function AddCaremanual({ }) {
                 onChange={(e) => setDetail(e.target.value)}
               />
             </div>
+            <p id="errormessage" className="errormessage">
+              {error}
+            </p>
             <div className="d-grid">
-              <button type="submit" className="add btn btn-outline py-2 ">
+              <button type="submit"className="btn btn-outline py-2">
                 บันทึก
               </button>
-              <br />
-            </div>
+         </div>
           </form>
         </div>
 

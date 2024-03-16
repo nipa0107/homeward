@@ -225,7 +225,7 @@ export default function AllUser({ }) {
         </div>
 
         {/*ค้นหา */}
-        <h3>จัดการข้อมูลผู้ป่วย</h3>
+        {/* <h3>จัดการข้อมูลผู้ป่วย</h3> */}
         <div className="search-bar">
           <input
             className="search-text"
@@ -243,7 +243,7 @@ export default function AllUser({ }) {
           >
             เพิ่มข้อมูลผู้ป่วย
           </button>
-          <p className="countadmin">จำนวน : {data.length} คน</p>
+          <p className="countadmin">จำนวนผู้ป่วยทั้งหมด : {data.length} คน</p>
         </div>
 
         <div className="content">

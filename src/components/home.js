@@ -204,7 +204,7 @@ export default function Home({ }) {
 
           </ul>
         </div>
-        <h3>จัดการข้อมูลคู่มือการดูแลผู้ป่วย</h3>
+        {/* <h3>จัดการข้อมูลคู่มือการดูแลผู้ป่วย</h3> */}
 
         {/* ค้นหา */}
         <div className="search-bar">
@@ -223,7 +223,7 @@ export default function Home({ }) {
           <button onClick={() => navigate("/addcaremanual")} className="bi bi-plus-circle btn btn-outline py-1 px-4">
             เพิ่มคู่มือ
           </button>
-          <p className="countadmin">จำนวน : {data.length} คู่มือ</p>
+          <p className="countadmin">จำนวนคู่มือทั้งหมด : {data.length} คู่มือ</p>
         </div>
 
 

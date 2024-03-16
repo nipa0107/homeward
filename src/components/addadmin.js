@@ -169,8 +169,8 @@ export default function AddAdmin() {
         <h3>เพิ่มข้อมูลแอดมิน</h3>
         <div className="adminall card mb-3">
           <form onSubmit={handleSubmit}>
-            <div className="mb-3">
-              <label>ชื่อผู้ใช้</label>
+            <div className="mb-1">
+              <label>ชื่อผู้ใช้<span className="required">*</span></label>
               <input
                 type="text"
                 className="form-control"
@@ -178,8 +178,8 @@ export default function AddAdmin() {
               />
             </div>
 
-            <div className="mb-3">
-              <label>ชื่อ</label>
+            <div className="mb-1">
+              <label>ชื่อ<span className="required">*</span></label>
               <input
                 type="text"
                 className="form-control"
@@ -187,8 +187,8 @@ export default function AddAdmin() {
               />
             </div>
 
-            <div className="mb-3">
-              <label>อีเมล</label>
+            <div className="mb-1">
+              <label>อีเมล<span className="required">*</span></label>
               <input
                 type="email"
                 className="form-control"
@@ -196,8 +196,8 @@ export default function AddAdmin() {
               />
             </div>
 
-            <div className="mb-3">
-              <label>รหัสผ่าน</label>
+            <div className="mb-1">
+              <label>รหัสผ่าน<span className="required">*</span></label>
               <input
                 type="password"
                 className="form-control"
@@ -205,23 +205,21 @@ export default function AddAdmin() {
               />
             </div>
 
-            <div className="mb-3">
-              <label>ยืนยันรหัสผ่าน</label>
+            <div className="mb-1">
+              <label>ยืนยันรหัสผ่าน<span className="required">*</span></label>
               <input
                 type="password"
                 className="form-control"
                 onChange={(e) => setConfirmPassword(e.target.value)}
               />
             </div>
-            <br />
                 {/* แสดงข้อความ error */}
                 <p id="errormessage" className="errormessage">{error}</p>
-            <div className="d-grid">
-              <button type="submit" className="btn btn-outline py-2">
+                <div className="d-grid">
+              <button type="submit"className="btn btn-outline py-2">
                 บันทึก
               </button>
-              <br />
-            </div>
+         </div>
           </form>
         </div>
         {/* <button onClick={All} className="btn btn-primary">

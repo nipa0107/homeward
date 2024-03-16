@@ -197,7 +197,7 @@ export default function AllEquip({}) {
             </li>
           </ul>
         </div>
-        <h3>จัดการอุปกรณ์ทางการแพทย์</h3>
+        {/* <h3>จัดการอุปกรณ์ทางการแพทย์</h3> */}
 
         {/* ค้นหา */}
         <div className="search-bar">
@@ -217,7 +217,7 @@ export default function AllEquip({}) {
           >
             เพิ่มอุปกรณ์
           </button>
-          <p className="countadmin">จำนวน : {data.length} ชิ้น</p>
+          <p className="countadmin">จำนวนอุปกรณ์ทั้งหมด : {data.length} ชิ้น</p>
         </div>
         <div className="content">
           <div className="cardall card mb-3">

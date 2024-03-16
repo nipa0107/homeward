@@ -202,7 +202,7 @@ useEffect(() => {
 
 
         {/*ค้นหา */}
-        <h3>จัดการแอดมิน</h3>
+        {/* <h3>จัดการแอดมิน</h3> */}
 
         <div className="search-bar">
           <input
@@ -218,7 +218,7 @@ useEffect(() => {
           <button onClick={add} className="bi bi-plus-circle btn btn-outline py-1 px-4">
             เพิ่มแอดมิน
           </button>
-          <p className="countadmin">จำนวน : {data.length} คน</p>
+          <p className="countadmin">จำนวนแอดมินทั้งหมด : {data.length} คน</p>
         </div>
         <div className="content">
   {data.map((i) => (
