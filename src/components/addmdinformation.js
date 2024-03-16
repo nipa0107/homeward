@@ -33,7 +33,6 @@ export default function AddUser() {
   const [pdfURL1, setPdfURL1] = useState(null);
   const [pdfURL2, setPdfURL2] = useState(null);
   const [pdfURL3, setPdfURL3] = useState(null);
-  const [userId, setUserId] = useState("");
   const [selectedPersonnel, setSelectedPersonnel] = useState("");
   const { state } = useLocation();
   const lastAddedUser = state && state.lastAddedUser;
