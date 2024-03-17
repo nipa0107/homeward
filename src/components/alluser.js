@@ -247,13 +247,13 @@ export default function AllUser({ }) {
         </div>
 
         <div className="content">
-          <div className="cardall card mb-3">
+          {/* <div className="table100"> */}
             <table className="table">
               <thead>
                 <tr>
                   <th>ชื่อผู้ใช้</th>
                   <th>ชื่อ-สกุล</th>
-                  <th>คำสั่ง</th>
+                  <th></th>
                 </tr>
               </thead>
               <tbody>
@@ -263,24 +263,9 @@ export default function AllUser({ }) {
                       <td>{i.username}</td>
                       <td>{i.name}</td>
                       <td>
-                      <a onClick={() => navigate("/allinfo", { state: { id: i._id } })} className="info">รายละเอียด</a>
-                      {/* <a href="allinfo" className="info">รายละเอียด</a> */}
-                        {/* <img
-                          src={editimg}
-                          className="editimg1"
-                          alt="editimg"
-                          onClick={() =>
-                            navigate("/updateuser", {
-                              state: { id: i._id, user: i },
-                            })
-                          }
-                        ></img>
-                        <img
-                          src={deleteimg}
-                          className="deleteimg1"
-                          alt="deleteimg"
-                          onClick={() => deleteUser(i._id, i.username, i.name)}
-                        ></img> */}
+                      <a
+                      className="info"
+                       onClick={() => navigate("/allinfo", { state: { id: i._id } })}>รายละเอียด</a>
                       </td>
                     </tr>
                   );
@@ -290,7 +275,7 @@ export default function AllUser({ }) {
             
           </div>
         </div>
-      </div>
+      {/* </div> */}
     </main>
   );
 }

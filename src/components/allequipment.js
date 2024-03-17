@@ -220,13 +220,13 @@ export default function AllEquip({}) {
           <p className="countadmin">จำนวนอุปกรณ์ทั้งหมด : {data.length} ชิ้น</p>
         </div>
         <div className="content">
-          <div className="cardall card mb-3">
+          {/* <div className="cardall card mb-3"> */}
             <table className="table">
               <thead>
                 <tr>
                   <th>ชื่ออุปกรณ์</th>
                   <th>ประเภทอุปกรณ์</th>
-                  <th>คำสั่ง</th>
+                  <th></th>
                 </tr>
               </thead>
               <tbody>
@@ -245,7 +245,7 @@ export default function AllEquip({}) {
                 ))}
               </tbody>
             </table>
-          </div>
+          {/* </div> */}
         </div>
       </div>
     </main>

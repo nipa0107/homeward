@@ -8,7 +8,7 @@ import logow from "../img/logow.png";
 import { useNavigate } from "react-router-dom";
 import { useLocation } from "react-router-dom";
 
-export default function AllUser({ }) {
+export default function AllUser({}) {
   const navigate = useNavigate();
 
   const [data, setData] = useState([]);
@@ -30,6 +30,7 @@ export default function AllUser({ }) {
   const [medicalInfo, setMedicalInfo] = useState(null); // เพิ่ม state สำหรับเก็บข้อมูลการดูแลผู้ป่วย
   const [mdata, setMData] = useState([]);
   const [docter, setDocter] = useState("");
+  const [equipmentuser, setEquipmentUser] = useState(null); // เพิ่ม state สำหรับเก็บข้อมูลการดูแลผู้ป่วย
 
   useEffect(() => {
     const token = window.localStorage.getItem("token");
@@ -76,21 +77,6 @@ export default function AllUser({ }) {
     fetchUserId();
   }, [id]);
 
-  // useEffect(() => {
-  //   const fetchMedicalInformation = async () => {
-  //     try {
-  //       const response = await fetch(`http://localhost:5000/medicalInformation/${id}`); // ใช้ id เป็น userId ใน URL
-  //       const medicalData = await response.json();
-  //       console.log(medicalData);
-  //       setMedicalInfo([medicalData.data]);
-  //       setHn(medicalData.data.HN);
-  //     } catch (error) {
-  //       console.error("Error fetching medical information:", error);
-  //     }
-  //   };
-  //   fetchMedicalInformation();
-  // }, [id]);
-
   useEffect(() => {
     const fetchMedicalInformation = async () => {
       try {
@@ -112,22 +98,26 @@ export default function AllUser({ }) {
     fetchMedicalInformation();
   }, [id]);
 
-  //   useEffect(() => {
-  //     const fetchData = async () => {
-  //     try {
-  //       const response = await fetch(
-  //         `http://localhost:5000/getmpersonnel/${medicalInfo.selectedPersonnel}`
-  //       );
-  //       const mdata = await response.json();
-  //           setMData(mdata.mData)
-  //         console.log("Data:", mdata);        // setCaremanualName(data.caremanual_name);
-
-  //     } catch (error) {
-  //       console.error("Error fetching caremanual data:", error);
-  //     }
-  //   };
-  //     fetchData();
-  // });
+  useEffect(() => {
+    const fetchEquipmentUser = async () => {
+      try {
+        console.log("UserID:", id);
+        const response = await fetch(
+          `http://localhost:5000/equipmentuser/${id}`
+        );
+        const equipmentUser = await response.json();
+        console.log("อุปกรณ์:", equipmentUser);
+        if (equipmentUser && equipmentUser.data) {
+          setEquipmentUser(equipmentUser.data);
+        } else {
+          console.error("Medical information not found for this user");
+        }
+      } catch (error) {
+        console.error("Error fetching medical information:", error);
+      }
+    };
+    fetchEquipmentUser();
+  }, [id]);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -296,27 +286,78 @@ export default function AllUser({ }) {
         <h3>ข้อมูลการดูแลผู้ป่วย</h3>
         <div>
           <div className="cardall card mb-3">
-            <h6><b>1.ข้อมูลทั่วไป</b></h6>
+            <h6>
+              <b>1.ข้อมูลทั่วไป</b>
+            </h6>
             <div className="user-info">
               <div className="left-info">
                 {/* {username ? (<p>ชื่อผู้ใช้: {username}</p>) : (<p>ชื่อผู้ใช้: -</p>)} */}
-                {name ? <p><b>ชื่อ-สกุล: </b>{name}</p> : <p><b>ชื่อ-สกุล:</b> -</p>}
-                {birthday ? <p><b>อายุ:</b> {userAge} ปี</p> : <p><b>อายุ:</b> - ปี</p>}
-                {ID_card_number ? (
-                  <p><b>เลขบัตรประชาชน:</b> {ID_card_number}</p>
+                {name ? (
+                  <p>
+                    <b>ชื่อ-สกุล: </b>
+                    {name}
+                  </p>
                 ) : (
-                  <p><b>เลขบัตรประชาชน:</b> -</p>
+                  <p>
+                    <b>ชื่อ-สกุล:</b> -
+                  </p>
                 )}
-                {Address ? <p><b>ที่อยู่:</b> {Address}</p> : <p><b>ที่อยู่:</b> -</p>}
+                {birthday ? (
+                  <p>
+                    <b>อายุ:</b> {userAge} ปี
+                  </p>
+                ) : (
+                  <p>
+                    <b>อายุ:</b> - ปี
+                  </p>
+                )}
+                {ID_card_number ? (
+                  <p>
+                    <b>เลขบัตรประชาชน:</b> {ID_card_number}
+                  </p>
+                ) : (
+                  <p>
+                    <b>เลขบัตรประชาชน:</b> -
+                  </p>
+                )}
+                {Address ? (
+                  <p>
+                    <b>ที่อยู่:</b> {Address}
+                  </p>
+                ) : (
+                  <p>
+                    <b>ที่อยู่:</b> -
+                  </p>
+                )}
               </div>
               <div className="right-info">
-                {gender ? <p><b>เพศ:</b> {gender}</p> : <p><b>เพศ:</b> -</p>}
-                {nationality ? (
-                  <p><b>สัญชาติ:</b> {nationality}</p>
+                {gender ? (
+                  <p>
+                    <b>เพศ:</b> {gender}
+                  </p>
                 ) : (
-                  <p><b>สัญชาติ:</b> -</p>
+                  <p>
+                    <b>เพศ:</b> -
+                  </p>
                 )}
-                {tel ? <p><b>เบอร์โทรศัพท์:</b> {tel}</p> : <p><b>เบอร์โทรศัพท์:</b> -</p>}
+                {nationality ? (
+                  <p>
+                    <b>สัญชาติ:</b> {nationality}
+                  </p>
+                ) : (
+                  <p>
+                    <b>สัญชาติ:</b> -
+                  </p>
+                )}
+                {tel ? (
+                  <p>
+                    <b>เบอร์โทรศัพท์:</b> {tel}
+                  </p>
+                ) : (
+                  <p>
+                    <b>เบอร์โทรศัพท์:</b> -
+                  </p>
+                )}
               </div>
             </div>
             <div className="btn-group">
@@ -332,208 +373,133 @@ export default function AllUser({ }) {
                 </button>
               </div>
               <div className="deleteimg1">
-                <button
-                  onClick={() => deleteUser()}
-                >
-                  ลบ
-                </button>
+                <button onClick={() => deleteUser()}>ลบ</button>
               </div>
             </div>
-
           </div>
 
-          {/* <div className="cardall card mb-3">
-            <h6>2.ข้อมูลการเจ็บป่วย</h6>
-            {medicalInfo && (
-              <div>
-                <p>HN: {medicalInfo.HN}</p>
-                <p>AN: {medicalInfo.AN}</p>
-                <p>
-                  วันที่ Admit:{" "}
-                  {new Date(medicalInfo.Date_Admit).toLocaleDateString(
-                    "th-TH",
-                    { day: "numeric", month: "long", year: "numeric" }
-                  )}
-                </p>
-                <p>
-                  วันที่ D/C:{" "}
-                  {new Date(medicalInfo.Date_DC).toLocaleDateString("th-TH", {
-                    day: "numeric",
-                    month: "long",
-                    year: "numeric",
-                  })}
-                </p>
-                <p>Diagnoosis: {medicalInfo.Diagnosis}</p>
-                <p>Chief complaint: {medicalInfo.Chief_complaint}</p>
-                <p>
-                  Phychosocial assessment: {medicalInfo.Phychosocial_assessment}
-                </p>
-                <p>Present illness: {medicalInfo.Present_illness}</p>
-              </div>
-            )}
-          </div> */}
-
           <div className="cardall card mb-3">
-            <h6>2.ข้อมูลการเจ็บป่วย</h6>
+            <h6><b>2.ข้อมูลการเจ็บป่วย</b></h6>
             {medicalInfo && (
               <div className="user-info">
                 <div className="left-info">
-                  <p><b>HN:</b> {medicalInfo.HN || "-"}</p>
                   <p>
-                    วันที่ Admit:
+                    <b>HN:</b> {medicalInfo.HN || "-"}
+                  </p>
+                  <p>
+                  <b>วันที่ Admit:</b>
                     {medicalInfo.Date_Admit
                       ? new Date(medicalInfo.Date_Admit).toLocaleDateString(
-                        "th-TH",
-                        { day: "numeric", month: "long", year: "numeric" }
-                      )
+                          "th-TH",
+                          { day: "numeric", month: "long", year: "numeric" }
+                        )
                       : "-"}
                   </p>
-                  <p>Diagnosis: {medicalInfo.Diagnosis || "-"}</p>
-                  <p>Chief complaint: {medicalInfo.Chief_complaint || "-"}</p>
-                  <p>Management plan: {medicalInfo.Management_plan || "-"}</p>
+                  <p><b>Diagnosis:</b> {medicalInfo.Diagnosis || "-"}</p>
+                  <p><b>Chief complaint:</b> {medicalInfo.Chief_complaint || "-"}</p>
+                  <p><b>Management plan:</b> {medicalInfo.Management_plan || "-"}</p>
                   <div className="filename">
-                  {medicalInfo.fileM && (
-                    <p>
-                      <a
-                        onClick={() => {
-                          const filePath = medicalInfo.fileM.replace(
-                            /\\/g,
-                            "/"
-                          );
-                          const fileName = filePath.split("/").pop();
-                          console.log("fileName:", fileName); // เพิ่มบรรทัดนี้เพื่อตรวจสอบค่า fileName ใน console
-                          window.open(
-                            `http://localhost:5000/file/${fileName}`,
-                            "_blank"
-                          );
-                        }}
-                      >
-                        {medicalInfo.fileM.split("/").pop().split("\\").pop()}
-                      </a>
-                    </p>
-                  )}
+                    {medicalInfo.fileM && (
+                      <p>
+                        <a
+                          onClick={() => {
+                            const filePath = medicalInfo.fileM.replace(
+                              /\\/g,
+                              "/"
+                            );
+                            const fileName = filePath.split("/").pop();
+                            console.log("fileName:", fileName);
+                            window.open(
+                              `http://localhost:5000/file/${fileName}`,
+                              "_blank"
+                            );
+                          }}
+                        >
+                          {medicalInfo.fileM.split("/").pop().split("\\").pop()}
+                        </a>
+                      </p>
+                    )}
                   </div>
                 </div>
 
-
                 <div className="right-info">
-                  <p>AN: {medicalInfo.AN || "-"}</p>
+                  <p><b>AN:</b> {medicalInfo.AN || "-"}</p>
                   <p>
                     {" "}
-                    วันที่ D/C:
+                   <b>วันที่ D/C:</b> 
                     {medicalInfo.Date_DC
                       ? new Date(medicalInfo.Date_DC).toLocaleDateString(
-                        "th-TH",
-                        { day: "numeric", month: "long", year: "numeric" }
-                      )
+                          "th-TH",
+                          { day: "numeric", month: "long", year: "numeric" }
+                        )
                       : "-"}
                   </p>
-                  <p>Present illness: {medicalInfo.Present_illness || "-"}</p>
+                  <p><b>Present illness:</b> {medicalInfo.Present_illness || "-"}</p>
                   <div className="filename">
-                  {medicalInfo.fileP && (
-                    <p>
-                      <a
-                        onClick={() => {
-                          const filePath = medicalInfo.fileP.replace(
-                            /\\/g,
-                            "/"
-                          );
-                          const fileName = filePath.split("/").pop();
-                          console.log("fileName:", fileName); // เพิ่มบรรทัดนี้เพื่อตรวจสอบค่า fileName ใน console
-                          window.open(
-                            `http://localhost:5000/file/${fileName}`,
-                            "_blank"
-                          );
-                        }}
-                      >
-                        {medicalInfo.fileP.split("/").pop().split("\\").pop()}
-                      </a>
-                    </p>
-                  )}
+                    {medicalInfo.fileP && (
+                      <p>
+                        <a
+                          onClick={() => {
+                            const filePath = medicalInfo.fileP.replace(
+                              /\\/g,
+                              "/"
+                            );
+                            const fileName = filePath.split("/").pop();
+                            console.log("fileName:", fileName);
+                            window.open(
+                              `http://localhost:5000/file/${fileName}`,
+                              "_blank"
+                            );
+                          }}
+                        >
+                          {medicalInfo.fileP.split("/").pop().split("\\").pop()}
+                        </a>
+                      </p>
+                    )}
                   </div>
                   <p>
-                    Phychosocial assessment:
+                    <b>Phychosocial assessment:</b>
                     {medicalInfo.Phychosocial_assessment || "-"}
                   </p>
-                  {/* <div className="filename">
-                  {medicalInfo.filePhy && (
-                    <p>
-                      <a
-                        onClick={() => {
-                          const filePath = medicalInfo.filePhy.replace(
-                            /\\/g,
-                            "/"
-                          );
-                          const fileName = filePath.split("/").pop();
-                          console.log("fileName:", fileName);
-                          const encodedFileName = encodeURIComponent(fileName);
-                          window.open(
-                            `http://localhost:5000/file/${encodedFileName}`,
-                            "_blank"
-                          );
-                        }}
-                      >
-                        {medicalInfo.filePhy.split("/").pop().split("\\").pop()}
-                      </a>
-                    </p>
-                  )}
-                  </div> */}
-                  {/* <div className="filename">
-  {medicalInfo.filePhy && (
-    <p>
-      <a
-        onClick={() => {
-          const filePath = medicalInfo.filePhy.replace(/\\/g, "/");
-          const fileName = filePath.split("/").pop();
-          console.log("fileName:", fileName);
-          const encodedFileName = encodeURIComponent(fileName);
-          window.open(
-            `http://localhost:5000/file/${encodedFileName}`,
-            "_blank"
-          );
-        }}
-      >
-        {decodeURI(medicalInfo.filePhy.split("/").pop().split("\\").pop())}
-      </a>
-    </p>
-  )}
-</div> */}
-<div className="filename">
-  {medicalInfo.filePhy && (
-    <p>
-      <a
-        onClick={() => {
-          const filePath = medicalInfo.filePhy.replace(/\\/g, "/");
-          const fileName = filePath.split("/").pop();
-          console.log("fileName:", fileName);
-          const cleanedFileName = fileName.replace(/[^\x00-\x7F]/g, ""); // ทำการลบอักขระพิเศษ
-          const encodedFileName = encodeURIComponent(cleanedFileName);
-          window.open(
-            `http://localhost:5000/file/${encodedFileName}`,
-            "_blank"
-          );
-        }}
-      >
-        {decodeURI(medicalInfo.filePhy.split("/").pop().split("\\").pop().replace(/[^\x00-\x7F]/g, ""))}
-      </a>
-    </p>
-  )}
-</div>
+                  <div className="filename">
+                    {medicalInfo.filePhy && (
+                      <p>
+                        <a
+                          onClick={() => {
+                            const filePath = medicalInfo.filePhy.replace(
+                              /\\/g,
+                              "/"
+                            );
+                            const fileName = filePath.split("/").pop();
+                            console.log("fileName:", fileName);
+                            window.open(
+                              `http://localhost:5000/file/${fileName}`,
+                              "_blank"
+                            );
+                          }}
+                        >
+                          {medicalInfo.filePhy
+                            .split("/")
+                            .pop()
+                            .split("\\")
+                            .pop()}
+                        </a>
+                      </p>
+                    )}
+                  </div>
 
-
-                  
                   <div>
                     {mdata && (
                       <div>
                         <p>
-                          แพทย์ผู้ดูแล: {mdata.nametitle}
+                          <b>แพทย์ผู้ดูแล:</b> {mdata.nametitle}
                           {mdata.name}
                         </p>
                       </div>
                     )}
                   </div>
                 </div>
-{/* 
+                {/* 
                 <div className="pdf-link">
                   <a
                     href={`http://localhost:5000/file/${medicalInfo.fileM}`}
@@ -547,8 +513,29 @@ export default function AllUser({ }) {
           </div>
 
           <div className="cardall card mb-3">
-            <h6>3.อุปกรณ์ทางการแพทย์</h6>
+            <h6><b>3. อุปกรณ์ทางการแพทย์</b></h6>
+            {equipmentuser && equipmentuser.equipmenttype_forUser && (
+              <>
+                {equipmentuser.equipmenttype_forUser} :{" "}
+                {equipmentuser.equipmentname_forUser}
+              </>
+            )}
           </div>
+
+          {/* <div className="cardall card mb-3">
+            <h6>3. อุปกรณ์ทางการแพทย์</h6>
+            {equipmentuser &&
+              equipmentuser.length > 0 &&
+              equipmentuser
+                .filter(
+                  (item) => item.equipmenttype_forUser === "อุปกรณ์เสริม"
+                )
+                .map((filteredItem) => (
+                  <div key={filteredItem.id}>
+                    {filteredItem.equipmentname_forUser}
+                  </div>
+                ))}
+          </div> */}
         </div>
       </div>
     </main>
