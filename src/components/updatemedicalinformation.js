@@ -1,0 +1,517 @@
+import React, { useEffect, useState } from "react";
+import "../css/alladmin.css";
+import "../css/sidebar.css";
+import "../css/styles.css";
+import logow from "../img/logow.png";
+import { useNavigate } from "react-router-dom";
+import { useLocation } from "react-router-dom";
+
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+
+export default function Updatemedicalinformation() {
+  const navigate = useNavigate();
+  const [token, setToken] = useState("");
+  const [medicalInfo, setMedicalInfo] = useState(null);
+  const [adminData, setAdminData] = useState("");
+  const location = useLocation();
+  const { id, user } = location.state;
+  //   const { idmd: medicalInfoId } = location.state;
+  const [isActive, setIsActive] = useState(false);
+  const [HN, setHN] = useState("");
+  const [AN, setAN] = useState("");
+  const [Diagnosis, setDiagnosis] = useState("");
+  const [Chief_complaint, setChief_complaint] = useState("");
+  const [Present_illness, setPresent_illness] = useState("");
+  const [Phychosocial_assessment, setPhychosocial_assessment] = useState("");
+  const [Management_plan, setManagement_plan] = useState("");
+  const [Date_Admit, setDate_Admit] = useState("");
+  const [Date_DC, setDate_DC] = useState("");
+  const [fileM, setFileM] = useState(null);
+  const [fileP, setFileP] = useState(null);
+  const [filePhy, setFilePhy] = useState(null);
+  const [pdfURL, setPdfURL] = useState(null);
+  const [selectedFileNameP, setSelectedFileNameP] = useState("");
+  const [selectedFileNameM, setSelectedFileNameM] = useState("");
+  const [selectedFileNamePhy, setSelectedFileNamePhy] = useState("");
+  const [pdfURLP, setPdfURLP] = useState("");
+  const [pdfURLM, setPdfURLM] = useState("");
+  const [pdfURLPhy, setPdfURLPhy] = useState("");
+
+
+  const initialSelectedPersonnel = medicalInfo
+    ? medicalInfo.selectedPersonnel
+    : "";
+
+  const [selectedPersonnel, setSelectedPersonnel] = useState(
+    initialSelectedPersonnel
+  );
+
+  const [data, setData] = useState([]);
+  // ฟังก์ชัน handleFileChangeP เพื่อจัดการกับการเลือกไฟล์ใหม่ของ Present illness
+  const handleFileChangeP = (e) => {
+    setFileP(e.target.files[0]);
+    setSelectedFileNameP(e.target.files[0].name);
+    const pdfURL = URL.createObjectURL(e.target.files[0]);
+    setPdfURLP(pdfURL);
+  };
+
+  // ฟังก์ชัน handleFileChangeM เพื่อจัดการกับการเลือกไฟล์ใหม่ของ Management plan
+  const handleFileChangeM = (e) => {
+    setFileM(e.target.files[0]);
+    setSelectedFileNameM(e.target.files[0].name);
+    const pdfURL = URL.createObjectURL(e.target.files[0]);
+    setPdfURLM(pdfURL);
+  };
+
+  // ฟังก์ชัน handleFileChangePhy เพื่อจัดการกับการเลือกไฟล์ใหม่ของ Phychosocial assessment
+  const handleFileChangePhy = (e) => {
+    setFilePhy(e.target.files[0]);
+    setSelectedFileNamePhy(e.target.files[0].name);
+    const pdfURL = URL.createObjectURL(e.target.files[0]);
+    setPdfURLPhy(pdfURL);
+  };
+  const formatDate = (date) => {
+    const formattedDate = new Date(date);
+    // ตรวจสอบว่า date เป็น NaN หรือไม่
+    if (isNaN(formattedDate.getTime())) {
+      return ""; // ถ้าเป็น NaN ให้ส่งค่าว่างกลับไป
+    }
+    return formattedDate.toISOString().split("T")[0];
+  };
+
+
+  useEffect(() => {
+    const token = window.localStorage.getItem("token");
+    setToken(token);
+    if (token) {
+      fetch("http://localhost:5000/profile", {
+        method: "POST",
+        crossDomain: true,
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "application/json",
+          "Access-Control-Allow-Origin": "*",
+        },
+        body: JSON.stringify({
+          token: token,
+        }),
+      })
+        .then((res) => res.json())
+        .then((data) => {
+          console.log(data);
+          setAdminData(data.data);
+        });
+    }
+    getAllMpersonnel();
+  }, []);
+
+  useEffect(() => {
+    const fetchMedicalInformation = async () => {
+      try {
+        const response = await fetch(
+          `http://localhost:5000/medicalInformation/${id}`
+        );
+        const medicalData = await response.json();
+
+        if (medicalData && medicalData.data) {
+          setMedicalInfo(medicalData.data);
+          console.log("medicalDataupdate:", medicalData);
+          setHN(medicalData.data.HN);
+          setAN(medicalData.data.AN);
+          setDiagnosis(medicalData.data.Diagnosis);
+          setChief_complaint(medicalData.data.Chief_complaint);
+          setPresent_illness(medicalData.data.Present_illness);
+          setPhychosocial_assessment(medicalData.data.Phychosocial_assessment);
+          setManagement_plan(medicalData.data.Management_plan);
+          setDate_Admit(formatDate(medicalData.data.Date_Admit));
+          setSelectedPersonnel(medicalData.data.selectedPersonnel);
+          setDate_DC(formatDate(medicalData.data.Date_DC));
+          setFileP(medicalData.data.fileP)
+          setFileM(medicalData.data.fileM)
+          setFilePhy(medicalData.data.filePhy)
+
+
+          console.log("AN:", AN);
+        } else {
+          console.error("Medical information not found for this user");
+        }
+      } catch (error) {
+        console.error("Error fetching medical information:", error);
+      }
+    };
+    fetchMedicalInformation();
+  }, [id]);
+
+  // useEffect(() => {
+  //   if (medicalInfo && medicalInfo.selectedPersonnel) {
+  //     setSelectedPersonnel(medicalInfo.selectedPersonnel);
+  //     console.log("ss", selectedPersonnel);
+  //   }
+  // }, [medicalInfo]);
+
+  const logOut = () => {
+    window.localStorage.clear();
+    window.location.href = "./";
+  };
+  // bi-list
+  const handleToggleSidebar = () => {
+    setIsActive(!isActive);
+  };
+
+  const handleBreadcrumbClick = () => {
+    navigate("/allinfo", { state: { id: id, user: user } });
+  };
+  const getAllMpersonnel = () => {
+    fetch("http://localhost:5000/allMpersonnel", {
+      method: "GET",
+      headers: {
+        Authorization: `Bearer ${token}`, // เพิ่ม Authorization header เพื่อส่ง token ในการร้องขอ
+      },
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        console.log(data, "AllMpersonnel");
+        setData(data.data);
+        console.log("info:", id);
+      });
+  };
+
+  const UpdateMedical = async () => {
+    console.log(AN, AN);
+    const selectedPersonnelValue =
+      document.getElementById("selectedPersonnel").value;
+
+    try {
+      if (!medicalInfo) {
+        console.error("ไม่พบข้อมูลการแพทย์");
+        return;
+      }
+
+      const formData = new FormData();
+      formData.append("HN", HN);
+      formData.append("AN", AN);
+      formData.append("Date_Admit", Date_Admit);
+      formData.append("Date_DC", Date_DC);
+      formData.append("Diagnosis", Diagnosis);
+      formData.append("Chief_complaint", Chief_complaint);
+      formData.append("Present_illness", Present_illness);
+      formData.append("selectedPersonnel", selectedPersonnelValue);
+      formData.append("Phychosocial_assessment", Phychosocial_assessment);
+      formData.append("Management_plan", Management_plan);
+
+      if (fileP) {
+        formData.append("fileP", fileP);
+      }
+
+      if (fileM) {
+        formData.append("fileM", fileM);
+      }
+
+      if (filePhy) {
+        formData.append("filePhy", filePhy);
+      }
+
+      console.log("info:", id);
+      const response = await fetch(
+        `http://localhost:5000/updatemedicalinformation/${medicalInfo._id}`,
+        {
+          method: "POST",
+          body: formData,
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      const data = await response.json();
+      console.log(data);
+      if (response.ok) {
+        const updatemedicalinformation = data; // ใช้ข้อมูลที่อ่านได้ในการทำงานต่อไป
+        console.log("แก้ไขคู่มือแล้ว:", updatemedicalinformation);
+        toast.success("แก้ไขข้อมูลสำเร็จ");
+        setTimeout(() => {
+        navigate("/allinfo", { state: { id: id, user: user } });
+
+        // navigate("/allinfo");
+        }, 1100);
+      } else {
+        console.error("แก้ไขไม่ได้:", response.statusText);
+      }
+    } catch (error) {
+      console.error("Error updating medical information:", error);
+      // ดำเนินการเมื่อเกิดข้อผิดพลาดในการส่งคำขอ
+    }
+  };
+
+  return (
+    <main className="body">
+      <div className={`sidebar ${isActive ? "active" : ""}`}>
+        <div class="logo_content">
+          <div class="logo">
+            <div class="logo_name">
+              <img src={logow} className="logow" alt="logo"></img>
+            </div>
+          </div>
+          <i class="bi bi-list" id="btn" onClick={handleToggleSidebar}></i>
+        </div>
+        <ul class="nav-list">
+          <li>
+            <a href="home">
+              <i class="bi bi-book"></i>
+              <span class="links_name">จัดการข้อมูลคู่มือการดูแลผู้ป่วย</span>
+            </a>
+          </li>
+          <li>
+            <a href="alluser">
+              <i class="bi bi-person-plus"></i>
+              <span class="links_name">จัดการข้อมูลผู้ป่วย</span>
+            </a>
+          </li>
+          <li>
+            <a href="allmpersonnel">
+              <i class="bi bi-people"></i>
+              <span class="links_name">จัดการข้อมูลบุคลากร</span>
+            </a>
+          </li>
+          <li>
+            <a href="allequip">
+              <i class="bi bi-prescription2"></i>
+              <span class="links_name">จัดการอุปกรณ์ทางการแพทย์</span>
+            </a>
+          </li>
+          <li>
+            <a href="alladmin" onClick={() => navigate("/alladmin")}>
+              <i class="bi bi-person-gear"></i>
+              <span class="links_name">จัดการแอดมิน</span>
+            </a>
+          </li>
+          <div class="nav-logout">
+            <li>
+              <a href="./" onClick={logOut}>
+                <i
+                  class="bi bi-box-arrow-right"
+                  id="log_out"
+                  onClick={logOut}
+                ></i>
+                <span class="links_name">ออกจากระบบ</span>
+              </a>
+            </li>
+          </div>
+        </ul>
+      </div>
+      <div className="home_content">
+        <div className="header">จัดการข้อมูลผู้ป่วย</div>
+        <div class="profile_details ">
+          <li>
+            <a href="profile">
+              <i class="bi bi-person"></i>
+              <span class="links_name">{adminData && adminData.username}</span>
+            </a>
+          </li>
+        </div>
+        <hr></hr>
+        <div className="breadcrumbs">
+          <ul>
+            <li>
+              <a href="home">
+                <i class="bi bi-house-fill"></i>
+              </a>
+            </li>
+            <li className="arrow">
+              <i class="bi bi-chevron-double-right"></i>
+            </li>
+            <li>
+              <a href="alluser">จัดการข้อมูลผู้ป่วย</a>
+            </li>
+            <li className="arrow">
+              <i class="bi bi-chevron-double-right"></i>
+            </li>
+            <li>
+              <a onClick={handleBreadcrumbClick} className="info">
+                ข้อมูลการดูแลผู้ป่วย
+              </a>
+              {/* <a href="allinfo">ข้อมูลการดูแลผู้ป่วย</a> */}
+            </li>
+            <li className="arrow">
+              <i class="bi bi-chevron-double-right"></i>
+            </li>
+            <li>
+              <a>แก้ไขข้อมูลการเจ็บป่วย</a>
+            </li>
+          </ul>
+        </div>
+        <h3>แก้ไขข้อมูลการเจ็บป่วย</h3>
+        {medicalInfo && (
+          <div className="adminall card mb-3">
+            <div className="mb-3">
+              <label>HN</label>
+              <input
+                type="text"
+                className="form-control"
+                value={HN}
+                onChange={(e) => setHN(e.target.value)}
+              />
+            </div>
+            <div className="mb-3">
+              <label>AN</label>
+              <input
+                type="text"
+                value={AN}
+                className="form-control"
+                onChange={(e) => setAN(e.target.value)}
+              />
+            </div>
+
+            <div className="mb-1">
+              <label>วันที่ Admit </label>
+              <input
+                type="date"
+                value={Date_Admit}
+                className="form-control"
+                onChange={(e) => setDate_Admit(e.target.value)}
+              />
+            </div>
+
+            <div className="mb-1">
+              <label>วันที่ D/C</label>
+              <input
+                type="date"
+                value={Date_DC}
+                className="form-control"
+                onChange={(e) => setDate_DC(e.target.value)}
+              />
+            </div>
+            <div className="mb-1">
+              <label>แพทย์ผู้ดูแล</label>
+              <select
+                id="selectedPersonnel"
+                className="form-select"
+                value={selectedPersonnel} // กำหนดค่า default เป็น selectedPersonnel
+                onChange={(e) => setSelectedPersonnel(e.target.value)} // ปรับเป็น e.target.value
+              >
+                {data.length > 0 ? (
+                  data.map((personnel) => (
+                    <option key={personnel._id} value={personnel._id}>
+                      {`${personnel.nametitle} ${personnel.name}`}
+                    </option>
+                  ))
+                ) : (
+                  <option value="">ไม่มีข้อมูลแพทย์</option>
+                )}
+              </select>
+            </div>
+
+            <div className="mb-1">
+              <label>Diagnosis</label>
+              <textarea
+                className="form-control"
+                value={Diagnosis}
+                rows="3" // กำหนดจำนวนแถวเริ่มต้น
+                style={{ resize: "vertical" }} // ให้ textarea สามารถปรับขนาดได้ในทิศทางดิสพล์เมนต์
+                onChange={(e) => setDiagnosis(e.target.value)}
+              />
+            </div>
+
+            <div className="mb-1">
+              <label>Chief complaint</label>
+              <textarea
+                className="form-control"
+                value={Chief_complaint}
+                rows="3" // กำหนดจำนวนแถวเริ่มต้น
+                style={{ resize: "vertical" }}
+                onChange={(e) => setChief_complaint(e.target.value)}
+              />
+            </div>
+
+            <div className="mb-1">
+              <label>Present illness</label>
+              <input
+                type="file"
+                className="form-control"
+                accept="application/pdf"
+                onChange={handleFileChangeP}
+              />
+              <div className="filename ">
+                {selectedFileNameP && (
+                  <div className="mb-3 pdf">
+                    <a href={pdfURLP} target="_blank" rel="noopener noreferrer">
+                      {selectedFileNameP}
+                    </a>
+                  </div>
+                )}
+              </div>
+              <textarea
+                className="form-control"
+                rows="3"
+                value={Present_illness}
+                style={{ resize: "vertical" }}
+                onChange={(e) => setPresent_illness(e.target.value)}
+              />
+            </div>
+            {/* 
+            <div className="mb-1">
+              <label>Management plan</label>
+              <input
+                type="file"
+                className="form-control"
+                accept="application/pdf"
+                onChange={onInputfileChange2}
+              />
+              <div className="filename ">
+                {selectedFileName2 && (
+                  <div className="mb-3 pdf">
+                    <a href={pdfURL2} target="_blank" rel="noopener noreferrer">
+                      {selectedFileName2}
+                    </a>
+                  </div>
+                )}
+              </div>
+              <textarea
+                className="form-control"
+                rows="3"
+                style={{ resize: "vertical" }}
+                onChange={(e) => setManagement_plan(e.target.value)}
+              />
+            </div>
+
+            <div className="mb-1">
+              <label>Phychosocial assessment</label>
+
+              <input
+                type="file"
+                className="form-control"
+                accept="application/pdf"
+                onChange={onInputfileChange3}
+              />
+              <div className="filename ">
+                {selectedFileName3 && (
+                  <div className="mb-3 pdf">
+                    <a href={pdfURL3} target="_blank" rel="noopener noreferrer">
+                      {selectedFileName3}
+                    </a>
+                  </div>
+                )}
+              </div>
+              <textarea
+                className="form-control"
+                rows="3" // กำหนดจำนวนแถวเริ่มต้น
+                style={{ resize: "vertical" }}
+                onChange={(e) => setPhychosocial_assessment(e.target.value)}
+              />
+            </div> */}
+
+            <div className="d-grid">
+              <button onClick={UpdateMedical} className="btn btn-outline py-2">
+                บันทึก
+              </button>
+              <br />
+            </div>
+          </div>
+        )}
+      </div>
+
+      <div></div>
+    </main>
+  );
+}

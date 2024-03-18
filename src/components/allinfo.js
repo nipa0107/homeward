@@ -10,7 +10,6 @@ import { useLocation } from "react-router-dom";
 
 export default function AllUser({}) {
   const navigate = useNavigate();
-
   const [data, setData] = useState([]);
   const [adminData, setAdminData] = useState("");
   const [isActive, setIsActive] = useState(false);
@@ -85,7 +84,7 @@ export default function AllUser({}) {
           `http://localhost:5000/medicalInformation/${id}`
         );
         const medicalData = await response.json();
-        console.log("Medical Data:", medicalData);
+        console.log("Medical Dataallinfo:", medicalData);
         if (medicalData && medicalData.data) {
           setMedicalInfo(medicalData.data);
         } else {
@@ -508,8 +507,26 @@ export default function AllUser({}) {
                     ดูไฟล์ PDF
                   </a>
                 </div> */}
+                
               </div>
             )}
+             <div className="btn-group">
+              <div className="editimg1">
+                <button
+                  onClick={() =>
+                    navigate("/updatemedicalinformation", {
+                      // state: { id },
+                      state: { id: id },
+                    })
+                  }
+                >
+                  แก้ไข
+                </button>
+              </div>
+              <div className="deleteimg1">
+                <button onClick={() => deleteUser()}>ลบ</button>
+              </div>
+            </div>
           </div>
 
           <div className="cardall card mb-3">

@@ -48,6 +48,7 @@ export default function UpdateCareManual() {
 
     const pdfURL = URL.createObjectURL(e.target.files[0]);
     setPdfURL(pdfURL);
+    console.log("a",pdfURL)
   };
 
   useEffect(() => {

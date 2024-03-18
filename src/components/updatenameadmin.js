@@ -207,6 +207,7 @@ export default function UpdateName() {
               onChange={(e) => setName(e.target.value)}
             />
           </div>
+          
           <div className="mb-3">
           <label>อีเมล</label>
           <input
