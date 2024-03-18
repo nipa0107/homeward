@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState } from 'react';
 import "../css/sidebar.css";
 import "../css/alladmin.css"
 import "bootstrap-icons/font/bootstrap-icons.css";
@@ -42,7 +42,8 @@ export default function AddEquip({ }) {
                     console.log(data)
                     setAdminData(data.data);
                 });
-        } getAllEquip();
+        }
+        getAllEquip();
         if (lastAddedUser) {
             // Display toast notification if lastAddedUser exists
             toast.success(`Last added user: ${lastAddedUser}`);
@@ -67,33 +68,33 @@ export default function AddEquip({ }) {
         e.preventDefault();
         const selectedEquipments = [];
 
-    // ตรวจสอบและเพิ่มข้อมูลอุปกรณ์ที่ผู้ใช้เลือกเข้าในอาร์เรย์ selectedEquipments
-    if (selectedEquipType1) {
-        selectedEquipments.push({
-            equipmentname_forUser: selectedEquipType1,
-            equipmenttype_forUser: "อุปกรณ์ติดตัว"
-        });
-    }
-    if (selectedEquipType2) {
-        selectedEquipments.push({
-            equipmentname_forUser: selectedEquipType2,
-            equipmenttype_forUser: "อุปกรณ์เสริม"
-        });
-    }
-    if (selectedEquipType3) {
-        selectedEquipments.push({
-            equipmentname_forUser: selectedEquipType3,
-            equipmenttype_forUser: "อุปกรณ์อื่นๆ"
-        });
-    }
+        // ตรวจสอบและเพิ่มข้อมูลอุปกรณ์ที่ผู้ใช้เลือกเข้าในอาร์เรย์ selectedEquipments
+        if (selectedEquipType1) {
+            selectedEquipments.push({
+                equipmentname_forUser: selectedEquipType1,
+                equipmenttype_forUser: "อุปกรณ์ติดตัว"
+            });
+        }
+        if (selectedEquipType2) {
+            selectedEquipments.push({
+                equipmentname_forUser: selectedEquipType2,
+                equipmenttype_forUser: "อุปกรณ์เสริม"
+            });
+        }
+        if (selectedEquipType3) {
+            selectedEquipments.push({
+                equipmentname_forUser: selectedEquipType3,
+                equipmenttype_forUser: "อุปกรณ์อื่นๆ"
+            });
+        }
 
-    // ตรวจสอบว่าผู้ใช้เลือกอุปกรณ์หรือไม่
-    if (selectedEquipments.length === 0) {
-        console.log("Please select at least one equipment");
-        setValidationMessage("โปรดเลือกอุปกรณ์อย่างน้อยหนึ่งรายการ");
-        return;
-    }
-    selectedEquipments.forEach((equipment) => {
+        // ตรวจสอบว่าผู้ใช้เลือกอุปกรณ์หรือไม่
+        if (selectedEquipments.length === 0) {
+            console.log("Please select at least one equipment");
+            setValidationMessage("โปรดเลือกอุปกรณ์อย่างน้อยหนึ่งรายการ");
+            return;
+        }
+
         fetch("http://localhost:5000/addequipuser", {
             method: "POST",
             headers: {
@@ -102,10 +103,7 @@ export default function AddEquip({ }) {
                 "Access-Control-Allow-Origin": "*",
                 Authorization: `Bearer ${token}`
             },
-            body: JSON.stringify({
-                equipmentname_forUser: equipment.equipmentname_forUser,
-                equipmenttype_forUser: equipment.equipmenttype_forUser,
-            }),
+            body: JSON.stringify(selectedEquipments),
         })
             .then((res) => res.json())
             .then((data) => {
@@ -116,8 +114,11 @@ export default function AddEquip({ }) {
                         navigate("/alluser");
                     }, 1100);
                 }
+            })
+            .catch((error) => {
+                console.error("Error adding equipment:", error);
+                toast.error("เกิดข้อผิดพลาดในการเพิ่มข้อมูล");
             });
-        });
     };
 
     const logOut = () => {
@@ -315,21 +316,7 @@ export default function AddEquip({ }) {
                 </div>
                 <div className="btn-group">
                     <div className="btn-pre">
-                        {/* <button
-                            onClick={() => navigate("/addmdinformation")}
-                            className="btn btn-outline py-2"
-                        >
-                            ก่อนหน้า
-                        </button> */}
                     </div>
-                    {/* <div className="btn-next">
-            <button
-              onClick={() => navigate("/addequipment")}
-              className="btn btn-outline py-2"
-            >
-              ถัดไป
-            </button>
-          </div> */}
                 </div>
             </div>
         </main>
