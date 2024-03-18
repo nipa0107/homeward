@@ -6,8 +6,8 @@ import logow from "../img/logow.png";
 import { useNavigate } from "react-router-dom";
 import { useLocation } from "react-router-dom";
 
-import { ToastContainer, toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 export default function Updatemedicalinformation() {
   const navigate = useNavigate();
@@ -37,7 +37,7 @@ export default function Updatemedicalinformation() {
   const [pdfURLP, setPdfURLP] = useState("");
   const [pdfURLM, setPdfURLM] = useState("");
   const [pdfURLPhy, setPdfURLPhy] = useState("");
-
+  const [data, setData] = useState([]);
 
   const initialSelectedPersonnel = medicalInfo
     ? medicalInfo.selectedPersonnel
@@ -47,30 +47,51 @@ export default function Updatemedicalinformation() {
     initialSelectedPersonnel
   );
 
-  const [data, setData] = useState([]);
-  // ฟังก์ชัน handleFileChangeP เพื่อจัดการกับการเลือกไฟล์ใหม่ของ Present illness
+  // const handleFileChangeP = (e) => {
+  //   setFileP(e.target.files[0]);
+  //   setSelectedFileNameP(e.target.files[0].name);
+  //   const pdfURLP = URL.createObjectURL(e.target.files[0]);
+  //   setPdfURLP(pdfURLP);
+  // };
+
+  // // ฟังก์ชัน handleFileChangeM เพื่อจัดการกับการเลือกไฟล์ใหม่ของ Management plan
+  // const handleFileChangeM = (e) => {
+  //   setFileM(e.target.files[0]);
+  //   setSelectedFileNameM(e.target.files[0].name);
+  //   const pdfURLM = URL.createObjectURL(e.target.files[0]);
+  //   setPdfURLM(pdfURLM);
+  // };
+
+  // // ฟังก์ชัน handleFileChangePhy เพื่อจัดการกับการเลือกไฟล์ใหม่ของ Phychosocial assessment
+  // const handleFileChangePhy = (e) => {
+  //   setFilePhy(e.target.files[0]);
+  //   setSelectedFileNamePhy(e.target.files[0].name);
+  //   const pdfURLPhy = URL.createObjectURL(e.target.files[0]);
+  //   setPdfURLPhy(pdfURLPhy);
+  // };
+
   const handleFileChangeP = (e) => {
-    setFileP(e.target.files[0]);
-    setSelectedFileNameP(e.target.files[0].name);
-    const pdfURL = URL.createObjectURL(e.target.files[0]);
-    setPdfURLP(pdfURL);
+    setFileP(e.target.files[0]); // อัปเดต state ของไฟล์ Present illness
+    setSelectedFileNameP(e.target.files[0].name); // อัปเดตชื่อไฟล์ที่เลือก
+    const pdfURLP = URL.createObjectURL(e.target.files[0]);
+    setPdfURLP(pdfURLP);
   };
-
-  // ฟังก์ชัน handleFileChangeM เพื่อจัดการกับการเลือกไฟล์ใหม่ของ Management plan
+  
   const handleFileChangeM = (e) => {
-    setFileM(e.target.files[0]);
-    setSelectedFileNameM(e.target.files[0].name);
-    const pdfURL = URL.createObjectURL(e.target.files[0]);
-    setPdfURLM(pdfURL);
+    setFileM(e.target.files[0]); // อัปเดต state ของไฟล์ Management plan
+    setSelectedFileNameM(e.target.files[0].name); // อัปเดตชื่อไฟล์ที่เลือก
+    const pdfURLM = URL.createObjectURL(e.target.files[0]);
+    setPdfURLM(pdfURLM);
   };
-
-  // ฟังก์ชัน handleFileChangePhy เพื่อจัดการกับการเลือกไฟล์ใหม่ของ Phychosocial assessment
+  
   const handleFileChangePhy = (e) => {
-    setFilePhy(e.target.files[0]);
-    setSelectedFileNamePhy(e.target.files[0].name);
-    const pdfURL = URL.createObjectURL(e.target.files[0]);
-    setPdfURLPhy(pdfURL);
+    setFilePhy(e.target.files[0]); // อัปเดต state ของไฟล์ Phychosocial assessment
+    setSelectedFileNamePhy(e.target.files[0].name); // อัปเดตชื่อไฟล์ที่เลือก
+    const pdfURLPhy = URL.createObjectURL(e.target.files[0]);
+    setPdfURLPhy(pdfURLPhy);
   };
+  
+
   const formatDate = (date) => {
     const formattedDate = new Date(date);
     // ตรวจสอบว่า date เป็น NaN หรือไม่
@@ -80,13 +101,13 @@ export default function Updatemedicalinformation() {
     return formattedDate.toISOString().split("T")[0];
   };
 
-
   useEffect(() => {
     const token = window.localStorage.getItem("token");
     setToken(token);
     if (token) {
       fetch("http://localhost:5000/profile", {
         method: "POST",
+
         crossDomain: true,
         headers: {
           "Content-Type": "application/json",
@@ -127,12 +148,22 @@ export default function Updatemedicalinformation() {
           setDate_Admit(formatDate(medicalData.data.Date_Admit));
           setSelectedPersonnel(medicalData.data.selectedPersonnel);
           setDate_DC(formatDate(medicalData.data.Date_DC));
-          setFileP(medicalData.data.fileP)
-          setFileM(medicalData.data.fileM)
-          setFilePhy(medicalData.data.filePhy)
+          // setFileP(medicalData.data.fileP);
+          // setFileM(medicalData.data.fileM);
+          // setFilePhy(medicalData.data.filePhy);
 
+          const filePath = medicalData.data.fileP.replace(/\\/g, "/");
+          const fileName = filePath.split("/").pop();
+          setFileP(fileName);
 
-          console.log("AN:", AN);
+          const filePathM = medicalData.data.fileM.replace(/\\/g, "/");
+          const fileNameM = filePathM.split("/").pop();
+          setFileM(fileNameM);
+
+          const filePathPhy = medicalData.data.filePhy.replace(/\\/g, "/");
+          const fileNamePhy = filePathPhy.split("/").pop();
+          setFilePhy(fileNamePhy);
+
         } else {
           console.error("Medical information not found for this user");
         }
@@ -143,12 +174,7 @@ export default function Updatemedicalinformation() {
     fetchMedicalInformation();
   }, [id]);
 
-  // useEffect(() => {
-  //   if (medicalInfo && medicalInfo.selectedPersonnel) {
-  //     setSelectedPersonnel(medicalInfo.selectedPersonnel);
-  //     console.log("ss", selectedPersonnel);
-  //   }
-  // }, [medicalInfo]);
+
 
   const logOut = () => {
     window.localStorage.clear();
@@ -188,6 +214,8 @@ export default function Updatemedicalinformation() {
         return;
       }
 
+      const updatedSelectedPersonnel = selectedPersonnelValue !== "" ? selectedPersonnelValue : selectedPersonnel;
+
       const formData = new FormData();
       formData.append("HN", HN);
       formData.append("AN", AN);
@@ -196,18 +224,18 @@ export default function Updatemedicalinformation() {
       formData.append("Diagnosis", Diagnosis);
       formData.append("Chief_complaint", Chief_complaint);
       formData.append("Present_illness", Present_illness);
-      formData.append("selectedPersonnel", selectedPersonnelValue);
+    formData.append("selectedPersonnel", updatedSelectedPersonnel); // ใช้ค่าที่อัปเดตแล้ว
       formData.append("Phychosocial_assessment", Phychosocial_assessment);
       formData.append("Management_plan", Management_plan);
 
       if (fileP) {
         formData.append("fileP", fileP);
       }
-
+  
       if (fileM) {
         formData.append("fileM", fileM);
       }
-
+  
       if (filePhy) {
         formData.append("filePhy", filePhy);
       }
@@ -231,9 +259,9 @@ export default function Updatemedicalinformation() {
         console.log("แก้ไขคู่มือแล้ว:", updatemedicalinformation);
         toast.success("แก้ไขข้อมูลสำเร็จ");
         setTimeout(() => {
-        navigate("/allinfo", { state: { id: id, user: user } });
+          // navigate("/allinfo", { state: { id: id, user: user } });
 
-        // navigate("/allinfo");
+          // navigate("/allinfo");
         }, 1100);
       } else {
         console.error("แก้ไขไม่ได้:", response.statusText);
@@ -423,7 +451,6 @@ export default function Updatemedicalinformation() {
                 onChange={(e) => setChief_complaint(e.target.value)}
               />
             </div>
-
             <div className="mb-1">
               <label>Present illness</label>
               <input
@@ -432,39 +459,60 @@ export default function Updatemedicalinformation() {
                 accept="application/pdf"
                 onChange={handleFileChangeP}
               />
-              <div className="filename ">
-                {selectedFileNameP && (
-                  <div className="mb-3 pdf">
-                    <a href={pdfURLP} target="_blank" rel="noopener noreferrer">
-                      {selectedFileNameP}
+              <div className="filename">
+                {pdfURLP ? (
+                  <a href={pdfURLP} target="_blank" rel="noopener noreferrer">
+                    {selectedFileNameP}
+                  </a>
+                ) : (
+                  fileP && (
+                    <a
+                      onClick={() => {
+                        window.open(
+                          `http://localhost:5000/file/${fileP}`,
+                          "_blank"
+                        );
+                      }}
+                    >
+                      {fileP}
                     </a>
-                  </div>
+                  )
                 )}
               </div>
               <textarea
                 className="form-control"
                 rows="3"
-                value={Present_illness}
                 style={{ resize: "vertical" }}
                 onChange={(e) => setPresent_illness(e.target.value)}
               />
             </div>
-            {/* 
+
             <div className="mb-1">
               <label>Management plan</label>
               <input
                 type="file"
                 className="form-control"
                 accept="application/pdf"
-                onChange={onInputfileChange2}
+                onChange={handleFileChangeM}
               />
-              <div className="filename ">
-                {selectedFileName2 && (
-                  <div className="mb-3 pdf">
-                    <a href={pdfURL2} target="_blank" rel="noopener noreferrer">
-                      {selectedFileName2}
+              <div className="filename">
+                {pdfURLM ? (
+                  <a href={pdfURLM} target="_blank" rel="noopener noreferrer">
+                    {selectedFileNameM}
+                  </a>
+                ) : (
+                  fileM && (
+                    <a
+                      onClick={() => {
+                        window.open(
+                          `http://localhost:5000/file/${fileM}`,
+                          "_blank"
+                        );
+                      }}
+                    >
+                      {fileM}
                     </a>
-                  </div>
+                  )
                 )}
               </div>
               <textarea
@@ -482,15 +530,27 @@ export default function Updatemedicalinformation() {
                 type="file"
                 className="form-control"
                 accept="application/pdf"
-                onChange={onInputfileChange3}
+                onChange={handleFileChangePhy}
               />
-              <div className="filename ">
-                {selectedFileName3 && (
-                  <div className="mb-3 pdf">
-                    <a href={pdfURL3} target="_blank" rel="noopener noreferrer">
-                      {selectedFileName3}
+
+              <div className="filename">
+                {pdfURLPhy ? (
+                  <a href={pdfURLPhy} target="_blank" rel="noopener noreferrer">
+                    {selectedFileNamePhy}
+                  </a>
+                ) : (
+                  filePhy && (
+                    <a
+                      onClick={() => {
+                        window.open(
+                          `http://localhost:5000/file/${filePhy}`,
+                          "_blank"
+                        );
+                      }}
+                    >
+                      {filePhy}
                     </a>
-                  </div>
+                  )
                 )}
               </div>
               <textarea
@@ -499,7 +559,7 @@ export default function Updatemedicalinformation() {
                 style={{ resize: "vertical" }}
                 onChange={(e) => setPhychosocial_assessment(e.target.value)}
               />
-            </div> */}
+            </div>
 
             <div className="d-grid">
               <button onClick={UpdateMedical} className="btn btn-outline py-2">
