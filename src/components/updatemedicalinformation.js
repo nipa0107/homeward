@@ -259,7 +259,7 @@ export default function Updatemedicalinformation() {
         console.log("แก้ไขคู่มือแล้ว:", updatemedicalinformation);
         toast.success("แก้ไขข้อมูลสำเร็จ");
         setTimeout(() => {
-          // navigate("/allinfo", { state: { id: id, user: user } });
+          navigate("/allinfo", { state: { id: id, user: user } });
 
           // navigate("/allinfo");
         }, 1100);

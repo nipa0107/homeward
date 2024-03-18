@@ -78,6 +78,27 @@ export default function AllUser({ }) {
   }, [id]);
 
   useEffect(() => {
+    const fetchMedicalInformation = async () => {
+      try {
+        const response = await fetch(
+          `http://localhost:5000/medicalInformation/${id}`
+        );
+        const medicalData = await response.json();
+
+        if (medicalData && medicalData.data) {
+          setMedicalInfo(medicalData.data);
+          console.log("medicalDataupdate:", medicalData);
+       
+        } else {
+          console.error("Medical information not found for this user");
+        }
+      } catch (error) {
+        console.error("Error fetching medical information:", error);
+      }
+    };
+    fetchMedicalInformation();
+  }, [id]);
+  useEffect(() => {
     const fetchEquipmentData = async () => {
       try {
         const response = await fetch(`http://localhost:5000/equipment/${id}`);
