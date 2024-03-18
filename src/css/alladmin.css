@@ -384,3 +384,9 @@ td {
 .info:hover {
   color: #0056b3;
 }
+
+.equipname{
+  margin-top: 30px;
+  margin-left: 50px;
+  line-height: 10px;
+}

@@ -8,7 +8,7 @@ import logow from "../img/logow.png";
 import { useNavigate } from "react-router-dom";
 import { useLocation } from "react-router-dom";
 
-export default function AllUser({}) {
+export default function AllUser({ }) {
   const navigate = useNavigate();
   const [data, setData] = useState([]);
   const [adminData, setAdminData] = useState("");
@@ -30,6 +30,7 @@ export default function AllUser({}) {
   const [mdata, setMData] = useState([]);
   const [docter, setDocter] = useState("");
   const [equipmentuser, setEquipmentUser] = useState(null); // เพิ่ม state สำหรับเก็บข้อมูลการดูแลผู้ป่วย
+  const [medicalEquipment, setMedicalEquipment] = useState(null);
 
   useEffect(() => {
     const token = window.localStorage.getItem("token");
@@ -77,45 +78,17 @@ export default function AllUser({}) {
   }, [id]);
 
   useEffect(() => {
-    const fetchMedicalInformation = async () => {
+    const fetchEquipmentData = async () => {
       try {
-        console.log("UserID:", id);
-        const response = await fetch(
-          `http://localhost:5000/medicalInformation/${id}`
-        );
-        const medicalData = await response.json();
-        console.log("Medical Dataallinfo:", medicalData);
-        if (medicalData && medicalData.data) {
-          setMedicalInfo(medicalData.data);
-        } else {
-          console.error("Medical information not found for this user");
-        }
+        const response = await fetch(`http://localhost:5000/equipment/${id}`);
+        const equipmentData = await response.json();
+        setMedicalEquipment(equipmentData);
+        console.log("Equipment Data:", equipmentData);
       } catch (error) {
-        console.error("Error fetching medical information:", error);
+        console.error("Error fetching equipment data:", error);
       }
     };
-    fetchMedicalInformation();
-  }, [id]);
-
-  useEffect(() => {
-    const fetchEquipmentUser = async () => {
-      try {
-        console.log("UserID:", id);
-        const response = await fetch(
-          `http://localhost:5000/equipmentuser/${id}`
-        );
-        const equipmentUser = await response.json();
-        console.log("อุปกรณ์:", equipmentUser);
-        if (equipmentUser && equipmentUser.data) {
-          setEquipmentUser(equipmentUser.data);
-        } else {
-          console.error("Medical information not found for this user");
-        }
-      } catch (error) {
-        console.error("Error fetching medical information:", error);
-      }
-    };
-    fetchEquipmentUser();
+    fetchEquipmentData();
   }, [id]);
 
   useEffect(() => {
@@ -285,9 +258,9 @@ export default function AllUser({}) {
         <h3>ข้อมูลการดูแลผู้ป่วย</h3>
         <div>
           <div className="cardall card mb-3">
-            <h6>
+            <h5>
               <b>1.ข้อมูลทั่วไป</b>
-            </h6>
+            </h5>
             <div className="user-info">
               <div className="left-info">
                 {/* {username ? (<p>ชื่อผู้ใช้: {username}</p>) : (<p>ชื่อผู้ใช้: -</p>)} */}
@@ -378,7 +351,7 @@ export default function AllUser({}) {
           </div>
 
           <div className="cardall card mb-3">
-            <h6><b>2.ข้อมูลการเจ็บป่วย</b></h6>
+            <h5><b>2.ข้อมูลการเจ็บป่วย</b></h5>
             {medicalInfo && (
               <div className="user-info">
                 <div className="left-info">
@@ -386,12 +359,12 @@ export default function AllUser({}) {
                     <b>HN:</b> {medicalInfo.HN || "-"}
                   </p>
                   <p>
-                  <b>วันที่ Admit:</b>
+                    <b>วันที่ Admit:</b>
                     {medicalInfo.Date_Admit
                       ? new Date(medicalInfo.Date_Admit).toLocaleDateString(
-                          "th-TH",
-                          { day: "numeric", month: "long", year: "numeric" }
-                        )
+                        "th-TH",
+                        { day: "numeric", month: "long", year: "numeric" }
+                      )
                       : "-"}
                   </p>
                   <p><b>Diagnosis:</b> {medicalInfo.Diagnosis || "-"}</p>
@@ -425,12 +398,12 @@ export default function AllUser({}) {
                   <p><b>AN:</b> {medicalInfo.AN || "-"}</p>
                   <p>
                     {" "}
-                   <b>วันที่ D/C:</b> 
+                    <b>วันที่ D/C:</b>
                     {medicalInfo.Date_DC
                       ? new Date(medicalInfo.Date_DC).toLocaleDateString(
-                          "th-TH",
-                          { day: "numeric", month: "long", year: "numeric" }
-                        )
+                        "th-TH",
+                        { day: "numeric", month: "long", year: "numeric" }
+                      )
                       : "-"}
                   </p>
                   <p><b>Present illness:</b> {medicalInfo.Present_illness || "-"}</p>
@@ -507,10 +480,10 @@ export default function AllUser({}) {
                     ดูไฟล์ PDF
                   </a>
                 </div> */}
-                
+
               </div>
             )}
-             <div className="btn-group">
+            <div className="btn-group">
               <div className="editimg1">
                 <button
                   onClick={() =>
@@ -530,29 +503,13 @@ export default function AllUser({}) {
           </div>
 
           <div className="cardall card mb-3">
-            <h6><b>3. อุปกรณ์ทางการแพทย์</b></h6>
-            {equipmentuser && equipmentuser.equipmenttype_forUser && (
-              <>
-                {equipmentuser.equipmenttype_forUser} :{" "}
-                {equipmentuser.equipmentname_forUser}
-              </>
-            )}
+            <h5><b>3. อุปกรณ์ทางการแพทย์</b></h5>
+            {medicalEquipment && medicalEquipment.map((equipment, index) => (
+              <div key={index}>
+                <p className="equipname"><b>{equipment.equipmenttype_forUser}:</b> {equipment.equipmentname_forUser} </p>
+              </div>
+            ))}
           </div>
-
-          {/* <div className="cardall card mb-3">
-            <h6>3. อุปกรณ์ทางการแพทย์</h6>
-            {equipmentuser &&
-              equipmentuser.length > 0 &&
-              equipmentuser
-                .filter(
-                  (item) => item.equipmenttype_forUser === "อุปกรณ์เสริม"
-                )
-                .map((filteredItem) => (
-                  <div key={filteredItem.id}>
-                    {filteredItem.equipmentname_forUser}
-                  </div>
-                ))}
-          </div> */}
         </div>
       </div>
     </main>
