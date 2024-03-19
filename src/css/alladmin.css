@@ -220,7 +220,7 @@
 
 .deleteimg1 button {
   border-radius: 5px;
-  width: 15vh;
+  width: 10vh;
   background-color: rgb(236, 78, 78);
   color: white;
   border: none;
@@ -229,7 +229,7 @@
 
 .editimg1 button{
   border-radius: 5px;
-  width: 15vh;
+  width: 10vh;
   background-color: #ffde59;
   color: black;
   border: none;

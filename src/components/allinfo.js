@@ -389,44 +389,16 @@ export default function AllUser({ }) {
                       : "-"}
                   </p>
                   <p><b>Diagnosis:</b> {medicalInfo.Diagnosis || "-"}</p>
-                  <p><b>Chief complaint:</b> {medicalInfo.Chief_complaint || "-"}</p>
-                  <p><b>Management plan:</b> {medicalInfo.Management_plan || "-"}</p>
-                  <div className="filename">
-                    {medicalInfo.fileM && (
-                      <p>
-                        <a
-                          onClick={() => {
-                            const filePath = medicalInfo.fileM.replace(
-                              /\\/g,
-                              "/"
-                            );
-                            const fileName = filePath.split("/").pop();
-                            console.log("fileName:", fileName);
-                            window.open(
-                              `http://localhost:5000/file/${fileName}`,
-                              "_blank"
-                            );
-                          }}
-                        >
-                          {medicalInfo.fileM.split("/").pop().split("\\").pop()}
-                        </a>
-                      </p>
+                  <div>
+                    {mdata && (
+                      <div>
+                        <p>
+                          <b>แพทย์ผู้ดูแล:</b> {mdata.nametitle}
+                          {mdata.name}
+                        </p>
+                      </div>
                     )}
                   </div>
-                </div>
-
-                <div className="right-info">
-                  <p><b>AN:</b> {medicalInfo.AN || "-"}</p>
-                  <p>
-                    {" "}
-                    <b>วันที่ D/C:</b>
-                    {medicalInfo.Date_DC
-                      ? new Date(medicalInfo.Date_DC).toLocaleDateString(
-                        "th-TH",
-                        { day: "numeric", month: "long", year: "numeric" }
-                      )
-                      : "-"}
-                  </p>
                   <p><b>Present illness:</b> {medicalInfo.Present_illness || "-"}</p>
                   <div className="filename">
                     {medicalInfo.fileP && (
@@ -446,6 +418,29 @@ export default function AllUser({ }) {
                           }}
                         >
                           {medicalInfo.fileP.split("/").pop().split("\\").pop()}
+                        </a>
+                      </p>
+                    )}
+                  </div>
+                  <p><b>Management plan:</b> {medicalInfo.Management_plan || "-"}</p>
+                  <div className="filename">
+                    {medicalInfo.fileM && (
+                      <p>
+                        <a
+                          onClick={() => {
+                            const filePath = medicalInfo.fileM.replace(
+                              /\\/g,
+                              "/"
+                            );
+                            const fileName = filePath.split("/").pop();
+                            console.log("fileName:", fileName);
+                            window.open(
+                              `http://localhost:5000/file/${fileName}`,
+                              "_blank"
+                            );
+                          }}
+                        >
+                          {medicalInfo.fileM.split("/").pop().split("\\").pop()}
                         </a>
                       </p>
                     )}
@@ -480,17 +475,24 @@ export default function AllUser({ }) {
                       </p>
                     )}
                   </div>
+                </div>
 
-                  <div>
-                    {mdata && (
-                      <div>
-                        <p>
-                          <b>แพทย์ผู้ดูแล:</b> {mdata.nametitle}
-                          {mdata.name}
-                        </p>
-                      </div>
-                    )}
-                  </div>
+                <div className="right-info">
+                  <p><b>AN:</b> {medicalInfo.AN || "-"}</p>
+                  <p>
+                    {" "}
+                    <b>วันที่ D/C:</b>
+                    {medicalInfo.Date_DC
+                      ? new Date(medicalInfo.Date_DC).toLocaleDateString(
+                        "th-TH",
+                        { day: "numeric", month: "long", year: "numeric" }
+                      )
+                      : "-"}
+                  </p>
+                  <p><b>Chief complaint:</b> {medicalInfo.Chief_complaint || "-"}</p>
+                  
+
+                  
                 </div>
                 {/* 
                 <div className="pdf-link">
