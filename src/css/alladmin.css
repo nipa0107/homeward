@@ -337,7 +337,7 @@
 }
 th,
 td {
-  width: 33.33%;
+  width: 40%;
 }
 
 .table {
@@ -354,30 +354,40 @@ td {
 }
 
 .table th, .table td {
-  padding: 15px;
+  padding: 10px;
+  padding-left: 20px;
   text-align: left;
   border-bottom: 1px solid #dee2e6;
 }
 
 .table th {
-  background-color: #f8f9fa;
-  font-weight: bold;
+  /* font-weight: bold; */
+  background-color: #87CEFA;
+  color: #000;
   text-transform: uppercase;
+  border-bottom: 2px solid #87CEFA; 
+}
+
+.table td:last-child {
+  width: 20%; /* ตั้งค่าความกว้างของเซลล์สุดท้ายเป็น 1% เพื่อให้กว้างตามข้อความที่อยู่ข้างในเซลล์ */
+  white-space: nowrap; /* ป้องกันการขึ้นบรรทัดใหม่ของข้อความภายในเซลล์ */
 }
 
 
-.table th:first-child, .table td:first-child {
+
+/* .table th:first-child, .table td:first-child {
   border-left: 1px solid #dee2e6;
 }
 
 .table th:last-child, .table td:last-child {
   border-right: 1px solid #dee2e6; 
-}
+} */
 
 .info {
   color: #007bff;
   cursor: pointer;
   text-decoration: none;
+  
 }
 
 
