@@ -27,7 +27,7 @@ import AddEquipment from "./components/addequipment"
 import AllInfo from "./components/allinfo"
 import AddEquipUser from "./components/addequipuser"
 import Updatemedicalinformation from "./components/updatemedicalinformation";
-
+import Success from "./components/success";
 const PrivateRoute = ({ element, isLoggedIn }) => {
   return isLoggedIn === "true" ? (
     element
@@ -158,6 +158,8 @@ function App() {
             }
           />
           <Route path="/forgetpassword" element={<Reset />} />
+          <Route path="/success" element={<Success />} />
+
           <Route
             path="/addmdinformation"
             element={

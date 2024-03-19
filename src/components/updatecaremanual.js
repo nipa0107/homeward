@@ -303,7 +303,7 @@ export default function UpdateCareManual() {
           <div className="filename">
             {pdfURL ? (
               <a
-                href={`http://localhost:5000${pdfURL}`}
+                href={pdfURL}
                 target="_blank"
                 rel="noopener noreferrer"
               >
