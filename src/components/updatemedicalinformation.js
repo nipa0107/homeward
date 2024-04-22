@@ -47,28 +47,7 @@ export default function Updatemedicalinformation() {
     initialSelectedPersonnel
   );
 
-  // const handleFileChangeP = (e) => {
-  //   setFileP(e.target.files[0]);
-  //   setSelectedFileNameP(e.target.files[0].name);
-  //   const pdfURLP = URL.createObjectURL(e.target.files[0]);
-  //   setPdfURLP(pdfURLP);
-  // };
 
-  // // ฟังก์ชัน handleFileChangeM เพื่อจัดการกับการเลือกไฟล์ใหม่ของ Management plan
-  // const handleFileChangeM = (e) => {
-  //   setFileM(e.target.files[0]);
-  //   setSelectedFileNameM(e.target.files[0].name);
-  //   const pdfURLM = URL.createObjectURL(e.target.files[0]);
-  //   setPdfURLM(pdfURLM);
-  // };
-
-  // // ฟังก์ชัน handleFileChangePhy เพื่อจัดการกับการเลือกไฟล์ใหม่ของ Phychosocial assessment
-  // const handleFileChangePhy = (e) => {
-  //   setFilePhy(e.target.files[0]);
-  //   setSelectedFileNamePhy(e.target.files[0].name);
-  //   const pdfURLPhy = URL.createObjectURL(e.target.files[0]);
-  //   setPdfURLPhy(pdfURLPhy);
-  // };
 
   const handleFileChangeP = (e) => {
     setFileP(e.target.files[0]); // อัปเดต state ของไฟล์ Present illness
@@ -188,6 +167,7 @@ export default function Updatemedicalinformation() {
   const handleBreadcrumbClick = () => {
     navigate("/allinfo", { state: { id: id, user: user } });
   };
+  
   const getAllMpersonnel = () => {
     fetch("http://localhost:5000/allMpersonnel", {
       method: "GET",
@@ -274,6 +254,8 @@ export default function Updatemedicalinformation() {
 
   return (
     <main className="body">
+     <ToastContainer />
+
       <div className={`sidebar ${isActive ? "active" : ""}`}>
         <div class="logo_content">
           <div class="logo">

@@ -19,6 +19,24 @@
   margin-right: 15vh;
 }
 
+.deleteimg2 {
+  border-radius: 5px;
+  width: 15vh;
+  background-color: rgb(236, 78, 78);
+  margin: auto 1.6vh;
+  color: white;
+  border: none;
+  margin-right: 8vh;
+}
+.editimg2 {
+  border-radius: 5px;
+  width: 15vh;
+  background-color: #ffde59;
+  color: black;
+  border: none;
+}
+
+
 /* .detail {
   border-radius: 5px;
   width: 15vh;
@@ -375,13 +393,6 @@ td {
 
 
 
-/* .table th:first-child, .table td:first-child {
-  border-left: 1px solid #dee2e6;
-}
-
-.table th:last-child, .table td:last-child {
-  border-right: 1px solid #dee2e6; 
-} */
 
 .info {
   color: #007bff;

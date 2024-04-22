@@ -83,45 +83,7 @@ export default function UpdateUser() {
         fetchData();
       }, [id]);
 
-      
-//   const UpdateUser = async () => {
-//     try {
-//       const formData = new FormData();
-//       formData.append("username", username);
-//       formData.append("name", name);
-//       formData.append("email", email);
-//       formData.append("password", password);
-//       formData.append("tel", tel);
-//       formData.append("gender", gender);
-//       formData.append("birthday", birthday);
-//       formData.append("ID_card_number", ID_card_number);
-//       formData.append("nationality", nationality);
-//       formData.append("Address", Address);
-
-//       const response = await fetch(
-//         `http://localhost:5000/updateuser/${id}`,
-//         {
-//           method: "POST",
-//           body: formData,
-//           headers: {
-//             Authorization: `Bearer ${token}` // เพิ่ม Authorization header เพื่อส่ง token ในการร้องขอ
-//           }
-//         }
-//       );
-
-//       if (response.ok) {
-//         const updatedUser = await response.json();
-//         console.log("แก้ไขคู่มือแล้ว:", updatedUser);
-//         // window.location.href = "./alluser";
-
-//       } else {
-//         console.error("แก้ไขไม่ได้:", response.statusText);
-//       }
-//     } catch (error) {
-//       console.error("การแก้ไขมีปัญหา:", error);
-//     }
-//   };
-
+    
 const UpdateUser = async () => {
     try {
       const userData = {

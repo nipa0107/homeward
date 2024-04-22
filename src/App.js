@@ -28,6 +28,8 @@ import AllInfo from "./components/allinfo"
 import AddEquipUser from "./components/addequipuser"
 import Updatemedicalinformation from "./components/updatemedicalinformation";
 import Success from "./components/success";
+import UpdateMPersonnel from "./components/updatempersonnel";
+import UpdateEquipment from "./components/updateequipment";
 const PrivateRoute = ({ element, isLoggedIn }) => {
   return isLoggedIn === "true" ? (
     element
@@ -190,7 +192,23 @@ function App() {
               <PrivateRoute element={<Updatemedicalinformation />} isLoggedIn={isLoggedIn} />
             }
           />
+
+        <Route
+            path="/updatempersonnel"
+            element={
+              <PrivateRoute element={<UpdateMPersonnel />} isLoggedIn={isLoggedIn} />
+            }
+          />
+                <Route
+            path="/updateequip"
+            element={
+              <PrivateRoute element={<UpdateEquipment />} isLoggedIn={isLoggedIn} />
+            }
+          />
+
+
         </Routes>
+
       </div>
     </Router>
   );

@@ -235,11 +235,13 @@ export default function AllEquip({}) {
                     <td data-title="">{i.equipment_name}</td>
                     <td>{i.equipment_type}</td>
                     <td>
+                    <button className="editimg2" onClick={() => navigate("/updateequip", { state: { id: i._id,equip: i} })}>แก้ไข</button>
                       <button
-                        className="deleteimg"
+                        className="deleteimg2"
                         alt="deleteimg"
                         onClick={() => deleteEquipment(i._id, i.equipment_name)}
                       >ลบ</button>
+
                     </td>
                   </tr>
                 ))}
