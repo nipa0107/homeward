@@ -160,8 +160,9 @@ function App() {
             }
           />
           <Route path="/forgetpassword" element={<Reset />} />
-          <Route path="/success" element={<Success />} />
 
+          <Route path="/success" element={<Success />} />
+          
           <Route
             path="/addmdinformation"
             element={
