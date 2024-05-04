@@ -257,7 +257,11 @@ export default function AllUser({ }) {
                 </tr>
               </thead>
               <tbody>
-                {data.map((i, index) => {
+                
+                {data
+                .filter(user => user.deletedAt === null) // กรองออกเฉพาะข้อมูลที่มีค่า deleteAt เป็น null
+
+                .map((i, index) => {
                   return (
                     <tr key={index}>
                       <td>{i.username}</td>

@@ -130,7 +130,7 @@ export default function Profile() {
             </li>
           </ul>
         </div>
-        <h3>โปรไฟล์</h3>
+        {/* <h3>โปรไฟล์</h3> */}
         <div className="formcontainerpf card mb-3">
           <div className="mb-3">
             <label>ชื่อผู้ใช้</label>

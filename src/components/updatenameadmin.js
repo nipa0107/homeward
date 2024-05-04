@@ -157,7 +157,7 @@ export default function UpdateName() {
         </ul>
       </div>
       <div className="home_content">
-        <div className="header">โปรไฟล์</div>
+        <div className="header">แก้ไขโปรไฟล์ผู้ใช้</div>
         <div class="profile_details ">
           <li>
             <a href="profile" >
@@ -186,7 +186,7 @@ export default function UpdateName() {
             </li>
           </ul>
         </div>
-        <h3>แก้ไขโปรไฟล์ผู้ใช้</h3>
+        {/* <h3>แก้ไขโปรไฟล์ผู้ใช้</h3> */}
         <div className="formcontainerpf card mb-3">
           <div className="mb-3">
           <label>ชื่อผู้ใช้</label>

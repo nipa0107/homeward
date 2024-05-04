@@ -147,7 +147,7 @@ function Updateadmin() {
         </ul>
       </div>
       <div className="home_content">
-        <div className="header">โปรไฟล์</div>
+        <div className="header">เปลี่ยนรหัสผ่าน</div>
         <div class="profile_details ">
           <li>
             <a href="profile" >
@@ -176,7 +176,7 @@ function Updateadmin() {
             </li>
           </ul>
         </div>
-        <h3>เปลี่ยนรหัสผ่าน</h3>
+        {/* <h3>เปลี่ยนรหัสผ่าน</h3> */}
         <div className="formcontainerpf">
           <div className="auth-inner">
             รหัสผ่านเก่า

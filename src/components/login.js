@@ -99,7 +99,6 @@ export default class Login extends Component {
               <p id="errormessage" className="errormessage">
                 {this.state.errorMessage}
               </p>
-              
               <p className="forgot-password">
                 <a href="/forgetpassword">ลืมรหัสผ่าน?</a>
               </p>
