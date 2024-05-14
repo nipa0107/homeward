@@ -76,6 +76,8 @@
 
 .content {
   margin-top: 125px;
+  margin-bottom: 125px;
+  
 }
 
 .content1 {
@@ -219,17 +221,24 @@
 .user-info {
   display: flex;
   justify-content: space-between;
-  padding-left: 5%;
+  padding-left: 6%;
 
 }
 
-.left-info,
 .right-info {
-  flex: 1;
+ flex: 1;
 }
-
+.left-info {
+  margin-top: 12px;
+  word-spacing: 12px;
+  padding: 10px;
+}
+/* .left-info b {
+  margin-left: 50px;
+  margin-right: 50px;
+} */
 .user-info p {
-  margin-bottom: 10px;
+  line-height: 15px;
 }
 
 .action-icons {
@@ -253,6 +262,24 @@
   border: none;
   cursor: pointer;
 
+}
+
+.adddata {
+  margin-top: 20px; /* Adjust as needed */
+  display: flex;
+  justify-content: center; 
+  align-items: center;
+}
+
+.adddata button{
+  border-radius: 5px;
+  width: 12vh;
+  background-color: #87CEFA;
+  color: white;
+  border: none;
+}
+.adddata button:hover {
+  background-color: #5cb3fd; /* Darker blue on hover */
 }
 
 .adminall .card-body .deleteimg1 {
@@ -414,3 +441,4 @@ td {
 .success{
   text-align: center;
 }
+

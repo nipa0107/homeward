@@ -211,14 +211,15 @@ export default function AllEquip({}) {
         </div>
 
         <div className="toolbar">
-          <button
-            className="btn btn-outline py-1 px-4"
-            onClick={() => navigate("/addequip", { state: adminData })}
-          >
-            เพิ่มอุปกรณ์
-          </button>
-          <p className="countadmin">จำนวนอุปกรณ์ทั้งหมด : {data.length} ชิ้น</p>
-        </div>
+      <button
+        className="btn btn-outline py-1 px-4"
+        onClick={() => navigate("/addequip", { state: adminData })}
+      >
+        <i className="bi bi-plus-circle" style={{ marginRight: '8px' }}></i>
+        เพิ่มอุปกรณ์
+      </button>
+      <p className="countadmin">จำนวนอุปกรณ์ทั้งหมด : {data.length} ชิ้น</p>
+    </div>
         <div className="content">
           {/* <div className="cardall card mb-3"> */}
             <table className="table">

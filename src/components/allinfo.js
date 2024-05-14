@@ -19,6 +19,7 @@ export default function AllUser({ }) {
   const { id } = location.state;
   const [username, setUsername] = useState("");
   const [name, setName] = useState("");
+  const [surname, setSurName] = useState("");
   // const [email, setEmail] = useState("");
   const [tel, setTel] = useState("");
   const [gender, setGender] = useState("");
@@ -64,6 +65,7 @@ export default function AllUser({ }) {
         setData([data.data]);
         setUsername(userdata.data.username);
         setName(userdata.data.name);
+        setSurName(userdata.data.surname);
         setBirthday(userdata.data.birthday);
         setGender(userdata.data.gender);
         setNationality(userdata.data.nationality);
@@ -88,7 +90,7 @@ export default function AllUser({ }) {
         if (medicalData && medicalData.data) {
           setMedicalInfo(medicalData.data);
           console.log("medicalDataupdate:", medicalData);
-       
+
         } else {
           console.error("Medical information not found for this user");
         }
@@ -280,77 +282,84 @@ export default function AllUser({ }) {
         <div>
           <div className="cardall card mb-3">
             <h5>
-              <b>1.ข้อมูลทั่วไป</b>
+              <b>ข้อมูลทั่วไป</b>
             </h5>
             <div className="user-info">
               <div className="left-info">
-                {/* {username ? (<p>ชื่อผู้ใช้: {username}</p>) : (<p>ชื่อผู้ใช้: -</p>)} */}
-                {name ? (
+                {name || surname ? (
                   <p>
-                    <b>ชื่อ-สกุล: </b>
-                    {name}
+                    ชื่อ-สกุล  <b>{name || '-'} {surname || '-'}</b>
                   </p>
                 ) : (
                   <p>
-                    <b>ชื่อ-สกุล:</b> -
-                  </p>
-                )}
-                {birthday ? (
-                  <p>
-                    <b>อายุ:</b> {userAge} ปี
-                  </p>
-                ) : (
-                  <p>
-                    <b>อายุ:</b> - ปี
+                    ชื่อ-สกุล <b>-</b> 
                   </p>
                 )}
                 {ID_card_number ? (
                   <p>
-                    <b>เลขบัตรประชาชน:</b> {ID_card_number}
+                    เลขบัตรประชาชน <b>{ID_card_number}</b> 
                   </p>
                 ) : (
                   <p>
-                    <b>เลขบัตรประชาชน:</b> -
+                    เลขบัตรประชาชน <b>-</b>
                   </p>
                 )}
-                {Address ? (
+                {birthday ? (
                   <p>
-                    <b>ที่อยู่:</b> {Address}
+                    อายุ <b>{userAge} ปี</b> 
                   </p>
                 ) : (
                   <p>
-                    <b>ที่อยู่:</b> -
+                    อายุ <b>-</b> 
                   </p>
                 )}
-              </div>
-              <div className="right-info">
                 {gender ? (
                   <p>
-                    <b>เพศ:</b> {gender}
+                    เพศ <b>{gender}</b> 
                   </p>
                 ) : (
                   <p>
-                    <b>เพศ:</b> -
+                    เพศ <b>-</b>
                   </p>
                 )}
                 {nationality ? (
                   <p>
-                    <b>สัญชาติ:</b> {nationality}
+                    สัญชาติ <b>{nationality}</b> 
                   </p>
                 ) : (
                   <p>
-                    <b>สัญชาติ:</b> -
+                    สัญชาติ <b>-</b>
+                  </p>
+                )}
+                {Address ? (
+                  <p>
+                    ที่อยู่ <b>{Address}</b> 
+                  </p>
+                ) : (
+                  <p>
+                    ที่อยู่ <b>-</b>
                   </p>
                 )}
                 {tel ? (
                   <p>
-                    <b>เบอร์โทรศัพท์:</b> {tel}
+                    เบอร์โทรศัพท์ <b>{tel}</b> 
                   </p>
                 ) : (
                   <p>
-                    <b>เบอร์โทรศัพท์:</b> -
+                    เบอร์โทรศัพท์<b>-</b> 
                   </p>
                 )}
+              </div>
+              <div className="right-info">
+                {/* {name ? (
+                  <p>
+                    <b> {name}</b>
+                  </p>
+                ) : (
+                  <p>
+                    <b>-</b> ชื่อ:
+                  </p>
+                )} */}
               </div>
             </div>
             <div className="btn-group">
@@ -372,7 +381,7 @@ export default function AllUser({ }) {
           </div>
 
           <div className="cardall card mb-3">
-            <h5><b>2.ข้อมูลการเจ็บป่วย</b></h5>
+            <h5><b>ข้อมูลการเจ็บป่วย</b></h5>
             {medicalInfo && (
               <div className="user-info">
                 <div className="left-info">
@@ -490,9 +499,9 @@ export default function AllUser({ }) {
                       : "-"}
                   </p>
                   <p><b>Chief complaint:</b> {medicalInfo.Chief_complaint || "-"}</p>
-                  
 
-                  
+
+
                 </div>
                 {/* 
                 <div className="pdf-link">
@@ -526,12 +535,20 @@ export default function AllUser({ }) {
           </div>
 
           <div className="cardall card mb-3">
-            <h5><b>3. อุปกรณ์ทางการแพทย์</b></h5>
-            {medicalEquipment && medicalEquipment.map((equipment, index) => (
-              <div key={index}>
-                <p className="equipname"><b>{equipment.equipmenttype_forUser}:</b> {equipment.equipmentname_forUser} </p>
+            <h5><b>อุปกรณ์ทางการแพทย์</b></h5>
+            {medicalEquipment && medicalEquipment.length > 0 ? (
+              medicalEquipment.map((equipment, index) => (
+                <div key={index}>
+                  <p className="equipname"><b>{equipment.equipmenttype_forUser}:</b> {equipment.equipmentname_forUser} </p>
+                </div>
+              ))
+            ) : (
+              <div className="adddata">
+                <button onClick={() => navigate("/addequipuser", { state: { id } })}>
+                  เพิ่มข้อมูล
+                </button>
               </div>
-            ))}
+            )}
           </div>
         </div>
       </div>

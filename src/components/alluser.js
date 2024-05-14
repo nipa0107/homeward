@@ -6,6 +6,7 @@ import "../css/sidebar.css";
 import logow from "../img/logow.png";
 import { useNavigate } from "react-router-dom";
 
+
 export default function AllUser({ }) {
   const navigate = useNavigate();
   const [data, setData] = useState([]);
@@ -53,59 +54,6 @@ export default function AllUser({ }) {
       });
   };
 
-  const deleteUser = async (id, username) => {
-    if (window.confirm(`คุณต้องการลบ ${username} หรือไม่ ?`)) {
-      try {
-        const response = await fetch(`http://localhost:5000/deleteUser/${id}`, {
-          method: "DELETE",
-          headers: {
-            "Content-Type": "application/json",
-            Accept: "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-        });
-
-        const data = await response.json();
-
-        if (response.ok) {
-          alert(data.data);
-          getAllUser();
-        } else {
-          console.error("Error during deletion:", data.data);
-        }
-      } catch (error) {
-        console.error("Error during fetch:", error);
-      }
-    }
-  };
-  const deleteEquipment = async (id, equipment_name) => {
-    if (window.confirm(`คุณต้องการลบ ${equipment_name} หรือไม่ ?`)) {
-      try {
-        const response = await fetch(
-          `http://localhost:5000/deleteEquipment/${id}`,
-          {
-            method: "DELETE",
-            headers: {
-              "Content-Type": "application/json",
-              Accept: "application/json",
-              Authorization: `Bearer ${token}`,
-            },
-          }
-        );
-
-        const data = await response.json();
-
-        if (response.ok) {
-          alert(data.data);
-          getAllUser();
-        } else {
-          console.error("Error during deletion:", data.data);
-        }
-      } catch (error) {
-        console.error("Error during fetch:", error);
-      }
-    }
-  };
   const logOut = () => {
     window.localStorage.clear();
     window.location.href = "./";
@@ -237,13 +185,13 @@ export default function AllUser({ }) {
         </div>
 
         <div className="toolbar">
-          <button
+          {/* <button
             onClick={() => navigate("/adduser")}
             className="bi bi-plus-circle btn btn-outline py-1 px-4"
           >
             เพิ่มข้อมูลผู้ป่วย
-          </button>
-          <p className="countadmin">จำนวนผู้ป่วยทั้งหมด : {data.length} คน</p>
+          </button> */}
+          <p className="countadmin1">จำนวนผู้ป่วยทั้งหมด : {data.filter(user => user.deletedAt === null).length} คน</p>
         </div>
 
         <div className="content">

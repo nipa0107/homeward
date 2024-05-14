@@ -215,7 +215,8 @@ useEffect(() => {
         </div>
 
         <div className="toolbar">
-          <button onClick={add} className="bi bi-plus-circle btn btn-outline py-1 px-4">
+          <button onClick={add} className="btn btn-outline py-1 px-4">
+          <i className="bi bi-plus-circle" style={{ marginRight: '8px' }}></i>
             เพิ่มแอดมิน
           </button>
           <p className="countadmin">จำนวนแอดมินทั้งหมด : {data.length} คน</p>

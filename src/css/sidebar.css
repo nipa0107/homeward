@@ -282,10 +282,13 @@
     margin-right: 250px;
     line-height: 40px;
 }
-.home_content .toolbar p{
+.home_content .toolbar .countadmin1{
+    margin-top: 65px;
     text-align: center;
 }
-
+.bi-plus-circle {
+    margin-right: 8px; /* หรือค่าที่คุณต้องการสำหรับ spacing */
+  }
 hr{
     margin: 2rem 2rem;
     color: inherit;
