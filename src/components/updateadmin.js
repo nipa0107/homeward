@@ -131,6 +131,12 @@ function Updateadmin() {
             </a>
           </li>
           <li>
+            <a href="allsymptom" onClick={() => navigate("/allsymptom")}>
+              <i class="bi bi-bandaid"></i>
+              <span class="links_name" >จัดการอาการผู้ป่วย</span>
+            </a>
+          </li>
+          <li>
             <a href="alladmin" onClick={() => navigate("/alladmin")}>
               <i class="bi bi-person-gear"></i>
               <span class="links_name" >จัดการแอดมิน</span>

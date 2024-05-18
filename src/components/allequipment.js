@@ -157,6 +157,12 @@ export default function AllEquip({}) {
             </a>
           </li>
           <li>
+            <a href="allsymptom" onClick={() => navigate("/allsymptom")}>
+              <i class="bi bi-bandaid"></i>
+              <span class="links_name" >จัดการอาการผู้ป่วย</span>
+            </a>
+          </li>
+          <li>
             <a href="alladmin" onClick={() => navigate("/alladmin")}>
               <i class="bi bi-person-gear"></i>
               <span class="links_name" >จัดการแอดมิน</span>
@@ -227,7 +233,7 @@ export default function AllEquip({}) {
                 <tr>
                   <th>ชื่ออุปกรณ์</th>
                   <th>ประเภทอุปกรณ์</th>
-                  <th></th>
+                  <th className="success">จัดการ</th>
                 </tr>
               </thead>
               <tbody>

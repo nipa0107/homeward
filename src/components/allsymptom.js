@@ -6,7 +6,7 @@ import logow from "../img/logow.png";
 import { useNavigate } from "react-router-dom";
 
 
-export default function Alladmin({ }) {
+export default function Allsymptom({ }) {
   const navigate = useNavigate();
   const [data, setData] = useState([]);
   const [adminData, setAdminData] = useState("");
@@ -37,11 +37,11 @@ export default function Alladmin({ }) {
           setAdminData(data.data);
         });
     }
-    getAllAdmin();
+    getSymptom();
   }, []);
 
-  const getAllAdmin = () => {
-    fetch("http://localhost:5000/alladmin", {
+  const getSymptom = () => {
+    fetch("http://localhost:5000/allSymptom", {
       method: "GET",
       headers: {
         Authorization: `Bearer ${token}` // เพิ่ม Authorization header เพื่อส่ง token ในการร้องขอ
@@ -49,15 +49,14 @@ export default function Alladmin({ }) {
     })
       .then((res) => res.json())
       .then((data) => {
-        console.log(data, "AllAdmin");
         setData(data.data);
       });
   };
 
-  const deleteAdmin = async (id, username) => {
+  const deleteSymptom = async (id, username) => {
     if (window.confirm(`คุณต้องการลบ ${username} หรือไม่ ?`)) {
       try {
-        const response = await fetch(`http://localhost:5000/deleteAdmin/${id}`, {
+        const response = await fetch(`http://localhost:5000/deleteSymptom/${id}`, {
           method: 'DELETE',
           headers: {
             'Content-Type': 'application/json',
@@ -70,7 +69,7 @@ export default function Alladmin({ }) {
 
         if (response.ok) {
           alert(data.data);
-          getAllAdmin();
+          getSymptom();
         } else {
           console.error('Error during deletion:', data.data);
         }
@@ -85,7 +84,7 @@ export default function Alladmin({ }) {
 
 
   const add = () => {
-    window.location.href = "./addadmin";
+    window.location.href = "./addsymptom";
   };
   const logOut = () => {
     window.localStorage.clear();
@@ -99,7 +98,7 @@ export default function Alladmin({ }) {
 useEffect(() => {
   const searchAdmins = async () => {
     try {
-      const response = await fetch(`http://localhost:5000/searchadmin?keyword=${encodeURIComponent(searchKeyword)}`, {
+      const response = await fetch(`http://localhost:5000/searchsymptom?keyword=${encodeURIComponent(searchKeyword)}`, {
         headers: {
           Authorization: `Bearer ${token}` // เพิ่ม Authorization header เพื่อส่ง token ในการร้องขอค้นหา
         }
@@ -181,7 +180,7 @@ useEffect(() => {
         </ul>
       </div>
       <div className="home_content">
-        <div className="header">จัดการแอดมิน</div>
+        <div className="header">จัดการอาการผู้ป่วย</div>
         <div class="profile_details ">
           <li>
             <a href="profile" >
@@ -201,7 +200,7 @@ useEffect(() => {
             <li className="arrow">
               <i class="bi bi-chevron-double-right"></i>
             </li>
-            <li><a>จัดการแอดมิน</a>
+            <li><a>จัดการอาการผู้ป่วย</a>
             </li>
           </ul>
         </div>
@@ -223,9 +222,9 @@ useEffect(() => {
         <div className="toolbar">
           <button onClick={add} className="btn btn-outline py-1 px-4">
           <i className="bi bi-plus-circle" style={{ marginRight: '8px' }}></i>
-            เพิ่มแอดมิน
+            เพิ่มอาการ
           </button>
-          <p className="countadmin">จำนวนแอดมินทั้งหมด : {data.length} คน</p>
+          <p className="countadmin">จำนวนอาการทั้งหมด : {data.length} อาการ</p>
         </div>
         <div className="content">
   {data.map((i) => (
@@ -234,9 +233,11 @@ useEffect(() => {
         <button
           className="deleteimg"
           alt="deleteimg"
-          onClick={() => deleteAdmin(i._id, i.username)}
+          onClick={() => deleteSymptom(i._id, i.name)}
         >ลบ</button>
-        <h5 className="card-title">{i.username}</h5>
+        <button className="editimg" onClick={() => navigate("/updatesymptom", { state: { id: i._id, caremanual: i } })}>แก้ไข</button>
+
+        <h5 className="card-title">{i.name}</h5>
       </div>
     </div>
   ))}

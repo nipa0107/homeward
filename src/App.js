@@ -30,6 +30,10 @@ import Updatemedicalinformation from "./components/updatemedicalinformation";
 import Success from "./components/success";
 import UpdateMPersonnel from "./components/updatempersonnel";
 import UpdateEquipment from "./components/updateequipment";
+import AddSymptom from "./components/addsymptom";
+import Allsymptom from "./components/allsymptom";
+import UpdateSymptom from "./components/updatesymptom";
+
 const PrivateRoute = ({ element, isLoggedIn }) => {
   return isLoggedIn === "true" ? (
     element
@@ -127,6 +131,24 @@ function App() {
             path="/adduser"
             element={
               <PrivateRoute element={<AddUser />} isLoggedIn={isLoggedIn} />
+            }
+          />
+               <Route
+            path="/addsymptom"
+            element={
+              <PrivateRoute element={<AddSymptom />} isLoggedIn={isLoggedIn} />
+            }
+          />
+<Route
+            path="/allsymptom"
+            element={
+              <PrivateRoute element={<Allsymptom />} isLoggedIn={isLoggedIn} />
+            }
+          />
+<Route
+            path="/updatesymptom"
+            element={
+              <PrivateRoute element={<UpdateSymptom />} isLoggedIn={isLoggedIn} />
             }
           />
           <Route

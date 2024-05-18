@@ -9,25 +9,24 @@ import { useParams } from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
-export default function UpdateEquipment() {
+export default function UpdateSymptom() {
     const navigate = useNavigate();
     const location = useLocation();
     const [token, setToken] = useState("");
     const [adminData, setAdminData] = useState("");
     const {id} = location.state;
     const [isActive, setIsActive] = useState(false);
-    const [equipment_name, setEquipName] = useState("");
-    const [equipment_type, setEquipType] = useState("");
+    const [name, setName] = useState("");
+
 
     useEffect(() => {
       const fetchData = async () => {
         try {
           const response = await fetch(
-            `http://localhost:5000/getequip/${id}`
+            `http://localhost:5000/getsymptom/${id}`
           );
           const data = await response.json();
-          setEquipName(data.equipment_name);
-          setEquipType(data.equipment_type);
+          setName(data.name);
         } catch (error) {
           console.error("Error fetching data:", error);
         }
@@ -58,31 +57,29 @@ export default function UpdateEquipment() {
       fetchData();
     }, [id]);
    
-    const UpdateEquipment = async () => {
-      console.log(equipment_name,equipment_type);
+    const UpdateSymptom = async () => {
 
       try {
-        const EquipUpdate = {
-          equipment_name,
-          equipment_type,
+        const SymptomUpdate = {
+          name,
         };
         const response = await fetch(
-       `http://localhost:5000/updateequip/${id}`,          
+       `http://localhost:5000/updatesymptom/${id}`,          
           {
             method: "POST",
             headers: {
               "Content-Type": "application/json",
               Authorization: `Bearer ${token}` // เพิ่ม Authorization header เพื่อส่ง token ในการร้องขอ
             },
-            body: JSON.stringify(EquipUpdate),
+            body: JSON.stringify(SymptomUpdate),
           }
         );
         if (response.ok) {
-          const UpdatedEquipment = await response.json();
-          console.log("แก้ไขคู่มือแล้ว:", UpdatedEquipment);
+          const UpdateSymptom = await response.json();
+          console.log("แก้ไขอาการแล้ว:", UpdateSymptom);
           toast.success("แก้ไขข้อมูลสำเร็จ");
           setTimeout(() => {
-            navigate("/allequip");
+            navigate("/allsymptom");
           }, 1100);
         } else {
           console.error("แก้ไขไม่ได้:", response.statusText);
@@ -103,7 +100,7 @@ export default function UpdateEquipment() {
   };
 
   const handleBreadcrumbClick = () => {
-    navigate("/allequipment");
+    navigate("/allsymptom");
   };
 
   return (
@@ -170,7 +167,7 @@ export default function UpdateEquipment() {
         </ul>
       </div>
       <div className="home_content">
-        <div className="header">จัดการอุปกรณ์ทางการแพทย์</div>
+        <div className="header">จัดการอาการผู้ป่วย</div>
         <div class="profile_details ">
           <li>
             <a href="profile">
@@ -191,44 +188,32 @@ export default function UpdateEquipment() {
               <i class="bi bi-chevron-double-right"></i>
             </li>
             <li>
-              <a href="allequip">จัดการอุปกรณ์ทางการแพทย์</a>
+              <a href="allsymptom">จัดการอาการผู้ป่วย</a>
             </li>
             <li className="arrow">
               <i class="bi bi-chevron-double-right"></i>
             </li>
             <li>
-              <a>แก้ไขอุปกรณ์</a>
+              <a>แก้ไขอาการผู้ป่วย</a>
             </li>
           </ul>
         </div>
-        <h3>แก้ไขอุปกรณ์</h3>
+        <h3>แก้ไขอาการผู้ป่วย</h3>
         <div className="adminall card mb-1">
           <div className="mb-1">
-            <label>ชื่ออุปกรณ์</label>
+            <label>ชื่ออาการ</label>
             <input
               type="text"
-              value={equipment_name}
+              value={name}
               className="form-control"
-              onChange={(e) => setEquipName(e.target.value)}
+              onChange={(e) => setName(e.target.value)}
             />
           </div>
-          <div className="mb-1">
-            <label>ประเภทอุปกรณ์</label>
-            <select
-              className="form-control"
-              value={equipment_type}
-              onChange={(e) => setEquipType(e.target.value)}
-            >
-              <option value="">กรุณาเลือก</option>
-              <option value="อุปกรณ์ติดตัว">อุปกรณ์ติดตัว</option>
-              <option value="อุปกรณ์เสริม">อุปกรณ์เสริม</option>
-              <option value="อุปกรณ์อื่นๆ">อุปกรณ์อื่น ๆ</option>
-            </select>
-          </div>
+
 
           <div className="d-grid">
             <button
-              onClick={UpdateEquipment}
+              onClick={UpdateSymptom}
               type="submit"
               className="btn btn-outline py-2"
             >

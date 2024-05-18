@@ -130,6 +130,12 @@ export default function AllUser({ }) {
             </a>
           </li>
           <li>
+            <a href="allsymptom" onClick={() => navigate("/allsymptom")}>
+              <i class="bi bi-bandaid"></i>
+              <span class="links_name" >จัดการอาการผู้ป่วย</span>
+            </a>
+          </li>
+          <li>
             <a href="alladmin" onClick={() => navigate("/alladmin")}>
               <i class="bi bi-person-gear"></i>
               <span class="links_name" >จัดการแอดมิน</span>
@@ -201,7 +207,7 @@ export default function AllUser({ }) {
                 <tr>
                   <th>ชื่อผู้ใช้</th>
                   <th>ชื่อ-สกุล</th>
-                  <th></th>
+                  <th>รายละเอียด</th>
                 </tr>
               </thead>
               <tbody>
