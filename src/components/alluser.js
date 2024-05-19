@@ -219,7 +219,7 @@ export default function AllUser({ }) {
                   return (
                     <tr key={index}>
                       <td>{i.username}</td>
-                      <td>{i.name}</td>
+                      <td>{i.name}{' '}{i.surname}</td>
                       <td>
                       <a
                       className="info"
