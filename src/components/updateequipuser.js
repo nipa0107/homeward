@@ -8,10 +8,10 @@ import { useLocation } from "react-router-dom";
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
-export default function AddEquipUser() {
+export default function UpdateEquipUser() {
     const navigate = useNavigate();
     const location = useLocation();
-    const { id } = location.state || {};
+    const { id } = location.state || {};  // Receive userId from the state passed during navigation
     const [data, setData] = useState([]);
     const [validationMessage, setValidationMessage] = useState("");
     const [adminData, setAdminData] = useState({});
@@ -20,7 +20,6 @@ export default function AddEquipUser() {
     const [selectedEquipType1, setSelectedEquipType1] = useState("");
     const [selectedEquipType2, setSelectedEquipType2] = useState("");
     const [selectedEquipType3, setSelectedEquipType3] = useState("");
-    const [equipValidationMessages, setEquipValidationMessages] = useState({});
 
     useEffect(() => {
         const token = window.localStorage.getItem("token");
@@ -38,6 +37,7 @@ export default function AddEquipUser() {
             })
                 .then((res) => res.json())
                 .then((data) => {
+                    console.log(data);
                     setAdminData(data.data);
                 });
         }
@@ -53,6 +53,7 @@ export default function AddEquipUser() {
         })
             .then((res) => res.json())
             .then((data) => {
+                console.log(data, "AllEquip");
                 setData(data.data);
             });
     };
@@ -60,77 +61,62 @@ export default function AddEquipUser() {
     const handleSubmit = (e) => {
         e.preventDefault();
         const selectedEquipments = [];
-        const validationMessages = {};
-
+    
         if (selectedEquipType1) {
-            selectedEquipments.push({
-                equipmentname_forUser: selectedEquipType1,
-                equipmenttype_forUser: "อุปกรณ์ติดตัว",
-            });
+          selectedEquipments.push({
+            equipmentname_forUser: selectedEquipType1,
+            equipmenttype_forUser: "อุปกรณ์ติดตัว",
+          });
         }
         if (selectedEquipType2) {
-            selectedEquipments.push({
-                equipmentname_forUser: selectedEquipType2,
-                equipmenttype_forUser: "อุปกรณ์เสริม",
-            });
+          selectedEquipments.push({
+            equipmentname_forUser: selectedEquipType2,
+            equipmenttype_forUser: "อุปกรณ์เสริม",
+          });
         }
         if (selectedEquipType3) {
-            selectedEquipments.push({
-                equipmentname_forUser: selectedEquipType3,
-                equipmenttype_forUser: "อุปกรณ์อื่นๆ",
-            });
+          selectedEquipments.push({
+            equipmentname_forUser: selectedEquipType3,
+            equipmenttype_forUser: "อุปกรณ์อื่นๆ",
+          });
         }
-
+    
         if (selectedEquipments.length === 0) {
-            setValidationMessage("โปรดเลือกอุปกรณ์อย่างน้อยหนึ่งรายการ");
-            return;
+          setValidationMessage("โปรดเลือกอุปกรณ์อย่างน้อยหนึ่งรายการ");
+          return;
         }
         if (!id) {
-            setValidationMessage("ไม่พบข้อมูลผู้ใช้");
-            return;
+          console.error("UserId is missing");
+          setValidationMessage("ไม่พบข้อมูลผู้ใช้");
+          return;
         }
-
-        // Check for duplicate equipment
-        selectedEquipments.forEach((equip, index) => {
-            if (selectedEquipments.filter(e => e.equipmentname_forUser === equip.equipmentname_forUser).length > 1) {
-                validationMessages[equip.equipmenttype_forUser] = "มีอุปกรณ์นี้อยู่แล้ว";
-            }
-        });
-
-        setEquipValidationMessages(validationMessages);
-
-        if (Object.keys(validationMessages).length > 0) {
-            return;
-        }
-
-        fetch("http://localhost:5000/addequipuser", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-                Accept: "application/json",
-                "Access-Control-Allow-Origin": "*",
-                Authorization: `Bearer ${token}`,
-            },
-            body: JSON.stringify({ equipments: selectedEquipments, userId: id }),
+    
+        fetch(`http://localhost:5000/updateequipuser/${id}`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Accept: "application/json",
+            "Access-Control-Allow-Origin": "*",
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify({ equipments: selectedEquipments }),
         })
-            .then((res) => res.json())
-            .then((data) => {
-                if (data.status === "ok") {
-                    toast.success("เพิ่มข้อมูลสำเร็จ");
-                    setTimeout(() => {
-                        navigate("/allinfo", { state: { id } });
-                    }, 1100);
-                } else if (data.status === "error" && data.message === "มีอุปกรณ์นี้อยู่แล้ว") {
-                    setValidationMessage("มีอุปกรณ์นี้อยู่แล้ว");
-                } else {
-                    toast.error("เกิดข้อผิดพลาดในการเพิ่มข้อมูล");
-                }
-            })
-            .catch((error) => {
-                console.error("Error adding equipment:", error);
-                toast.error("เกิดข้อผิดพลาดในการเพิ่มข้อมูล");
-            });
-    };
+          .then((res) => res.json())
+          .then((data) => {
+            if (data.status === "ok") {
+              toast.success("อัปเดตข้อมูลสำเร็จ");
+              setTimeout(() => {
+                navigate("/allinfo", { state: { id } });
+              }, 1100);
+            } else {
+              toast.error("เกิดข้อผิดพลาดในการอัปเดตข้อมูล");
+            }
+          })
+          .catch((error) => {
+            console.error("Error updating equipment:", error);
+            toast.error("เกิดข้อผิดพลาดในการอัปเดตข้อมูล");
+          });
+      };
 
     const logOut = () => {
         window.localStorage.clear();
@@ -139,16 +125,6 @@ export default function AddEquipUser() {
 
     const handleToggleSidebar = () => {
         setIsActive(!isActive);
-    };
-
-    const handleChange = (e, equipTypeSetter, equipType) => {
-        equipTypeSetter(e.target.value);
-        setEquipValidationMessages((prevMessages) => {
-            const newMessages = { ...prevMessages };
-            delete newMessages[equipType];
-            return newMessages;
-        });
-        setValidationMessage(""); // Clear general validation message
     };
 
     return (
@@ -239,17 +215,17 @@ export default function AddEquipUser() {
                             <i className="bi bi-chevron-double-right"></i>
                         </li>
                         <li>
-                            <a href="allinfo" onClick={() => navigate("/allinfo", { state: { id } })}>ข้อมูลการดูแลผู้ป่วย</a>
+                            <a href="allinfo" onClick={() => navigate("/allinfo" , { state: { id } })}>ข้อมูลการดูแลผู้ป่วย</a>
                         </li>
                         <li className="arrow">
                             <i className="bi bi-chevron-double-right"></i>
                         </li>
                         <li>
-                            <a>เพิ่มอุปกรณ์สำหรับผู้ป่วย</a>
+                            <a>แก้ไขอุปกรณ์สำหรับผู้ป่วย</a>
                         </li>
                     </ul>
                 </div>
-                <h3>เพิ่มอุปกรณ์สำหรับผู้ป่วย</h3>
+                <h3>แก้ไขอุปกรณ์สำหรับผู้ป่วย</h3>
                 <div className="adminall card mb-3">
                     <form onSubmit={handleSubmit}>
                         <div className="mb-3">
@@ -257,7 +233,7 @@ export default function AddEquipUser() {
                             <select
                                 className="form-select"
                                 value={selectedEquipType1}
-                                onChange={(e) => handleChange(e, setSelectedEquipType1, "อุปกรณ์ติดตัว")}
+                                onChange={(e) => setSelectedEquipType1(e.target.value)}
                             >
                                 <option value="">เลือกอุปกรณ์ติดตัว</option>
                                 {data.length > 0 ? (
@@ -274,16 +250,13 @@ export default function AddEquipUser() {
                                     <option value="">ไม่มีข้อมูลอุปกรณ์ติดตัว</option>
                                 )}
                             </select>
-                            {equipValidationMessages["อุปกรณ์ติดตัว"] && (
-                                <div style={{ color: "red" }}>{equipValidationMessages["อุปกรณ์ติดตัว"]}</div>
-                            )}
                         </div>
                         <div className="mb-3">
                             <label>อุปกรณ์เสริม</label>
                             <select
                                 className="form-select"
                                 value={selectedEquipType2}
-                                onChange={(e) => handleChange(e, setSelectedEquipType2, "อุปกรณ์เสริม")}
+                                onChange={(e) => setSelectedEquipType2(e.target.value)}
                             >
                                 <option value="">เลือกอุปกรณ์เสริม</option>
                                 {data.length > 0 ? (
@@ -300,16 +273,13 @@ export default function AddEquipUser() {
                                     <option value="">ไม่มีข้อมูลอุปกรณ์เสริม</option>
                                 )}
                             </select>
-                            {equipValidationMessages["อุปกรณ์เสริม"] && (
-                                <div style={{ color: "red" }}>{equipValidationMessages["อุปกรณ์เสริม"]}</div>
-                            )}
                         </div>
                         <div className="mb-3">
                             <label>อุปกรณ์อื่นๆ</label>
                             <select
                                 className="form-select"
                                 value={selectedEquipType3}
-                                onChange={(e) => handleChange(e, setSelectedEquipType3, "อุปกรณ์อื่นๆ")}
+                                onChange={(e) => setSelectedEquipType3(e.target.value)}
                             >
                                 <option value="">เลือกอุปกรณ์อื่นๆ</option>
                                 {data.length > 0 ? (
@@ -326,9 +296,6 @@ export default function AddEquipUser() {
                                     <option value=""> ไม่มีข้อมูลอุปกรณ์อื่นๆ</option>
                                 )}
                             </select>
-                            {equipValidationMessages["อุปกรณ์อื่นๆ"] && (
-                                <div style={{ color: "red" }}>{equipValidationMessages["อุปกรณ์อื่นๆ"]}</div>
-                            )}
                         </div>
                         {validationMessage && (
                             <div style={{ color: "red" }}>{validationMessage}</div>

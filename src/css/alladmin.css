@@ -265,7 +265,7 @@
 }
 
 .adddata {
-  margin-top: 20px; /* Adjust as needed */
+  margin-top: 10px; 
   display: flex;
   justify-content: center; 
   align-items: center;
@@ -273,13 +273,31 @@
 
 .adddata button{
   border-radius: 5px;
-  width: 12vh;
+  width: 11vh;
   background-color: #87CEFA;
   color: white;
   border: none;
 }
 .adddata button:hover {
   background-color: #5cb3fd; /* Darker blue on hover */
+}
+.delete-btn {
+  color: rgb(255, 255, 255);
+  background: rgb(236, 78, 78);
+  border-radius: 3px;
+  width: 10vh;
+  padding: 15px;
+  border: none;
+  margin-left: 390px; /* ปรับตำแหน่งของปุ่มลบ */
+}
+.no-equipment {
+  margin-top: 20px; /* ปรับระยะห่างของข้อความ "ไม่มีข้อมูลอุปกรณ์" */
+  text-align: center;
+}
+.equip-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
 
 .adminall .card-body .deleteimg1 {

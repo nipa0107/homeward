@@ -33,6 +33,7 @@ import UpdateEquipment from "./components/updateequipment";
 import AddSymptom from "./components/addsymptom";
 import Allsymptom from "./components/allsymptom";
 import UpdateSymptom from "./components/updatesymptom";
+import UpdateEquipUser from "./components/updateequipuser";
 
 const PrivateRoute = ({ element, isLoggedIn }) => {
   return isLoggedIn === "true" ? (
@@ -133,19 +134,19 @@ function App() {
               <PrivateRoute element={<AddUser />} isLoggedIn={isLoggedIn} />
             }
           />
-               <Route
+          <Route
             path="/addsymptom"
             element={
               <PrivateRoute element={<AddSymptom />} isLoggedIn={isLoggedIn} />
             }
           />
-<Route
+          <Route
             path="/allsymptom"
             element={
               <PrivateRoute element={<Allsymptom />} isLoggedIn={isLoggedIn} />
             }
           />
-<Route
+          <Route
             path="/updatesymptom"
             element={
               <PrivateRoute element={<UpdateSymptom />} isLoggedIn={isLoggedIn} />
@@ -184,7 +185,7 @@ function App() {
           <Route path="/forgetpassword" element={<Reset />} />
 
           <Route path="/success" element={<Success />} />
-          
+
           <Route
             path="/addmdinformation"
             element={
@@ -209,27 +210,31 @@ function App() {
               <PrivateRoute element={<AddEquipUser />} isLoggedIn={isLoggedIn} />
             }
           />
-               <Route
+          <Route
             path="/updatemedicalinformation"
             element={
               <PrivateRoute element={<Updatemedicalinformation />} isLoggedIn={isLoggedIn} />
             }
           />
 
-        <Route
+          <Route
             path="/updatempersonnel"
             element={
               <PrivateRoute element={<UpdateMPersonnel />} isLoggedIn={isLoggedIn} />
             }
           />
-                <Route
+          <Route
             path="/updateequip"
             element={
               <PrivateRoute element={<UpdateEquipment />} isLoggedIn={isLoggedIn} />
             }
           />
-
-
+          <Route
+            path="/updateequipuser"
+            element={
+              <PrivateRoute element={<UpdateEquipUser />} isLoggedIn={isLoggedIn} />
+            }
+          />
         </Routes>
 
       </div>
