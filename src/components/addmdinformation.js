@@ -8,8 +8,10 @@ import { useLocation } from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
-export default function AddUser() {
+export default function AddMedicalInformation() {
   const [data, setData] = useState([]);
+  const location = useLocation();
+  const { id } = location.state || {};
   const [HN, setHN] = useState("");
   const [AN, setAN] = useState("");
   const [Diagnosis, setDiagnosis] = useState("");
@@ -35,7 +37,7 @@ export default function AddUser() {
   const [pdfURL3, setPdfURL3] = useState(null);
   const [selectedPersonnel, setSelectedPersonnel] = useState("");
   const { state } = useLocation();
-  const lastAddedUser = state && state.lastAddedUser;
+
 
   useEffect(() => {
     const token = window.localStorage.getItem("token");
@@ -60,12 +62,7 @@ export default function AddUser() {
         });
     }
     getAllMpersonnel();
-
-    if (lastAddedUser) {
-      // Display toast notification if lastAddedUser exists
-      toast.success(`Last added user: ${lastAddedUser}`);
-    }
-  }, [lastAddedUser]);//ส่งไปครั้งเดียว
+  }, []);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -84,6 +81,12 @@ export default function AddUser() {
     formData.append("fileM", fileM);
     formData.append("filePhy", filePhy);
 
+    // ตรวจสอบว่ามี token อยู่ใน local storage หรือไม่
+    const token = window.localStorage.getItem("token");
+    if (!token) {
+      toast.error("กรุณาเข้าสู่ระบบ");
+      return;
+    }
 
     fetch(`http://localhost:5000/addmedicalinformation`, {
       method: "POST",
@@ -97,7 +100,7 @@ export default function AddUser() {
         console.log(data, "Addmdinformation");
         if (data.status === "ok") {
           toast.success("เพิ่มข้อมูลสำเร็จ");
-          navigate("/addequipuser")
+          navigate('/allinfo', { state: { id} });
         }
       })
       .catch((error) => {
@@ -249,7 +252,7 @@ export default function AddUser() {
               <i className="bi bi-chevron-double-right"></i>
             </li>
             <li>
-              <a href="adduser">เพิ่มข้อมูลผู้ป่วยทั่วไป</a>
+              <a href="allinfo" onClick={() => navigate("/allinfo", { state: { id } })} >ข้อมูลการดูแลผู้ป่วย</a>
             </li>
             <li className="arrow">
               <i className="bi bi-chevron-double-right"></i>
@@ -415,7 +418,7 @@ export default function AddUser() {
             </div>
             <div className="d-grid">
               <button type="submit" className="btn btn-outline py-2">
-                ถัดไป
+                บันทึก
               </button>
             </div>
           </form>

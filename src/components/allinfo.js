@@ -27,11 +27,15 @@ export default function AllUser({ }) {
   const [ID_card_number, setIDCardNumber] = useState("");
   const [nationality, setNationality] = useState("");
   const [Address, setAddress] = useState("");
+  const [caregiverName, setCaregiverName] = useState('');
+  const [caregiverSurname, setCaregiverSurname] = useState('');
+  const [Relationship, setRelationship] = useState('');
+  const [caregiverTel, setCaregiverTel] = useState('');
   const [medicalInfo, setMedicalInfo] = useState(null); // เพิ่ม state สำหรับเก็บข้อมูลการดูแลผู้ป่วย
   const [mdata, setMData] = useState([]);
   const [docter, setDocter] = useState("");
-  const [equipmentuser, setEquipmentUser] = useState(null); // เพิ่ม state สำหรับเก็บข้อมูลการดูแลผู้ป่วย
   const [medicalEquipment, setMedicalEquipment] = useState(null);
+
 
   useEffect(() => {
     const token = window.localStorage.getItem("token");
@@ -76,7 +80,24 @@ export default function AllUser({ }) {
         console.error("Error fetching user ID:", error);
       }
     };
+
+
+    const fetchCaregiverData = async () => {
+      try {
+        const response = await fetch(`http://localhost:5000/getcaregiver/${id}`);
+        const caregiverData = await response.json();
+        if (caregiverData.status === 'ok') {
+          setCaregiverName(caregiverData.data.name);
+          setCaregiverSurname(caregiverData.data.surname);
+          setCaregiverTel(caregiverData.data.tel);
+          setRelationship(caregiverData.data.Relationship);
+        }
+      } catch (error) {
+        console.error("Error fetching caregiver data:", error);
+      }
+    };
     fetchUserId();
+    fetchCaregiverData();
   }, [id]);
 
   useEffect(() => {
@@ -100,13 +121,14 @@ export default function AllUser({ }) {
     };
     fetchMedicalInformation();
   }, [id]);
+
   useEffect(() => {
     const fetchEquipmentData = async () => {
       try {
         const response = await fetch(`http://localhost:5000/equipment/${id}`);
         const equipmentData = await response.json();
         setMedicalEquipment(equipmentData);
-        console.log("Equipment Data:", equipmentData);
+        console.log("EquipmentUser Data:", equipmentData);
       } catch (error) {
         console.error("Error fetching equipment data:", error);
       }
@@ -158,6 +180,33 @@ export default function AllUser({ }) {
     }
   };
 
+  const handleDeleteEquipment = async (equipmentName) => {
+    if (window.confirm(`คุณต้องการลบอุปกรณ์ ${equipmentName} หรือไม่?`)) {
+      try {
+        const response = await fetch(`http://localhost:5000/deleteEquipuser/${id}`, {
+          method: "DELETE",
+          headers: {
+            "Content-Type": "application/json",
+            Accept: "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify({ equipmentName, userId: id }),
+        });
+
+        const data = await response.json();
+
+        if (response.ok) {
+          alert(data.message);
+          // รีเฟรชหน้าหลังจากลบข้อมูล
+          window.location.reload();
+        } else {
+          console.error("Error during deletion:", data.message);
+        }
+      } catch (error) {
+        console.error("Error during fetch:", error);
+      }
+    }
+  };
   const handleViewPDF = () => {
     // ทำการเรียกดูไฟล์ PDF ที่เกี่ยวข้อง
   };
@@ -226,6 +275,12 @@ if (monthDiff < 0 || (monthDiff === 0 && currentDate.getDate() < userBirthday.ge
             </a>
           </li>
           <li>
+            <a href="allsymptom" onClick={() => navigate("/allsymptom")}>
+              <i class="bi bi-bandaid"></i>
+              <span class="links_name" >จัดการอาการผู้ป่วย</span>
+            </a>
+          </li>
+          <li>
             <a href="alladmin" onClick={() => navigate("/alladmin")}>
               <i class="bi bi-person-gear"></i>
               <span class="links_name">จัดการแอดมิน</span>
@@ -291,12 +346,12 @@ if (monthDiff < 0 || (monthDiff === 0 && currentDate.getDate() < userBirthday.ge
                   </p>
                 ) : (
                   <p>
-                    ชื่อ-สกุล <b>-</b> 
+                    ชื่อ-สกุล <b>-</b>
                   </p>
                 )}
                 {ID_card_number ? (
                   <p>
-                    เลขบัตรประชาชน <b>{ID_card_number}</b> 
+                    เลขบัตรประชาชน <b>{ID_card_number}</b>
                   </p>
                 ) : (
                   <p>
@@ -305,16 +360,16 @@ if (monthDiff < 0 || (monthDiff === 0 && currentDate.getDate() < userBirthday.ge
                 )}
                 {birthday ? (
                   <p>
-                    อายุ <b>{userAge}</b> 
+                    อายุ <b>{userAge} ปี</b> 
                   </p>
                 ) : (
                   <p>
-                    อายุ <b>-</b> 
+                    อายุ <b>-</b>
                   </p>
                 )}
                 {gender ? (
                   <p>
-                    เพศ <b>{gender}</b> 
+                    เพศ <b>{gender}</b>
                   </p>
                 ) : (
                   <p>
@@ -323,7 +378,7 @@ if (monthDiff < 0 || (monthDiff === 0 && currentDate.getDate() < userBirthday.ge
                 )}
                 {nationality ? (
                   <p>
-                    สัญชาติ <b>{nationality}</b> 
+                    สัญชาติ <b>{nationality}</b>
                   </p>
                 ) : (
                   <p>
@@ -332,7 +387,7 @@ if (monthDiff < 0 || (monthDiff === 0 && currentDate.getDate() < userBirthday.ge
                 )}
                 {Address ? (
                   <p>
-                    ที่อยู่ <b>{Address}</b> 
+                    ที่อยู่ <b>{Address}</b>
                   </p>
                 ) : (
                   <p>
@@ -341,11 +396,39 @@ if (monthDiff < 0 || (monthDiff === 0 && currentDate.getDate() < userBirthday.ge
                 )}
                 {tel ? (
                   <p>
-                    เบอร์โทรศัพท์ <b>{tel}</b> 
+                    เบอร์โทรศัพท์ <b>{tel}</b>
                   </p>
                 ) : (
                   <p>
-                    เบอร์โทรศัพท์<b>-</b> 
+                    เบอร์โทรศัพท์<b>-</b>
+                  </p>
+                )}
+                <b>ผู้ดูแล</b>
+                {caregiverName || caregiverSurname ? (
+                  <p>
+                    ชื่อ-สกุล  <b>{caregiverName || '-'} {caregiverSurname || '-'}</b>
+                  </p>
+                ) : (
+                  <p>
+                    ชื่อ-สกุล <b>-</b>
+                  </p>
+                )}
+                {Relationship ? (
+                  <p>
+                    ความสัมพันธ์ <b>{Relationship}</b>
+                  </p>
+                ) : (
+                  <p>
+                    ความสัมพันธ์<b>-</b>
+                  </p>
+                )}
+                {tel ? (
+                  <p>
+                    เบอร์โทรศัพท์ <b>{caregiverTel}</b>
+                  </p>
+                ) : (
+                  <p>
+                    เบอร์โทรศัพท์<b>-</b>
                   </p>
                 )}
               </div>
@@ -381,7 +464,7 @@ if (monthDiff < 0 || (monthDiff === 0 && currentDate.getDate() < userBirthday.ge
 
           <div className="cardall card mb-3">
             <h5><b>ข้อมูลการเจ็บป่วย</b></h5>
-            {medicalInfo && (
+            {medicalInfo ? (
               <div className="user-info">
                 <div className="left-info">
                   <p>
@@ -484,7 +567,6 @@ if (monthDiff < 0 || (monthDiff === 0 && currentDate.getDate() < userBirthday.ge
                     )}
                   </div>
                 </div>
-
                 <div className="right-info">
                   <p><b>AN:</b> {medicalInfo.AN || "-"}</p>
                   <p>
@@ -498,9 +580,6 @@ if (monthDiff < 0 || (monthDiff === 0 && currentDate.getDate() < userBirthday.ge
                       : "-"}
                   </p>
                   <p><b>Chief complaint:</b> {medicalInfo.Chief_complaint || "-"}</p>
-
-
-
                 </div>
                 {/* 
                 <div className="pdf-link">
@@ -513,41 +592,43 @@ if (monthDiff < 0 || (monthDiff === 0 && currentDate.getDate() < userBirthday.ge
                 </div> */}
 
               </div>
+            ) : (
+              <div>
+                <p className="no-equipment">ไม่มีข้อมูลการเจ็บป่วย</p>
+                <div className="btn-group">
+                  <div className="adddata">
+                    <button onClick={() => navigate("/addmdinformation", { state: { id  } })}>
+                      เพิ่มข้อมูล
+                    </button>
+                  </div>
+                </div>
+              </div>
             )}
-            <div className="btn-group">
-              <div className="editimg1">
-                <button
-                  onClick={() =>
-                    navigate("/updatemedicalinformation", {
-                      // state: { id },
-                      state: { id: id },
-                    })
-                  }
-                >
-                  แก้ไข
-                </button>
-              </div>
-              <div className="deleteimg1">
-                <button onClick={() => deleteUser()}>ลบ</button>
-              </div>
-            </div>
           </div>
 
           <div className="cardall card mb-3">
             <h5><b>อุปกรณ์ทางการแพทย์</b></h5>
             {medicalEquipment && medicalEquipment.length > 0 ? (
               medicalEquipment.map((equipment, index) => (
-                <div key={index}>
-                  <p className="equipname"><b>{equipment.equipmenttype_forUser}:</b> {equipment.equipmentname_forUser} </p>
+                <div key={index} className="equip-container">
+                  <p className="equipname">
+                    {equipment.equipmenttype_forUser} <b> {equipment.equipmentname_forUser}</b>
+                    <button className="delete-btn" onClick={() => handleDeleteEquipment(equipment.equipmentname_forUser)}>
+                      ลบ
+                    </button>
+                  </p>
                 </div>
               ))
             ) : (
+              <div className="no-equipment">ไม่มีข้อมูลอุปกรณ์</div>
+            )}
+            <div className="btn-group">
               <div className="adddata">
                 <button onClick={() => navigate("/addequipuser", { state: { id } })}>
-                  เพิ่มข้อมูล
+                  เพิ่มอุปกรณ์
                 </button>
               </div>
-            )}
+            </div>
           </div>
         </div>
       </div>

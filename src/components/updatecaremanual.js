@@ -174,16 +174,17 @@ export default function UpdateCareManual() {
               <span class="links_name" >จัดการข้อมูลบุคลากร</span>
             </a>
           </li>
-          <li>
-            <a href="allsymptom" onClick={() => navigate("/allsymptom")}>
-              <i class="bi bi-bandaid"></i>
-              <span class="links_name" >จัดการอาการผู้ป่วย</span>
-            </a>
-          </li>
+          
           <li>
             <a href="allequip">
               <i class="bi bi-prescription2"></i>
               <span class="links_name" >จัดการอุปกรณ์ทางการแพทย์</span>
+            </a>
+          </li>
+          <li>
+            <a href="allsymptom">
+              <i class="bi bi-bandaid"></i>
+              <span class="links_name" >จัดการอาการผู้ป่วย</span>
             </a>
           </li>
           <li>
