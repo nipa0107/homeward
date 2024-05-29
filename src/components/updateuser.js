@@ -14,6 +14,7 @@ export default function UpdateUser() {
     const { id, user } = location.state;
     const [username, setUsername] = useState("");
     const [name, setName] = useState("");
+    const [surname, setSurname] = useState("");
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [tel, setTel] = useState("");
@@ -46,6 +47,7 @@ export default function UpdateUser() {
             const data = await response.json();
             setUsername(data.username);
             setName(data.name);
+            setSurname(data.surname);
             setEmail(data.email);
             setPassword(data.password);
             setTel(data.tel);
@@ -89,6 +91,7 @@ const UpdateUser = async () => {
       const userData = {
         username,
         name,
+        surname,
         email,
         password,
         tel,
@@ -275,12 +278,21 @@ const UpdateUser = async () => {
               />
             </div> */}
             <div className="mb-3">
-              <label>ชื่อ-นามสกุล</label>
+              <label>ชื่อ</label>
               <input
               value={name}
                 type="text"
                 className="form-control"
                 onChange={(e) => setName(e.target.value)}
+              />
+            </div>
+            <div className="mb-3">
+              <label>นามสกุล</label>
+              <input
+              value={surname}
+                type="text"
+                className="form-control"
+                onChange={(e) => setSurname(e.target.value)}
               />
             </div>
 

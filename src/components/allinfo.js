@@ -174,21 +174,20 @@ export default function AllUser({ }) {
   // กำหนดวันที่ปัจจุบัน
   const currentDate = new Date();
 
-  // แปลงวันเกิดของผู้ใช้เป็นวัตถุ Date
-  const userBirthday = new Date(birthday);
+  // คำนวณอายุและแสดงเป็นอายุที่มีเดือนด้วย
+const userBirthday = new Date(birthday); // แปลงวันเกิดของผู้ใช้เป็นวัตถุ Date
+const ageDiff = currentDate.getFullYear() - userBirthday.getFullYear(); // คำนวณความแตกต่างระหว่างปีปัจจุบันกับปีเกิดของผู้ใช้
+const monthDiff = currentDate.getMonth() - userBirthday.getMonth(); // คำนวณความแตกต่างระหว่างเดือนปัจจุบันกับเดือนเกิดของผู้ใช้
 
-  // คำนวณความแตกต่างระหว่างปีปัจจุบันกับปีเกิดของผู้ใช้
-  const ageDiff = currentDate.getFullYear() - userBirthday.getFullYear();
-
-  // ตรวจสอบว่าวันเกิดของผู้ใช้มีเกินวันปัจจุบันหรือไม่
-  // ถ้ายังไม่เกิน แสดงอายุเป็นผลลัพธ์
-  // ถ้าเกินแล้ว ลดอายุลง 1 ปี
-  const isBeforeBirthday =
-    currentDate.getMonth() < userBirthday.getMonth() ||
-    (currentDate.getMonth() === userBirthday.getMonth() &&
-      currentDate.getDate() < userBirthday.getDate());
-
-  const userAge = isBeforeBirthday ? ageDiff - 1 : ageDiff;
+// ตรวจสอบว่าวันเกิดของผู้ใช้มีเกินวันปัจจุบันหรือไม่
+// ถ้ายังไม่เกิน แสดงอายุเป็นผลลัพธ์ (ปี และ เดือน)
+// ถ้าเกินแล้ว ลดอายุลง 1 ปี
+let userAge = "";
+if (monthDiff < 0 || (monthDiff === 0 && currentDate.getDate() < userBirthday.getDate())) {
+  userAge = `${ageDiff - 1} ปี ${12 + monthDiff} เดือน`;
+} else {
+  userAge = `${ageDiff} ปี ${monthDiff} เดือน`;
+}
 
   return (
     <main className="body">
@@ -306,7 +305,7 @@ export default function AllUser({ }) {
                 )}
                 {birthday ? (
                   <p>
-                    อายุ <b>{userAge} ปี</b> 
+                    อายุ <b>{userAge}</b> 
                   </p>
                 ) : (
                   <p>

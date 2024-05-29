@@ -15,6 +15,8 @@ export default function AddMpersonnel() {
   const [tel, setTel] = useState("");
   const [email, setEmail] = useState("");
   const [name, setName] = useState("");
+  const [surname, setSurname] = useState("");
+
   const [nametitle, setNameTitle] = useState("");
   const [isActive, setIsActive] = useState(false);
   const navigate = useNavigate();
@@ -66,6 +68,7 @@ export default function AddMpersonnel() {
         email,
         tel,
         name,
+        surname,
         nametitle
       }),
     })
@@ -94,6 +97,9 @@ export default function AddMpersonnel() {
   const handleToggleSidebar = () => {
     setIsActive(!isActive);
   };
+
+
+ 
   return (
     <main className="body">
       <ToastContainer />
@@ -240,11 +246,19 @@ export default function AddMpersonnel() {
               </select>
             </div>
             <div className="mb-3">
-              <label>ชื่อ - นามสกุล<span className="required">*</span></label>
+              <label>ชื่อ<span className="required">*</span></label>
               <input
                 type="text"
                 className="form-control"
                 onChange={(e) => setName(e.target.value)}
+              />
+            </div>
+            <div className="mb-3">
+              <label>นามสกุล<span className="required">*</span></label>
+              <input
+                type="text"
+                className="form-control"
+                onChange={(e) => setSurname(e.target.value)}
               />
             </div>
 

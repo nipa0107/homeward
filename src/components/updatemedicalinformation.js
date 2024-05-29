@@ -409,7 +409,7 @@ export default function Updatemedicalinformation() {
                 {data.length > 0 ? (
                   data.map((personnel) => (
                     <option key={personnel._id} value={personnel._id}>
-                      {`${personnel.nametitle} ${personnel.name}`}
+                      {`${personnel.nametitle} ${personnel.name} ${personnel.surname}`}
                     </option>
                   ))
                 ) : (

@@ -254,7 +254,7 @@ export default function AllMpersonnel({}) {
 
                 <button className="editimg" onClick={() => navigate("/updatempersonnel", { state: { id: i._id, caremanual: i } })}>แก้ไข</button>
 
-                <h5 className="card-title">{i.nametitle}{"  "}{i.name}</h5>
+                <h5 className="card-title">{i.nametitle}{"  "}{i.name}{"  "}{i.surname}</h5>
               </div>
             </div>
           ))}

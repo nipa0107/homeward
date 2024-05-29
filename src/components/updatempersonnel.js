@@ -10,106 +10,100 @@ import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
 export default function UpdateMPersonnel() {
-    const navigate = useNavigate();
-    const location = useLocation();
-    const [token, setToken] = useState("");
-    const [adminData, setAdminData] = useState("");
-    const {id} = location.state;
-    const [isActive, setIsActive] = useState(false);
-    const [username, setUsername] = useState("");
-    const [password, setPassword] = useState("");
-    const [confirmPassword, setConfirmPassword] = useState("");
-    const [tel, setTel] = useState("");
-    const [email, setEmail] = useState("");
-    const [name, setName] = useState("");
-    const [nametitle, setNameTitle] = useState("");
-    const [error, setError] = useState(""); 
+  const navigate = useNavigate();
+  const location = useLocation();
+  const [token, setToken] = useState("");
+  const [adminData, setAdminData] = useState("");
+  const { id } = location.state;
+  const [isActive, setIsActive] = useState(false);
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [tel, setTel] = useState("");
+  const [email, setEmail] = useState("");
+  const [name, setName] = useState("");
+  const [surname, setSurname] = useState("");
+  const [nametitle, setNameTitle] = useState("");
+  const [error, setError] = useState("");
 
-
-
-    useEffect(() => {
-      const fetchData = async () => {
-        try {
-          const response = await fetch(
-            `http://localhost:5000/getmpersonnel/${id}`
-          );
-          const data = await response.json();
-          setUsername(data.username);
-          setPassword(data.password);
-          setConfirmPassword(data.confirmPassword)
-          setTel(data.tel);
-          setEmail(data.email);
-          setName(data.name);
-          setNameTitle(data.nametitle);
-
-        } catch (error) {
-          console.error("Error fetching data:", error);
-        }
-      };
-  
-      const token = window.localStorage.getItem("token");
-      setToken(token);
-      if (token) {
-        fetch("http://localhost:5000/profile", {
-          method: "POST",
-          crossDomain: true,
-          headers: {
-            "Content-Type": "application/json",
-            Accept: "application/json",
-            "Access-Control-Allow-Origin": "*",
-          },
-          body: JSON.stringify({
-            token: token,
-          }),
-        })
-          .then((res) => res.json())
-          .then((data) => {
-            console.log(data);
-            setAdminData(data.data);
-            
-          });
-      }
-      fetchData();
-    }, [id]);
-   
-    const UpdateMP = async () => {
-
+  useEffect(() => {
+    const fetchData = async () => {
       try {
-        const MPUpdate = {
-            username,
-            password,
-            confirmPassword,
-            email,
-            tel,
-            name,
-            nametitle,
-        };
         const response = await fetch(
-       `http://localhost:5000/updatemp/${id}`,          
-          {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-              Authorization: `Bearer ${token}` // เพิ่ม Authorization header เพื่อส่ง token ในการร้องขอ
-            },
-            body: JSON.stringify(MPUpdate),
-          }
+          `http://localhost:5000/getmpersonnel/${id}`
         );
-        if (response.ok) {
-          const UpdatedMP = await response.json();
-          console.log("แก้ไขคู่มือแล้ว:", UpdatedMP);
-          toast.success("แก้ไขข้อมูลสำเร็จ");
-          setTimeout(() => {
-            navigate("/allmpersonnel");
-          }, 1100);
-        } else {
-          console.error("แก้ไขไม่ได้:", response.statusText);
-        }
+        const data = await response.json();
+        setUsername(data.username);
+        setPassword(data.password);
+        setConfirmPassword(data.confirmPassword);
+        setTel(data.tel);
+        setEmail(data.email);
+        setName(data.name);
+        setSurname(data.surname);
+        setNameTitle(data.nametitle);
       } catch (error) {
-        console.error("การแก้ไขมีปัญหา:", error);
+        console.error("Error fetching data:", error);
       }
     };
 
+    const token = window.localStorage.getItem("token");
+    setToken(token);
+    if (token) {
+      fetch("http://localhost:5000/profile", {
+        method: "POST",
+        crossDomain: true,
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "application/json",
+          "Access-Control-Allow-Origin": "*",
+        },
+        body: JSON.stringify({
+          token: token,
+        }),
+      })
+        .then((res) => res.json())
+        .then((data) => {
+          console.log(data);
+          setAdminData(data.data);
+        });
+    }
+    fetchData();
+  }, [id]);
+
+  const UpdateMP = async () => {
+    try {
+      const MPUpdate = {
+        username,
+        password,
+        confirmPassword,
+        email,
+        tel,
+        name,
+        surname,
+        nametitle,
+      };
+      const response = await fetch(`http://localhost:5000/updatemp/${id}`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`, // เพิ่ม Authorization header เพื่อส่ง token ในการร้องขอ
+        },
+        body: JSON.stringify(MPUpdate),
+      });
+      if (response.ok) {
+        const UpdatedMP = await response.json();
+        console.log("แก้ไขคู่มือแล้ว:", UpdatedMP);
+        toast.success("แก้ไขข้อมูลสำเร็จ");
+        setTimeout(() => {
+          navigate("/allmpersonnel");
+        }, 1100);
+      } else {
+        console.error("แก้ไขไม่ได้:", response.statusText);
+      }
+    } catch (error) {
+      console.error("การแก้ไขมีปัญหา:", error);
+    }
+  };
 
   const logOut = () => {
     window.localStorage.clear();
@@ -126,7 +120,7 @@ export default function UpdateMPersonnel() {
 
   return (
     <main className="body">
-            <ToastContainer />
+      <ToastContainer />
       <div className={`sidebar ${isActive ? "active" : ""}`}>
         <div class="logo_content">
           <div class="logo">
@@ -164,7 +158,7 @@ export default function UpdateMPersonnel() {
           <li>
             <a href="allsymptom" onClick={() => navigate("/allsymptom")}>
               <i class="bi bi-bandaid"></i>
-              <span class="links_name" >จัดการอาการผู้ป่วย</span>
+              <span class="links_name">จัดการอาการผู้ป่วย</span>
             </a>
           </li>
           <li>
@@ -246,24 +240,24 @@ export default function UpdateMPersonnel() {
                 onChange={(e) => setConfirmPassword(e.target.value)}
               />
             </div> */}
-            <div className="mb-3">
-              <label>อีเมล</label>
-              <input
+          <div className="mb-3">
+            <label>อีเมล</label>
+            <input
               value={email}
-                type="email"
-                className="form-control"
-                onChange={(e) => setEmail(e.target.value)}
-              />
-            </div>
-            <div className="mb-3">
-              <label>เบอร์โทรศัพท์</label>
-              <input
+              type="email"
+              className="form-control"
+              onChange={(e) => setEmail(e.target.value)}
+            />
+          </div>
+          <div className="mb-3">
+            <label>เบอร์โทรศัพท์</label>
+            <input
               value={tel}
-                type="text"
-                className="form-control"
-                onChange={(e) => setTel(e.target.value)}
-              />
-            </div>
+              type="text"
+              className="form-control"
+              onChange={(e) => setTel(e.target.value)}
+            />
+          </div>
           <div className="mb-1">
             <label>คำนำหน้าชื่อ</label>
             <select
@@ -273,18 +267,27 @@ export default function UpdateMPersonnel() {
             >
               <option value="">กรุณาเลือก</option>
               <option value="แพทย์หญิง">แพทย์หญิง</option>
-                <option value="นายแพทย์">นายแพทย์</option>
+              <option value="นายแพทย์">นายแพทย์</option>
             </select>
           </div>
           <div className="mb-3">
-              <label>ชื่อ - นามสกุล</label>
-              <input
-                type="text"
-                value={name}
-                className="form-control"
-                onChange={(e) => setName(e.target.value)}
-              />
-            </div>
+            <label>ชื่อ</label>
+            <input
+              type="text"
+              value={name}
+              className="form-control"
+              onChange={(e) => setName(e.target.value)}
+            />
+          </div>
+          <div className="mb-3">
+            <label>นามสกุล</label>
+            <input
+              type="text"
+              value={surname}
+              className="form-control"
+              onChange={(e) => setSurname(e.target.value)}
+            />
+          </div>
           <div className="d-grid">
             <button
               onClick={UpdateMP}
@@ -301,4 +304,3 @@ export default function UpdateMPersonnel() {
     </main>
   );
 }
-
