@@ -10,23 +10,31 @@ import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
 export default function UpdateUser() {
-    const location = useLocation();
-    const { id, user } = location.state;
-    const [username, setUsername] = useState("");
-    const [name, setName] = useState("");
-    const [email, setEmail] = useState("");
-    const [password, setPassword] = useState("");
-    const [tel, setTel] = useState("");
-    const [gender, setGender] = useState("");
-    const [birthday, setBirthday] = useState("");
-    const [ID_card_number, setIDCardNumber] = useState("");
-    const [nationality, setNationality] = useState("");
-    const [Address, setAddress] = useState("");
-    const navigate = useNavigate();
-    const [adminData, setAdminData] = useState("");
-    const [isActive, setIsActive] = useState(false);
-    const [error, setError] = useState("");
-    const [token, setToken] = useState("");
+  const location = useLocation();
+  const { id, user } = location.state;
+  const [username, setUsername] = useState("");
+  const [name, setName] = useState("");
+  const [surname, setSurname] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [tel, setTel] = useState("");
+  const [gender, setGender] = useState("");
+  const [birthday, setBirthday] = useState("");
+  const [ID_card_number, setIDCardNumber] = useState("");
+  const [nationality, setNationality] = useState("");
+  const [Address, setAddress] = useState("");
+  const [caregiverName, setCaregiverName] = useState('');
+  const [caregiverSurname, setCaregiverSurname] = useState('');
+  const [Relationship, setRelationship] = useState('');
+  const [caregiverTel, setCaregiverTel] = useState('');
+  const navigate = useNavigate();
+  const [adminData, setAdminData] = useState("");
+  const [isActive, setIsActive] = useState(false);
+  const [error, setError] = useState("");
+  const [token, setToken] = useState("");
+  const [otherGender, setOtherGender] = useState("");
+  const [showOtherInput, setShowOtherInput] = useState(false);
+  const [otherRelationship, setOtherRelationship] = useState("");
 
   const formatDate = (date) => {
     const formattedDate = new Date(date);
@@ -37,54 +45,66 @@ export default function UpdateUser() {
     return formattedDate.toISOString().split('T')[0];
   };
 
-    useEffect(() => {
-        const fetchData = async () => {
-          try {
-            const response = await fetch(
-              `http://localhost:5000/getuser/${id}`
-            );
-            const data = await response.json();
-            setUsername(data.username);
-            setName(data.name);
-            setEmail(data.email);
-            setPassword(data.password);
-            setTel(data.tel);
-            setGender(data.gender);
-            setBirthday(data.birthday);
-            setIDCardNumber(data.ID_card_number);
-            setNationality(data.nationality);
-            setAddress(data.Address);
-          } catch (error) {
-            console.error("Error fetching caremanual data:", error);
-          }
-        };
-        
-        const token = window.localStorage.getItem("token");
-        setToken(token); 
-        if (token) {
-          fetch("http://localhost:5000/profile", {
-            method: "POST",
-            crossDomain: true,
-            headers: {
-              "Content-Type": "application/json",
-              Accept: "application/json",
-              "Access-Control-Allow-Origin": "*",
-            },
-            body: JSON.stringify({
-              token: token,
-            }),
-          })
-            .then((res) => res.json())
-            .then((data) => {
-              console.log(data);
-              setAdminData(data.data);
-            });
-        }
-        fetchData();
-      }, [id]);
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await fetch(`http://localhost:5000/getuser/${id}`);
+        const data = await response.json();
+        setUsername(data.username);
+        setName(data.name);
+        setSurname(data.surname);
+        setEmail(data.email);
+        setPassword(data.password);
+        setTel(data.tel);
+        setGender(data.gender);
+        setBirthday(data.birthday);
+        setIDCardNumber(data.ID_card_number);
+        setNationality(data.nationality);
+        setAddress(data.Address);
+      } catch (error) {
+        console.error("Error fetching user data:", error);
+      }
+    };
 
-    
-const UpdateUser = async () => {
+    const fetchCaregiverData = async () => {
+      try {
+        const response = await fetch(`http://localhost:5000/getcaregiver/${id}`);
+        const caregiverData = await response.json();
+        if (caregiverData.status === 'ok') {
+          setCaregiverName(caregiverData.data.name);
+          setCaregiverSurname(caregiverData.data.surname);
+          setCaregiverTel(caregiverData.data.tel);
+          setRelationship(caregiverData.data.Relationship);
+        }
+      } catch (error) {
+        console.error("Error fetching caregiver data:", error);
+      }
+    };
+
+    const token = window.localStorage.getItem("token");
+    setToken(token);
+    if (token) {
+      fetch("http://localhost:5000/profile", {
+        method: "POST",
+        crossDomain: true,
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "application/json",
+          "Access-Control-Allow-Origin": "*",
+        },
+        body: JSON.stringify({ token: token }),
+      })
+        .then((res) => res.json())
+        .then((data) => {
+          console.log(data);
+          setAdminData(data.data);
+        });
+    }
+    fetchData();
+    fetchCaregiverData();
+  }, [id]);
+
+  const UpdateUser = async () => {
     try {
       const userData = {
         username,
@@ -295,25 +315,24 @@ const UpdateUser = async () => {
               onChange={(e) => setEmail(e.target.value)}
             />
           </div>
-
-          {/* <div className="mb-3">
-              <label>รหัสผ่าน</label>
-              <input
-                type="password"
-                readOnly
-                className="form-control gray-background"
-                onChange={(e) => setPassword(e.target.value)}
-              />
-            </div> */}
-            <div className="mb-3">
-              <label>ชื่อ-นามสกุล</label>
-              <input
+          <div className="mb-3">
+            <label>ชื่อ</label>
+            <input
               value={name}
-                type="text"
-                className="form-control"
-                onChange={(e) => setName(e.target.value)}
-              />
-            </div>
+              type="text"
+              className="form-control"
+              onChange={(e) => setName(e.target.value)}
+            />
+          </div>
+          <div className="mb-3">
+            <label>นามสกุล</label>
+            <input
+              type="text"
+              className="form-control"
+              value={surname}
+              onChange={(e) => setSurname(e.target.value)}
+            />
+          </div>
 
           <div className="mb-3">
             <label>เพศ</label>
