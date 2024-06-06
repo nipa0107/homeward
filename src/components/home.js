@@ -230,7 +230,7 @@ export default function Home({ }) {
         onClick={() => navigate("/addcaremanual", { state: adminData })}
       >
         <i className="bi bi-plus-circle" style={{ marginRight: '8px' }}></i>
-        เพิ่มอุปกรณ์
+        เพิ่มคู่มือ
       </button>
           <p className="countadmin">จำนวนคู่มือทั้งหมด : {data.length} คู่มือ</p>
         </div>

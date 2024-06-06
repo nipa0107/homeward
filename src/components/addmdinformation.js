@@ -51,9 +51,7 @@ export default function AddMedicalInformation() {
           Accept: "application/json",
           "Access-Control-Allow-Origin": "*",
         },
-        body: JSON.stringify({
-          token: token,
-        }),
+        body: JSON.stringify({ token }),
       })
         .then((res) => res.json())
         .then((data) => {
@@ -62,7 +60,7 @@ export default function AddMedicalInformation() {
         });
     }
     getAllMpersonnel();
-  }, []);
+  }, [token]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -80,27 +78,28 @@ export default function AddMedicalInformation() {
     formData.append("fileP", fileP);
     formData.append("fileM", fileM);
     formData.append("filePhy", filePhy);
+    formData.append("userId", id); // Append userId to formData
 
-    // ตรวจสอบว่ามี token อยู่ใน local storage หรือไม่
+    // Ensure token exists
     const token = window.localStorage.getItem("token");
     if (!token) {
       toast.error("กรุณาเข้าสู่ระบบ");
       return;
     }
 
-    fetch(`http://localhost:5000/addmedicalinformation`, {
+    fetch("http://localhost:5000/addmedicalinformation", {
       method: "POST",
       headers: {
         Authorization: `Bearer ${token}`,
       },
-      body: formData,
+      body: formData, // Directly send FormData
     })
       .then((res) => res.json())
       .then((data) => {
         console.log(data, "Addmdinformation");
         if (data.status === "ok") {
           toast.success("เพิ่มข้อมูลสำเร็จ");
-          navigate('/allinfo', { state: { id} });
+          navigate("/allinfo", { state: { id } });
         }
       })
       .catch((error) => {
@@ -113,7 +112,7 @@ export default function AddMedicalInformation() {
     window.localStorage.clear();
     window.location.href = "./";
   };
-  // bi-list
+
   const handleToggleSidebar = () => {
     setIsActive(!isActive);
   };
@@ -122,7 +121,7 @@ export default function AddMedicalInformation() {
     fetch("http://localhost:5000/allMpersonnel", {
       method: "GET",
       headers: {
-        Authorization: `Bearer ${token}`, // เพิ่ม Authorization header เพื่อส่ง token ในการร้องขอ
+        Authorization: `Bearer ${token}`, // Add Authorization header
       },
     })
       .then((res) => res.json())
@@ -131,8 +130,6 @@ export default function AddMedicalInformation() {
         setData(data.data);
       });
   };
-
-
 
   const onInputfileChange1 = (e) => {
     console.log(e.target.files[0]);
@@ -148,7 +145,6 @@ export default function AddMedicalInformation() {
     const pdfURL2 = URL.createObjectURL(e.target.files[0]);
     setPdfURL2(pdfURL2);
   };
-
   const onInputfileChange3 = (e) => {
     console.log(e.target.files[0]);
     setFilePhy(e.target.files[0]);
