@@ -199,6 +199,12 @@ export default function AddMedicalInformation() {
             </a>
           </li>
           <li>
+            <a href="/alluserinsetting" >
+            <i class="bi bi-bell"></i>              
+            <span class="links_name" >ตั้งค่าการแจ้งเตือน</span>
+            </a>
+          </li>
+          <li>
             <a href="alladmin" onClick={() => navigate("/alladmin")}>
               <i className="bi bi-person-gear"></i>
               <span className="links_name">จัดการแอดมิน</span>
