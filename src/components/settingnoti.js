@@ -164,6 +164,9 @@ export default function SettingNoti() {
     fetchThreshold();
   }, [id]); 
   
+  const handleCancel = () => {
+    navigate(-1); 
+  };
   return (
     <main className="body">
       <div className={`sidebar ${isActive ? "active" : ""}`}>
@@ -260,11 +263,11 @@ export default function SettingNoti() {
             </li>
           </ul>
         </div>
-        <div className="formcontainerpf card mb-3">
+        <div className="formsetnoti">
 
         <form onSubmit={handleSubmit}>
-          <div>
-            <label className="title">SBP</label>
+        <div className="input-group">
+            <label className="titlenoti">SBP</label>
             <label>Min:</label>
             <input
               type="number"
@@ -281,8 +284,8 @@ export default function SettingNoti() {
             />
           </div>
 
-          <div>
-            <label className="title">DBP</label>
+          <div className="input-group">
+          <label className="titlenoti">DBP</label>
             <label>Min:</label>
             <input
               type="number"
@@ -300,8 +303,8 @@ export default function SettingNoti() {
             />
           </div>
 
-          <div>
-            <label className="title">Pulse Rate</label>
+          <div className="input-group">
+          <label className="titlenoti">Pulse Rate</label>
             <label>Min:</label>
             <input
               type="number"
@@ -319,8 +322,8 @@ export default function SettingNoti() {
             />
           </div>
 
-          <div>
-            <label className="title">Temperature</label>
+          <div className="input-group">
+          <label className="titlenoti">Temperature</label>
             <label>Min:</label>
             <input
               type="number"
@@ -337,8 +340,8 @@ export default function SettingNoti() {
             />
           </div>
 
-          <div>
-            <label className="title">DTX</label>
+          <div className="input-group">
+          <label className="titlenoti">DTX</label>
             <label>Min:</label>
             <input
               type="number"
@@ -355,8 +358,8 @@ export default function SettingNoti() {
             />
           </div>
 
-          <div>
-            <label className="title">Respiration</label>
+          <div className="input-group">
+          <label className="titlenoti">Respiration</label>
             <label>Min:</label>
             <input
               type="number"
@@ -373,7 +376,7 @@ export default function SettingNoti() {
             />
           </div>
           <div className="d-grid">
-
+          {/* <button type="button" className="btn btn-outline py-2" onClick={handleCancel}>ยกเลิก</button> */}
           <button type="submit" className="btn btn-outline py-2">บันทึก</button>
           </div>
         </form>

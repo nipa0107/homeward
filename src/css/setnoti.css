@@ -1,3 +1,46 @@
-.title{
+.formsetnoti {
+    border: 1px solid #ddd;
+    box-shadow: 0 4px 21px -12px rgba(0, 0, 0, 0.66);    
+    width: 60%;
+    padding: 2rem;
+    margin: 30px auto;
+    border-radius: 1rem;
+    background-color: #fff;
+}
+
+.formsetnoti form .input-group {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: nowrap;
+    margin-bottom: 20px;
+}
+
+.formsetnoti .titlenoti {
     font-weight: bold;
+    font-size: 1.2em;
+    margin-right: 20px;
+    flex: 0 0 200px;
+    display: flex;
+    align-items: center;
+    
+    
+}
+
+.formsetnoti .input-group label {
+    font-weight: 600;
+    margin-right: 10px;
+    /* flex: 0 0 60px; */
+
+}
+
+.formsetnoti .input-group input[type="number"] {
+    padding: 10px;
+    margin-right: 20px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    box-sizing: border-box;
+    width: 100px;
+    flex: 1;
+    
 }
