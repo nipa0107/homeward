@@ -7,8 +7,8 @@ import logow from "../img/logow.png";
 import { useNavigate } from "react-router-dom";
 import imgdefault from "../img/image.png";
 
-import { ToastContainer, toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 export default function UpdateCareManual() {
   const location = useLocation();
@@ -22,33 +22,44 @@ export default function UpdateCareManual() {
   const [isActive, setIsActive] = useState(false);
   const [selectedFileName, setSelectedFileName] = useState("");
   const [pdfURL, setPdfURL] = useState(null);
-  const [token, setToken] = useState('');
+  const [token, setToken] = useState("");
 
-  const defaultImageURL = imgdefault
+  const defaultImageURL = imgdefault;
   // const defaultImageURL =
   //   "https://gnetradio.com/wp-content/uploads/2019/10/no-image.jpg";
 
   console.log(caremanual);
 
+  // const handleImageChange = (e) => {
+  //   const selectedImage = e.target.files[0];
+  //   setImage(selectedImage);
+  //   const previewImageElement = document.getElementById("previewImage");
+  //   if (previewImageElement && selectedImage) {
+  //     const imageURL = URL.createObjectURL(selectedImage);
+  //     previewImageElement.src = imageURL;
+  //   }
+  // };
   const handleImageChange = (e) => {
     const selectedImage = e.target.files[0];
-    setImage(selectedImage);
-    const previewImageElement = document.getElementById("previewImage");
-    if (previewImageElement && selectedImage) {
-      const imageURL = URL.createObjectURL(selectedImage);
-      previewImageElement.src = imageURL;
+    if (selectedImage) {
+      setImage(selectedImage);
+      if (typeof selectedImage === "object") {
+        const imageURL = URL.createObjectURL(selectedImage);
+        const previewImageElement = document.getElementById("previewImage");
+        if (previewImageElement) {
+          previewImageElement.src = imageURL;
+        }
+      }
     }
   };
 
   const handleFileChange = (e) => {
     console.log(e.target.files[0]);
     setFile(e.target.files[0]);
-
     setSelectedFileName(e.target.files[0].name);
-
     const pdfURL = URL.createObjectURL(e.target.files[0]);
     setPdfURL(pdfURL);
-    console.log("a",pdfURL)
+    console.log("a", pdfURL);
   };
 
   useEffect(() => {
@@ -114,8 +125,8 @@ export default function UpdateCareManual() {
           method: "POST",
           body: formData,
           headers: {
-            Authorization: `Bearer ${token}` // เพิ่ม Authorization header เพื่อส่ง token ในการร้องขอ
-          }
+            Authorization: `Bearer ${token}`,
+          },
         }
       );
 
@@ -159,45 +170,49 @@ export default function UpdateCareManual() {
           <li>
             <a href="home">
               <i class="bi bi-book"></i>
-              <span class="links_name" >จัดการข้อมูลคู่มือการดูแลผู้ป่วย</span>
+              <span class="links_name">จัดการข้อมูลคู่มือการดูแลผู้ป่วย</span>
             </a>
           </li>
           <li>
             <a href="alluser">
               <i class="bi bi-person-plus"></i>
-              <span class="links_name" >จัดการข้อมูลผู้ป่วย</span>
+              <span class="links_name">จัดการข้อมูลผู้ป่วย</span>
             </a>
           </li>
           <li>
             <a href="allmpersonnel">
               <i class="bi bi-people"></i>
-              <span class="links_name" >จัดการข้อมูลบุคลากร</span>
+              <span class="links_name">จัดการข้อมูลบุคลากร</span>
             </a>
           </li>
-          
+
           <li>
             <a href="allequip">
               <i class="bi bi-prescription2"></i>
-              <span class="links_name" >จัดการอุปกรณ์ทางการแพทย์</span>
+              <span class="links_name">จัดการอุปกรณ์ทางการแพทย์</span>
             </a>
           </li>
           <li>
             <a href="allsymptom">
               <i class="bi bi-bandaid"></i>
-              <span class="links_name" >จัดการอาการผู้ป่วย</span>
+              <span class="links_name">จัดการอาการผู้ป่วย</span>
             </a>
           </li>
           <li>
             <a href="alladmin" onClick={() => navigate("/alladmin")}>
               <i class="bi bi-person-gear"></i>
-              <span class="links_name" >จัดการแอดมิน</span>
+              <span class="links_name">จัดการแอดมิน</span>
             </a>
           </li>
           <div class="nav-logout">
             <li>
               <a href="./" onClick={logOut}>
-                <i class='bi bi-box-arrow-right' id="log_out" onClick={logOut}></i>
-                <span class="links_name" >ออกจากระบบ</span>
+                <i
+                  class="bi bi-box-arrow-right"
+                  id="log_out"
+                  onClick={logOut}
+                ></i>
+                <span class="links_name">ออกจากระบบ</span>
               </a>
             </li>
           </div>
@@ -207,9 +222,9 @@ export default function UpdateCareManual() {
         <div className="header">จัดการข้อมูลคู่มือการดูแลผู้ป่วย</div>
         <div class="profile_details ">
           <li>
-            <a href="profile" >
+            <a href="profile">
               <i class="bi bi-person"></i>
-              <span class="links_name" >{adminData && adminData.username}</span>
+              <span class="links_name">{adminData && adminData.username}</span>
             </a>
           </li>
         </div>
@@ -217,19 +232,21 @@ export default function UpdateCareManual() {
         <div className="breadcrumbs">
           <ul>
             <li>
-            <a href="home">
+              <a href="home">
                 <i class="bi bi-house-fill"></i>
               </a>
             </li>
             <li className="arrow">
               <i class="bi bi-chevron-double-right"></i>
             </li>
-            <li><a href="home">จัดการข้อมูลคู่มือการดูแลผู้ป่วย</a>
+            <li>
+              <a href="home">จัดการข้อมูลคู่มือการดูแลผู้ป่วย</a>
             </li>
             <li className="arrow">
               <i class="bi bi-chevron-double-right"></i>
             </li>
-            <li><a>แก้ไขคู่มือ</a>
+            <li>
+              <a>แก้ไขคู่มือ</a>
             </li>
           </ul>
         </div>
@@ -249,15 +266,15 @@ export default function UpdateCareManual() {
             <label>รูปภาพ</label> <br />
             <div className="centered-image">
               {image ? (
-                <img
-                  id="previewImage"
-                  src={
-                    typeof image === "string"
-                      ? require(`../images/${image}`)
-                      : URL.createObjectURL(image)
-                  }
-                  alt="Caremanual Image"
-                />
+                typeof image === "string" ? (
+                  <img id="previewImage" src={image} alt="Caremanual Image" />
+                ) : (
+                  <img
+                    id="previewImage"
+                    src={URL.createObjectURL(image)}
+                    alt="Caremanual Image"
+                  />
+                )
               ) : (
                 <img
                   id="previewImage"
@@ -266,7 +283,6 @@ export default function UpdateCareManual() {
                 />
               )}
             </div>
-
             <br />
             <input
               type="file"
@@ -309,20 +325,14 @@ export default function UpdateCareManual() {
 
           <div className="filename">
             {pdfURL ? (
-              <a
-                href={pdfURL}
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                {selectedFileName || "ดูไฟล์ "}
+              <a href={pdfURL} target="_blank" rel="noopener noreferrer">
+                {selectedFileName || "ดูไฟล์"}
               </a>
             ) : (
               file && (
-                <a
-                  href={`http://localhost:5000/file/${file}`}
-                  target="_blank"
-                  rel="noopener noreferrer">
-                  {selectedFileName || file}
+                <a href={file} target="_blank" rel="noopener noreferrer">
+                  <i className="bi bi-filetype-pdf" style={{color:'red'}}></i>{" "}
+                  {selectedFileName || "ดูไฟล์"}
                 </a>
               )
             )}
@@ -338,10 +348,7 @@ export default function UpdateCareManual() {
             />
           </div>
           <div className="d-grid">
-            <button
-              onClick={UpdateCareManual}
-              className="btn btn-outline py-2"
-            >
+            <button onClick={UpdateCareManual} className="btn btn-outline py-2">
               บันทึก
             </button>
             <br />

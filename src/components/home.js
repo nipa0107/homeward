@@ -168,6 +168,12 @@ export default function Home({ }) {
             </a>
           </li>
           <li>
+            <a href="/alluserinsetting" >
+            <i class="bi bi-bell"></i>              
+            <span class="links_name" >ตั้งค่าการแจ้งเตือน</span>
+            </a>
+          </li>
+          <li>
             <a href="alladmin" >
               <i class="bi bi-person-gear"></i>
               <span class="links_name" >จัดการแอดมิน</span>
@@ -230,7 +236,7 @@ export default function Home({ }) {
         onClick={() => navigate("/addcaremanual", { state: adminData })}
       >
         <i className="bi bi-plus-circle" style={{ marginRight: '8px' }}></i>
-        เพิ่มอุปกรณ์
+        เพิ่มคู่มือ
       </button>
           <p className="countadmin">จำนวนคู่มือทั้งหมด : {data.length} คู่มือ</p>
         </div>
