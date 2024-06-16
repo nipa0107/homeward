@@ -205,8 +205,8 @@ export default function AllUser({ }) {
             <table className="table">
               <thead>
                 <tr>
-                  <th>ชื่อผู้ใช้</th>
-                  <th>ชื่อ-สกุล</th>
+                  <th>เลขประจำตัวประชาชน</th>
+                  <th>ชื่อ-นามสกุล</th>
                   <th>รายละเอียด</th>
                 </tr>
               </thead>

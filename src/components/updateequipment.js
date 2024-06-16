@@ -10,87 +10,89 @@ import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
 export default function UpdateEquipment() {
-    const navigate = useNavigate();
-    const location = useLocation();
-    const [token, setToken] = useState("");
-    const [adminData, setAdminData] = useState("");
-    const {id} = location.state;
-    const [isActive, setIsActive] = useState(false);
-    const [equipment_name, setEquipName] = useState("");
-    const [equipment_type, setEquipType] = useState("");
+  const navigate = useNavigate();
+  const location = useLocation();
+  const [token, setToken] = useState("");
+  const [adminData, setAdminData] = useState("");
+  const { id } = location.state;
+  const [isActive, setIsActive] = useState(false);
+  const [equipment_name, setEquipName] = useState("");
+  const [equipment_type, setEquipType] = useState("");
 
-    useEffect(() => {
-      const fetchData = async () => {
-        try {
-          const response = await fetch(
-            `http://localhost:5000/getequip/${id}`
-          );
-          const data = await response.json();
-          setEquipName(data.equipment_name);
-          setEquipType(data.equipment_type);
-        } catch (error) {
-          console.error("Error fetching data:", error);
-        }
-      };
-  
-      const token = window.localStorage.getItem("token");
-      setToken(token);
-      if (token) {
-        fetch("http://localhost:5000/profile", {
-          method: "POST",
-          crossDomain: true,
-          headers: {
-            "Content-Type": "application/json",
-            Accept: "application/json",
-            "Access-Control-Allow-Origin": "*",
-          },
-          body: JSON.stringify({
-            token: token,
-          }),
-        })
-          .then((res) => res.json())
-          .then((data) => {
-            console.log(data);
-            setAdminData(data.data);
-            
-          });
-      }
-      fetchData();
-    }, [id]);
-   
-    const UpdateEquipment = async () => {
-      console.log(equipment_name,equipment_type);
-
+  useEffect(() => {
+    const fetchData = async () => {
       try {
-        const EquipUpdate = {
-          equipment_name,
-          equipment_type,
-        };
         const response = await fetch(
-       `http://localhost:5000/updateequip/${id}`,          
-          {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-              Authorization: `Bearer ${token}` // เพิ่ม Authorization header เพื่อส่ง token ในการร้องขอ
-            },
-            body: JSON.stringify(EquipUpdate),
-          }
+          `http://localhost:5000/getequip/${id}`
         );
-        if (response.ok) {
-          const UpdatedEquipment = await response.json();
-          console.log("แก้ไขคู่มือแล้ว:", UpdatedEquipment);
-          toast.success("แก้ไขข้อมูลสำเร็จ");
-          setTimeout(() => {
-            navigate("/allequip");
-          }, 1100);
-        } else {
-          console.error("แก้ไขไม่ได้:", response.statusText);
-        }
+        const data = await response.json();
+        setEquipName(data.equipment_name);
+        setEquipType(data.equipment_type);
       } catch (error) {
-        console.error("การแก้ไขมีปัญหา:", error);
+        console.error("Error fetching data:", error);
       }
     };
+
+    const token = window.localStorage.getItem("token");
+    setToken(token);
+    if (token) {
+      fetch("http://localhost:5000/profile", {
+        method: "POST",
+        crossDomain: true,
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "application/json",
+          "Access-Control-Allow-Origin": "*",
+        },
+        body: JSON.stringify({
+          token: token,
+        }),
+      })
+        .then((res) => res.json())
+        .then((data) => {
+          console.log(data);
+          setAdminData(data.data);
+
+        });
+    }
+    fetchData();
+  }, [id]);
+
+  const UpdateEquipment = async () => {
+    console.log(equipment_name, equipment_type);
+
+    try {
+      const EquipUpdate = {
+        equipment_name,
+        equipment_type,
+      };
+
+      const response = await fetch(
+        `http://localhost:5000/updateequip/${id}`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`, // เพิ่ม Authorization header เพื่อส่ง token ในการร้องขอ
+          },
+          body: JSON.stringify(EquipUpdate),
+        }
+      );
+
+      if (response.ok) {
+        const UpdatedEquipment = await response.json();
+        console.log("แก้ไขอุปกรณ์สำเร็จ:", UpdatedEquipment);
+        toast.success("แก้ไขอุปกรณ์สำเร็จ");
+        setTimeout(() => {
+          navigate("/allequip");
+        }, 1100);
+      } else {
+        console.error("แก้ไขไม่ได้:", response.statusText);
+      }
+    } catch (error) {
+      console.error("การแก้ไขมีปัญหา:", error);
+    }
+  };
 
 
   const logOut = () => {
@@ -108,7 +110,7 @@ export default function UpdateEquipment() {
 
   return (
     <main className="body">
-            <ToastContainer />
+      <ToastContainer />
       <div className={`sidebar ${isActive ? "active" : ""}`}>
         <div class="logo_content">
           <div class="logo">
