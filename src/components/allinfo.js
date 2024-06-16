@@ -207,6 +207,31 @@ export default function AllUser({ }) {
       }
     }
   };
+
+  const handleDeleteMedicalInfo = async () => {
+    if (window.confirm("คุณต้องการลบข้อมูลการเจ็บป่วยหรือไม่?")) {
+      try {
+        const response = await fetch(`http://localhost:5000/deletemedicalInformation/${id}`, {
+          method: "DELETE",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        });
+
+        const data = await response.json();
+        if (response.ok) {
+          alert(data.message);
+          window.location.reload(); // รีเฟรชหน้าหลังจากลบข้อมูล
+        } else {
+          console.error("Error during deletion:", data.message);
+        }
+      } catch (error) {
+        console.error("Error during fetch:", error);
+      }
+    }
+  };
+
   const handleViewPDF = () => {
     // ทำการเรียกดูไฟล์ PDF ที่เกี่ยวข้อง
   };
@@ -224,19 +249,19 @@ export default function AllUser({ }) {
   const currentDate = new Date();
 
   // คำนวณอายุและแสดงเป็นอายุที่มีเดือนด้วย
-const userBirthday = new Date(birthday); // แปลงวันเกิดของผู้ใช้เป็นวัตถุ Date
-const ageDiff = currentDate.getFullYear() - userBirthday.getFullYear(); // คำนวณความแตกต่างระหว่างปีปัจจุบันกับปีเกิดของผู้ใช้
-const monthDiff = currentDate.getMonth() - userBirthday.getMonth(); // คำนวณความแตกต่างระหว่างเดือนปัจจุบันกับเดือนเกิดของผู้ใช้
+  const userBirthday = new Date(birthday); // แปลงวันเกิดของผู้ใช้เป็นวัตถุ Date
+  const ageDiff = currentDate.getFullYear() - userBirthday.getFullYear(); // คำนวณความแตกต่างระหว่างปีปัจจุบันกับปีเกิดของผู้ใช้
+  const monthDiff = currentDate.getMonth() - userBirthday.getMonth(); // คำนวณความแตกต่างระหว่างเดือนปัจจุบันกับเดือนเกิดของผู้ใช้
 
-// ตรวจสอบว่าวันเกิดของผู้ใช้มีเกินวันปัจจุบันหรือไม่
-// ถ้ายังไม่เกิน แสดงอายุเป็นผลลัพธ์ (ปี และ เดือน)
-// ถ้าเกินแล้ว ลดอายุลง 1 ปี
-let userAge = "";
-if (monthDiff < 0 || (monthDiff === 0 && currentDate.getDate() < userBirthday.getDate())) {
-  userAge = `${ageDiff - 1} ปี ${12 + monthDiff} เดือน`;
-} else {
-  userAge = `${ageDiff} ปี ${monthDiff} เดือน`;
-}
+  // ตรวจสอบว่าวันเกิดของผู้ใช้มีเกินวันปัจจุบันหรือไม่
+  // ถ้ายังไม่เกิน แสดงอายุเป็นผลลัพธ์ (ปี และ เดือน)
+  // ถ้าเกินแล้ว ลดอายุลง 1 ปี
+  let userAge = "";
+  if (monthDiff < 0 || (monthDiff === 0 && currentDate.getDate() < userBirthday.getDate())) {
+    userAge = `${ageDiff - 1} ปี ${12 + monthDiff} เดือน`;
+  } else {
+    userAge = `${ageDiff} ปี ${monthDiff} เดือน`;
+  }
 
   return (
     <main className="body">
@@ -334,114 +359,74 @@ if (monthDiff < 0 || (monthDiff === 0 && currentDate.getDate() < userBirthday.ge
         </div>
         <h3>ข้อมูลการดูแลผู้ป่วย</h3>
         <div>
-          <div className="cardall card mb-3">
+          <div className="adminall card mb-3">
             <h5>
               <b>ข้อมูลทั่วไป</b>
             </h5>
             <div className="user-info">
               <div className="left-info">
-                {name || surname ? (
-                  <p>
-                    ชื่อ-สกุล  <b>{name || '-'} {surname || '-'}</b>
-                  </p>
-                ) : (
-                  <p>
-                    ชื่อ-สกุล <b>-</b>
-                  </p>
-                )}
-                {ID_card_number ? (
-                  <p>
-                    เลขบัตรประชาชน <b>{ID_card_number}</b>
-                  </p>
-                ) : (
-                  <p>
-                    เลขบัตรประชาชน <b>-</b>
-                  </p>
-                )}
-                {birthday ? (
-                  <p>
-                    อายุ <b>{userAge} ปี</b> 
-                  </p>
-                ) : (
-                  <p>
-                    อายุ <b>-</b>
-                  </p>
-                )}
-                {gender ? (
-                  <p>
-                    เพศ <b>{gender}</b>
-                  </p>
-                ) : (
-                  <p>
-                    เพศ <b>-</b>
-                  </p>
-                )}
-                {nationality ? (
-                  <p>
-                    สัญชาติ <b>{nationality}</b>
-                  </p>
-                ) : (
-                  <p>
-                    สัญชาติ <b>-</b>
-                  </p>
-                )}
-                {Address ? (
-                  <p>
-                    ที่อยู่ <b>{Address}</b>
-                  </p>
-                ) : (
-                  <p>
-                    ที่อยู่ <b>-</b>
-                  </p>
-                )}
-                {tel ? (
-                  <p>
-                    เบอร์โทรศัพท์ <b>{tel}</b>
-                  </p>
-                ) : (
-                  <p>
-                    เบอร์โทรศัพท์<b>-</b>
-                  </p>
-                )}
-                <b>ผู้ดูแล</b>
-                {caregiverName || caregiverSurname ? (
-                  <p>
-                    ชื่อ-สกุล  <b>{caregiverName || '-'} {caregiverSurname || '-'}</b>
-                  </p>
-                ) : (
-                  <p>
-                    ชื่อ-สกุล <b>-</b>
-                  </p>
-                )}
-                {Relationship ? (
-                  <p>
-                    ความสัมพันธ์ <b>{Relationship}</b>
-                  </p>
-                ) : (
-                  <p>
-                    ความสัมพันธ์<b>-</b>
-                  </p>
-                )}
-                {tel ? (
-                  <p>
-                    เบอร์โทรศัพท์ <b>{caregiverTel}</b>
-                  </p>
-                ) : (
-                  <p>
-                    เบอร์โทรศัพท์<b>-</b>
-                  </p>
-                )}
+                <p>
+                  <span>ชื่อ-สกุล</span>
+                </p>
+                <p>
+                  <span>เลขบัตรประชาชน</span>
+                </p>
+                <p>
+                  <span>อายุ</span>
+                </p>
+                <p>
+                  <span>เพศ</span>
+                </p>
+                <p>
+                  <span>สัญชาติ</span>
+                </p>
+                <p>
+                  <span>ที่อยู่</span>
+                </p>
+                <p>
+                  <span>เบอร์โทรศัพท์</span>
+                </p>
+                <p>
+                  <span>ผู้ดูแล</span>
+                </p>
+                <p>
+                  <span>ความสัมพันธ์</span>
+                </p>
+                <p>
+                  <span>เบอร์โทรศัพท์ผู้ดูแล</span>
+                </p>
               </div>
               <div className="right-info">
-                {/* {name ? (
-                  <p>
-                    <b> {name}</b>
-                  </p>
-                ) : (
-                  <p>
-                    <b>-</b> ชื่อ:
-                  </p>
-                )} */}
+                <p>
+                  <b>{name || '-'}</b> <b>{surname || '-'}</b>
+                </p>
+                <p>
+                  <b>{ID_card_number || '-'}</b>
+                </p>
+                <p>
+                  <b>{userAge}</b>
+                </p>
+                <p>
+                  <b>{gender || '-'}</b>
+                </p>
+                <p>
+                  <b>{nationality || '-'}</b>
+                </p>
+                <p>
+                  <b>{Address || '-'}</b>
+                </p>
+                <p>
+                  <b>{tel || '-'}</b>
+                </p>
+                <p>
+                  <b>{caregiverName || '-'}</b> <b>{caregiverSurname || '-'}</b>
+                </p>
+                <p>
+                  <b>{Relationship || '-'}</b>
+                </p>
+                <p>
+                  <b>{caregiverTel || '-'}</b>
+                </p>
               </div>
             </div>
             <div className="btn-group">
@@ -462,142 +447,129 @@ if (monthDiff < 0 || (monthDiff === 0 && currentDate.getDate() < userBirthday.ge
             </div>
           </div>
 
-          <div className="cardall card mb-3">
+          <div className="adminall card mb-3">
             <h5><b>ข้อมูลการเจ็บป่วย</b></h5>
             {medicalInfo ? (
-              <div className="user-info">
-                <div className="left-info">
-                  <p>
-                    <b>HN:</b> {medicalInfo.HN || "-"}
-                  </p>
-                  <p>
-                    <b>วันที่ Admit:</b>
-                    {medicalInfo.Date_Admit
-                      ? new Date(medicalInfo.Date_Admit).toLocaleDateString(
-                        "th-TH",
-                        { day: "numeric", month: "long", year: "numeric" }
-                      )
-                      : "-"}
-                  </p>
-                  <p><b>Diagnosis:</b> {medicalInfo.Diagnosis || "-"}</p>
-                  <div>
-                    {mdata && (
-                      <div>
-                        <p>
-                          <b>แพทย์ผู้ดูแล:</b> {mdata.nametitle}
-                          {mdata.name}
-                        </p>
-                      </div>
-                    )}
+              <>
+                <div className="user-info">
+                  <div className="left-info">
+                    <p><span>HN</span></p>
+                    <p><span>AN</span></p>
+                    <p></p>
+                    <p><span>วันที่ Admit</span></p>
+                    <p><span>วันที่ D/C</span></p>
+                    <p><span>Diagnosis</span></p>
+                    <div>
+                      {mdata && (
+                        <div>
+                          <p><span>แพทย์ผู้ดูแล</span></p>
+                        </div>
+                      )}
+                    </div>
+                    <p><span>Chief_complaint</span></p>
+                    <p><span>Present illness</span></p>
+                    <p>Management plan</p>
+                    <p><span>Phychosocial assessment</span></p>
                   </div>
-                  <p><b>Present illness:</b> {medicalInfo.Present_illness || "-"}</p>
-                  <div className="filename">
-                    {medicalInfo.fileP && (
-                      <p>
-                        <a
-                          onClick={() => {
-                            const filePath = medicalInfo.fileP.replace(
-                              /\\/g,
-                              "/"
-                            );
-                            const fileName = filePath.split("/").pop();
-                            console.log("fileName:", fileName);
-                            window.open(
-                              `http://localhost:5000/file/${fileName}`,
-                              "_blank"
-                            );
-                          }}
-                        >
-                          {medicalInfo.fileP.split("/").pop().split("\\").pop()}
-                        </a>
-                      </p>
-                    )}
-                  </div>
-                  <p><b>Management plan:</b> {medicalInfo.Management_plan || "-"}</p>
-                  <div className="filename">
-                    {medicalInfo.fileM && (
-                      <p>
-                        <a
-                          onClick={() => {
-                            const filePath = medicalInfo.fileM.replace(
-                              /\\/g,
-                              "/"
-                            );
-                            const fileName = filePath.split("/").pop();
-                            console.log("fileName:", fileName);
-                            window.open(
-                              `http://localhost:5000/file/${fileName}`,
-                              "_blank"
-                            );
-                          }}
-                        >
-                          {medicalInfo.fileM.split("/").pop().split("\\").pop()}
-                        </a>
-                      </p>
-                    )}
-                  </div>
-                  <p>
-                    <b>Phychosocial assessment:</b>
-                    {medicalInfo.Phychosocial_assessment || "-"}
-                  </p>
-                  <div className="filename">
-                    {medicalInfo.filePhy && (
-                      <p>
-                        <a
-                          onClick={() => {
-                            const filePath = medicalInfo.filePhy.replace(
-                              /\\/g,
-                              "/"
-                            );
-                            const fileName = filePath.split("/").pop();
-                            console.log("fileName:", fileName);
-                            window.open(
-                              `http://localhost:5000/file/${fileName}`,
-                              "_blank"
-                            );
-                          }}
-                        >
-                          {medicalInfo.filePhy
-                            .split("/")
-                            .pop()
-                            .split("\\")
-                            .pop()}
-                        </a>
-                      </p>
-                    )}
+                  <div className="right-info">
+                    <p><b>{medicalInfo.HN || "-"}</b></p>
+                    <p><b>{medicalInfo.AN || "-"}</b></p>
+                    <p>
+                      <b>{medicalInfo.Date_Admit
+                        ? new Date(medicalInfo.Date_Admit).toLocaleDateString(
+                          "th-TH",
+                          { day: "numeric", month: "long", year: "numeric" }
+                        )
+                        : "-"}</b>
+                    </p>
+                    <p>
+                      <b>{medicalInfo.Date_DC
+                        ? new Date(medicalInfo.Date_DC).toLocaleDateString(
+                          "th-TH",
+                          { day: "numeric", month: "long", year: "numeric" }
+                        )
+                        : "-"}</b>
+                    </p>
+                    <p><b>{medicalInfo.Diagnosis || "-"}</b></p>
+                    <p><b>{mdata.nametitle} {mdata.name} {mdata.surname}</b></p>
+                    <p><b>{medicalInfo.Chief_complaint || "-"}</b></p>
+                    <p>
+                      <b>{medicalInfo.Present_illness || "-"}
+                        {medicalInfo.fileP && (
+                          <a href=""
+                            onClick={() => {
+                              const filePath = medicalInfo.fileP.replace(/\\/g, "/");
+                              const fileName = filePath.split("/").pop();
+                              console.log("fileName:", fileName);
+                              window.open(`http://localhost:5000/file/${fileName}`, "_blank");
+                            }}
+                          >
+                            {medicalInfo.fileP.split("/").pop().split("\\").pop()}
+                          </a>
+                        )}
+                      </b>
+                    </p>
+                    <p>
+                      <b>{medicalInfo.Management_plan || "-"}
+                        {medicalInfo.fileM && (
+                          <a href=""
+                            onClick={() => {
+                              const filePath = medicalInfo.fileM.replace(/\\/g, "/");
+                              const fileName = filePath.split("/").pop();
+                              console.log("fileName:", fileName);
+                              window.open(`http://localhost:5000/file/${fileName}`, "_blank");
+                            }}
+                          >
+                            {medicalInfo.fileM.split("/").pop().split("\\").pop()}
+                          </a>
+                        )}
+                      </b>
+                    </p>
+                    <p>
+                      <b>{medicalInfo.Phychosocial_assessment || "-"}
+                        <div className="filename">
+                          {medicalInfo.filePhy && (
+                            <p>
+                              <a href=""
+                                onClick={() => {
+                                  const filePath = medicalInfo.filePhy.replace(/\\/g, "/");
+                                  const fileName = filePath.split("/").pop();
+                                  console.log("fileName:", fileName);
+                                  window.open(`http://localhost:5000/file/${fileName}`, "_blank");
+                                }}
+                              >
+                                {medicalInfo.filePhy.split("/").pop().split("\\").pop()}
+                              </a>
+                            </p>
+                          )}
+                        </div>
+                      </b>
+                    </p>
                   </div>
                 </div>
-                <div className="right-info">
-                  <p><b>AN:</b> {medicalInfo.AN || "-"}</p>
-                  <p>
-                    {" "}
-                    <b>วันที่ D/C:</b>
-                    {medicalInfo.Date_DC
-                      ? new Date(medicalInfo.Date_DC).toLocaleDateString(
-                        "th-TH",
-                        { day: "numeric", month: "long", year: "numeric" }
-                      )
-                      : "-"}
-                  </p>
-                  <p><b>Chief complaint:</b> {medicalInfo.Chief_complaint || "-"}</p>
+                <div className="btn-group">
+                  <div className="editimg1">
+                    <button
+                      onClick={() =>
+                        navigate("/updatemedicalinformation", {
+                          state: { id },
+                        })
+                      }
+                    >
+                      แก้ไข
+                    </button>
+                  </div>
+                  <div className="deleteimg1">
+                    <button onClick={handleDeleteMedicalInfo}>ลบ</button>
+                  </div>
                 </div>
-                {/* 
-                <div className="pdf-link">
-                  <a
-                    href={`http://localhost:5000/file/${medicalInfo.fileM}`}
-                    target="_blank"
-                    rel="noopener noreferrer">
-                    ดูไฟล์ PDF
-                  </a>
-                </div> */}
-
-              </div>
+              </>
             ) : (
               <div>
-                <p className="no-equipment">ไม่มีข้อมูลการเจ็บป่วย</p>
+                <p className="no-equipment">ไม่พบข้อมูล</p>
                 <div className="btn-group">
                   <div className="adddata">
-                    <button onClick={() => navigate("/addmdinformation", { state: { id  } })}>
+                    <button onClick={() => navigate("/addmdinformation", { state: { id } })}>
                       เพิ่มข้อมูล
                     </button>
                   </div>
@@ -606,7 +578,7 @@ if (monthDiff < 0 || (monthDiff === 0 && currentDate.getDate() < userBirthday.ge
             )}
           </div>
 
-          <div className="cardall card mb-3">
+          <div className="adminall card mb-3">
             <h5><b>อุปกรณ์ทางการแพทย์</b></h5>
             {medicalEquipment && medicalEquipment.length > 0 ? (
               medicalEquipment.map((equipment, index) => (
@@ -620,7 +592,7 @@ if (monthDiff < 0 || (monthDiff === 0 && currentDate.getDate() < userBirthday.ge
                 </div>
               ))
             ) : (
-              <div className="no-equipment">ไม่มีข้อมูลอุปกรณ์</div>
+              <div className="no-equipment">ไม่พบข้อมูล</div>
             )}
             <div className="btn-group">
               <div className="adddata">

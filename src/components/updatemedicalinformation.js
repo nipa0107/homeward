@@ -55,27 +55,29 @@ export default function Updatemedicalinformation() {
     const pdfURLP = URL.createObjectURL(e.target.files[0]);
     setPdfURLP(pdfURLP);
   };
-  
+
   const handleFileChangeM = (e) => {
     setFileM(e.target.files[0]); // อัปเดต state ของไฟล์ Management plan
     setSelectedFileNameM(e.target.files[0].name); // อัปเดตชื่อไฟล์ที่เลือก
     const pdfURLM = URL.createObjectURL(e.target.files[0]);
     setPdfURLM(pdfURLM);
   };
-  
+
   const handleFileChangePhy = (e) => {
     setFilePhy(e.target.files[0]); // อัปเดต state ของไฟล์ Phychosocial assessment
     setSelectedFileNamePhy(e.target.files[0].name); // อัปเดตชื่อไฟล์ที่เลือก
     const pdfURLPhy = URL.createObjectURL(e.target.files[0]);
     setPdfURLPhy(pdfURLPhy);
   };
-  
+
 
   const formatDate = (date) => {
+    if (!date) {
+      return ""; // Return an empty string if the date is null, undefined, or empty
+    }
     const formattedDate = new Date(date);
-    // ตรวจสอบว่า date เป็น NaN หรือไม่
     if (isNaN(formattedDate.getTime())) {
-      return ""; // ถ้าเป็น NaN ให้ส่งค่าว่างกลับไป
+      return ""; // If the date is invalid, return an empty string
     }
     return formattedDate.toISOString().split("T")[0];
   };
@@ -167,7 +169,7 @@ export default function Updatemedicalinformation() {
   const handleBreadcrumbClick = () => {
     navigate("/allinfo", { state: { id: id, user: user } });
   };
-  
+
   const getAllMpersonnel = () => {
     fetch("http://localhost:5000/allMpersonnel", {
       method: "GET",
@@ -184,7 +186,7 @@ export default function Updatemedicalinformation() {
   };
 
   const UpdateMedical = async () => {
-    console.log(AN, AN);
+    console.log(HN, AN,);
     const selectedPersonnelValue =
       document.getElementById("selectedPersonnel").value;
 
@@ -204,18 +206,18 @@ export default function Updatemedicalinformation() {
       formData.append("Diagnosis", Diagnosis);
       formData.append("Chief_complaint", Chief_complaint);
       formData.append("Present_illness", Present_illness);
-    formData.append("selectedPersonnel", updatedSelectedPersonnel); // ใช้ค่าที่อัปเดตแล้ว
+      formData.append("selectedPersonnel", updatedSelectedPersonnel); // ใช้ค่าที่อัปเดตแล้ว
       formData.append("Phychosocial_assessment", Phychosocial_assessment);
       formData.append("Management_plan", Management_plan);
 
       if (fileP) {
         formData.append("fileP", fileP);
       }
-  
+
       if (fileM) {
         formData.append("fileM", fileM);
       }
-  
+
       if (filePhy) {
         formData.append("filePhy", filePhy);
       }
@@ -236,7 +238,7 @@ export default function Updatemedicalinformation() {
       console.log(data);
       if (response.ok) {
         const updatemedicalinformation = data; // ใช้ข้อมูลที่อ่านได้ในการทำงานต่อไป
-        console.log("แก้ไขคู่มือแล้ว:", updatemedicalinformation);
+        console.log("แก้ไข้อมูลแล้ว:", updatemedicalinformation);
         toast.success("แก้ไขข้อมูลสำเร็จ");
         setTimeout(() => {
           navigate("/allinfo", { state: { id: id, user: user } });
@@ -254,7 +256,7 @@ export default function Updatemedicalinformation() {
 
   return (
     <main className="body">
-     <ToastContainer />
+      <ToastContainer />
 
       <div className={`sidebar ${isActive ? "active" : ""}`}>
         <div class="logo_content">
@@ -388,7 +390,6 @@ export default function Updatemedicalinformation() {
                 onChange={(e) => setDate_Admit(e.target.value)}
               />
             </div>
-
             <div className="mb-1">
               <label>วันที่ D/C</label>
               <input
@@ -403,9 +404,10 @@ export default function Updatemedicalinformation() {
               <select
                 id="selectedPersonnel"
                 className="form-select"
-                value={selectedPersonnel} // กำหนดค่า default เป็น selectedPersonnel
-                onChange={(e) => setSelectedPersonnel(e.target.value)} // ปรับเป็น e.target.value
+                value={selectedPersonnel}
+                onChange={(e) => setSelectedPersonnel(e.target.value)}
               >
+                <option value="">โปรดเลือกแพทย์</option>
                 {data.length > 0 ? (
                   data.map((personnel) => (
                     <option key={personnel._id} value={personnel._id}>
@@ -428,7 +430,6 @@ export default function Updatemedicalinformation() {
                 onChange={(e) => setDiagnosis(e.target.value)}
               />
             </div>
-
             <div className="mb-1">
               <label>Chief complaint</label>
               <textarea

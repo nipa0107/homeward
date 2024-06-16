@@ -145,13 +145,6 @@
   /* height: 700px */
 }
 
-.action-icons {
-  /* display: flex;
-    justify-content: center;
-    align-items: center;
-    margin-left: auto;
-    margin-right: auto; */
-}
 
 .action-icons img {
   margin-right: 5px;
@@ -226,6 +219,9 @@
 }
 
 .right-info {
+  margin-top: 21px;
+  margin-left: 21px;
+  word-spacing: 10px;
  flex: 1;
 }
 .left-info {
@@ -348,7 +344,7 @@
 }
 
 .adminall {
-  width: 85%;
+  width: 65%;
   /* Adjust the width as needed */
   margin-left: auto;
   margin-right: auto;
