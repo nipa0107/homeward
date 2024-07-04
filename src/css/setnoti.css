@@ -18,17 +18,21 @@
 
 .formsetnoti .titlenoti {
     font-weight: bold;
-    font-size: 1.2em;
     margin-right: 20px;
-    flex: 0 0 200px;
+    flex: 0 0 20%;
     display: flex;
     align-items: center;
-    
-    
+}
+
+.formsetnoti .unitnoti {
+    /* margin-right: 20px; */
+    flex: 10% 0 0 ;
+    display: flex;
+    align-items: center;
 }
 
 .formsetnoti .input-group label {
-    font-weight: 600;
+    /* font-weight: 600; */
     margin-right: 10px;
     /* flex: 0 0 60px; */
 
@@ -43,4 +47,27 @@
     width: 100px;
     flex: 1;
     
+}
+
+.formsetnoti form .input-group-header{
+    display: flex;
+    align-items: center;
+    flex-wrap: nowrap;
+    margin-bottom: 20px;
+    /* justify-content: space-between; */
+
+}
+
+.formsetnoti .titlenoti-min{
+    display: flex;
+    align-items: center;
+    font-weight: 600;
+    
+}
+
+.formsetnoti .titlenoti-max{
+    margin-left: 27%;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
 }

@@ -12,6 +12,7 @@
     "boxicons": "^2.1.4",
     "google-auth-library": "^9.9.0",
     "googleapis": "^137.1.0",
+    "html2canvas": "^1.4.1",
     "react": "^18.2.0",
     "react-bootstrap": "^2.9.0-beta.1",
     "react-datepicker": "^6.2.0",

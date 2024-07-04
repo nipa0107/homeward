@@ -36,7 +36,8 @@ import UpdateSymptom from "./components/updatesymptom";
 import UpdateEquipUser from "./components/updateequipuser";
 import AlluserInSetting from "./components/alluserinsetting";
 import SettingNoti from "./components/settingnoti";
-
+import DisplayUser from "./components/DisplayUser";
+import PhysicalTherapyUser from "./components/PhysicalTherapyUser";
 const PrivateRoute = ({ element, isLoggedIn }) => {
   return isLoggedIn === "true" ? (
     element
@@ -136,6 +137,18 @@ function App() {
               <PrivateRoute element={<AddUser />} isLoggedIn={isLoggedIn} />
             }
           />
+            <Route
+            path="/displayUser"
+            element={
+              <PrivateRoute element={<DisplayUser />} isLoggedIn={isLoggedIn} />
+            }
+          />         <Route
+          path="/physicalTherapyUser"
+          element={
+            <PrivateRoute element={<PhysicalTherapyUser />} isLoggedIn={isLoggedIn} />
+          }
+        />
+
           <Route
             path="/addsymptom"
             element={

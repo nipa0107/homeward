@@ -22,7 +22,7 @@ export default function SettingNoti() {
     PulseRate: "",
     Temperature: "",
     DTX: "",
-    Respiration: ""
+    Respiration: "",
   });
   const [max, setMax] = useState({
     SBP: "",
@@ -30,7 +30,7 @@ export default function SettingNoti() {
     PulseRate: "",
     Temperature: "",
     DTX: "",
-    Respiration: ""
+    Respiration: "",
   });
   const { id } = location.state || {};
 
@@ -84,7 +84,7 @@ export default function SettingNoti() {
           toast.success("แก้ไขข้อมูลสำเร็จ");
           setTimeout(() => {
             navigate("/alluserinsetting");
-            }, 1100);
+          }, 1100);
         } else {
           alert("Error updating threshold");
         }
@@ -97,7 +97,7 @@ export default function SettingNoti() {
     PulseRate: { min: 60, max: 100 },
     Temperature: { min: 36.5, max: 37.5 },
     DTX: { min: 70, max: 110 },
-    Respiration: { min: 16, max: 20 }
+    Respiration: { min: 16, max: 20 },
   };
 
   useEffect(() => {
@@ -114,7 +114,7 @@ export default function SettingNoti() {
               userId: id,
             }),
           });
-  
+
           const data = await response.json();
           if (data.status === "success") {
             setMin({
@@ -125,7 +125,7 @@ export default function SettingNoti() {
               DTX: data.min.DTX,
               Respiration: data.min.Respiration,
             });
-  
+
             setMax({
               SBP: data.max.SBP,
               DBP: data.max.DBP,
@@ -144,7 +144,7 @@ export default function SettingNoti() {
               DTX: threshold.DTX.min,
               Respiration: threshold.Respiration.min,
             });
-  
+
             setMax({
               SBP: threshold.SBP.max,
               DBP: threshold.DBP.max,
@@ -160,12 +160,12 @@ export default function SettingNoti() {
         toast.error("เกิดข้อผิดพลาดในการดึงข้อมูล threshold");
       }
     };
-  
+
     fetchThreshold();
-  }, [id]); 
-  
+  }, [id]);
+
   const handleCancel = () => {
-    navigate(-1); 
+    navigate(-1);
   };
   return (
     <main className="body">
@@ -182,51 +182,55 @@ export default function SettingNoti() {
           <li>
             <a href="home">
               <i class="bi bi-book"></i>
-              <span class="links_name" >จัดการข้อมูลคู่มือการดูแลผู้ป่วย</span>
+              <span class="links_name">จัดการข้อมูลคู่มือการดูแลผู้ป่วย</span>
             </a>
           </li>
           <li>
             <a href="alluser">
               <i class="bi bi-person-plus"></i>
-              <span class="links_name" >จัดการข้อมูลผู้ป่วย</span>
+              <span class="links_name">จัดการข้อมูลผู้ป่วย</span>
             </a>
           </li>
           <li>
             <a href="allmpersonnel">
               <i class="bi bi-people"></i>
-              <span class="links_name" >จัดการข้อมูลบุคลากร</span>
+              <span class="links_name">จัดการข้อมูลบุคลากร</span>
             </a>
           </li>
           <li>
             <a href="allequip">
               <i class="bi bi-prescription2"></i>
-              <span class="links_name" >จัดการอุปกรณ์ทางการแพทย์</span>
+              <span class="links_name">จัดการอุปกรณ์ทางการแพทย์</span>
             </a>
           </li>
           <li>
             <a href="allsymptom" onClick={() => navigate("/allsymptom")}>
               <i class="bi bi-bandaid"></i>
-              <span class="links_name" >จัดการอาการผู้ป่วย</span>
+              <span class="links_name">จัดการอาการผู้ป่วย</span>
             </a>
           </li>
           <li>
-            <a href="/alluserinsetting" >
-            <i class="bi bi-bell"></i>              
-            <span class="links_name" >ตั้งค่าการแจ้งเตือน</span>
+            <a href="/alluserinsetting">
+              <i class="bi bi-bell"></i>
+              <span class="links_name">ตั้งค่าการแจ้งเตือน</span>
             </a>
           </li>
           <li>
             <a href="alladmin" onClick={() => navigate("/alladmin")}>
               <i class="bi bi-person-gear"></i>
-              <span class="links_name" >จัดการแอดมิน</span>
+              <span class="links_name">จัดการแอดมิน</span>
             </a>
           </li>
-          
+
           <div class="nav-logout">
             <li>
               <a href="./" onClick={logOut}>
-                <i class='bi bi-box-arrow-right' id="log_out" onClick={logOut}></i>
-                <span class="links_name" >ออกจากระบบ</span>
+                <i
+                  class="bi bi-box-arrow-right"
+                  id="log_out"
+                  onClick={logOut}
+                ></i>
+                <span class="links_name">ออกจากระบบ</span>
               </a>
             </li>
           </div>
@@ -236,9 +240,9 @@ export default function SettingNoti() {
         <div className="header">ตั้งค่าการแจ้งเตือน</div>
         <div class="profile_details ">
           <li>
-            <a href="profile" >
+            <a href="profile">
               <i class="bi bi-person"></i>
-              <span class="links_name" >{adminData && adminData.username}</span>
+              <span class="links_name">{adminData && adminData.username}</span>
             </a>
           </li>
         </div>
@@ -246,14 +250,15 @@ export default function SettingNoti() {
         <div className="breadcrumbs">
           <ul>
             <li>
-            <a href="home">
+              <a href="home">
                 <i class="bi bi-house-fill"></i>
               </a>
             </li>
             <li className="arrow">
               <i class="bi bi-chevron-double-right"></i>
             </li>
-            <li><a href="alluserinsetting">รายชื่อผู้ป่วย</a>
+            <li>
+              <a href="alluserinsetting">รายชื่อผู้ป่วย</a>
             </li>
             <li className="arrow">
               <i class="bi bi-chevron-double-right"></i>
@@ -264,124 +269,146 @@ export default function SettingNoti() {
           </ul>
         </div>
         <div className="formsetnoti">
+          <form onSubmit={handleSubmit}>
+            <div className="input-group-header">
+              <label className="titlenoti"></label>
+              <label  className="titlenoti-min">ค่าต่ำสุด</label>
+              <label className="titlenoti-max">ค่าสูงสุด</label>
+              <label className="unitnoti"></label>
+            </div>
+            <div className="input-group">
+              <label className="titlenoti">ความดันตัวบน</label>
+              {/* <label>Min:</label> */}
+              <input
+                type="number"
+                value={min.SBP}
+                onChange={(e) => setMin({ ...min, SBP: e.target.value })}
+                required
+              />
+              {/* <label>Max:</label> */}
+              <input
+                type="number"
+                value={max.SBP}
+                onChange={(e) => setMax({ ...max, SBP: e.target.value })}
+                required
+              />
+              <label className="unitnoti">mmHg</label>
+            </div>
 
-        <form onSubmit={handleSubmit}>
-        <div className="input-group">
-            <label className="titlenoti">SBP</label>
-            <label>Min:</label>
-            <input
-              type="number"
-              value={min.SBP}
-              onChange={(e) => setMin({ ...min, SBP: e.target.value })}
-              required
-            />
-            <label>Max:</label>
-            <input
-              type="number"
-              value={max.SBP}
-              onChange={(e) => setMax({ ...max, SBP: e.target.value })}
-              required
-            />
-          </div>
+            <div className="input-group">
+              <label className="titlenoti">ความดันตัวล่าง</label>
+              {/* <label>Min:</label> */}
 
-          <div className="input-group">
-          <label className="titlenoti">DBP</label>
-            <label>Min:</label>
-            <input
-              type="number"
-              value={min.DBP}
-              onChange={(e) => setMin({ ...min, DBP: e.target.value })}
-              required
-            />
-              <label>Max:</label>
+              <input
+                type="number"
+                value={min.DBP}
+                onChange={(e) => setMin({ ...min, DBP: e.target.value })}
+                required
+              />
+              {/* <label>Max:</label> */}
 
-            <input
-              type="number"
-              value={max.DBP}
-              onChange={(e) => setMax({ ...max, DBP: e.target.value })}
-              required
-            />
-          </div>
+              <input
+                type="number"
+                value={max.DBP}
+                onChange={(e) => setMax({ ...max, DBP: e.target.value })}
+                required
+              />
+              <label className="unitnoti">mmHg</label>
+            </div>
 
-          <div className="input-group">
-          <label className="titlenoti">Pulse Rate</label>
-            <label>Min:</label>
-            <input
-              type="number"
-              value={min.PulseRate}
-              onChange={(e) => setMin({ ...min, PulseRate: e.target.value })}
-              required
-            />
-              <label>Max:</label>
-            
-            <input
-              type="number"
-              value={max.PulseRate}
-              onChange={(e) => setMax({ ...max, PulseRate: e.target.value })}
-              required
-            />
-          </div>
+            <div className="input-group">
+              <label className="titlenoti">ชีพจร</label>
+              {/* <label>Min:</label> */}
+              <input
+                type="number"
+                value={min.PulseRate}
+                onChange={(e) => setMin({ ...min, PulseRate: e.target.value })}
+                required
+              />
+              {/* <label>Max:</label> */}
 
-          <div className="input-group">
-          <label className="titlenoti">Temperature</label>
-            <label>Min:</label>
-            <input
-              type="number"
-              value={min.Temperature}
-              onChange={(e) => setMin({ ...min, Temperature: e.target.value })}
-              required
-            />
-            <label>Max:</label>
-            <input
-              type="number"
-              value={max.Temperature}
-              onChange={(e) => setMax({ ...max, Temperature: e.target.value })}
-              required
-            />
-          </div>
+              <input
+                type="number"
+                value={max.PulseRate}
+                onChange={(e) => setMax({ ...max, PulseRate: e.target.value })}
+                required
+              />
+              <label className="unitnoti">ครั้ง/นาที</label>
+            </div>
 
-          <div className="input-group">
-          <label className="titlenoti">DTX</label>
-            <label>Min:</label>
-            <input
-              type="number"
-              value={min.DTX}
-              onChange={(e) => setMin({ ...min, DTX: e.target.value })}
-              required
-            />
-            <label>Max:</label>
-            <input
-              type="number"
-              value={max.DTX}
-              onChange={(e) => setMax({ ...max, DTX: e.target.value })}
-              required
-            />
-          </div>
+            <div className="input-group">
+              <label className="titlenoti">การหายใจ</label>
+              {/* <label>Min:</label> */}
+              <input
+                type="number"
+                value={min.Respiration}
+                onChange={(e) =>
+                  setMin({ ...min, Respiration: e.target.value })
+                }
+                required
+              />
+              {/* <label>Max:</label> */}
+              <input
+                type="number"
+                value={max.Respiration}
+                onChange={(e) =>
+                  setMax({ ...max, Respiration: e.target.value })
+                }
+                required
+              />
+              <label className="unitnoti">ครั้ง/นาที</label>
+            </div>
+            <div className="input-group">
+              <label className="titlenoti">อุณหภูมิ</label>
+              {/* <label>Min:</label> */}
+              <input
+                type="number"
+                value={min.Temperature}
+                onChange={(e) =>
+                  setMin({ ...min, Temperature: e.target.value })
+                }
+                required
+              />
+              {/* <label>Max:</label> */}
+              <input
+                type="number"
+                value={max.Temperature}
+                onChange={(e) =>
+                  setMax({ ...max, Temperature: e.target.value })
+                }
+                required
+              />
+              <label className="unitnoti">°C</label>
+            </div>
 
-          <div className="input-group">
-          <label className="titlenoti">Respiration</label>
-            <label>Min:</label>
-            <input
-              type="number"
-              value={min.Respiration}
-              onChange={(e) => setMin({ ...min, Respiration: e.target.value })}
-              required
-            />
-            <label>Max:</label>
-            <input
-              type="number"
-              value={max.Respiration}
-              onChange={(e) => setMax({ ...max, Respiration: e.target.value })}
-              required
-            />
-          </div>
-          <div className="d-grid">
-          {/* <button type="button" className="btn btn-outline py-2" onClick={handleCancel}>ยกเลิก</button> */}
-          <button type="submit" className="btn btn-outline py-2">บันทึก</button>
-          </div>
-        </form>
+            <div className="input-group">
+              <label className="titlenoti">ระดับน้ำตาลในเลือด</label>
+              {/* <label>Min:</label> */}
+              <input
+                type="number"
+                value={min.DTX}
+                onChange={(e) => setMin({ ...min, DTX: e.target.value })}
+                required
+              />
+              {/* <label>Max:</label> */}
+              <input
+                type="number"
+                value={max.DTX}
+                onChange={(e) => setMax({ ...max, DTX: e.target.value })}
+                required
+              />
+              <label className="unitnoti">mg/dL</label>
+            </div>
+
+            <div className="d-grid">
+              {/* <button type="button" className="btn btn-outline py-2" onClick={handleCancel}>ยกเลิก</button> */}
+              <button type="submit" className="btn btn-outline py-2">
+                บันทึก
+              </button>
+            </div>
+          </form>
         </div>
-        </div>
+      </div>
     </main>
   );
 }

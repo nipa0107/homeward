@@ -1,0 +1,88 @@
+.save-img {
+    display: flex;
+    flex-direction: column; 
+    background-color: #ffffff;
+    border: 1px solid #e0e0e0;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+    margin-bottom: 20px;
+  }
+  .label-saveimg-container {
+    display: flex;
+    gap: 20px; 
+  }
+  
+  .data-container {
+    flex: 1;
+  }
+  .user-data-container {
+    padding: 1rem;
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .qrcode-container {
+    flex: 1; 
+    display: flex;
+    justify-content: center; 
+    align-items: center;
+  }
+  .qrcode-item {
+    flex: 1; 
+    margin-right: 10px;
+    text-align: center;
+  }
+  .image-description {
+    font-size: 14px;
+  }
+  .qrcode {
+    max-width: 100%;
+  }
+  .button-container {
+    justify-content: center; 
+    display: flex;
+    margin-left: auto;
+    margin-right: auto;
+    gap: 10px; 
+  }
+  .label-saveimg {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  
+  .label-name {
+    font-weight: bold;
+    margin-left: 4rem;
+
+  }
+  .label-scan {
+    font-weight: bold;
+    margin-left: 4rem;
+    color: red;
+  }
+  
+  .user-data {
+    margin: 0;
+    padding: 0;
+    line-height: inherit; 
+  }
+
+  .btn-manage-user, .btn-save-image {
+    width: 15rem;
+    margin-right: 10px;
+  }
+ .btn-manage-user{
+    border: 1 solid #87CEFA;
+    text-align: center;
+    margin-top: 20px;
+  }
+
+  .btn-save-image{
+    background-color: #87CEFA;
+    color: white;
+    text-align: center;
+    margin-top: 20px;
+  }
+  

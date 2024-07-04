@@ -44,7 +44,7 @@ export default function AllUser({ }) {
     fetch("http://localhost:5000/alluser", {
       method: "GET",
       headers: {
-        Authorization: `Bearer ${token}`, // เพิ่ม Authorization header เพื่อส่ง token ในการร้องขอ
+        Authorization: `Bearer ${token}`, 
       },
     })
       .then((res) => res.json())
@@ -197,12 +197,12 @@ export default function AllUser({ }) {
         </div>
 
         <div className="toolbar">
-          {/* <button
+          <button
             onClick={() => navigate("/adduser")}
             className="bi bi-plus-circle btn btn-outline py-1 px-4"
           >
             เพิ่มข้อมูลผู้ป่วย
-          </button> */}
+          </button>
           <p className="countadmin1">จำนวนผู้ป่วยทั้งหมด : {data.filter(user => user.deletedAt === null).length} คน</p>
         </div>
 

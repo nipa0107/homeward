@@ -1,0 +1,41 @@
+.form-container {
+    display: flex;
+    align-items: center;
+  }
+
+  .form-check {
+    display: flex;
+    align-items: center;
+    margin-left: 1rem;
+  }
+  .form-check-input {
+    width: 3rem; /* เพิ่มความกว้าง */
+    height: 1.5rem; /* เพิ่มความสูง */
+    background-color: #ddd;
+    border-radius: 1.5rem;
+    position: relative;
+    appearance: none;
+    cursor: pointer;
+    outline: none;
+    transition: background-color 0.3s ease;
+  }
+  .form-check-input:checked {
+    background-color: #87CEFA;
+    border: #87CEFA;
+  }
+  .form-check-input::before {
+    border-radius: 50%;
+    transition: transform 0.3s ease;
+  }
+  .form-switch {
+    display: flex;
+    align-items: center; 
+    width: 3rem; 
+    height: 1.5rem; 
+    position: relative;
+    margin-left: 1rem;
+  }
+  .form-check-input:checked::before {
+    transform: translateX(1rem);
+  }
+  
