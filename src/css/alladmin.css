@@ -190,7 +190,7 @@
   /* ตั้งค่าขอบเป็นสีเทา */
   padding: 10px 20px;
   /* ตั้งค่าการระบุช่องว่างภายในปุ่ม */
-  cursor: pointer;
+  cursor: pointer; 
   /* เพิ่ม cursor เมื่อนำเมาส์ไปวางที่ปุ่ม */
   outline: none;
   /* ลบเส้นขอบน้ำเงินเมื่อกด */
@@ -229,10 +229,7 @@
   word-spacing: 12px;
   padding: 10px;
 }
-/* .left-info b {
-  margin-left: 50px;
-  margin-right: 50px;
-} */
+
 .user-info p {
   line-height: 15px;
 }
