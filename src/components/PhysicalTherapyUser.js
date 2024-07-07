@@ -1,27 +1,18 @@
 import React, { useState, useEffect } from "react";
-import "../css/sidebar.css";
-import "../css/alladmin.css";
-import "bootstrap-icons/font/bootstrap-icons.css";
-import logow from "../img/logow.png";
-import { useNavigate } from "react-router-dom";
-import DatePicker from "react-datepicker";
-import "react-datepicker/dist/react-datepicker.css";
-import th from "date-fns/locale/th";
-import "../css/adduser.css";
+import { useLocation, useNavigate } from "react-router-dom";
+import html2canvas from "html2canvas";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-export default function AddUser() {
-  const [username, setUsername] = useState("");
-  const [name, setName] = useState("");
-  const [surname, setSurname] = useState("");
+import logow from "../img/logow.png";
+import qrcode from "../img/449140932_1920288995070552_7756516006885928418_n.jpg";
 
-  const [tel, setTel] = useState("");
+export default function PhysicalTherapyUser() {
+  const location = useLocation();
   const navigate = useNavigate();
+  const userData = location.state?.userData;
   const [adminData, setAdminData] = useState("");
   const [isActive, setIsActive] = useState(false);
-  const [error, setError] = useState("");
   const [token, setToken] = useState("");
-  const [physicalTherapy, setPhysicalTherapy] = useState(false);
 
   useEffect(() => {
     const token = window.localStorage.getItem("token");
@@ -47,48 +38,32 @@ export default function AddUser() {
     }
   }, []);
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-  
-    fetch("http://localhost:5000/adduser", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Accept: "application/json",
-        "Access-Control-Allow-Origin": "*",
-        Authorization: `Bearer ${token}`,
-      },
-      body: JSON.stringify({
-        username,
-        name,
-        surname,
-        tel,
-        physicalTherapy,
-      }),
-    })
-      .then((res) => res.json())
-      .then((data) => {
-        console.log(data, "Addadmain");
-        if (data.status === "ok") {
-          console.log("User data to navigate: ", data.user);
-          toast.success("เพิ่มข้อมูลสำเร็จ");
-          if (physicalTherapy) {
-            navigate("/physicalTherapyUser", { state: { userData: data.user } });
-          } else {
-            navigate("/displayUser", { state: { userData: data.user } });
-          }
-        } else {
-          setError(data.error);
-          toast.error(data.error);
-        }
-      })
-      .catch((error) => {
-        console.error("Error:", error);
-        toast.error("An unexpected error occurred.");
-      });
+  const handleSaveAsImage = () => {
+    const element = document.getElementById("user-data");
+    html2canvas(element).then((canvas) => {
+      const fileName = `${userData.name}_${userData.surname}_data.png`;
+      const link = document.createElement("a");
+      link.download = fileName;
+      link.href = canvas.toDataURL();
+      link.click();
+      toast.success("บันทึกรูปสำเร็จ");
+    });
   };
-  
 
+  if (!userData) {
+    return (
+      <main className="body">
+        <ToastContainer />
+        <h3>ไม่พบข้อมูลผู้ใช้</h3>
+        <button
+          onClick={() => navigate("/alluser")}
+          className="btn btn-outline py-2"
+        >
+          กลับไปที่หน้าจัดการข้อมูลผู้ใช้
+        </button>
+      </main>
+    );
+  }
   const logOut = () => {
     window.localStorage.clear();
     window.location.href = "./";
@@ -97,10 +72,8 @@ export default function AddUser() {
   const handleToggleSidebar = () => {
     setIsActive(!isActive);
   };
-
   return (
     <main className="body">
-      <ToastContainer />
       <div className={`sidebar ${isActive ? "active" : ""}`}>
         <div class="logo_content">
           <div class="logo">
@@ -199,86 +172,61 @@ export default function AddUser() {
             </li>
           </ul>
         </div>
-        <h3>เพิ่มข้อมูลผู้ป่วยทั่วไป</h3>
-        <div className="adminall card mb-1">
-          <form onSubmit={handleSubmit}>
-            <div className="mb-1">
-              <label>
-                เลขประจำตัวบัตรประชาชน<span className="required"> *</span>
-              </label>
-              <input
-                type="text"
-                className="form-control"
-                onChange={(e) => setUsername(e.target.value)}
-              />
-            </div>
 
-            <div className="mb-1">
-              <label>
-                เบอร์โทรศัพท์<span className="required"> *</span>
-              </label>
-              <input
-                type="text"
-                className="form-control"
-                onChange={(e) => setTel(e.target.value)}
-              />
-            </div>
-            <div className="mb-1">
-              <label>
-                ชื่อ<span className="required"> *</span>
-              </label>
-              <input
-                type="text"
-                className="form-control"
-                onChange={(e) => setName(e.target.value)}
-              />
-            </div>
-            <div className="mb-1">
-              <label>
-                นามสกุล<span className="required"> *</span>
-              </label>
-              <input
-                type="text"
-                className="form-control"
-                onChange={(e) => setSurname(e.target.value)}
-              />
-            </div>
-            <div className="mb-1 form-container">
-              <label>ผู้ป่วยต้องทำกายภาพบำบัด</label>
-              
-              <div className="form-check form-switch">
-                <input
-                  className="form-check-input"
-                  type="checkbox"
-                  id="flexSwitchCheckDefault"
-                  checked={physicalTherapy}
-                  onChange={(e) => setPhysicalTherapy(e.target.checked)}
-                />
+        <ToastContainer />
+        <div className="save-img card mb-1">
+          <div id="user-data" className="user-data-container">
+            <h3>ข้อมูลสำหรับใช้ในการเข้าสู่ระบบของผู้ป่วย</h3>
+            <div className="label-saveimg-container">
+              <div className="data-container">
+                <div className="label-saveimg">
+                  <label className="label-name">ชื่อ-นามสกุล:</label>
+                  <span className="user-data">
+                    {userData.name} {userData.surname}
+                  </span>
+                </div>
+                <div className="label-saveimg">
+                  <label className="label-name">ชื่อผู้ใช้:</label>
+                  <span className="user-data">{userData.username}</span>
+                </div>
+                <div className="label-saveimg">
+                  <label className="label-name">รหัสผ่าน:</label>
+                  <span className="user-data">{userData.tel}</span>
+                </div>
+                <div className="label-saveimg">
+                <label className="label-scan">สแกน QR Code เพื่อติดตั้งแอปพลิเคชัน</label>
+                </div>
               </div>
-              <label
-                  className="form-check-label"
-                  htmlFor="flexSwitchCheckDefault"
-                >
-                  {physicalTherapy ? "ใช่" : "ไม่ใช่"}
-                </label>
+              <div className="qrcode-container">
+                <div className="qrcode-item">
+                  <img src={qrcode} className="qrcode" alt="QR Code 1" />
+                  <div className="image-description">
+                  สำหรับดูคู่มือการรักษา
+                  </div>
+                </div>
+                <div className="qrcode-item">
+                  <img src={qrcode} className="qrcode" alt="QR Code 2" />
+                  <div className="image-description">
+                  สำหรับทำกายภาพบำบัด                  
+                  </div>
+                </div>
+              </div>
             </div>
-
-            <p id="errormessage" className="errormessage">
-              {error}
-            </p>
-            <div className="d-grid">
-              <button type="submit" className="btn btn-outline py-2">
-                บันทึก
-              </button>
-            </div>
-          </form>
-        </div>
-        <div className="btn-group">
-          <div className="btn-next">
-            {/* <button onClick={() => navigate("/addmdinformation")} className="btn btn-outline py-2">
-              ถัดไป
-            </button> */}
           </div>
+        </div>
+        <div className="button-container">
+          <button
+            onClick={() => navigate("/alluser")}
+            className="btn btn-outline py-2 btn-manage-user"
+          >
+            กลับไปที่หน้าจัดการข้อมูลผู้ป่วย
+          </button>
+          <button
+            onClick={handleSaveAsImage}
+            className="btn btn-outline py-2 btn-save-image"
+          >
+            บันทึกรูป
+          </button>
         </div>
       </div>
     </main>

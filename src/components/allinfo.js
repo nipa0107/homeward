@@ -244,24 +244,23 @@ export default function AllUser({ }) {
   const handleToggleSidebar = () => {
     setIsActive(!isActive);
   };
-
-  // กำหนดวันที่ปัจจุบัน
   const currentDate = new Date();
-
-  // คำนวณอายุและแสดงเป็นอายุที่มีเดือนด้วย
-  const userBirthday = new Date(birthday); // แปลงวันเกิดของผู้ใช้เป็นวัตถุ Date
-  const ageDiff = currentDate.getFullYear() - userBirthday.getFullYear(); // คำนวณความแตกต่างระหว่างปีปัจจุบันกับปีเกิดของผู้ใช้
-  const monthDiff = currentDate.getMonth() - userBirthday.getMonth(); // คำนวณความแตกต่างระหว่างเดือนปัจจุบันกับเดือนเกิดของผู้ใช้
-
-  // ตรวจสอบว่าวันเกิดของผู้ใช้มีเกินวันปัจจุบันหรือไม่
-  // ถ้ายังไม่เกิน แสดงอายุเป็นผลลัพธ์ (ปี และ เดือน)
-  // ถ้าเกินแล้ว ลดอายุลง 1 ปี
-  let userAge = "";
-  if (monthDiff < 0 || (monthDiff === 0 && currentDate.getDate() < userBirthday.getDate())) {
-    userAge = `${ageDiff - 1} ปี ${12 + monthDiff} เดือน`;
-  } else {
-    userAge = `${ageDiff} ปี ${monthDiff} เดือน`;
+  let userAge = "0 ปี 0 เดือน"; // เริ่มต้นให้แสดง "0 ปี 0 เดือน"
+  
+  if (birthday) {
+    const userBirthday = new Date(birthday);
+    const ageDiff = currentDate.getFullYear() - userBirthday.getFullYear();
+    const monthDiff = currentDate.getMonth() - userBirthday.getMonth();
+  
+    if (monthDiff < 0 || (monthDiff === 0 && currentDate.getDate() < userBirthday.getDate())) {
+      userAge = `${ageDiff - 1} ปี ${12 + monthDiff} เดือน`;
+    } else {
+      userAge = `${ageDiff} ปี ${monthDiff} เดือน`;
+    }
   }
+  
+  console.log(userAge); // แสดงผลอายุผู้ใช้
+  
 
   return (
     <main className="body">
@@ -410,7 +409,7 @@ export default function AllUser({ }) {
                   <b>{ID_card_number || '-'}</b>
                 </p>
                 <p>
-                  <b>{userAge}</b>
+                  <b>{userAge|| '-'}</b>
                 </p>
                 <p>
                   <b>{gender || '-'}</b>
