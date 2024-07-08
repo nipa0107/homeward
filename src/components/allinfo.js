@@ -476,7 +476,7 @@ export default function AllUser({ }) {
             <div className="editimg1">
               <button
                 onClick={() =>
-                  navigate("/updatepatient", {
+                  navigate("/updateuser", {
                     state: { id },
                   })
                 }

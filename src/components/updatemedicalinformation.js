@@ -242,8 +242,6 @@ export default function Updatemedicalinformation() {
         toast.success("แก้ไขข้อมูลสำเร็จ");
         setTimeout(() => {
           navigate("/allinfo", { state: { id: id, user: user } });
-
-          // navigate("/allinfo");
         }, 1100);
       } else {
         console.error("แก้ไขไม่ได้:", response.statusText);
