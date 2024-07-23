@@ -172,7 +172,15 @@
 /* .d-grid {
   margin-top: 10px;
 } */
+.equipment-item {
+  display: flex;
+  align-items: center;
+}
 
+.equipment-item input {
+  margin-right: 10px;
+  margin-top: 8px;
+}
 .btn-group {
   gap: 10px;
   display: flex;
@@ -189,7 +197,7 @@
   /* ตั้งค่าขอบเป็นสีเทา */
   padding: 10px 20px;
   /* ตั้งค่าการระบุช่องว่างภายในปุ่ม */
-  cursor: pointer;
+  cursor: pointer; 
   /* เพิ่ม cursor เมื่อนำเมาส์ไปวางที่ปุ่ม */
   outline: none;
   /* ลบเส้นขอบน้ำเงินเมื่อกด */
@@ -227,11 +235,9 @@
   margin-top: 12px;
   word-spacing: 12px;
   padding: 10px;
+  margin-left: 21px;
 }
-/* .left-info b {
-  margin-left: 50px;
-  margin-right: 50px;
-} */
+
 .user-info p {
   line-height: 15px;
 }
@@ -260,7 +266,7 @@
 }
 
 .adddata {
-  margin-top: 10px; 
+  margin-top: 8px; 
   display: flex;
   justify-content: center; 
   align-items: center;
@@ -286,7 +292,7 @@
   margin-left: 390px; /* ปรับตำแหน่งของปุ่มลบ */
 }
 .no-equipment {
-  margin-top: 20px; /* ปรับระยะห่างของข้อความ "ไม่มีข้อมูลอุปกรณ์" */
+  margin-top: 19px; /* ปรับระยะห่างของข้อความ "ไม่มีข้อมูลอุปกรณ์" */
   text-align: center;
 }
 .equip-container {
@@ -429,7 +435,26 @@ td {
   width: 20%; /* ตั้งค่าความกว้างของเซลล์สุดท้ายเป็น 1% เพื่อให้กว้างตามข้อความที่อยู่ข้างในเซลล์ */
   white-space: nowrap; /* ป้องกันการขึ้นบรรทัดใหม่ของข้อความภายในเซลล์ */
 }
-
+.info3 .header {
+  background-color: #95d7ff; /* สีฟ้า */
+  color: #000; /* ตัวหนังสือสีดำ */
+  padding: 5px 0px 5px 25px;
+  margin: 0;
+  border-radius: 3px 3px 0 0;
+}
+.info3 .header b{
+  font-size: 20px;
+}
+.info3.card {
+  padding: 0;
+}
+.info3 {
+  width: 70%;
+  margin-left: auto;
+  margin-right: auto;
+  box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.1);
+  line-height: 50px;
+}
 
 
 

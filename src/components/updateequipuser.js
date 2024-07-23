@@ -61,62 +61,62 @@ export default function UpdateEquipUser() {
     const handleSubmit = (e) => {
         e.preventDefault();
         const selectedEquipments = [];
-    
+
         if (selectedEquipType1) {
-          selectedEquipments.push({
-            equipmentname_forUser: selectedEquipType1,
-            equipmenttype_forUser: "อุปกรณ์ติดตัว",
-          });
+            selectedEquipments.push({
+                equipmentname_forUser: selectedEquipType1,
+                equipmenttype_forUser: "อุปกรณ์ติดตัว",
+            });
         }
         if (selectedEquipType2) {
-          selectedEquipments.push({
-            equipmentname_forUser: selectedEquipType2,
-            equipmenttype_forUser: "อุปกรณ์เสริม",
-          });
+            selectedEquipments.push({
+                equipmentname_forUser: selectedEquipType2,
+                equipmenttype_forUser: "อุปกรณ์เสริม",
+            });
         }
         if (selectedEquipType3) {
-          selectedEquipments.push({
-            equipmentname_forUser: selectedEquipType3,
-            equipmenttype_forUser: "อุปกรณ์อื่นๆ",
-          });
+            selectedEquipments.push({
+                equipmentname_forUser: selectedEquipType3,
+                equipmenttype_forUser: "อุปกรณ์อื่นๆ",
+            });
         }
-    
+
         if (selectedEquipments.length === 0) {
-          setValidationMessage("โปรดเลือกอุปกรณ์อย่างน้อยหนึ่งรายการ");
-          return;
+            setValidationMessage("โปรดเลือกอุปกรณ์อย่างน้อยหนึ่งรายการ");
+            return;
         }
         if (!id) {
-          console.error("UserId is missing");
-          setValidationMessage("ไม่พบข้อมูลผู้ใช้");
-          return;
+            console.error("UserId is missing");
+            setValidationMessage("ไม่พบข้อมูลผู้ใช้");
+            return;
         }
-    
+
         fetch(`http://localhost:5000/updateequipuser/${id}`, {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Accept: "application/json",
-            "Access-Control-Allow-Origin": "*",
-            Authorization: `Bearer ${token}`,
-          },
-          body: JSON.stringify({ equipments: selectedEquipments }),
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                Accept: "application/json",
+                "Access-Control-Allow-Origin": "*",
+                Authorization: `Bearer ${token}`,
+            },
+            body: JSON.stringify({ equipments: selectedEquipments }),
         })
-          .then((res) => res.json())
-          .then((data) => {
-            if (data.status === "ok") {
-              toast.success("อัปเดตข้อมูลสำเร็จ");
-              setTimeout(() => {
-                navigate("/allinfo", { state: { id } });
-              }, 1100);
-            } else {
-              toast.error("เกิดข้อผิดพลาดในการอัปเดตข้อมูล");
-            }
-          })
-          .catch((error) => {
-            console.error("Error updating equipment:", error);
-            toast.error("เกิดข้อผิดพลาดในการอัปเดตข้อมูล");
-          });
-      };
+            .then((res) => res.json())
+            .then((data) => {
+                if (data.status === "ok") {
+                    toast.success("อัปเดตข้อมูลสำเร็จ");
+                    setTimeout(() => {
+                        navigate("/allinfo", { state: { id } });
+                    }, 1100);
+                } else {
+                    toast.error("เกิดข้อผิดพลาดในการอัปเดตข้อมูล");
+                }
+            })
+            .catch((error) => {
+                console.error("Error updating equipment:", error);
+                toast.error("เกิดข้อผิดพลาดในการอัปเดตข้อมูล");
+            });
+    };
 
     const logOut = () => {
         window.localStorage.clear();
@@ -170,11 +170,11 @@ export default function UpdateEquipUser() {
                         </a>
                     </li>
                     <li>
-            <a href="/alluserinsetting" >
-            <i class="bi bi-bell"></i>              
-            <span class="links_name" >ตั้งค่าการแจ้งเตือน</span>
-            </a>
-          </li>
+                        <a href="/alluserinsetting" >
+                            <i class="bi bi-bell"></i>
+                            <span class="links_name" >ตั้งค่าการแจ้งเตือน</span>
+                        </a>
+                    </li>
                     <li>
                         <a href="alladmin" onClick={() => navigate("/alladmin")}>
                             <i className="bi bi-person-gear"></i>
@@ -224,7 +224,7 @@ export default function UpdateEquipUser() {
                             <i className="bi bi-chevron-double-right"></i>
                         </li>
                         <li>
-                            <a href="allinfo" onClick={() => navigate("/allinfo" , { state: { id } })}>ข้อมูลการดูแลผู้ป่วย</a>
+                            <a href="allinfo" onClick={() => navigate("/allinfo", { state: { id } })}>ข้อมูลการดูแลผู้ป่วย</a>
                         </li>
                         <li className="arrow">
                             <i className="bi bi-chevron-double-right"></i>

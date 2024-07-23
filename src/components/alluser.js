@@ -204,8 +204,6 @@ export default function AllUser({ }) {
             onClick={() => navigate("/adduser")}
             className="btn btn-outline py-1 px-4"
           >
-          <i className="bi bi-plus-circle" style={{ marginRight: '8px' }}></i>
-  
             เพิ่มข้อมูลผู้ป่วย
           </button>
           <p className="countadmin">จำนวนผู้ป่วยทั้งหมด : {data.filter(user => user.deletedAt === null).length} คน</p>
