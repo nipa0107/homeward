@@ -13,6 +13,7 @@ export default function UpdateName() {
     const { id, user } = location.state;
     const navigate = useNavigate();
     const [name, setName] = useState("");
+    const [surname, setSurname] = useState("");
     const [username, setUsername] = useState("");
     const [email, setEmail] = useState("");
     const [adminData, setAdminData] = useState("");
@@ -54,6 +55,7 @@ export default function UpdateName() {
               console.log(data)
               setAdminData(data.data);
               setName(data.data.name);
+              setSurname(data.data.surname);
               setUsername(data.data.username)
               setEmail(data.data.email)
             });
@@ -66,6 +68,7 @@ export default function UpdateName() {
     try {
       const adminData = 
       { name,
+        surname
       };
       const response = await fetch(`http://localhost:5000/updatenameadmin/${location.state._id}`, {
         method: "POST",
@@ -215,7 +218,7 @@ export default function UpdateName() {
             />
           </div>
           <div className="mb-3">
-          <label>ชื่อ-นามสกุล</label>
+          <label>ชื่อ</label>
           <input
               type="text"
               className="form-control"
@@ -223,7 +226,15 @@ export default function UpdateName() {
               onChange={(e) => setName(e.target.value)}
             />
           </div>
-          
+          <div className="mb-3">
+          <label>นามสกุล</label>
+          <input
+              type="text"
+              className="form-control"
+              value={surname}
+              onChange={(e) => setSurname(e.target.value)}
+            />
+          </div>
           <div className="mb-3">
           <label>อีเมล</label>
           <input

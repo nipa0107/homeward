@@ -13,6 +13,7 @@ export default function Profile() {
   const [token, setToken] = useState("");
   const [name, setName] = useState("");
   const [username, setUsername] = useState("");
+  const [surname, setSurname] = useState("");
   const [email, setEmail] = useState("");
 
   useEffect(() => {
@@ -36,6 +37,7 @@ export default function Profile() {
           console.log(data);
           setAdminData(data.data);
           setName(data.data.name);
+          setSurname(data.data.surname);
           setUsername(data.data.username);
           setEmail(data.data.email);
         });
@@ -149,40 +151,54 @@ export default function Profile() {
         <div className="formcontainerpf card mb-3">
           <div className="mb-3">
             <label>ชื่อผู้ใช้</label>
-            <div className="textbox gray-background">
+            <div className="form-control gray-background">
               {username}
             </div>{" "}
           </div>
           <div className="mb-3">
-            <label>ชื่อ-นามสกุล</label>
-            {/* <div className="textbox">{adminData && adminData.name} <a onClick={() => navigate("/updatenameadmin", { state: adminData })}>แก้ไขชื่อ</a></div>{" "}
+            <label>นามสกุล</label>
+            {/* <div className="form-control">{adminData && adminData.name} <a onClick={() => navigate("/updatenameadmin", { state: adminData })}>แก้ไขชื่อ</a></div>{" "}
           <br /> */}
-            <div className="textbox">
+            <div className="form-control">
               <span>{name}</span>
-              {adminData && (
-                <a className="editname" onClick={() => navigate("/updatename", { state: adminData })}>
-                  แก้ไขชื่อ
-                </a>
-              )}
+            </div>
+          </div>
+          <div className="mb-3">
+            <label>นามสกุล</label>
+            {/* <div className="form-control">{adminData && adminData.name} <a onClick={() => navigate("/updatenameadmin", { state: adminData })}>แก้ไขชื่อ</a></div>{" "}
+          <br /> */}
+            <div className="form-control">
+              <span>{surname}</span>
+              
             </div>
           </div>
           <div>
             <label>อีเมล</label>
-            <div className="textbox gray-background">
+            <div className="form-control gray-background">
               {email}
               {/* <a
               onClick={() => navigate("/updateemail", { state: adminData })}>
               เปลี่ยนอีเมล
             </a> */}
             </div>{" "}
-            <br />
-            <a className="editname" onClick={() => navigate("/updateadmin", { state: adminData })}>
+          
+          <div>
+          {adminData && (
+                <a className="editname" onClick={() => navigate("/updatename", { state: adminData })}>
+                  แก้ไขโปรไฟล์
+                </a>
+              )}
+          </div>
+           <div>
+           <a className="editname" onClick={() => navigate("/updateadmin", { state: adminData })}>
               เปลี่ยนรหัสผ่าน
             </a>
+           </div>
+          
             {/* <div>
             <label>รหัสผ่าน</label>
             <br />
-            <div className="textbox">
+            <div className="form-control">
               <img
               src={editimg}
               className="editimg"
