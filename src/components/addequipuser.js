@@ -231,7 +231,9 @@ export default function AddEquipUser() {
       </div>
       <div className="home_content">
         <div className="header">จัดการข้อมูลผู้ป่วย</div>
+        <div className="homeheader">
         <div className="profile_details">
+        <ul className="nav-list">
           <li>
             <a href="profile">
               <i className="bi bi-person"></i>
@@ -240,8 +242,9 @@ export default function AddEquipUser() {
               </span>
             </a>
           </li>
+          </ul>
         </div>
-        <hr />
+        </div>
         <div className="breadcrumbs">
           <ul>
             <li>

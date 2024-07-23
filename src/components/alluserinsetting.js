@@ -159,16 +159,19 @@ export default function AlluserInSetting({ }) {
         </ul>
       </div>
       <div className="home_content">
+      <div className="homeheader">
         <div className="header">ตั้งค่าการแจ้งเตือน</div>
-        <div class="profile_details ">
+        <div class="profile_details">
+        <ul className="nav-list">
           <li>
             <a href="profile" >
               <i class="bi bi-person"></i>
               <span class="links_name" >{adminData && adminData.username}</span>
             </a>
           </li>
+          </ul>
         </div>
-        <hr></hr>
+        </div>
         <div className="breadcrumbs">
           <ul>
             <li>
@@ -204,7 +207,7 @@ export default function AlluserInSetting({ }) {
           >
             เพิ่มข้อมูลผู้ป่วย
           </button> */}
-          <p className="countadmin1">จำนวนผู้ป่วยทั้งหมด : {data.filter(user => user.deletedAt === null).length} คน</p>
+          <p className="countadmin">จำนวนผู้ป่วยทั้งหมด : {data.filter(user => user.deletedAt === null).length} คน</p>
         </div>
 
         <div className="content">

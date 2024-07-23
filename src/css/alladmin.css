@@ -75,7 +75,7 @@
 }
 
 .content {
-  margin-top: 125px;
+  /* margin-top: 110px; */
   margin-bottom: 125px;
   
 }
@@ -309,15 +309,14 @@
 }
 
 .countadmin {
-  margin-right: 20px;
-  /* ปรับระยะห่างของ countadmin จากขอบขวา */
+  /* margin-right: 20px; */
 }
 
-.profile_details {
+/* .profile_details {
   margin-bottom: 20px;
-}
+} */
 
-.breadcrumbs {
+/* .breadcrumbs {
   margin-bottom: 20px;
 }
 
@@ -340,7 +339,7 @@
 
 .breadcrumbs ul li.arrow {
   margin: 0 5px;
-}
+} */
 
 .adminall {
   width: 65%;

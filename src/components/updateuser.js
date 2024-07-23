@@ -260,16 +260,19 @@ export default function UpdateUser() {
         </ul>
       </div>
       <div className="home_content">
+      <div className="homeheader">
         <div className="header">จัดการข้อมูลผู้ป่วย</div>
         <div class="profile_details ">
+        <ul className="nav-list">
           <li>
             <a href="profile" >
               <i class="bi bi-person"></i>
               <span class="links_name" >{adminData && adminData.username}</span>
             </a>
           </li>
+          </ul>
+          </div>
         </div>
-        <hr></hr>
         <div className="breadcrumbs">
           <ul>
             <li>

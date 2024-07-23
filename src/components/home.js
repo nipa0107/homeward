@@ -35,16 +35,20 @@ export default function Home({ }) {
         .then((res) => res.json())
         .then((data) => {
           console.log(data)
-          setAdminData(data.data);
+          setAdminData(data.data); 
+          if (data.data == "token expired") {
+            // alert("Token expired login again");
+            window.localStorage.clear();
+            window.location.href = "./";
+          }
+
         })
+        
         .catch((error) => {
-          // เกิดข้อผิดพลาดในการตรวจสอบ token
           console.error("Error verifying token:", error);
-          // ลบ token ใน localStorage และเปลี่ยนเส้นทางไปยังหน้าเข้าสู่ระบบ
           logOut();
         });
     } else {
-      // หากไม่มี token ใน localStorage ให้เปลี่ยนเส้นทางไปยังหน้าเข้าสู่ระบบ
       logOut();
     }
     getAllCaremanual();
@@ -190,17 +194,19 @@ export default function Home({ }) {
         </ul>
       </div>
       <div className="home_content">
-        <div className="header">จัดการข้อมูลคู่มือการดูแลผู้ป่วย
-        </div>
-        <div class="profile_details ">
+      <div className="homeheader">
+        <div className="header">จัดการข้อมูลคู่มือการดูแลผู้ป่วย</div>
+        <div class="profile_details">
+        <ul className="nav-list">
           <li>
             <a href="profile" >
               <i class="bi bi-person"></i>
               <span class="links_name" >{adminData && adminData.username}</span>
             </a>
           </li>
+          </ul>
         </div>
-        <hr></hr>
+        </div>
         <div className="breadcrumbs">
           <ul>
             <li>
