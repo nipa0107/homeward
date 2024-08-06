@@ -127,12 +127,7 @@ export default function AddAdmin() {
               <span class="links_name" >จัดการอาการผู้ป่วย</span>
             </a>
           </li>
-          <li>
-            <a href="allsymptom" onClick={() => navigate("/allsymptom")}>
-              <i class="bi bi-bandaid"></i>
-              <span class="links_name" >จัดการอาการผู้ป่วย</span>
-            </a>
-          </li>
+          
           <li>
             <a href="/alluserinsetting" >
             <i class="bi bi-bell"></i>              

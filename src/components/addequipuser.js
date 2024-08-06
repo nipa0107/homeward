@@ -230,8 +230,8 @@ export default function AddEquipUser() {
         </ul>
       </div>
       <div className="home_content">
+      <div className="homeheader">
         <div className="header">จัดการข้อมูลผู้ป่วย</div>
-        <div className="homeheader">
         <div className="profile_details">
         <ul className="nav-list">
           <li>
