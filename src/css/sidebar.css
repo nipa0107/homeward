@@ -52,10 +52,10 @@
 
 .sidebar #btn {
     position: absolute;
-    color: white;
+    color: rgb(0, 0, 0);
     left: 90%;
     top: 10px;
-    font-size: 20px;
+    font-size: 23px;
     width: 50px;
     height: 50px;
     text-align: center;
@@ -78,6 +78,8 @@
     width: 100%;
     list-style-type: none;
     line-height: 50px;
+    font-size: 17px;
+    font-weight: bold; 
 }
 .sidebar.active .links_name{
     opacity: 0;
@@ -130,7 +132,7 @@
 }
 
 .sidebar ul li a {
-    color: white;
+    color: rgb(0, 0, 0);
     /* color: black; */
     display: flex;
     align-items: center;
@@ -157,10 +159,13 @@
 }
 
 .profile_details {
-    font-size: 20px;
-    display: flex;
+    /* position: absolute; */
+    right: 30px;
+    top: 10px;
+    /* display: flex; */
+    padding: 5px;
     align-items: center;
-    margin-right: 50px; 
+    font-size: 20px;
 }
 
 .profile_details li a{
@@ -335,6 +340,7 @@ hr{
     margin-top: 30px;
 }
 .home_content .breadcrumbs{
+    margin-top: 21px;
     margin-left: 28px;
 }
 .breadcrumbs{

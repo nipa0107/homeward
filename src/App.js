@@ -180,7 +180,7 @@ function App() {
             }
           />
           <Route
-            path="/updatename"
+            path="/updatenameadmin"
             element={
               <PrivateRoute element={<UpdateName />} isLoggedIn={isLoggedIn} />
             }

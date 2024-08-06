@@ -35,7 +35,7 @@ export default function Home({ }) {
         .then((res) => res.json())
         .then((data) => {
           console.log(data)
-          setAdminData(data.data); 
+          setAdminData(data.data);
           if (data.data == "token expired") {
             // alert("Token expired login again");
             window.localStorage.clear();
@@ -43,7 +43,7 @@ export default function Home({ }) {
           }
 
         })
-        
+
         .catch((error) => {
           console.error("Error verifying token:", error);
           logOut();
@@ -173,8 +173,8 @@ export default function Home({ }) {
           </li>
           <li>
             <a href="/alluserinsetting" >
-            <i class="bi bi-bell"></i>              
-            <span class="links_name" >ตั้งค่าการแจ้งเตือน</span>
+              <i class="bi bi-bell"></i>
+              <span class="links_name" >ตั้งค่าการแจ้งเตือน</span>
             </a>
           </li>
           <li>
@@ -194,18 +194,18 @@ export default function Home({ }) {
         </ul>
       </div>
       <div className="home_content">
-      <div className="homeheader">
-        <div className="header">จัดการข้อมูลคู่มือการดูแลผู้ป่วย</div>
-        <div class="profile_details">
-        <ul className="nav-list">
-          <li>
-            <a href="profile" >
-              <i class="bi bi-person"></i>
-              <span class="links_name" >{adminData && adminData.username}</span>
-            </a>
-          </li>
-          </ul>
-        </div>
+        <div className="homeheader">
+          <div className="header">จัดการข้อมูลคู่มือการดูแลผู้ป่วย</div>
+          <div class="profile_details">
+            <ul className="nav-list">
+              <li>
+                <a href="profile" >
+                  <i class="bi bi-person"></i>
+                  <span class="links_name" >{adminData && adminData.username}</span>
+                </a>
+              </li>
+            </ul>
+          </div>
         </div>
         <div className="breadcrumbs">
           <ul>
@@ -237,18 +237,18 @@ export default function Home({ }) {
 
 
         <div className="toolbar">
-        <button
-        className="btn btn-outline py-1 px-4"
-        onClick={() => navigate("/addcaremanual", { state: adminData })}
-      >
-        <i className="bi bi-plus-circle" style={{ marginRight: '8px' }}></i>
-        เพิ่มคู่มือ
-      </button>
+          <button
+            className="btn btn-outline py-1 px-4"
+            onClick={() => navigate("/addcaremanual", { state: adminData })}
+          >
+            <i className="bi bi-plus-circle" style={{ marginRight: '8px' }}></i>
+            เพิ่มคู่มือ
+          </button>
           <p className="countadmin">จำนวนคู่มือทั้งหมด : {data.length} คู่มือ</p>
         </div>
 
 
- 
+
         <div className="content">
           {data == null
             ? ""

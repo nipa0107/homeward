@@ -230,20 +230,21 @@ export default function AddEquipUser() {
         </ul>
       </div>
       <div className="home_content">
-        <div className="header">จัดการข้อมูลผู้ป่วย</div>
+        
         <div className="homeheader">
-        <div className="profile_details">
-        <ul className="nav-list">
-          <li>
-            <a href="profile">
-              <i className="bi bi-person"></i>
-              <span className="links_name">
-                {adminData && adminData.username}
-              </span>
-            </a>
-          </li>
-          </ul>
-        </div>
+          <div className="header">จัดการข้อมูลผู้ป่วย</div>
+          <div className="profile_details">
+            <ul className="nav-list">
+              <li>
+                <a href="profile">
+                  <i className="bi bi-person"></i>
+                  <span className="links_name">
+                    {adminData && adminData.username}
+                  </span>
+                </a>
+              </li>
+            </ul>
+          </div>
         </div>
         <div className="breadcrumbs">
           <ul>

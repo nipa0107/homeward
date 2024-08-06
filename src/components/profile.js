@@ -13,7 +13,7 @@ export default function Profile() {
   const [token, setToken] = useState("");
   const [name, setName] = useState("");
   const [username, setUsername] = useState("");
-  const [surname, setSurname] = useState("");
+  const [surname, setSurName] = useState("");
   const [email, setEmail] = useState("");
 
   useEffect(() => {
@@ -37,7 +37,7 @@ export default function Profile() {
           console.log(data);
           setAdminData(data.data);
           setName(data.data.name);
-          setSurname(data.data.surname);
+          setSurName(data.data.surname);
           setUsername(data.data.username);
           setEmail(data.data.email);
         });
@@ -156,20 +156,15 @@ export default function Profile() {
             </div>{" "}
           </div>
           <div className="mb-3">
-            <label>นามสกุล</label>
-            {/* <div className="form-control">{adminData && adminData.name} <a onClick={() => navigate("/updatenameadmin", { state: adminData })}>แก้ไขชื่อ</a></div>{" "}
-          <br /> */}
+            <label>ชื่อ</label>
             <div className="form-control">
               <span>{name}</span>
             </div>
           </div>
           <div className="mb-3">
             <label>นามสกุล</label>
-            {/* <div className="form-control">{adminData && adminData.name} <a onClick={() => navigate("/updatenameadmin", { state: adminData })}>แก้ไขชื่อ</a></div>{" "}
-          <br /> */}
             <div className="form-control">
               <span>{surname}</span>
-              
             </div>
           </div>
           <div>
@@ -184,7 +179,7 @@ export default function Profile() {
           
           <div>
           {adminData && (
-                <a className="editname" onClick={() => navigate("/updatename", { state: adminData })}>
+                <a className="editname" onClick={() => navigate("/updatenameadmin", { state: adminData })}>
                   แก้ไขโปรไฟล์
                 </a>
               )}
