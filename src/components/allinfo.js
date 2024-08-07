@@ -370,18 +370,18 @@ export default function AllUser({ }) {
         </ul>
       </div>
       <div className="home_content">
-      <div className="homeheader">
-        <div className="header">จัดการข้อมูลผู้ป่วย</div>
-        <div class="profile_details ">
-        <ul className="nav-list">
-          <li>
-            <a href="profile">
-              <i class="bi bi-person"></i>
-              <span class="links_name">{adminData && adminData.username}</span>
-            </a>
-          </li>
-          </ul>
-        </div>
+        <div className="homeheader">
+          <div className="header">จัดการข้อมูลผู้ป่วย</div>
+          <div class="profile_details ">
+            <ul className="nav-list">
+              <li>
+                <a href="profile">
+                  <i class="bi bi-person"></i>
+                  <span class="links_name">{adminData && adminData.username}</span>
+                </a>
+              </li>
+            </ul>
+          </div>
         </div>
         <div className="breadcrumbs">
           <ul>
@@ -501,21 +501,17 @@ export default function AllUser({ }) {
                 <div className="left-info">
                   <p><span>HN</span></p>
                   <p><span>AN</span></p>
-                  <p></p>
                   <p><span>วันที่ Admit</span></p>
                   <p><span>วันที่ D/C</span></p>
                   <p><span>Diagnosis</span></p>
-                  <div>
-                    {mdata && (
-                      <div>
-                        <p><span>แพทย์ผู้ดูแล</span></p>
-                      </div>
-                    )}
-                  </div>
+                  <p><span>แพทย์ผู้ดูแล</span></p>
                   <p><span>Chief_complaint</span></p>
                   <p><span>Present illness</span></p>
-                  <p>Management plan</p>
+                  <p><span>File Present illness</span></p>
+                  <p><span>Management plan</span></p>
+                  <p><span>File Management plan</span></p>
                   <p><span>Phychosocial assessment</span></p>
+                  <p><span>File Phychosocial assessment</span></p>
                 </div>
                 <div className="right-info">
                   <p><b>{medicalInfo.HN || "-"}</b></p>
@@ -537,12 +533,22 @@ export default function AllUser({ }) {
                       : "-"}</b>
                   </p>
                   <p><b>{medicalInfo.Diagnosis || "-"}</b></p>
-                  <p><b>{mdata.nametitle} {mdata.name} {mdata.surname}</b></p>
-                  <p><b>{medicalInfo.Chief_complaint || "-"}</b></p>
                   <p>
-                    <b>{medicalInfo.Present_illness || "-"}
-                      {medicalInfo.fileP && (
-                        <a href=""
+                    <b>
+                      {(mdata.nametitle || mdata.name || mdata.surname)
+                        ? `${mdata.nametitle || ""} ${mdata.name || ""} ${mdata.surname || ""}`.trim()
+                        : "-"
+                      }
+                    </b>
+                  </p>
+                  <p><b>{medicalInfo.Chief_complaint || "-"}</b></p>
+                  <p><b>{medicalInfo.Present_illness || "-"}</b></p>
+                  <p>
+                    <b>
+                      {medicalInfo.fileP ? (
+                        <a
+                          style={{ color: "grey" }}
+                          href=""
                           onClick={() => {
                             const filePath = medicalInfo.fileP.replace(/\\/g, "/");
                             const fileName = filePath.split("/").pop();
@@ -552,13 +558,18 @@ export default function AllUser({ }) {
                         >
                           {medicalInfo.fileP.split("/").pop().split("\\").pop()}
                         </a>
+                      ) : (
+                        "-"
                       )}
                     </b>
                   </p>
+                  <p><b>{medicalInfo.Management_plan || "-"}</b></p>
                   <p>
-                    <b>{medicalInfo.Management_plan || "-"}
-                      {medicalInfo.fileM && (
-                        <a href=""
+                    <b>
+                      {medicalInfo.fileM ? (
+                        <a
+                          style={{ color: "grey" }}
+                          href=""
                           onClick={() => {
                             const filePath = medicalInfo.fileM.replace(/\\/g, "/");
                             const fileName = filePath.split("/").pop();
@@ -568,27 +579,30 @@ export default function AllUser({ }) {
                         >
                           {medicalInfo.fileM.split("/").pop().split("\\").pop()}
                         </a>
+                      ) : (
+                        "-"
                       )}
                     </b>
                   </p>
+                  <p><b>{medicalInfo.Phychosocial_assessment || "-"}</b></p>
                   <p>
-                    <b>{medicalInfo.Phychosocial_assessment || "-"}
-                      <div className="filename">
-                        {medicalInfo.filePhy && (
-                          <p>
-                            <a href=""
-                              onClick={() => {
-                                const filePath = medicalInfo.filePhy.replace(/\\/g, "/");
-                                const fileName = filePath.split("/").pop();
-                                console.log("fileName:", fileName);
-                                window.open(`http://localhost:5000/file/${fileName}`, "_blank");
-                              }}
-                            >
-                              {medicalInfo.filePhy.split("/").pop().split("\\").pop()}
-                            </a>
-                          </p>
-                        )}
-                      </div>
+                    <b>
+                      {medicalInfo.filePhy ? (
+                        <a
+                          style={{ color: "grey" }}
+                          href=""
+                          onClick={() => {
+                            const filePath = medicalInfo.filePhy.replace(/\\/g, "/");
+                            const fileName = filePath.split("/").pop();
+                            console.log("fileName:", fileName);
+                            window.open(`http://localhost:5000/file/${fileName}`, "_blank");
+                          }}
+                        >
+                          {medicalInfo.filePhy.split("/").pop().split("\\").pop()}
+                        </a>
+                      ) : (
+                        "-"
+                      )}
                     </b>
                   </p>
                 </div>
@@ -624,50 +638,104 @@ export default function AllUser({ }) {
           )}
         </div>
         <br></br>
-        <div className="info3 card mb-5">
-          <div className="header"><b>อุปกรณ์ทางการแพทย์</b></div>
+        <div className="info3 card mb-1">
+          <div className="header">
+            <b>อุปกรณ์ทางการแพทย์</b>
+          </div>
           {medicalEquipment && medicalEquipment.length > 0 ? (
             <>
-              <div className="user-info">
-                <div className="left-info">
-                  {medicalEquipment.map((equipment, index) => (
-                    <div key={index} className="equipment-item">
-                      <input
-                        type="checkbox"
-                        className="mb-2"
-                        checked={selectedEquipments.includes(equipment.equipmentname_forUser)}
-                        onChange={() => handleCheckboxChange(equipment.equipmentname_forUser)}
-                      />
-                      <span>{equipment.equipmenttype_forUser}</span>
-                    </div>
-                  ))}
-                </div>
-                <div className="right-info">
-                  {medicalEquipment.map((equipment, index) => (
-                    <div key={index} className="equipment-item">
-                      <b>{equipment.equipmentname_forUser}</b>
-                    </div>
-                  ))}
-                </div>
-              </div>
+              {Object.entries(
+                medicalEquipment.reduce((acc, equipment) => {
+                  if (!acc[equipment.equipmenttype_forUser]) {
+                    acc[equipment.equipmenttype_forUser] = [];
+                  }
+                  acc[equipment.equipmenttype_forUser].push(equipment);
+                  return acc;
+                }, {})
+              ).map(([type, equipments]) => {
+                // Determine if all items in this category are selected
+                const allSelected = equipments.every(equipment =>
+                  selectedEquipments.includes(equipment.equipmentname_forUser)
+                );
+
+                return (
+                  <div key={type} className="equipment-category">
+                    <h4 className="mt-3"><b>{type}</b></h4>
+                    <table className="equipment-table mb-5">
+                      <thead>
+                        <tr>
+                          <th>
+                            <input
+                              type="checkbox"
+                              checked={allSelected}
+                              onChange={() => {
+                                if (allSelected) {
+                                  // Unselect all items in this category
+                                  setSelectedEquipments(prevSelected =>
+                                    prevSelected.filter(name =>
+                                      !equipments.some(equipment => equipment.equipmentname_forUser === name)
+                                    )
+                                  );
+                                } else {
+                                  // Select all items in this category
+                                  setSelectedEquipments(prevSelected => [
+                                    ...prevSelected,
+                                    ...equipments
+                                      .filter(equipment => !prevSelected.includes(equipment.equipmentname_forUser))
+                                      .map(equipment => equipment.equipmentname_forUser)
+                                  ]);
+                                }
+                              }}
+                            />
+                          </th>
+                          <th>ลำดับ</th>
+                          <th>ชื่ออุปกรณ์</th>
+                          <th>วันที่เพิ่ม</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {equipments.map((equipment, index) => (
+                          <tr key={equipment._id}>
+                            <td>
+                              <input
+                                type="checkbox"
+                                className="mb-2"
+                                checked={selectedEquipments.includes(equipment.equipmentname_forUser)}
+                                onChange={() =>
+                                  handleCheckboxChange(equipment.equipmentname_forUser)
+                                }
+                              />
+                            </td>
+                            <td>{index + 1}</td>
+                            <td>{equipment.equipmentname_forUser}</td>
+                            <td>
+                              {new Date(equipment.createdAt).toLocaleDateString("th-TH", {
+                                day: "numeric",
+                                month: "long",
+                                year: "numeric",
+                              })}
+                            </td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
+                );
+              })}
               <div className="btn-group mb-4">
                 <div className="adddata">
                   <button onClick={() => navigate("/addequipuser", { state: { id } })}>
                     เพิ่มอุปกรณ์
                   </button>
                 </div>
-                <div className="deleteimg1 mt-2 mb-0">
-                  <button onClick={handleDeleteSelected}>
-                    ลบอุปกรณ์
-                  </button>
+                <div className="deleteimg1 mt-2">
+                  <button onClick={handleDeleteSelected}>ลบอุปกรณ์</button>
                 </div>
               </div>
             </>
           ) : (
             <>
-              <div className="no-equipment">
-                ไม่พบข้อมูล
-              </div>
+              <div className="no-equipment">ไม่พบข้อมูล</div>
               <div className="btn-group mb-4">
                 <div className="adddata">
                   <button onClick={() => navigate("/addequipuser", { state: { id } })}>
@@ -680,6 +748,6 @@ export default function AllUser({ }) {
         </div>
 
       </div>
-    </main >
+    </main>
   );
 }

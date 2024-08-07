@@ -157,6 +157,7 @@ export default function Updatemedicalinformation() {
 
 
 
+
   const logOut = () => {
     window.localStorage.clear();
     window.location.href = "./";
@@ -298,8 +299,8 @@ export default function Updatemedicalinformation() {
           </li>
           <li>
             <a href="/alluserinsetting" >
-            <i class="bi bi-bell"></i>              
-            <span class="links_name" >ตั้งค่าการแจ้งเตือน</span>
+              <i class="bi bi-bell"></i>
+              <span class="links_name" >ตั้งค่าการแจ้งเตือน</span>
             </a>
           </li>
           <li>
@@ -323,20 +324,20 @@ export default function Updatemedicalinformation() {
         </ul>
       </div>
       <div className="home_content">
-      <div className="homeheader">
-        <div className="header">จัดการข้อมูลผู้ป่วย</div>
-        <div class="profile_details ">
-        <ul className="nav-list">
-          <li>
-            <a href="profile">
-              <i class="bi bi-person"></i>
-              <span class="links_name">{adminData && adminData.username}</span>
-            </a>
-          </li>
-          </ul>
+        <div className="homeheader">
+          <div className="header">จัดการข้อมูลผู้ป่วย</div>
+          <div class="profile_details ">
+            <ul className="nav-list">
+              <li>
+                <a href="profile">
+                  <i class="bi bi-person"></i>
+                  <span class="links_name">{adminData && adminData.username}</span>
+                </a>
+              </li>
+            </ul>
           </div>
         </div>
-        
+
         <div className="breadcrumbs">
           <ul>
             <li>
@@ -478,10 +479,12 @@ export default function Updatemedicalinformation() {
               </div>
               <textarea
                 className="form-control"
+                value={Present_illness} // Set the value attribute
                 rows="3"
                 style={{ resize: "vertical" }}
                 onChange={(e) => setPresent_illness(e.target.value)}
               />
+
             </div>
 
             <div className="mb-1">
@@ -514,6 +517,7 @@ export default function Updatemedicalinformation() {
               </div>
               <textarea
                 className="form-control"
+                value={Management_plan} // Set the value here
                 rows="3"
                 style={{ resize: "vertical" }}
                 onChange={(e) => setManagement_plan(e.target.value)}
@@ -552,7 +556,8 @@ export default function Updatemedicalinformation() {
               </div>
               <textarea
                 className="form-control"
-                rows="3" // กำหนดจำนวนแถวเริ่มต้น
+                value={Phychosocial_assessment} // Set the value here
+                rows="3"
                 style={{ resize: "vertical" }}
                 onChange={(e) => setPhychosocial_assessment(e.target.value)}
               />
