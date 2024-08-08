@@ -21,6 +21,7 @@ export default function AddEquipUser() {
   const [selectedEquipType2, setSelectedEquipType2] = useState("");
   const [selectedEquipType3, setSelectedEquipType3] = useState("");
   const [equipValidationMessages, setEquipValidationMessages] = useState({});
+  const [selectedEquipments, setSelectedEquipments] = useState([]);
 
   useEffect(() => {
     const token = window.localStorage.getItem("token");
@@ -57,88 +58,116 @@ export default function AddEquipUser() {
       });
   };
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    const selectedEquipments = [];
+  const handleCheckboxChange = (e, equipmentName, equipmentType) => {
+    const isChecked = e.target.checked;
+    let updatedEquipments;
+
+    if (isChecked) {
+        updatedEquipments = [
+            ...selectedEquipments,
+            {
+                equipmentname_forUser: equipmentName,
+                equipmenttype_forUser: equipmentType,
+            },
+        ];
+    } else {
+        updatedEquipments = selectedEquipments.filter(
+            (equip) => equip.equipmentname_forUser !== equipmentName
+        );
+    }
+
+    setSelectedEquipments(updatedEquipments);
+
+    // Check for duplicates and update validation messages
     const validationMessages = {};
+    updatedEquipments.forEach((equip, index) => {
+        const duplicates = updatedEquipments.filter(
+            (e) => e.equipmentname_forUser === equip.equipmentname_forUser
+        ).length;
 
-    if (selectedEquipType1) {
-      selectedEquipments.push({
-        equipmentname_forUser: selectedEquipType1,
-        equipmenttype_forUser: "อุปกรณ์ติดตัว",
-      });
-    }
-    if (selectedEquipType2) {
-      selectedEquipments.push({
-        equipmentname_forUser: selectedEquipType2,
-        equipmenttype_forUser: "อุปกรณ์เสริม",
-      });
-    }
-    if (selectedEquipType3) {
-      selectedEquipments.push({
-        equipmentname_forUser: selectedEquipType3,
-        equipmenttype_forUser: "อุปกรณ์อื่นๆ",
-      });
-    }
-
-    if (selectedEquipments.length === 0) {
-      setValidationMessage("โปรดเลือกอุปกรณ์อย่างน้อยหนึ่งรายการ");
-      return;
-    }
-    if (!id) {
-      setValidationMessage("ไม่พบข้อมูลผู้ใช้");
-      return;
-    }
-
-    // Check for duplicate equipment
-    selectedEquipments.forEach((equip, index) => {
-      if (
-        selectedEquipments.filter(
-          (e) => e.equipmentname_forUser === equip.equipmentname_forUser
-        ).length > 1
-      ) {
-        validationMessages[equip.equipmenttype_forUser] =
-          "มีอุปกรณ์นี้อยู่แล้ว";
-      }
+        if (duplicates > 1) {
+            validationMessages[equip.equipmentname_forUser] = "มีอุปกรณ์นี้อยู่แล้ว";
+        }
     });
 
     setEquipValidationMessages(validationMessages);
+    setValidationMessage(""); // Clear general validation message
+};
 
-    if (Object.keys(validationMessages).length > 0) {
-      return;
+const handleSelectAll = (equipmentType, isChecked) => {
+    let updatedEquipments = [...selectedEquipments];
+
+    data
+        .filter((equipment) => equipment.equipment_type === equipmentType)
+        .forEach((equipment) => {
+            if (isChecked) {
+                if (
+                    !updatedEquipments.some(
+                        (equip) => equip.equipmentname_forUser === equipment.equipment_name
+                    )
+                ) {
+                    updatedEquipments.push({
+                        equipmentname_forUser: equipment.equipment_name,
+                        equipmenttype_forUser: equipmentType,
+                    });
+                }
+            } else {
+                updatedEquipments = updatedEquipments.filter(
+                    (equip) => equip.equipmentname_forUser !== equipment.equipment_name
+                );
+            }
+        });
+
+    setSelectedEquipments(updatedEquipments);
+};
+
+const handleSubmit = (e) => {
+    e.preventDefault();
+
+    if (selectedEquipments.length === 0) {
+        setValidationMessage("โปรดเลือกอุปกรณ์อย่างน้อยหนึ่งรายการ");
+        return;
+    }
+    if (!id) {
+        setValidationMessage("ไม่พบข้อมูลผู้ใช้");
+        return;
+    }
+
+    if (Object.keys(equipValidationMessages).length > 0) {
+        return;
     }
 
     fetch("http://localhost:5000/addequipuser", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Accept: "application/json",
-        "Access-Control-Allow-Origin": "*",
-        Authorization: `Bearer ${token}`,
-      },
-      body: JSON.stringify({ equipments: selectedEquipments, userId: id }),
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+            Accept: "application/json",
+            "Access-Control-Allow-Origin": "*",
+            Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({ equipments: selectedEquipments, userId: id }),
     })
-      .then((res) => res.json())
-      .then((data) => {
-        if (data.status === "ok") {
-          toast.success("เพิ่มข้อมูลสำเร็จ");
-          setTimeout(() => {
-            navigate("/allinfo", { state: { id } });
-          }, 1100);
-        } else if (
-          data.status === "error" &&
-          data.message === "มีอุปกรณ์นี้อยู่แล้ว"
-        ) {
-          setValidationMessage("มีอุปกรณ์นี้อยู่แล้ว");
-        } else {
-          toast.error("เกิดข้อผิดพลาดในการเพิ่มข้อมูล");
-        }
-      })
-      .catch((error) => {
-        console.error("Error adding equipment:", error);
-        toast.error("เกิดข้อผิดพลาดในการเพิ่มข้อมูล");
-      });
-  };
+        .then((res) => res.json())
+        .then((data) => {
+            if (data.status === "ok") {
+                toast.success("เพิ่มข้อมูลสำเร็จ");
+                setTimeout(() => {
+                    navigate("/allinfo", { state: { id } });
+                }, 1100);
+            } else if (
+                data.status === "error" &&
+                data.message === "มีอุปกรณ์นี้อยู่แล้ว"
+            ) {
+                setValidationMessage("มีอุปกรณ์นี้อยู่แล้ว");
+            } else {
+                toast.error("เกิดข้อผิดพลาดในการเพิ่มข้อมูล");
+            }
+        })
+        .catch((error) => {
+            console.error("Error adding equipment:", error);
+            toast.error("เกิดข้อผิดพลาดในการเพิ่มข้อมูล");
+        });
+};
 
   const logOut = () => {
     window.localStorage.clear();
@@ -159,8 +188,10 @@ export default function AddEquipUser() {
     setValidationMessage(""); // Clear general validation message
   };
 
+  
   return (
     <main className="body">
+      <ToastContainer />
       <div className={`sidebar ${isActive ? "active" : ""}`}>
         <div className="logo_content">
           <div className="logo">
@@ -230,8 +261,8 @@ export default function AddEquipUser() {
         </ul>
       </div>
       <div className="home_content">
-      <div className="homeheader">
-        
+        <div className="homeheader">
+
           <div className="header">จัดการข้อมูลผู้ป่วย</div>
           <div className="profile_details">
             <ul className="nav-list">
@@ -279,116 +310,99 @@ export default function AddEquipUser() {
           </ul>
         </div>
         <h3>เพิ่มอุปกรณ์สำหรับผู้ป่วย</h3>
-        <div className="adminall card mb-3">
+        <div className="adminall card mb-1">
           <form onSubmit={handleSubmit}>
-            <div className="mb-3">
-              <label>อุปกรณ์ติดตัว</label>
-              <select
-                className="form-select"
-                value={selectedEquipType1}
-                onChange={(e) =>
-                  handleChange(e, setSelectedEquipType1, "อุปกรณ์ติดตัว")
-                }
-              >
-                <option value="">เลือกอุปกรณ์ติดตัว</option>
-                {data.length > 0 ? (
-                  data
-                    .filter(
-                      (equipment) =>
-                        equipment.equipment_type === "อุปกรณ์ติดตัว"
+            {["อุปกรณ์ติดตัว", "อุปกรณ์เสริม", "อุปกรณ์อื่นๆ"].map(
+              (equipmentType) => {
+                const isAllSelected = data
+                  .filter(
+                    (equipment) => equipment.equipment_type === equipmentType
+                  )
+                  .every((equipment) =>
+                    selectedEquipments.some(
+                      (equip) =>
+                        equip.equipmentname_forUser ===
+                        equipment.equipment_name
                     )
-                    .map((equipment) => (
-                      <option
-                        key={equipment._id}
-                        value={equipment.equipment_name}
-                      >
-                        {equipment.equipment_name}
-                      </option>
-                    ))
-                ) : (
-                  <option value="">ไม่มีข้อมูลอุปกรณ์ติดตัว</option>
-                )}
-              </select>
-              {equipValidationMessages["อุปกรณ์ติดตัว"] && (
-                <div style={{ color: "red" }}>
-                  {equipValidationMessages["อุปกรณ์ติดตัว"]}
-                </div>
-              )}
-            </div>
-            <div className="mb-3">
-              <label>อุปกรณ์เสริม</label>
-              <select
-                className="form-select"
-                value={selectedEquipType2}
-                onChange={(e) =>
-                  handleChange(e, setSelectedEquipType2, "อุปกรณ์เสริม")
-                }
-              >
-                <option value="">เลือกอุปกรณ์เสริม</option>
-                {data.length > 0 ? (
-                  data
-                    .filter(
-                      (equipment) => equipment.equipment_type === "อุปกรณ์เสริม"
-                    )
-                    .map((equipment) => (
-                      <option
-                        key={equipment._id}
-                        value={equipment.equipment_name}
-                      >
-                        {equipment.equipment_name}
-                      </option>
-                    ))
-                ) : (
-                  <option value="">ไม่มีข้อมูลอุปกรณ์เสริม</option>
-                )}
-              </select>
-              {equipValidationMessages["อุปกรณ์เสริม"] && (
-                <div style={{ color: "red" }}>
-                  {equipValidationMessages["อุปกรณ์เสริม"]}
-                </div>
-              )}
-            </div>
-            <div className="mb-3">
-              <label>อุปกรณ์อื่นๆ</label>
-              <select
-                className="form-select"
-                value={selectedEquipType3}
-                onChange={(e) =>
-                  handleChange(e, setSelectedEquipType3, "อุปกรณ์อื่นๆ")
-                }
-              >
-                <option value="">เลือกอุปกรณ์อื่นๆ</option>
-                {data.length > 0 ? (
-                  data
-                    .filter(
-                      (equipment) => equipment.equipment_type === "อุปกรณ์อื่นๆ"
-                    )
-                    .map((equipment) => (
-                      <option
-                        key={equipment._id}
-                        value={equipment.equipment_name}
-                      >
-                        {equipment.equipment_name}
-                      </option>
-                    ))
-                ) : (
-                  <option value=""> ไม่มีข้อมูลอุปกรณ์อื่นๆ</option>
-                )}
-              </select>
-              {equipValidationMessages["อุปกรณ์อื่นๆ"] && (
-                <div style={{ color: "red" }}>
-                  {equipValidationMessages["อุปกรณ์อื่นๆ"]}
-                </div>
-              )}
-            </div>
+                  );
+
+                return (
+                  <div key={equipmentType} className="mb-1">
+                    <h4 className="equipment-type-title">
+                      <b>{equipmentType}</b>
+                    </h4>
+                    <table className="equipment-table">
+                      <thead>
+                        <tr>
+                          <th>
+                            <input
+                              type="checkbox"
+                              checked={isAllSelected}
+                              onChange={(e) =>
+                                handleSelectAll(equipmentType, e.target.checked)
+                              }
+                            />
+                          </th>
+                          <th>ลำดับ</th>
+                          <th>ชื่ออุปกรณ์</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {Array.isArray(data) && data.length > 0 ? (
+                          data
+                            .filter(
+                              (equipment) =>
+                                equipment.equipment_type === equipmentType
+                            )
+                            .map((equipment, index) => (
+                              <tr key={equipment._id}>
+                                <td>
+                                  <input
+                                    type="checkbox"
+                                    value={equipment.equipment_name}
+                                    checked={selectedEquipments.some(
+                                      (equip) =>
+                                        equip.equipmentname_forUser ===
+                                        equipment.equipment_name
+                                    )}
+                                    onChange={(e) =>
+                                      handleCheckboxChange(
+                                        e,
+                                        equipment.equipment_name,
+                                        equipmentType
+                                      )
+                                    }
+                                  />
+                                </td>
+                                <td>{index + 1}</td>
+                                <td>{equipment.equipment_name}</td>
+                                {equipValidationMessages[equipment.equipment_name] && (
+                                  <td style={{ color: "red" }}>
+                                    {equipValidationMessages[equipment.equipment_name]}
+                                  </td>
+                                )}
+                              </tr>
+                            ))
+                        ) : (
+                          <tr>
+                            <td colSpan="3">ไม่มีข้อมูล{equipmentType}</td>
+                          </tr>
+                        )}
+                      </tbody>
+                    </table>
+                  </div>
+                );
+              }
+            )}
             {validationMessage && (
               <div style={{ color: "red" }}>{validationMessage}</div>
             )}
-            <div className="d-grid">
-              <button type="submit" className="btn btn-outline py-2">
-                บันทึก
-              </button>
-              <br />
+            <div className="btn-group">
+              <div className="btn-next">
+                <button type="submit" className="btn btn-outline py-2">
+                  บันทึก
+                </button>
+              </div>
             </div>
           </form>
         </div>
