@@ -148,27 +148,27 @@ export default function Profile() {
           </ul>
         </div>
         {/* <h3>โปรไฟล์</h3> */}
-        <div className="formcontainerpf card mb-3">
-          <div className="mb-3">
+        <div className="formcontainerpf card mb-2">
+          <div className="mb-2">
             <label>ชื่อผู้ใช้</label>
             <div className="form-control gray-background">
               {username}
             </div>{" "}
           </div>
-          <div className="mb-3">
+          <div className="mb-2">
             <label>ชื่อ</label>
             <div className="form-control">
               <span>{name}</span>
             </div>
           </div>
-          <div className="mb-3">
+          <div className="mb-2">
             <label>นามสกุล</label>
             <div className="form-control">
               <span>{surname}</span>
             </div>
           </div>
-          <div>
-            <label>อีเมล</label>
+          <div className="mb-2">
+            <label >อีเมล</label>
             <div className="form-control gray-background">
               {email}
               {/* <a
@@ -178,32 +178,21 @@ export default function Profile() {
             </div>{" "}
           
           <div>
+          </div>
+          </div>
           {adminData && (
                 <a className="editname" onClick={() => navigate("/updatenameadmin", { state: adminData })}>
                   แก้ไขโปรไฟล์
                 </a>
               )}
-          </div>
+        
            <div>
            <a className="editname" onClick={() => navigate("/updateadmin", { state: adminData })}>
               เปลี่ยนรหัสผ่าน
             </a>
            </div>
           
-            {/* <div>
-            <label>รหัสผ่าน</label>
-            <br />
-            <div className="form-control">
-              <img
-              src={editimg}
-              className="editimg"
-              alt="editimg"
-              onClick={() => navigate("/updateadmin", { state: adminData })}
-            />
-            </div>
-        
-          </div> */}
-          </div>
+           
         </div>
       </div>
       <button onClick={logOut} className="btn btn-primary">

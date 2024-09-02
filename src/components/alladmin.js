@@ -240,11 +240,15 @@ useEffect(() => {
   {data.map((i) => (
     <div key={i._id} className="adminall card mb-3 ">
       <div className="card-body">
-        <button
-          className="deleteimg"
-          alt="deleteimg"
-          onClick={() => deleteAdmin(i._id, i.username)}
-        >ลบ</button>
+      {i.username !== "AdminSasi" && ( 
+          <button
+            className="deleteimg"
+            alt="deleteimg"
+            onClick={() => deleteAdmin(i._id, i.username)}
+          >
+            ลบ
+          </button>
+        )}
         <h5 className="card-title">{i.username}</h5>
       </div>
     </div>

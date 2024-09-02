@@ -206,8 +206,8 @@ export default function UpdateName() {
           </ul>
         </div>
         {/* <h3>แก้ไขโปรไฟล์ผู้ใช้</h3> */}
-        <div className="formcontainerpf card mb-3">
-          <div className="mb-3">
+        <div className="formcontainerpf card mb-2">
+          <div className="mb-2">
           <label>ชื่อผู้ใช้</label>
           <input
               type="text"
@@ -217,7 +217,7 @@ export default function UpdateName() {
               onChange={(e) => setUsername(e.target.value)}
             />
           </div>
-          <div className="mb-3">
+          <div className="mb-2">
           <label>ชื่อ</label>
           <input
               type="text"
@@ -226,7 +226,7 @@ export default function UpdateName() {
               onChange={(e) => setName(e.target.value)}
             />
           </div>
-          <div className="mb-3">
+          <div className="mb-2">
           <label>นามสกุล</label>
           <input
               type="text"
@@ -235,7 +235,7 @@ export default function UpdateName() {
               onChange={(e) => setSurname(e.target.value)}
             />
           </div>
-          <div className="mb-3">
+          <div className="mb-2">
           <label>อีเมล</label>
           <input
               type="text"
