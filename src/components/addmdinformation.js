@@ -397,7 +397,7 @@ export default function AddMedicalInformation() {
             </div>
 
             <div className="mb-1">
-              <label>Phychosocial assessment</label>
+              <label>Psychosocial assessment</label>
 
               <input
                 type="file"

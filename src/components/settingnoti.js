@@ -267,7 +267,7 @@ export default function SettingNoti() {
               <i class="bi bi-chevron-double-right"></i>
             </li>
             <li>
-              <a>ตั้งค่าการแจ้งเตือน</a>
+              <a>ตั้งค่าการแจ้งเตือนสัญญาณชีพ</a>
             </li>
           </ul>
         </div>
