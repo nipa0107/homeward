@@ -82,26 +82,23 @@ export default function AddCaremanual({ }) {
     formData.append("file", file);
     formData.append("detail", detail);
 
-    fetch(`http://localhost:5000/addcaremanual`, {
+    fetch(`http://localhost:5000/addcaremanual1`, {
       method: "POST",
       body: formData,
       headers: {
-        Authorization: `Bearer ${token}` // เพิ่ม Authorization header เพื่อส่ง token ในการร้องขอ
+        Authorization: `Bearer ${token}` 
       }
     })
       .then((res) => res.json())
       .then((data) => {
         console.log(data, "Addcaremanual");
         if (data.status === "ok") {
-          // console.log(caremanual_name, image, detail);
-          // window.location.href = "./home";
           toast.success("เพิ่มข้อมูลสำเร็จ");
           setTimeout(() => {
-            navigate("/home");
+            navigate("/");
           },1050); 
         } else {
-          // เมื่อเกิดข้อผิดพลาด
-          setError(data.error); // กำหนดข้อความ error ให้กับ state
+          setError(data.error); 
         }
       });
   };

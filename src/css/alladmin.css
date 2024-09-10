@@ -204,8 +204,8 @@
 }
 
 .btn-pre button:hover {
-  background-color: #eee;
-  /* สีพื้นหลังเมื่อโฮเวอร์ปุ่ม */
+  /* background-color: #eee; */
+  color:#000
 }
 
 .btn-next button {
@@ -390,7 +390,7 @@
 
 .errormessage {
   color: red;
-  margin-top: 10px;
+	font-size:1.5vh;
 }
 
 .table100{

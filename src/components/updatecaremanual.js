@@ -110,7 +110,7 @@ export default function UpdateCareManual() {
       formData.append("caremanual_name", caremanual_name);
       formData.append("detail", detail);
 
-      // ถ้ามีการเลือกรูปภาพใหม่
+ 
       if (image) {
         formData.append("image", image);
       }
