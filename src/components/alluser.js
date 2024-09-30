@@ -80,7 +80,7 @@ export default function AllUser({ }) {
         if (searchData.data.length > 0) {
           setData(searchData.data);
         } else {
-          setData([]); // ล้างข้อมูลเดิมในกรณีไม่พบข้อมูล
+          setData([]); 
         }
       } else {
         console.error('Error during search:', searchData.status);
@@ -217,6 +217,7 @@ export default function AllUser({ }) {
                   <th>เลขประจำตัวประชาชน</th>
                   <th>ชื่อ-นามสกุล</th>
                   <th>รายละเอียด</th>
+                  <th className="centered-cell">ข้อมูลใช้เข้าสู่ระบบ</th>
                 </tr>
               </thead>
               <tbody>
@@ -233,7 +234,27 @@ export default function AllUser({ }) {
                       <a
                       className="info"
                        onClick={() => navigate("/allinfo", { state: { id: i._id } })}>รายละเอียด</a>
-                      </td>
+                         </td>
+                         <td className="centered-cell">
+  {i.AdddataFirst ? (
+    <span>-</span> // แสดง - เมื่อ AdddataFirst เป็น true
+  ) : (
+    <button
+      className="btn btn-save"
+      onClick={() => {
+        if (i.physicalTherapy) {
+          navigate("/physicalTherapyUser", { state: { userData: i } });
+        } else {
+          navigate("/displayUser", { state: { userData: i } });
+        }
+      }}
+    >
+      <i className="bi bi-download"></i>
+    </button>
+  )}
+</td>
+
+             
                     </tr>
                   );
                 })}

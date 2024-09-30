@@ -99,7 +99,6 @@
   background-color: #87CEFA;
   color: white;
   text-align: center;
-  margin-top: 20px;
 }
 
 .card {
@@ -400,11 +399,11 @@
 }
 th,
 td {
-  width: 40%;
+  /* width: 27%; */
 }
 
 .table {
-  width: 70%; 
+  width:70%; 
   margin :0 auto;
   box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.1); 
   line-height: 50px; 
@@ -419,7 +418,7 @@ td {
 .table th, .table td {
   padding: 10px;
   padding-left: 20px;
-  text-align: left;
+  /* text-align: left; */
   border-bottom: 1px solid #dee2e6;
 }
 
@@ -432,12 +431,13 @@ td {
 }
 
 .table td:last-child {
-  width: 20%; /* ตั้งค่าความกว้างของเซลล์สุดท้ายเป็น 1% เพื่อให้กว้างตามข้อความที่อยู่ข้างในเซลล์ */
+  width: 20%; 
+  /* ตั้งค่าความกว้างของเซลล์สุดท้ายเป็น 1% เพื่อให้กว้างตามข้อความที่อยู่ข้างในเซลล์ */
   white-space: nowrap; /* ป้องกันการขึ้นบรรทัดใหม่ของข้อความภายในเซลล์ */
 }
 .info3 .header {
-  background-color: #95d7ff; /* สีฟ้า */
-  color: #000; /* ตัวหนังสือสีดำ */
+  background-color: #95d7ff;
+  color: #000; 
   padding: 5px 0px 5px 25px;
   margin: 0;
   border-radius: 3px 3px 0 0;
@@ -483,6 +483,51 @@ td {
 /* th.success {
   text-align: center;
 } */
+.centered-cell {
+  text-align: center;      /* Center horizontally */
+  vertical-align: middle;  /* Center vertically */
+}
 
+.btn.btn-save {
+  justify-content: center; 
+  align-items: center;   
+}
+.verify {
+  margin-left: auto;
+  text-decoration: none; 
+  color: #007bff; 
+  cursor: pointer;
+}
+.form-control {
+  display: flex;
+  justify-content: space-between; 
+  align-items: center; 
+  position: relative; 
+}
+.error-messageotp {
+  display: inline-block; 
+  margin: 0;
+}
 
+.newotp {
+  display: inline-block; 
+  text-decoration: underline;
+  color: blue;
+  cursor: pointer;
+}
+/* .label-container {
+  display: flex;
+  align-items: center; 
+}
 
+.label-inline {
+  margin-right: 10px;
+}
+h5 {
+  margin: 0;
+} */
+.message-container {
+  display: flex;
+  align-items: center;
+  gap: 10px; /* ปรับระยะห่างระหว่างข้อความและปุ่ม */
+}

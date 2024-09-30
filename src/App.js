@@ -38,6 +38,8 @@ import AlluserInSetting from "./components/alluserinsetting";
 import SettingNoti from "./components/settingnoti";
 import DisplayUser from "./components/DisplayUser";
 import PhysicalTherapyUser from "./components/PhysicalTherapyUser";
+import Emailverification from "./components/email-verification";
+import VerifyOtp from "./components/VerifyOtp";
 const PrivateRoute = ({ element, isLoggedIn }) => {
   return isLoggedIn === "true" ? (
     element
@@ -261,6 +263,18 @@ function App() {
             path="/settingnoti"
             element={
               <PrivateRoute element={<SettingNoti/>} isLoggedIn={isLoggedIn} />
+            }
+          />
+             <Route
+            path="/emailverification"
+            element={
+              <PrivateRoute element={<Emailverification/>} isLoggedIn={isLoggedIn} />
+            }
+          />
+            <Route
+            path="/verifyotp"
+            element={
+              <PrivateRoute element={<VerifyOtp/>} isLoggedIn={isLoggedIn} />
             }
           />
         </Routes>

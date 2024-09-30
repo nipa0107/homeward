@@ -212,7 +212,7 @@ export default function AlluserInSetting({ }) {
 
         <div className="content">
           {/* <div className="table100"> */}
-            <table className="table">
+            <table className="table tablesetting">
               <thead>
                 <tr>
                   <th>ชื่อผู้ใช้</th>

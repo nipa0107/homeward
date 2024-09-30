@@ -1,28 +1,22 @@
-import React, { useEffect, useState } from "react";
+// มีนับถอยหลัง 5 นาที
+
+import React, { useState, useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import "../css/sidebar.css";
 import "../css/alladmin.css";
 import "bootstrap-icons/font/bootstrap-icons.css";
 import logow from "../img/logow.png";
 
-export default function UpdateOTP() {
+export default function VerifyOtp() {
   const [otp, setOtp] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
   const [successMessage, setSuccessMessage] = useState("");
-  const [isActive, setIsActive] = useState(false);
   const navigate = useNavigate();
   const location = useLocation();
-  const { username, email } = location.state || {};
-  const adminData = location.state?.adminData;
+  const { username, email } = location.state || {}; // รับ username และ email
+  const [isActive, setIsActive] = useState(false);
   const [timer, setTimer] = useState(300); // นับถอยหลัง 5 นาที (300 วินาที)
   const [isOtpExpired, setIsOtpExpired] = useState(false);
-
-  // useEffect(() => {
-  //   if (adminData) {
-  //     setEmail(adminData.email);
-  //     setUsername(adminData.username);
-  //   }
-  // }, [adminData]);
   useEffect(() => {
     // ตั้งค่าการนับถอยหลัง
     let countdown;
@@ -35,15 +29,20 @@ export default function UpdateOTP() {
       setIsOtpExpired(true);
       setErrorMessage("OTP หมดอายุ");
       setSuccessMessage("");
+
     }
     return () => clearInterval(countdown); // ล้าง interval เมื่อ component unmount หรือ timer เปลี่ยน
   }, [timer]);
+
   const handleSubmit = (e) => {
     e.preventDefault();
     if (isOtpExpired) {
       setErrorMessage("OTP หมดอายุ");
       return;
     }
+    console.log("Sending OTP:", otp);
+    console.log("Username:", username);
+    console.log("Email:", email);
     fetch("http://localhost:5000/verify-otp1", {
       method: "POST",
       headers: {
@@ -67,13 +66,15 @@ export default function UpdateOTP() {
         console.error("Error:", error);
       });
   };
-
   const logOut = () => {
     window.localStorage.clear();
     navigate("/");
   };
   const handleToggleSidebar = () => {
     setIsActive(!isActive);
+  };
+  const handleBreadcrumbClick = () => {
+    navigate("/emailverification", {  state: { username, email } });
   };
 
   const handleRequestNewOtp = () => {
@@ -206,7 +207,7 @@ export default function UpdateOTP() {
               <i className="bi bi-chevron-double-right"></i>
             </li>
             <li>
-              <a href="updateemail">เปลี่ยนอีเมล</a>
+              <a onClick={handleBreadcrumbClick}>ยืนยันอีเมล</a>
             </li>
             <li className="arrow">
               <i className="bi bi-chevron-double-right"></i>
@@ -220,50 +221,76 @@ export default function UpdateOTP() {
         <h3>กรอกรหัสยืนยัน</h3>
         <div className="formcontainerpf card mb-3">
           <div className="mb-3">
-            <label>คุณจะได้รับรหัสยืนยันตัวตนที่</label>
-            <h5>{email}</h5>
-          </div>
-          <div className="mb-3">
-            <label>กรอกรหัส OTP</label>
-            <input
-              type="text"
-              className="form-control"
-              placeholder="กรอกรหัส OTP"
-              value={otp}
-              onChange={(e) => setOtp(e.target.value)}
-            />
-          </div>
+          <div className="mb-3 label-container">
+  <label className="label-inline">คุณจะได้รับรหัสยืนยันตัวตนที่</label>
+  <h5>{email}</h5>
+</div>
 
-          {timer > 0 && (
-            <p className="timer">กรุณากรอก OTP ภายในเวลา {formatTime(timer)}</p>
-          )}
-          {isOtpExpired && (
-            <div className="message-container">
-              <p className="error-messageotp">{errorMessage}</p>
-              <a className="newotp" onClick={handleRequestNewOtp}>
-                ขอ OTP ใหม่
-              </a>
-            </div>
-          )}
+            <form onSubmit={handleSubmit}>
+              <div className="mb-3">
+                <label htmlFor="otp">กรอก OTP ที่ได้รับ</label>
+                <input
+                  type="text"
+                  id="otp"
+                  className="form-control"
+                  value={otp}
+                  onChange={(e) => setOtp(e.target.value)}
+                  required
+                />
+              </div>
 
-          {/* {errorMessage && <p className="error-message">{errorMessage}</p>} */}
-          {successMessage && (
-            <p className="success-message">{successMessage}</p>
-          )}
-          <div className="d-grid">
-            <button
-              onClick={handleSubmit}
-              disabled={isOtpExpired}
-              className="btn btn-outline py-2"
-            >
-              ยืนยัน
-            </button>
+              {timer > 0 && (
+                <p className="timer">กรุณากรอก OTP ภายในเวลา {formatTime(timer)}</p>
+              )}
+              {isOtpExpired && (
+                <>
+                  <p className="error-messageotp">{errorMessage}</p>{" "}<a className="newotp" type="button" onClick={handleRequestNewOtp}>
+                    ขอ OTP ใหม่
+                  </a>
+                 
+                </>
+              )}
+              {/* {errorMessage && <p className="error-message">{errorMessage}</p>} */}
+              {successMessage && (
+                <p className="success-message">{successMessage}</p>
+              )}
+              <div className="d-grid">
+              <button type="submit" className="btn" disabled={isOtpExpired}>
+              ยืนยัน OTP
+                </button>
+              </div>
+            </form>
           </div>
         </div>
       </div>
-      {/* <button onClick={logOut} className="btn btn-primary">
-        Log Out
-      </button> */}
     </main>
   );
 }
+
+
+const handleSubmit = (e) => {
+  e.preventDefault();
+
+  fetch("http://localhost:5000/verify-otp1", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({ username, otp, newEmail: email }), // ส่ง username, otp และ newEmail
+  })
+    .then((res) => res.json())
+    .then((data) => {
+      if (data.success) {
+        setSuccessMessage("ยืนยันอีเมลสำเร็จ");
+        setTimeout(() => {
+          navigate("/profile"); // เปลี่ยนเส้นทางไปยังโปรไฟล์หลังจากยืนยัน
+        }, 2000);
+      } else {
+        setErrorMessage("OTP ไม่ถูกต้องหรือหมดอายุ");
+      }
+    })
+    .catch((error) => {
+      setErrorMessage("เกิดข้อผิดพลาด: " + error.message);
+      console.error("Error:", error);
+    });
+};

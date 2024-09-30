@@ -15,6 +15,7 @@ export default function Profile() {
   const [username, setUsername] = useState("");
   const [surname, setSurName] = useState("");
   const [email, setEmail] = useState("");
+  const [isEmailVerified, setIsEmailVerified] = useState(false);
 
   useEffect(() => {
     const token = window.localStorage.getItem("token");
@@ -40,6 +41,7 @@ export default function Profile() {
           setSurName(data.data.surname);
           setUsername(data.data.username);
           setEmail(data.data.email);
+          setIsEmailVerified(data.data.isEmailVerified);
         });
     }
   }, []); //ส่งไปครั้งเดียว
@@ -52,6 +54,15 @@ export default function Profile() {
   // bi-list
   const handleToggleSidebar = () => {
     setIsActive(!isActive);
+  };
+
+  const handleEditClick = () => {
+    navigate("/emailverification", { state: { adminData } });
+  };
+  
+
+  const handleChangeEmailClick = () => {
+    navigate("/updateemail", { state: { adminData } });
   };
 
   return (
@@ -69,68 +80,74 @@ export default function Profile() {
           <li>
             <a href="home">
               <i class="bi bi-book"></i>
-              <span class="links_name" >จัดการข้อมูลคู่มือการดูแลผู้ป่วย</span>
+              <span class="links_name">จัดการข้อมูลคู่มือการดูแลผู้ป่วย</span>
             </a>
           </li>
           <li>
             <a href="alluser">
               <i class="bi bi-person-plus"></i>
-              <span class="links_name" >จัดการข้อมูลผู้ป่วย</span>
+              <span class="links_name">จัดการข้อมูลผู้ป่วย</span>
             </a>
           </li>
           <li>
             <a href="allmpersonnel">
               <i class="bi bi-people"></i>
-              <span class="links_name" >จัดการข้อมูลบุคลากร</span>
+              <span class="links_name">จัดการข้อมูลบุคลากร</span>
             </a>
           </li>
           <li>
             <a href="allequip">
               <i class="bi bi-prescription2"></i>
-              <span class="links_name" >จัดการอุปกรณ์ทางการแพทย์</span>
+              <span class="links_name">จัดการอุปกรณ์ทางการแพทย์</span>
             </a>
           </li>
           <li>
             <a href="allsymptom" onClick={() => navigate("/allsymptom")}>
               <i class="bi bi-bandaid"></i>
-              <span class="links_name" >จัดการอาการผู้ป่วย</span>
+              <span class="links_name">จัดการอาการผู้ป่วย</span>
             </a>
           </li>
           <li>
-            <a href="/alluserinsetting" >
-            <i class="bi bi-bell"></i>              
-            <span class="links_name" >ตั้งค่าการแจ้งเตือน</span>
+            <a href="/alluserinsetting">
+              <i class="bi bi-bell"></i>
+              <span class="links_name">ตั้งค่าการแจ้งเตือน</span>
             </a>
           </li>
           <li>
             <a href="alladmin" onClick={() => navigate("/alladmin")}>
               <i class="bi bi-person-gear"></i>
-              <span class="links_name" >จัดการแอดมิน</span>
+              <span class="links_name">จัดการแอดมิน</span>
             </a>
           </li>
           <div class="nav-logout">
             <li>
               <a href="./" onClick={logOut}>
-                <i class='bi bi-box-arrow-right' id="log_out" onClick={logOut}></i>
-                <span class="links_name" >ออกจากระบบ</span>
+                <i
+                  class="bi bi-box-arrow-right"
+                  id="log_out"
+                  onClick={logOut}
+                ></i>
+                <span class="links_name">ออกจากระบบ</span>
               </a>
             </li>
           </div>
         </ul>
       </div>
       <div className="home_content">
-      <div className="homeheader">
-        <div className="header">โปรไฟล์</div>
-        <div class="profile_details ">
-        <ul className="nav-list">
-          <li>
-            <a href="profile" >
-              <i class="bi bi-person"></i>
-              <span class="links_name" >{adminData && adminData.username}</span>
-            </a>
-          </li>
-          </ul>
-        </div>
+        <div className="homeheader">
+          <div className="header">โปรไฟล์</div>
+          <div class="profile_details ">
+            <ul className="nav-list">
+              <li>
+                <a href="profile">
+                  <i class="bi bi-person"></i>
+                  <span class="links_name">
+                    {adminData && adminData.username}
+                  </span>
+                </a>
+              </li>
+            </ul>
+          </div>
         </div>
         <div className="breadcrumbs">
           <ul>
@@ -151,9 +168,7 @@ export default function Profile() {
         <div className="formcontainerpf card mb-2">
           <div className="mb-2">
             <label>ชื่อผู้ใช้</label>
-            <div className="form-control gray-background">
-              {username}
-            </div>{" "}
+            <div className="form-control gray-background">{username}</div>{" "}
           </div>
           <div className="mb-2">
             <label>ชื่อ</label>
@@ -168,36 +183,46 @@ export default function Profile() {
             </div>
           </div>
           <div className="mb-2">
-            <label >อีเมล</label>
-            <div className="form-control gray-background">
-              {email}
-              {/* <a
-              onClick={() => navigate("/updateemail", { state: adminData })}>
-              เปลี่ยนอีเมล
-            </a> */}
-            </div>{" "}
-          
-          <div>
-          </div>
-          </div>
+      <label>อีเมล</label>
+      <div className="form-control">
+        {email}
+        {isEmailVerified ? (
+          <a
+            className="verify"
+            onClick={handleChangeEmailClick}
+          >
+            เปลี่ยนอีเมล
+          </a>
+        ) : (
+          <a
+            className="verify"
+            onClick={handleEditClick}
+          >
+            ยืนยันอีเมล
+          </a>
+        )}
+      </div>
+    </div>
           {adminData && (
-                <a className="editname" onClick={() => navigate("/updatenameadmin", { state: adminData })}>
-                  แก้ไขโปรไฟล์
-                </a>
-              )}
-        
-           <div>
-           <a className="editname" onClick={() => navigate("/updateadmin", { state: adminData })}>
+            <a
+              className="editname"
+              onClick={() => navigate("/updatenameadmin", { state: adminData })}
+            >
+              แก้ไขโปรไฟล์
+            </a>
+          )}
+
+          <div>
+            <a
+              className="editname"
+              onClick={() => navigate("/updateadmin", { state: adminData })}
+            >
               เปลี่ยนรหัสผ่าน
             </a>
-           </div>
-          
-           
+          </div>
         </div>
       </div>
-      <button onClick={logOut} className="btn btn-primary">
-        Log Out
-      </button>
+
     </main>
   );
 }

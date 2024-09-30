@@ -71,3 +71,8 @@
     display: flex;
     align-items: center;
 }
+
+.tablesetting td:last-child{
+    width: 20%; 
+    white-space: nowrap;
+}

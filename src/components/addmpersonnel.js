@@ -16,7 +16,6 @@ export default function AddMpersonnel() {
   const [email, setEmail] = useState("");
   const [name, setName] = useState("");
   const [surname, setSurname] = useState("");
-
   const [nametitle, setNameTitle] = useState("");
   const [isActive, setIsActive] = useState(false);
   const navigate = useNavigate();
@@ -63,8 +62,8 @@ export default function AddMpersonnel() {
       },
       body: JSON.stringify({
         username,
-        password,
-        confirmPassword,
+        // password,
+        // confirmPassword,
         email,
         tel,
         name,
@@ -210,7 +209,7 @@ export default function AddMpersonnel() {
               />
             </div>
 
-            <div className="mb-3">
+            {/* <div className="mb-3">
               <label>รหัสผ่าน<span className="required">*</span></label>
               <input
                 type="password"
@@ -226,7 +225,7 @@ export default function AddMpersonnel() {
                 className="form-control"
                 onChange={(e) => setConfirmPassword(e.target.value)}
               />
-            </div>
+            </div> */}
             <div className="mb-3">
               <label>อีเมล<span className="required">*</span></label>
               <input
@@ -236,7 +235,7 @@ export default function AddMpersonnel() {
               />
             </div>
             <div className="mb-3">
-              <label>เบอร์โทรศัพท์</label>
+              <label>เบอร์โทรศัพท์<span className="required">*</span></label>
               <input
                 type="text"
                 className="form-control"

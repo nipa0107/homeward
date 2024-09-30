@@ -230,7 +230,8 @@ export default function UpdateMPersonnel() {
             <input
               type="text"
               value={username}
-              className="form-control"
+              readOnly
+              className="form-control gray-background"
               onChange={(e) => setUsername(e.target.value)}
             />
           </div>
@@ -255,7 +256,8 @@ export default function UpdateMPersonnel() {
             <input
               value={email}
               type="email"
-              className="form-control"
+              readOnly
+              className="form-control1 gray-background"
               onChange={(e) => setEmail(e.target.value)}
             />
           </div>

@@ -43,7 +43,7 @@ export default function DisplayUser() {
   const handleSaveAsImage = () => {
     const element = document.getElementById("user-data");
     html2canvas(element).then((canvas) => {
-      const fileName = `${userData.name}_${userData.surname}_data.png`;
+      const fileName = `${userData.name}_${userData.surname}.png`;
       const link = document.createElement("a");
       link.download = fileName;
       link.href = canvas.toDataURL();
