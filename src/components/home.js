@@ -46,10 +46,10 @@ export default function Home({ }) {
 
         .catch((error) => {
           console.error("Error verifying token:", error);
-          logOut();
+          // logOut();
         });
     } else {
-      logOut();
+      // logOut();
     }
     getAllCaremanual();
   }, []); // ส่งไปครั้งเดียว
