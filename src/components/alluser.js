@@ -6,8 +6,7 @@ import "../css/sidebar.css";
 import logow from "../img/logow.png";
 import { useNavigate } from "react-router-dom";
 
-
-export default function AllUser({ }) {
+export default function AllUser({}) {
   const navigate = useNavigate();
   const [data, setData] = useState([]);
   const [adminData, setAdminData] = useState("");
@@ -44,7 +43,7 @@ export default function AllUser({ }) {
     fetch("http://localhost:5000/alluser", {
       method: "GET",
       headers: {
-        Authorization: `Bearer ${token}`, 
+        Authorization: `Bearer ${token}`,
       },
     })
       .then((res) => res.json())
@@ -64,122 +63,129 @@ export default function AllUser({ }) {
   };
 
   useEffect(() => {
-  const searchUser = async () => {
-    try {
-      const response = await fetch(
-        `http://localhost:5000/searchuser?keyword=${encodeURIComponent(searchKeyword)}`,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`, // เพิ่ม Authorization header เพื่อส่ง token ในการร้องขอค้นหา
-          },
-        }
-      );
+    const searchUser = async () => {
+      try {
+        const response = await fetch(
+          `http://localhost:5000/searchuser?keyword=${encodeURIComponent(
+            searchKeyword
+          )}`,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`, // เพิ่ม Authorization header เพื่อส่ง token ในการร้องขอค้นหา
+            },
+          }
+        );
 
-      const searchData = await response.json();
-      if (response.ok) {
-        if (searchData.data.length > 0) {
-          setData(searchData.data);
+        const searchData = await response.json();
+        if (response.ok) {
+          if (searchData.data.length > 0) {
+            setData(searchData.data);
+          } else {
+            setData([]);
+          }
         } else {
-          setData([]); 
+          console.error("Error during search:", searchData.status);
         }
-      } else {
-        console.error('Error during search:', searchData.status);
+      } catch (error) {
+        console.error("Error during search:", error);
       }
-    } catch (error) {
-      console.error("Error during search:", error);
-    }
-  };
-  searchUser();
-}, [searchKeyword, token]);
-
+    };
+    searchUser();
+  }, [searchKeyword, token]);
 
   return (
     <main className="body">
       <div className={`sidebar ${isActive ? "active" : ""}`}>
-        <div class="logo_content">
-          <div class="logo">
-            <div class="logo_name">
+        <div className="logo_content">
+          <div className="logo">
+            <div className="logo_name">
               <img src={logow} className="logow" alt="logo"></img>
             </div>
           </div>
-          <i class="bi bi-list" id="btn" onClick={handleToggleSidebar}></i>
+          <i className="bi bi-list" id="btn" onClick={handleToggleSidebar}></i>
         </div>
-        <ul class="nav-list">
+        <ul className="nav-list">
           <li>
             <a href="home">
-              <i class="bi bi-book"></i>
-              <span class="links_name" >จัดการข้อมูลคู่มือการดูแลผู้ป่วย</span>
+              <i className="bi bi-book"></i>
+              <span className="links_name">จัดการข้อมูลคู่มือการดูแลผู้ป่วย</span>
             </a>
           </li>
           <li>
             <a href="alluser">
-              <i class="bi bi-person-plus"></i>
-              <span class="links_name" >จัดการข้อมูลผู้ป่วย</span>
+              <i className="bi bi-person-plus"></i>
+              <span className="links_name">จัดการข้อมูลผู้ป่วย</span>
             </a>
           </li>
           <li>
             <a href="allmpersonnel">
-              <i class="bi bi-people"></i>
-              <span class="links_name" >จัดการข้อมูลบุคลากร</span>
+              <i className="bi bi-people"></i>
+              <span className="links_name">จัดการข้อมูลบุคลากร</span>
             </a>
           </li>
           <li>
             <a href="allequip">
-              <i class="bi bi-prescription2"></i>
-              <span class="links_name" >จัดการอุปกรณ์ทางการแพทย์</span>
+              <i className="bi bi-prescription2"></i>
+              <span className="links_name">จัดการอุปกรณ์ทางการแพทย์</span>
             </a>
           </li>
           <li>
             <a href="allsymptom" onClick={() => navigate("/allsymptom")}>
-              <i class="bi bi-bandaid"></i>
-              <span class="links_name" >จัดการอาการผู้ป่วย</span>
+              <i className="bi bi-bandaid"></i>
+              <span className="links_name">จัดการอาการผู้ป่วย</span>
             </a>
           </li>
           <li>
-            <a href="/alluserinsetting" >
-            <i class="bi bi-bell"></i>              
-            <span class="links_name" >ตั้งค่าการแจ้งเตือน</span>
+            <a href="/alluserinsetting">
+              <i className="bi bi-bell"></i>
+              <span className="links_name">ตั้งค่าการแจ้งเตือน</span>
             </a>
           </li>
           <li>
             <a href="alladmin" onClick={() => navigate("/alladmin")}>
-              <i class="bi bi-person-gear"></i>
-              <span class="links_name" >จัดการแอดมิน</span>
+              <i className="bi bi-person-gear"></i>
+              <span className="links_name">จัดการแอดมิน</span>
             </a>
           </li>
-          <div class="nav-logout">
+          <div className="nav-logout">
             <li>
               <a href="./" onClick={logOut}>
-                <i class='bi bi-box-arrow-right' id="log_out" onClick={logOut}></i>
-                <span class="links_name" >ออกจากระบบ</span>
+                <i
+                  className="bi bi-box-arrow-right"
+                  id="log_out"
+                  onClick={logOut}
+                ></i>
+                <span className="links_name">ออกจากระบบ</span>
               </a>
             </li>
           </div>
         </ul>
       </div>
       <div className="home_content">
-      <div className="homeheader">
-        <div className="header">จัดการข้อมูลผู้ป่วย</div>
-        <div class="profile_details ">
-        <ul className="nav-list">
-          <li>
-            <a href="profile" >
-              <i class="bi bi-person"></i>
-              <span class="links_name" >{adminData && adminData.username}</span>
-            </a>
-          </li>
-          </ul>
-        </div>
+        <div className="homeheader">
+          <div className="header">จัดการข้อมูลผู้ป่วย</div>
+          <div className="profile_details ">
+            <ul className="nav-list">
+              <li>
+                <a href="profile">
+                  <i className="bi bi-person"></i>
+                  <span className="links_name">
+                    {adminData && adminData.username}
+                  </span>
+                </a>
+              </li>
+            </ul>
+          </div>
         </div>
         <div className="breadcrumbs">
           <ul>
             <li>
-            <a href="home">
-                <i class="bi bi-house-fill"></i>
+              <a href="home">
+                <i className="bi bi-house-fill"></i>
               </a>
             </li>
             <li className="arrow">
-              <i class="bi bi-chevron-double-right"></i>
+              <i className="bi bi-chevron-double-right"></i>
             </li>
             <li>
               <a>จัดการข้อมูลผู้ป่วย</a>
@@ -204,65 +210,76 @@ export default function AllUser({ }) {
             onClick={() => navigate("/adduser")}
             className="btn btn-outline py-1 px-4"
           >
+          <i className="bi bi-plus-circle" style={{ marginRight: '8px' }}></i>
             เพิ่มข้อมูลผู้ป่วย
           </button>
-          <p className="countadmin">จำนวนผู้ป่วยทั้งหมด : {data.filter(user => user.deletedAt === null).length} คน</p>
+          <p className="countadmin">
+            จำนวนผู้ป่วยทั้งหมด :{" "}
+            {data.filter((user) => user.deletedAt === null).length} คน
+          </p>
         </div>
 
         <div className="content">
           {/* <div className="table100"> */}
-            <table className="table">
-              <thead>
-                <tr>
-                  <th>เลขประจำตัวประชาชน</th>
-                  <th>ชื่อ-นามสกุล</th>
-                  <th>รายละเอียด</th>
-                  <th className="centered-cell">ข้อมูลใช้เข้าสู่ระบบ</th>
-                </tr>
-              </thead>
-              <tbody>
-                
-                {data
-                .filter(user => user.deletedAt === null) // กรองออกเฉพาะข้อมูลที่มีค่า deleteAt เป็น null
+          <table className="table">
+            <thead>
+              <tr>
+                <th>เลขประจำตัวประชาชน</th>
+                <th>ชื่อ-นามสกุล</th>
+                <th>รายละเอียด</th>
+                <th className="centered-cell">ข้อมูลใช้เข้าสู่ระบบ</th>
+              </tr>
+            </thead>
+            <tbody>
+              {data
+                .filter((user) => user.deletedAt === null) // กรองออกเฉพาะข้อมูลที่มีค่า deleteAt เป็น null
 
                 .map((i, index) => {
                   return (
                     <tr key={index}>
                       <td>{i.username}</td>
-                      <td>{i.name}{' '}{i.surname}</td>
                       <td>
-                      <a
-                      className="info"
-                       onClick={() => navigate("/allinfo", { state: { id: i._id } })}>รายละเอียด</a>
-                         </td>
-                         <td className="centered-cell">
-  {i.AdddataFirst ? (
-    <span>-</span> // แสดง - เมื่อ AdddataFirst เป็น true
-  ) : (
-    <button
-      className="btn btn-save"
-      onClick={() => {
-        if (i.physicalTherapy) {
-          navigate("/physicalTherapyUser", { state: { userData: i } });
-        } else {
-          navigate("/displayUser", { state: { userData: i } });
-        }
-      }}
-    >
-      <i className="bi bi-download"></i>
-    </button>
-  )}
-</td>
-
-             
+                        {i.name} {i.surname}
+                      </td>
+                      <td>
+                        <a
+                          className="info"
+                          onClick={() =>
+                            navigate("/allinfo", { state: { id: i._id } })
+                          }
+                        >
+                          รายละเอียด
+                        </a>
+                      </td>
+                      <td className="centered-cell">
+                        {i.AdddataFirst ? (
+                          <span>-</span> // แสดง - เมื่อ AdddataFirst เป็น true
+                        ) : (
+                          <button
+                            className="btn btn-save"
+                            onClick={() => {
+                              if (i.physicalTherapy) {
+                                navigate("/physicalTherapyUser", {
+                                  state: { userData: i },
+                                });
+                              } else {
+                                navigate("/displayUser", {
+                                  state: { userData: i },
+                                });
+                              }
+                            }}
+                          >
+                            <i className="bi bi-download"></i>
+                          </button>
+                        )}
+                      </td>
                     </tr>
                   );
                 })}
-              </tbody>
-            </table>
-            
-          </div>
+            </tbody>
+          </table>
         </div>
+      </div>
       {/* </div> */}
     </main>
   );

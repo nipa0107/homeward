@@ -73,6 +73,6 @@
 }
 
 .tablesetting td:last-child{
-    width: 20%; 
-    white-space: nowrap;
+    /* width: 20%; 
+    white-space: nowrap; */
 }

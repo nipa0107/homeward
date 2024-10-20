@@ -171,8 +171,8 @@ export default function UpdateEquipUser() {
                     </li>
                     <li>
                         <a href="/alluserinsetting" >
-                            <i class="bi bi-bell"></i>
-                            <span class="links_name" >ตั้งค่าการแจ้งเตือน</span>
+                            <i className="bi bi-bell"></i>
+                            <span className="links_name" >ตั้งค่าการแจ้งเตือน</span>
                         </a>
                     </li>
                     <li>

@@ -96,63 +96,63 @@ export default function AlluserInSetting({ }) {
   return (
     <main className="body">
       <div className={`sidebar ${isActive ? "active" : ""}`}>
-        <div class="logo_content">
-          <div class="logo">
-            <div class="logo_name">
+        <div className="logo_content">
+          <div className="logo">
+            <div className="logo_name">
               <img src={logow} className="logow" alt="logo"></img>
             </div>
           </div>
-          <i class="bi bi-list" id="btn" onClick={handleToggleSidebar}></i>
+          <i className="bi bi-list" id="btn" onClick={handleToggleSidebar}></i>
         </div>
-        <ul class="nav-list">
+        <ul className="nav-list">
           <li>
             <a href="home">
-              <i class="bi bi-book"></i>
-              <span class="links_name" >จัดการข้อมูลคู่มือการดูแลผู้ป่วย</span>
+              <i className="bi bi-book"></i>
+              <span className="links_name" >จัดการข้อมูลคู่มือการดูแลผู้ป่วย</span>
             </a>
           </li>
           <li>
             <a href="alluser">
-              <i class="bi bi-person-plus"></i>
-              <span class="links_name" >จัดการข้อมูลผู้ป่วย</span>
+              <i className="bi bi-person-plus"></i>
+              <span className="links_name" >จัดการข้อมูลผู้ป่วย</span>
             </a>
           </li>
           <li>
             <a href="allmpersonnel">
-              <i class="bi bi-people"></i>
-              <span class="links_name" >จัดการข้อมูลบุคลากร</span>
+              <i className="bi bi-people"></i>
+              <span className="links_name" >จัดการข้อมูลบุคลากร</span>
             </a>
           </li>
           <li>
             <a href="allequip">
-              <i class="bi bi-prescription2"></i>
-              <span class="links_name" >จัดการอุปกรณ์ทางการแพทย์</span>
+              <i className="bi bi-prescription2"></i>
+              <span className="links_name" >จัดการอุปกรณ์ทางการแพทย์</span>
             </a>
           </li>
           <li>
             <a href="allsymptom" onClick={() => navigate("/allsymptom")}>
-              <i class="bi bi-bandaid"></i>
-              <span class="links_name" >จัดการอาการผู้ป่วย</span>
+              <i className="bi bi-bandaid"></i>
+              <span className="links_name" >จัดการอาการผู้ป่วย</span>
             </a>
           </li>
           <li>
             <a href="/alluserinsetting" >
-            <i class="bi bi-bell"></i>              
-            <span class="links_name" >ตั้งค่าการแจ้งเตือน</span>
+            <i className="bi bi-bell"></i>              
+            <span className="links_name" >ตั้งค่าการแจ้งเตือน</span>
             </a>
           </li>
           <li>
             <a href="alladmin" onClick={() => navigate("/alladmin")}>
-              <i class="bi bi-person-gear"></i>
-              <span class="links_name" >จัดการแอดมิน</span>
+              <i className="bi bi-person-gear"></i>
+              <span className="links_name" >จัดการแอดมิน</span>
             </a>
           </li>
           
-          <div class="nav-logout">
+          <div className="nav-logout">
             <li>
               <a href="./" onClick={logOut}>
-                <i class='bi bi-box-arrow-right' id="log_out" onClick={logOut}></i>
-                <span class="links_name" >ออกจากระบบ</span>
+                <i className='bi bi-box-arrow-right' id="log_out" onClick={logOut}></i>
+                <span className="links_name" >ออกจากระบบ</span>
               </a>
             </li>
           </div>
@@ -161,12 +161,12 @@ export default function AlluserInSetting({ }) {
       <div className="home_content">
       <div className="homeheader">
         <div className="header">ตั้งค่าการแจ้งเตือน</div>
-        <div class="profile_details">
+        <div className="profile_details">
         <ul className="nav-list">
           <li>
             <a href="profile" >
-              <i class="bi bi-person"></i>
-              <span class="links_name" >{adminData && adminData.username}</span>
+              <i className="bi bi-person"></i>
+              <span className="links_name" >{adminData && adminData.username}</span>
             </a>
           </li>
           </ul>
@@ -176,11 +176,11 @@ export default function AlluserInSetting({ }) {
           <ul>
             <li>
             <a href="home">
-                <i class="bi bi-house-fill"></i>
+                <i className="bi bi-house-fill"></i>
               </a>
             </li>
             <li className="arrow">
-              <i class="bi bi-chevron-double-right"></i>
+              <i className="bi bi-chevron-double-right"></i>
             </li>
             <li>
               <a>รายชื่อผู้ป่วย</a>

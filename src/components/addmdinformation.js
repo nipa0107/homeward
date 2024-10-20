@@ -194,14 +194,14 @@ export default function AddMedicalInformation() {
           </li>
           <li>
             <a href="allsymptom" onClick={() => navigate("/allsymptom")}>
-              <i class="bi bi-bandaid"></i>
-              <span class="links_name" >จัดการอาการผู้ป่วย</span>
+              <i className="bi bi-bandaid"></i>
+              <span className="links_name" >จัดการอาการผู้ป่วย</span>
             </a>
           </li>
           <li>
             <a href="/alluserinsetting" >
-            <i class="bi bi-bell"></i>              
-            <span class="links_name" >ตั้งค่าการแจ้งเตือน</span>
+            <i className="bi bi-bell"></i>              
+            <span className="links_name" >ตั้งค่าการแจ้งเตือน</span>
             </a>
           </li>
           <li>
@@ -356,7 +356,10 @@ export default function AddMedicalInformation() {
               <div className="filename ">
                 {selectedFileName1 && (
                   <div className="mb-3 pdf">
+
                     <a href={pdfURL1} target="_blank" rel="noopener noreferrer">
+                                 <i className="bi bi-filetype-pdf" style={{ color: "red" }}></i>{" "}
+
                       {selectedFileName1}
                     </a>
                   </div>

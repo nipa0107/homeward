@@ -5,14 +5,13 @@ import "../css/sidebar.css";
 import logow from "../img/logow.png";
 import { useNavigate } from "react-router-dom";
 
-
-export default function Allsymptom({ }) {
+export default function Allsymptom({}) {
   const navigate = useNavigate();
   const [data, setData] = useState([]);
   const [adminData, setAdminData] = useState("");
   const [isActive, setIsActive] = useState(false);
   const [searchKeyword, setSearchKeyword] = useState(""); //ค้นหา
-  const [token, setToken] = useState('');
+  const [token, setToken] = useState("");
 
   useEffect(() => {
     const token = window.localStorage.getItem("token");
@@ -25,7 +24,6 @@ export default function Allsymptom({ }) {
           "Content-Type": "application/json",
           Accept: "application/json",
           "Access-Control-Allow-Origin": "*",
-
         },
         body: JSON.stringify({
           token: token,
@@ -44,8 +42,8 @@ export default function Allsymptom({ }) {
     fetch("http://localhost:5000/allSymptom", {
       method: "GET",
       headers: {
-        Authorization: `Bearer ${token}` // เพิ่ม Authorization header เพื่อส่ง token ในการร้องขอ
-      }
+        Authorization: `Bearer ${token}`, // เพิ่ม Authorization header เพื่อส่ง token ในการร้องขอ
+      },
     })
       .then((res) => res.json())
       .then((data) => {
@@ -56,14 +54,17 @@ export default function Allsymptom({ }) {
   const deleteSymptom = async (id, username) => {
     if (window.confirm(`คุณต้องการลบ ${username} หรือไม่ ?`)) {
       try {
-        const response = await fetch(`http://localhost:5000/deleteSymptom/${id}`, {
-          method: 'DELETE',
-          headers: {
-            'Content-Type': 'application/json',
-            Accept: 'application/json',
-            Authorization: `Bearer ${token}`
-          },
-        });
+        const response = await fetch(
+          `http://localhost:5000/deleteSymptom/${id}`,
+          {
+            method: "DELETE",
+            headers: {
+              "Content-Type": "application/json",
+              Accept: "application/json",
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
 
         const data = await response.json();
 
@@ -71,17 +72,13 @@ export default function Allsymptom({ }) {
           alert(data.data);
           getSymptom();
         } else {
-          console.error('Error during deletion:', data.data);
+          console.error("Error during deletion:", data.data);
         }
       } catch (error) {
-        console.error('Error during fetch:', error);
+        console.error("Error during fetch:", error);
       }
     }
   };
-
-
-
-
 
   const add = () => {
     window.location.href = "./addsymptom";
@@ -95,125 +92,136 @@ export default function Allsymptom({ }) {
     setIsActive(!isActive);
   };
 
-useEffect(() => {
-  const searchAdmins = async () => {
-    try {
-      const response = await fetch(`http://localhost:5000/searchsymptom?keyword=${encodeURIComponent(searchKeyword)}`, {
-        headers: {
-          Authorization: `Bearer ${token}` // เพิ่ม Authorization header เพื่อส่ง token ในการร้องขอค้นหา
-        }
-      });
+  useEffect(() => {
+    const searchAdmins = async () => {
+      try {
+        const response = await fetch(
+          `http://localhost:5000/searchsymptom?keyword=${encodeURIComponent(
+            searchKeyword
+          )}`,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`, // เพิ่ม Authorization header เพื่อส่ง token ในการร้องขอค้นหา
+            },
+          }
+        );
 
-      const searchData = await response.json();
-      if (response.ok) {
-        if (searchData.data.length > 0) {
-          setData(searchData.data);
+        const searchData = await response.json();
+        if (response.ok) {
+          if (searchData.data.length > 0) {
+            setData(searchData.data);
+          } else {
+            setData([]); // ล้างข้อมูลเดิมในกรณีไม่พบข้อมูล
+          }
         } else {
-          setData([]); // ล้างข้อมูลเดิมในกรณีไม่พบข้อมูล
+          console.error("Error during search:", searchData.status);
         }
-      } else {
-        console.error('Error during search:', searchData.status);
+      } catch (error) {
+        console.error("Error during search:", error);
       }
-    } catch (error) {
-      console.error('Error during search:', error);
-    }
-  };
-  searchAdmins();
-}, [searchKeyword, token]);
+    };
+    searchAdmins();
+  }, [searchKeyword, token]);
 
   return (
     <main className="body">
-      <div className={`sidebar ${isActive ? 'active' : ''}`}>
-        <div class="logo_content">
-          <div class="logo">
-            <div class="logo_name" >
-              <img src={logow} className="logow" alt="logo" ></img>
+      <div className={`sidebar ${isActive ? "active" : ""}`}>
+        <div className="logo_content">
+          <div className="logo">
+            <div className="logo_name">
+              <img src={logow} className="logow" alt="logo"></img>
             </div>
           </div>
-          <i class='bi bi-list' id="btn" onClick={handleToggleSidebar}></i>
+          <i className="bi bi-list" id="btn" onClick={handleToggleSidebar}></i>
         </div>
-        <ul class="nav-list">
+        <ul className="nav-list">
           <li>
             <a href="home">
-              <i class="bi bi-book"></i>
-              <span class="links_name" >จัดการข้อมูลคู่มือการดูแลผู้ป่วย</span>
+              <i className="bi bi-book"></i>
+              <span className="links_name">จัดการข้อมูลคู่มือการดูแลผู้ป่วย</span>
             </a>
           </li>
           <li>
             <a href="alluser">
-              <i class="bi bi-person-plus"></i>
-              <span class="links_name" >จัดการข้อมูลผู้ป่วย</span>
+              <i className="bi bi-person-plus"></i>
+              <span className="links_name">จัดการข้อมูลผู้ป่วย</span>
             </a>
           </li>
           <li>
             <a href="allmpersonnel">
-              <i class="bi bi-people"></i>
-              <span class="links_name" >จัดการข้อมูลบุคลากร</span>
+              <i className="bi bi-people"></i>
+              <span className="links_name">จัดการข้อมูลบุคลากร</span>
             </a>
           </li>
           <li>
             <a href="allequip">
-              <i class="bi bi-prescription2"></i>
-              <span class="links_name" >จัดการอุปกรณ์ทางการแพทย์</span>
+              <i className="bi bi-prescription2"></i>
+              <span className="links_name">จัดการอุปกรณ์ทางการแพทย์</span>
             </a>
           </li>
           <li>
             <a href="allsymptom" onClick={() => navigate("/allsymptom")}>
-              <i class="bi bi-bandaid"></i>
-              <span class="links_name" >จัดการอาการผู้ป่วย</span>
+              <i className="bi bi-bandaid"></i>
+              <span className="links_name">จัดการอาการผู้ป่วย</span>
             </a>
           </li>
           <li>
-            <a href="/alluserinsetting" >
-            <i class="bi bi-bell"></i>              
-            <span class="links_name" >ตั้งค่าการแจ้งเตือน</span>
+            <a href="/alluserinsetting">
+              <i className="bi bi-bell"></i>
+              <span className="links_name">ตั้งค่าการแจ้งเตือน</span>
             </a>
           </li>
           <li>
             <a href="alladmin" onClick={() => navigate("/alladmin")}>
-              <i class="bi bi-person-gear"></i>
-              <span class="links_name" >จัดการแอดมิน</span>
+              <i className="bi bi-person-gear"></i>
+              <span className="links_name">จัดการแอดมิน</span>
             </a>
           </li>
-          <div class="nav-logout">
+          <div className="nav-logout">
             <li>
               <a href="./" onClick={logOut}>
-                <i class='bi bi-box-arrow-right' id="log_out" onClick={logOut}></i>
-                <span class="links_name" >ออกจากระบบ</span>
+                <i
+                  className="bi bi-box-arrow-right"
+                  id="log_out"
+                  onClick={logOut}
+                ></i>
+                <span className="links_name">ออกจากระบบ</span>
               </a>
             </li>
           </div>
         </ul>
       </div>
       <div className="home_content">
-      <div className="homeheader">
-        <div className="header">จัดการอาการผู้ป่วย</div>
-        <div class="profile_details">
-        <ul className="nav-list">
-          <li>
-            <a href="profile" >
-              <i class="bi bi-person"></i>
-              <span class="links_name" >{adminData && adminData.username}</span>
-            </a>
-          </li>
-          </ul>
-        </div>
+        <div className="homeheader">
+          <div className="header">จัดการอาการผู้ป่วย</div>
+          <div className="profile_details">
+            <ul className="nav-list">
+              <li>
+                <a href="profile">
+                  <i className="bi bi-person"></i>
+                  <span className="links_name">
+                    {adminData && adminData.username}
+                  </span>
+                </a>
+              </li>
+            </ul>
+          </div>
         </div>
         <div className="breadcrumbs">
           <ul>
             <li>
-            <a href="home">
-                <i class="bi bi-house-fill"></i>
+              <a href="home">
+                <i className="bi bi-house-fill"></i>
               </a>
             </li>
             <li className="arrow">
-              <i class="bi bi-chevron-double-right"></i>
+              <i className="bi bi-chevron-double-right"></i>
             </li>
-            <li><a>จัดการอาการผู้ป่วย</a>
+            <li>
+              <a>จัดการอาการผู้ป่วย</a>
             </li>
           </ul>
         </div>
-
 
         {/*ค้นหา */}
         {/* <h3>จัดการแอดมิน</h3> */}
@@ -230,28 +238,39 @@ useEffect(() => {
 
         <div className="toolbar">
           <button onClick={add} className="btn btn-outline py-1 px-4">
-          <i className="bi bi-plus-circle" style={{ marginRight: '8px' }}></i>
+            <i className="bi bi-plus-circle" style={{ marginRight: "8px" }}></i>
             เพิ่มอาการ
           </button>
           <p className="countadmin">จำนวนอาการทั้งหมด : {data.length} อาการ</p>
         </div>
         <div className="content">
-  {data.map((i) => (
-    <div key={i._id} className="adminall card mb-3 ">
-      <div className="card-body">
-        <button
-          className="deleteimg"
-          alt="deleteimg"
-          onClick={() => deleteSymptom(i._id, i.name)}
-        >ลบ</button>
-        <button className="editimg" onClick={() => navigate("/updatesymptom", { state: { id: i._id, caremanual: i } })}>แก้ไข</button>
-
-        <h5 className="card-title">{i.name}</h5>
-      </div>
-    </div>
-  ))}
-</div>
-
+          {data.map((i) => (
+            <div key={i._id} className="adminall card mb-3 ">
+              <div className="card-body">
+                <h5 className="card-title">{i.name}</h5>
+                <div className="buttongroup">
+                  <button
+                    className="editimg"
+                    onClick={() =>
+                      navigate("/updatesymptom", {
+                        state: { id: i._id, caremanual: i },
+                      })
+                    }
+                  >
+                    แก้ไข
+                  </button>
+                  <button
+                    className="deleteimg"
+                    alt="deleteimg"
+                    onClick={() => deleteSymptom(i._id, i.name)}
+                  >
+                    ลบ
+                  </button>
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
       </div>
     </main>
   );

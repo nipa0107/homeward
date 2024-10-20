@@ -13,10 +13,9 @@
   border-radius: 5px;
   width: 15vh;
   background-color: rgb(236, 78, 78);
-  margin: auto 1.6vh;
   color: white;
   border: none;
-  margin-right: 15vh;
+  margin-left: 10px; /* Space between username and button */
 }
 
 .deleteimg2 {
@@ -26,7 +25,6 @@
   margin: auto 1.6vh;
   color: white;
   border: none;
-  margin-right: 8vh;
 }
 .editimg2 {
   border-radius: 5px;
@@ -47,18 +45,11 @@
   border: none;
 } */
 
-.adminall .card-body .deleteimg {
+/* .adminall .card-body .deleteimg {
   float: right;
-}
+} */
 
-.adminall {
-  width: 70%;
-  margin-left: auto;
-  margin-right: auto;
-  box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.1);
-  line-height: 50px;
-  padding: 20px;
-}
+
 
 .adminall form {
   padding: 20px;
@@ -97,7 +88,7 @@
 
 .btn {
   background-color: #87CEFA;
-  color: white;
+  color: #000000;
   text-align: center;
 }
 
@@ -124,12 +115,7 @@
 }
 
 /* รูปที่แสดง */
-.centered-image {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  /* เพิ่มคำสั่งอื่นๆ ตามต้องการ */
-}
+
 
 .centered-image #previewImage {
   max-width: 30%;
@@ -300,9 +286,14 @@
   align-items: center;
 }
 
-.adminall .card-body .deleteimg1 {
+/* .adminall .card-body .deleteimg1 {
   float: none;
-  /* Remove float property */
+} */
+.adminall .card-body {
+  display: flex; /* Use flexbox */
+  justify-content: space-between; /* Align items with space between */
+  align-items: center; /* Center vertically */
+  padding: 20px;
 }
 
 .both-info {
@@ -347,20 +338,26 @@
 } */
 
 .adminall {
-  width: 65%;
-  /* Adjust the width as needed */
+  width: 70%;
   margin-left: auto;
   margin-right: auto;
+  box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.1);
+  line-height: 40px;
   padding: 20px;
-  border: 1px solid #ccc;
   border-radius: 10px;
-  background-color: #fff;
-  box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+  min-height: 125px;
 }
 
-/* .adminall form {
-    margin-bottom: 20px;
-  } */
+/* .adminall {
+  flex: 1 1 10%;
+  min-height: 120px;
+  display: flex; 
+  margin-left: auto;
+  margin-right: auto;
+  box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.1);
+  line-height: 50px;
+  padding: 20px;
+} */
 
 .adminall label {
   font-weight: 500;
@@ -380,16 +377,16 @@
 }
 
 .adminall .filename {
-  margin-bottom: 10px;
+  /* margin-bottom: 10px; */
 }
 
 .adminall .pdf {
-  margin-top: 5px;
+  /* margin-top: 5px; */
 }
 
 .errormessage {
   color: red;
-	font-size:1.5vh;
+	font-size:1em;
 }
 
 .table100{
@@ -432,8 +429,7 @@ td {
 
 .table td:last-child {
   width: 20%; 
-  /* ตั้งค่าความกว้างของเซลล์สุดท้ายเป็น 1% เพื่อให้กว้างตามข้อความที่อยู่ข้างในเซลล์ */
-  white-space: nowrap; /* ป้องกันการขึ้นบรรทัดใหม่ของข้อความภายในเซลล์ */
+  white-space: nowrap; 
 }
 .info3 .header {
   background-color: #95d7ff;
@@ -529,5 +525,106 @@ h5 {
 .message-container {
   display: flex;
   align-items: center;
-  gap: 10px; /* ปรับระยะห่างระหว่างข้อความและปุ่ม */
+  gap: 10px;
+}
+
+.card-body {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.buttongroup {
+  display: flex;             
+  justify-content: flex-end;  
+  gap: 10px;      
+  line-height: 50px;
+          
+}
+.card-title{
+  margin: 0;
+}
+
+/* ปุมลบไฟล์ */
+.delete-button-file {
+  background-color: transparent;
+  border: none;
+  color: #dc3545;
+  font-size: 20px; 
+  cursor: pointer; 
+  transition: color 0.3s; 
+}
+.delete-button-image {
+  background-color: transparent;
+  border: none;
+  color: #dc3545;
+  font-size: 20px; 
+  cursor: pointer; 
+  transition: color 0.3s; 
+}
+.delete-button-file:hover {
+  color: #c82333; 
+}
+
+.delete-button-file:focus {
+  outline: none;
+}
+.btn-danger {
+  background-color: #ff4d4f;
+  border-color: #ff4d4f;
+  color: #fff;
+  transition: background-color 0.3s ease;
+}
+
+.btn-danger:hover {
+  background-color: #ff6666; 
+  border-color: #ff6666;
+}
+
+.centered-image {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 10px;
+  align-items: center;
+
+}
+
+.centered-image img {
+  max-width: 100%;
+  max-height: 300px;
+  border-radius: 8px;
+  /* box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1); */
+  object-fit: cover;
+}
+
+.filename {
+  /* margin-top: 10px; */
+  font-size: 16px;
+}
+
+.filename a {
+  color: #007bff; 
+  text-decoration: none;
+  transition: color 0.3s ease;
+}
+
+.filename a:hover {
+  color: #0056b3;
+}
+
+.bi-filetype-pdf {
+  margin-right: 5px; 
+  font-size: 20px; 
+}
+
+@media (max-width: 768px) {
+  .card-body {
+    flex-direction: column; 
+    align-items: flex-start;
+  }
+
+  .deleteimg {
+    margin-top: 10px; 
+    width: 100%; 
+  }
 }

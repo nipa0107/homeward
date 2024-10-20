@@ -39,6 +39,7 @@ export default function UpdateCareManual() {
   //     previewImageElement.src = imageURL;
   //   }
   // };
+
   const handleImageChange = (e) => {
     const selectedImage = e.target.files[0];
     if (selectedImage) {
@@ -102,15 +103,63 @@ export default function UpdateCareManual() {
     fetchData();
   }, [id]);
 
+  const removeImage = async () => {
+    try {
+      const response = await fetch(`http://localhost:5000/remove-image/${id}`, {
+        method: "DELETE",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      if (response.ok) {
+        setImage(null);
+        const previewImageElement = document.getElementById("previewImage");
+        if (previewImageElement) {
+          previewImageElement.src = defaultImageURL;
+        }
+      } else {
+        toast.error("ไม่สามารถลบรูปภาพได้");
+      }
+    } catch (error) {
+      console.error("เกิดข้อผิดพลาดในการลบรูปภาพ:", error);
+      toast.error("เกิดข้อผิดพลาดในการลบรูปภาพ");
+    }
+  };
+
+  const removeFile = async () => {
+    try {
+      const response = await fetch(`http://localhost:5000/remove-file/${id}`, {
+        method: "DELETE",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      if (response.ok) {
+        setFile(null);
+        setSelectedFileName("");
+        setPdfURL(null);
+      } else {
+        toast.error("ไม่สามารถลบไฟล์ได้");
+      }
+    } catch (error) {
+      console.error("เกิดข้อผิดพลาดในการลบไฟล์:", error);
+      toast.error("เกิดข้อผิดพลาดในการลบไฟล์");
+    }
+  };
+
   const UpdateCareManual = async () => {
     console.log(caremanual_name, image, file, detail);
-
+    if (!caremanual_name || !image) {
+      toast.error("กรุณากรอกชื่อคู่มือและเลือกภาพก่อนทำการบันทึก");
+      return; // หยุดการดำเนินการถ้าเงื่อนไขไม่ตรง
+    }
     try {
       const formData = new FormData();
       formData.append("caremanual_name", caremanual_name);
       formData.append("detail", detail);
 
- 
       if (image) {
         formData.append("image", image);
       }
@@ -158,101 +207,103 @@ export default function UpdateCareManual() {
     <main className="body">
       <ToastContainer />
       <div className={`sidebar ${isActive ? "active" : ""}`}>
-        <div class="logo_content">
-          <div class="logo">
-            <div class="logo_name">
+        <div className="logo_content">
+          <div className="logo">
+            <div className="logo_name">
               <img src={logow} className="logow" alt="logo"></img>
             </div>
           </div>
-          <i class="bi bi-list" id="btn" onClick={handleToggleSidebar}></i>
+          <i className="bi bi-list" id="btn" onClick={handleToggleSidebar}></i>
         </div>
-        <ul class="nav-list">
+        <ul className="nav-list">
           <li>
             <a href="home">
-              <i class="bi bi-book"></i>
-              <span class="links_name">จัดการข้อมูลคู่มือการดูแลผู้ป่วย</span>
+              <i className="bi bi-book"></i>
+              <span className="links_name">จัดการข้อมูลคู่มือการดูแลผู้ป่วย</span>
             </a>
           </li>
           <li>
             <a href="alluser">
-              <i class="bi bi-person-plus"></i>
-              <span class="links_name">จัดการข้อมูลผู้ป่วย</span>
+              <i className="bi bi-person-plus"></i>
+              <span className="links_name">จัดการข้อมูลผู้ป่วย</span>
             </a>
           </li>
           <li>
             <a href="allmpersonnel">
-              <i class="bi bi-people"></i>
-              <span class="links_name">จัดการข้อมูลบุคลากร</span>
+              <i className="bi bi-people"></i>
+              <span className="links_name">จัดการข้อมูลบุคลากร</span>
             </a>
           </li>
 
           <li>
             <a href="allequip">
-              <i class="bi bi-prescription2"></i>
-              <span class="links_name">จัดการอุปกรณ์ทางการแพทย์</span>
+              <i className="bi bi-prescription2"></i>
+              <span className="links_name">จัดการอุปกรณ์ทางการแพทย์</span>
             </a>
           </li>
           <li>
             <a href="allsymptom">
-              <i class="bi bi-bandaid"></i>
-              <span class="links_name">จัดการอาการผู้ป่วย</span>
+              <i className="bi bi-bandaid"></i>
+              <span className="links_name">จัดการอาการผู้ป่วย</span>
             </a>
           </li>
           <li>
-            <a href="/alluserinsetting" >
-            <i class="bi bi-bell"></i>              
-            <span class="links_name" >ตั้งค่าการแจ้งเตือน</span>
+            <a href="/alluserinsetting">
+              <i className="bi bi-bell"></i>
+              <span className="links_name">ตั้งค่าการแจ้งเตือน</span>
             </a>
           </li>
           <li>
             <a href="alladmin" onClick={() => navigate("/alladmin")}>
-              <i class="bi bi-person-gear"></i>
-              <span class="links_name">จัดการแอดมิน</span>
+              <i className="bi bi-person-gear"></i>
+              <span className="links_name">จัดการแอดมิน</span>
             </a>
           </li>
-          <div class="nav-logout">
+          <div className="nav-logout">
             <li>
               <a href="./" onClick={logOut}>
                 <i
-                  class="bi bi-box-arrow-right"
+                  className="bi bi-box-arrow-right"
                   id="log_out"
                   onClick={logOut}
                 ></i>
-                <span class="links_name">ออกจากระบบ</span>
+                <span className="links_name">ออกจากระบบ</span>
               </a>
             </li>
           </div>
         </ul>
       </div>
       <div className="home_content">
-      <div className="homeheader">
-        <div className="header">จัดการข้อมูลคู่มือการดูแลผู้ป่วย</div>
-        <div class="profile_details ">
-        <ul className="nav-list">
-          <li>
-            <a href="profile">
-              <i class="bi bi-person"></i>
-              <span class="links_name">{adminData && adminData.username}</span>
-            </a>
-          </li>
-          </ul>
-        </div>
+        <div className="homeheader">
+          <div className="header">จัดการข้อมูลคู่มือการดูแลผู้ป่วย</div>
+          <div className="profile_details ">
+            <ul className="nav-list">
+              <li>
+                <a href="profile">
+                  <i className="bi bi-person"></i>
+                  <span className="links_name">
+                    {adminData && adminData.username}
+                  </span>
+                </a>
+              </li>
+            </ul>
+          </div>
         </div>
         <div className="breadcrumbs">
           <ul>
             <li>
               <a href="home">
-                <i class="bi bi-house-fill"></i>
+                <i className="bi bi-house-fill"></i>
               </a>
             </li>
             <li className="arrow">
-              <i class="bi bi-chevron-double-right"></i>
+              <i className="bi bi-chevron-double-right"></i>
             </li>
             <li>
               <a href="home">จัดการข้อมูลคู่มือการดูแลผู้ป่วย</a>
             </li>
             <li className="arrow">
-              <i class="bi bi-chevron-double-right"></i>
+              <i className="bi bi-chevron-double-right"></i>
             </li>
             <li>
               <a>แก้ไขคู่มือ</a>
@@ -290,60 +341,70 @@ export default function UpdateCareManual() {
                   src={defaultImageURL}
                   alt="Default Image"
                 />
+                
               )}
+                      {image && (
+              <button
+                type="button"
+                className="delete-button-image"
+                onClick={removeImage}
+              >
+                <i className="bi bi-x"></i> 
+              </button>
+              // <button className="btn btn-danger mt-2" onClick={removeImage}>
+              //   ลบรูปภาพ
+              // </button>
+            )}
             </div>
-            <br />
-            <input
-              type="file"
-              className="form-control"
-              accept="image/*"
-              onChange={handleImageChange}
-            ></input>
+    
+            {!image && (
+              <input
+                type="file"
+                className="form-control"
+                accept="image/*"
+                onChange={handleImageChange}
+              />
+            )}
           </div>
 
           <div className="mb-3">
             <label>แนบไฟล์</label>
-
-            <input
-              type="file"
-              className="form-control"
-              accept="application/pdf"
-              onChange={handleFileChange}
-            />
-          </div>
-
-          {/* <div className="mb-3 pdf">
-            {pdfURL ? (
-              <a href={pdfURL} target="_blank" rel="noopener noreferrer">
-                {selectedFileName || "ดูไฟล์ "}
-              </a>
-            ) : (
-              file && (
-                <a
-                  href={`file/${file}`}
-                  target="_blank"
-                  rel="noopener noreferrer"
+            {file ? (
+              <div className="filename">
+                {typeof file === "string" ? (
+                  // กรณีที่ไฟล์มาจากฐานข้อมูล (เป็น URL ของไฟล์)
+                  <a href={file} target="_blank" rel="noopener noreferrer">
+                    <i
+                      className="bi bi-filetype-pdf"
+                      style={{ color: "red" }}
+                    ></i>{" "}
+                    {selectedFileName || "ดูไฟล์"}
+                  </a>
+                ) : (
+                  // กรณีที่ไฟล์เพิ่งถูกอัปโหลดใหม่
+                  <a href={pdfURL} target="_blank" rel="noopener noreferrer">
+                    <i
+                      className="bi bi-filetype-pdf"
+                      style={{ color: "red" }}
+                    ></i>{" "}
+                    {selectedFileName || "ดูไฟล์"}
+                  </a>
+                )}
+                <button
+                  type="button"
+                  className="delete-button-file"
+                  onClick={removeFile}
                 >
-                  {selectedFileName || "ดูไฟล์ PDF"}
-                </a>
-              )
-            )}
-          </div> */}
-
-          {/* กลับมาดูใหม่ */}
-
-          <div className="filename">
-            {pdfURL ? (
-              <a href={pdfURL} target="_blank" rel="noopener noreferrer">
-                {selectedFileName || "ดูไฟล์"}
-              </a>
+                  <i className="bi bi-x"></i> {/* X icon */}
+                </button>
+              </div>
             ) : (
-              file && (
-                <a href={file} target="_blank" rel="noopener noreferrer">
-                  <i className="bi bi-filetype-pdf" style={{color:'red'}}></i>{" "}
-                  {selectedFileName || "ดูไฟล์"}
-                </a>
-              )
+              <input
+                type="file"
+                className="form-control"
+                accept="application/pdf"
+                onChange={handleFileChange}
+              />
             )}
           </div>
 
@@ -360,11 +421,9 @@ export default function UpdateCareManual() {
             <button onClick={UpdateCareManual} className="btn btn-outline py-2">
               บันทึก
             </button>
-            <br />
           </div>
         </div>
       </div>
-      <div></div>
     </main>
   );
 }
