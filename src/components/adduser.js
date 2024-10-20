@@ -49,7 +49,11 @@ export default function AddUser() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-  
+    if (username.length !== 13) {
+      setError("เลขประจำตัวบัตรประชาชนต้องมีความยาว 13 ตัวอักษร");
+      // toast.error("เลขประจำตัวบัตรประชาชนต้องมีความยาว 13 ตัวอักษร");
+      return;
+    }
     fetch("http://localhost:5000/adduser", {
       method: "POST",
       headers: {
@@ -79,7 +83,7 @@ export default function AddUser() {
           }
         } else {
           setError(data.error);
-          toast.error(data.error);
+          // toast.error(data.error);
         }
       })
       .catch((error) => {
