@@ -556,7 +556,8 @@ export default function AllUser({ }) {
                             window.open(`${medicalInfo.fileP}`, "_blank");
                           }}
                         >
-                          {medicalInfo.fileP.split("/").pop().split("\\").pop()}
+                          
+                          {medicalInfo.fileP.replace("?alt=media", "").split("/").pop().split("\\").pop()}
                         </a>
                       ) : (
                         "-"
@@ -577,8 +578,8 @@ export default function AllUser({ }) {
                             window.open(`${medicalInfo.fileM}`, "_blank");
                           }}
                         >
-                          {medicalInfo.fileM.split("/").pop().split("\\").pop()}
-                        </a>
+    {medicalInfo.fileM.replace("?alt=media", "").split("/").pop().split("\\").pop()}
+    </a>
                       ) : (
                         "-"
                       )}
@@ -598,7 +599,7 @@ export default function AllUser({ }) {
                             window.open(`${medicalInfo.filePhy}`, "_blank");
                           }}
                         >
-                          {medicalInfo.filePhy.split("/").pop().split("\\").pop()}
+                          {medicalInfo.filePhy.replace("?alt=media", "").split("/").pop().split("\\").pop()}
                         </a>
                       ) : (
                         "-"
