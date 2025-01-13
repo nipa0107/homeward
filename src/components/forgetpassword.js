@@ -14,6 +14,7 @@ export default class Reset extends Component {
   hanleSubmit(e) {
     e.preventDefault();
     const { email } = this.state;
+    console.log("Email submitted: ", email); 
     console.log(email);
     fetch("http://localhost:5000/forgot-password", {
       method: "POST",
@@ -26,12 +27,25 @@ export default class Reset extends Component {
         email,
       }),
     })
-      .then((res) => res.json())
-      .then((data) => {
-        console.log(data);
-        alert(data.status);
-      });
-  }
+    .then((res) => res.json())
+    .then((data) => {
+      console.log("Response from server: ", data); 
+      if (data.status === "User Not Exists!!") {
+        alert(data.status); 
+      } else if (data.status === "check your emailbox") {
+        console.log("Email sent successfully"); 
+        alert("เช็คอีเมลของคุณเพื่อรีเซ็ทรหัสผ่าน"); 
+        this.setState({ email: "" }, () => {
+          // ล้างค่า email หลังจากที่ตั้งค่า state แล้ว
+          console.log("Email field cleared"); // ดูใน console ว่าค่าถูกรีเซ็ตหรือไม่
+        });      }
+    })
+    .catch((error) => {
+      console.error("Error:", error); 
+      alert("เกิดข้อผิดพลาดในการส่งคำขอ");
+    });
+}
+
 
   render() {
     return (
@@ -51,6 +65,7 @@ export default class Reset extends Component {
               type="email"
               className="form-control"
               placeholder="อีเมล"
+              value={this.state.email} 
               onChange={(e) => this.setState({ email: e.target.value })}
             />
           </div>

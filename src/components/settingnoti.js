@@ -32,6 +32,8 @@ export default function SettingNoti() {
     DTX: "",
     Respiration: "",
   });
+  const [painscore, setPainscore] = useState("")
+
   const { id } = location.state || {};
 
   useEffect(() => {
@@ -76,6 +78,7 @@ export default function SettingNoti() {
         userId: id,
         min,
         max,
+        painscore,
       }),
     })
       .then((res) => res.json())
@@ -96,8 +99,9 @@ export default function SettingNoti() {
     DBP: { min: 60, max: 90 },
     PulseRate: { min: 60, max: 100 },
     Temperature: { min: 36.5, max: 37.5 },
-    DTX: { min: 70, max: 110 },
+    DTX: { min: 80, max: 180 },
     Respiration: { min: 16, max: 20 },
+    Painscore: 5,
   };
 
   useEffect(() => {
@@ -134,6 +138,7 @@ export default function SettingNoti() {
               DTX: data.max.DTX,
               Respiration: data.max.Respiration,
             });
+            setPainscore(data.Painscore)
           } else {
             // ถ้าไม่พบข้อมูล threshold ใช้ค่าเริ่มต้น
             setMin({
@@ -153,6 +158,7 @@ export default function SettingNoti() {
               DTX: threshold.DTX.max,
               Respiration: threshold.Respiration.max,
             });
+            setPainscore(threshold.Painscore)
           }
         }
       } catch (error) {
@@ -169,6 +175,7 @@ export default function SettingNoti() {
   };
   return (
     <main className="body">
+      <ToastContainer />
       <div className={`sidebar ${isActive ? "active" : ""}`}>
         <div className="logo_content">
           <div className="logo">
@@ -221,7 +228,12 @@ export default function SettingNoti() {
               <span className="links_name">จัดการแอดมิน</span>
             </a>
           </li>
-
+          <li>
+            <a href="recover-patients">
+              <i className="bi bi-trash"></i>
+              <span className="links_name">จัดการข้อมูลผู้ป่วยที่ถูกลบ</span>
+            </a>
+          </li>
           <div className="nav-logout">
             <li>
               <a href="./" onClick={logOut}>
@@ -401,6 +413,17 @@ export default function SettingNoti() {
                 required
               />
               <label className="unitnoti">mg/dL</label>
+            </div>
+
+            <div className="input-group">
+            <label className="titlenoti">ระดับความเจ็บปวด</label>
+            {/* <label>Min:</label> */}
+            <input
+              type="number"
+              value={painscore}
+              onChange={(e) => setPainscore( e.target.value )}
+              required
+            />          
             </div>
 
             <div className="d-grid">

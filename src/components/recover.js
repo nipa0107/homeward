@@ -1,18 +1,17 @@
 import React, { useEffect, useState } from "react";
-import "../css/sidebar.css";
-import "../css/alladmin.css";
-import "bootstrap-icons/font/bootstrap-icons.css";
-import logow from "../img/logow.png";
-import { useNavigate } from "react-router-dom";
 import deleteimg from "../img/delete.png";
 import editimg from "../img/edit.png";
+import "../css/alladmin.css";
+import "../css/sidebar.css";
+import logow from "../img/logow.png";
+import { useNavigate } from "react-router-dom";
 
-export default function Home({}) {
-  const [data, setData] = useState([]);
+export default function Recover({}) {
   const navigate = useNavigate();
+  const [data, setData] = useState([]);
   const [adminData, setAdminData] = useState("");
   const [isActive, setIsActive] = useState(false);
-  const [searchKeyword, setSearchKeyword] = useState(""); // ค้นหา
+  const [searchKeyword, setSearchKeyword] = useState(""); //ค้นหา
   const [token, setToken] = useState("");
 
   useEffect(() => {
@@ -35,33 +34,21 @@ export default function Home({}) {
         .then((data) => {
           console.log(data);
           setAdminData(data.data);
-          if (data.data == "token expired") {
-            // alert("Token expired login again");
-            window.localStorage.clear();
-            window.location.href = "./";
-          }
-        })
-
-        .catch((error) => {
-          console.error("Error verifying token:", error);
-          // logOut();
         });
-    } else {
-      // logOut();
     }
-    getAllCaremanual();
-  }, []); // ส่งไปครั้งเดียว
+    getAllUser();
+  }, []);
 
-  const getAllCaremanual = () => {
-    fetch("http://localhost:5000/allcaremanual", {
+  const getAllUser = () => {
+    fetch("http://localhost:5000/alluser", {
       method: "GET",
       headers: {
-        Authorization: `Bearer ${token}`, // เพิ่ม Authorization header เพื่อส่ง token ในการร้องขอ
+        Authorization: `Bearer ${token}`,
       },
     })
       .then((res) => res.json())
       .then((data) => {
-        console.log(data);
+        console.log(data, "AllUser");
         setData(data.data);
       });
   };
@@ -70,46 +57,16 @@ export default function Home({}) {
     window.localStorage.clear();
     window.location.href = "./";
   };
-
-  const deleteCaremanual = async (id, caremanual_name) => {
-    if (window.confirm(`คุณต้องการลบ ${caremanual_name} หรือไม่ ?`)) {
-      try {
-        const response = await fetch(
-          `http://localhost:5000/deleteCaremanual/${id}`,
-          {
-            method: "DELETE",
-            headers: {
-              "Content-Type": "application/json",
-              Accept: "application/json",
-              Authorization: `Bearer ${token}`,
-            },
-          }
-        );
-
-        const data = await response.json();
-
-        if (response.ok) {
-          alert(data.data);
-          getAllCaremanual();
-        } else {
-          console.error("Error during deletion:", data.data);
-        }
-      } catch (error) {
-        console.error("Error during fetch:", error);
-      }
-    }
-  };
-
   // bi-list
   const handleToggleSidebar = () => {
     setIsActive(!isActive);
   };
 
   useEffect(() => {
-    const searchCaremanual = async () => {
+    const searchUser = async () => {
       try {
         const response = await fetch(
-          `http://localhost:5000/searchcaremanual?keyword=${encodeURIComponent(
+          `http://localhost:5000/searchuser?keyword=${encodeURIComponent(
             searchKeyword
           )}`,
           {
@@ -118,12 +75,13 @@ export default function Home({}) {
             },
           }
         );
+
         const searchData = await response.json();
         if (response.ok) {
           if (searchData.data.length > 0) {
             setData(searchData.data);
           } else {
-            setData([]); // ล้างข้อมูลเดิมในกรณีไม่พบข้อมูล
+            setData([]);
           }
         } else {
           console.error("Error during search:", searchData.status);
@@ -132,8 +90,40 @@ export default function Home({}) {
         console.error("Error during search:", error);
       }
     };
-    searchCaremanual();
+    searchUser();
   }, [searchKeyword, token]);
+
+  const recoverUser = async (id, username) => {
+    if (window.confirm(`คุณต้องการกู้คืน ${username} นี้ใช่หรือไม่?`)) {
+
+    try {
+    
+      // ดำเนินการเรียก API
+      const response = await fetch(`http://localhost:5000/recoveruser/${id}`, {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+      });
+  
+      const result = await response.json();
+  
+      if (response.ok && result.success) {
+        alert("กู้คืนข้อมูลสำเร็จ");
+        getAllUser(); // เรียกข้อมูลใหม่หลังจากกู้คืน
+      } else {
+        alert(
+          "เกิดข้อผิดพลาด: " + (result.message || "ไม่สามารถกู้คืนข้อมูลได้")
+        );
+      }
+    } catch (error) {
+      console.error("Error recovering user:", error);
+      alert("เกิดข้อผิดพลาด: " + error.message);
+    }
+  }
+};
+  
 
   return (
     <main className="body">
@@ -150,7 +140,9 @@ export default function Home({}) {
           <li>
             <a href="home">
               <i className="bi bi-book"></i>
-              <span className="links_name">จัดการข้อมูลคู่มือการดูแลผู้ป่วย</span>
+              <span className="links_name">
+                จัดการข้อมูลคู่มือการดูแลผู้ป่วย
+              </span>
             </a>
           </li>
           <li>
@@ -159,6 +151,7 @@ export default function Home({}) {
               <span className="links_name">จัดการข้อมูลผู้ป่วย</span>
             </a>
           </li>
+
           <li>
             <a href="allmpersonnel">
               <i className="bi bi-people"></i>
@@ -172,7 +165,7 @@ export default function Home({}) {
             </a>
           </li>
           <li>
-            <a href="allsymptom">
+            <a href="allsymptom" onClick={() => navigate("/allsymptom")}>
               <i className="bi bi-bandaid"></i>
               <span className="links_name">จัดการอาการผู้ป่วย</span>
             </a>
@@ -184,7 +177,7 @@ export default function Home({}) {
             </a>
           </li>
           <li>
-            <a href="alladmin">
+            <a href="alladmin" onClick={() => navigate("/alladmin")}>
               <i className="bi bi-person-gear"></i>
               <span className="links_name">จัดการแอดมิน</span>
             </a>
@@ -211,8 +204,8 @@ export default function Home({}) {
       </div>
       <div className="home_content">
         <div className="homeheader">
-          <div className="header">จัดการข้อมูลคู่มือการดูแลผู้ป่วย</div>
-          <div className="profile_details">
+          <div className="header">จัดการข้อมูลผู้ป่วยที่ถูกลบ</div>
+          <div className="profile_details ">
             <ul className="nav-list">
               <li>
                 <a href="profile">
@@ -236,13 +229,13 @@ export default function Home({}) {
               <i className="bi bi-chevron-double-right"></i>
             </li>
             <li>
-              <a>จัดการข้อมูลคู่มือการดูแลผู้ป่วย</a>
+              <a>จัดการข้อมูลผู้ป่วยที่ถูกลบ</a>
             </li>
           </ul>
         </div>
-        {/* <h3>จัดการข้อมูลคู่มือการดูแลผู้ป่วย</h3> */}
 
-        {/* ค้นหา */}
+        {/*ค้นหา */}
+        {/* <h3>จัดการข้อมูลผู้ป่วย</h3> */}
         <div className="search-bar">
           <input
             className="search-text"
@@ -252,69 +245,87 @@ export default function Home({}) {
             onChange={(e) => setSearchKeyword(e.target.value)}
           />
         </div>
-
+       
         <div className="toolbar">
-          <button
-            className="btn btn-outline py-1 px-4"
-            onClick={() => navigate("/addcaremanual", { state: adminData })}
-          >
-          <i className="bi bi-plus-circle" style={{ marginRight: '8px' }}></i>
-          เพิ่มคู่มือ
-          </button>
           <p className="countadmin">
-            จำนวนคู่มือทั้งหมด : {data.length} คู่มือ
+            จำนวนผู้ป่วยที่ถูกลบทั้งหมด :{" "}
+            {data.filter((user) => user.deletedAt !== null).length} คน
           </p>
         </div>
-
+       
         <div className="content">
-        {data.length > 0 ? (
-           data.map((i) => {
-                // แปลงเวลา
-                const formattedDate = new Intl.DateTimeFormat("th-TH", {
-                  day: "numeric",
-                  month: "long",
-                  year: "numeric",
-                  hour: "numeric",
-                  minute: "numeric",
-                  second: "numeric",
-                }).format(new Date(i.updatedAt));
-                return (
-                  <div className="adminall card mb-3 ">
-                    <div className="card-body">
-                      <h5 className="card-title">{i.caremanual_name}</h5>
-                      {/* <h5 className="card-title">แก้ไขครั้งล่าสุดเมื่อ : {formattedDate}</h5> */}
-                      <div className="buttongroup">
-                        <button
-                          className="editimg"
+        {/* <div className="info-alert"> */}
+              <p className="info-alert">
+                ข้อมูลผู้ป่วยที่ถูกลบจะถูกเก็บไว้ในระบบ &nbsp;<strong> 30 วัน </strong>&nbsp;
+                หลังจากนั้นข้อมูลจะถูกลบถาวรจากฐานข้อมูล
+              </p>
+        {/* </div> */}
+          {/* <div className="table100"> */}
+          <table className="table">
+            <thead>
+              <tr>
+                <th>เลขประจำตัวประชาชน</th>
+                <th>ชื่อ-นามสกุล</th>
+                <th>วันที่ลบข้อมูล</th>
+                {/* <th>รายละเอียด</th> */}
+                <th className="centered-cell">กู้คืนข้อมูลผู้ป่วย</th>
+              </tr>
+            </thead>
+            <tbody>
+            {data.filter((user) => user.deletedAt !== null).length > 0 ? (
+            data
+                .filter((user) => user.deletedAt !== null) // กรองออกเฉพาะข้อมูลที่มีค่า deleteAt เป็น null
+                .sort((a, b) => new Date(a.deletedAt) - new Date(b.deletedAt))
+                .map((i, index) => (
+                  
+                    <tr key={index}>
+                      <td>{i.username}</td>
+                      <td>
+                        {i.name} {i.surname}
+                      </td>
+                      {/* <td>
+                        <a
+                          className="info"
                           onClick={() =>
-                            navigate("/updatecaremanual", {
-                              state: { id: i._id, caremanual: i },
-                            })
+                            navigate("/allinfo", { state: { id: i._id } })
                           }
                         >
-                          แก้ไข
-                        </button>
-
+                          รายละเอียด
+                        </a>
+                      </td> */}
+                      <td>
+                        {new Date(i.deletedAt).toLocaleDateString("th-TH", {
+                          year: "numeric",
+                          month: "long",
+                          day: "numeric",
+                        })}
+                      </td>
+                      <td className="centered-cell">
                         <button
-                          className="deleteimg"
-                          onClick={() =>
-                            deleteCaremanual(i._id, i.caremanual_name)
-                          }
+                          className="btn btn-recover"
+                          onClick={() => recoverUser(i._id, i.username)} // เรียกใช้ฟังก์ชัน recoverUser
                         >
-                          ลบ
+                          <i className="bi bi-arrow-counterclockwise"></i>{" "}
+                          กู้คืน
                         </button>
-                      </div>
-                    </div>
-                  </div>
-                );
-              })
-            ) : (
-              <div className="no-results">
-                <p>ไม่พบข้อมูลที่คุณค้นหา</p>
-              </div>
-            )}
+                      </td>
+                    </tr>
+                    ))
+                  ) : (
+                    <tr>
+                      <td colSpan="4" className="text-center">
+                        ไม่พบข้อมูลที่คุณค้นหา
+                      </td>
+                    </tr>
+                  )}
+            </tbody>
+          </table>
+          {/* <div className="content">
+         
+          </div> */}
         </div>
       </div>
+      {/* </div> */}
     </main>
   );
 }

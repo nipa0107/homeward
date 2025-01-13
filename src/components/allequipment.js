@@ -174,6 +174,12 @@ export default function AllEquip({}) {
               <span className="links_name" >จัดการแอดมิน</span>
             </a>
           </li>
+          <li>
+            <a href="recover-patients">
+              <i className="bi bi-trash"></i>
+              <span className="links_name">จัดการข้อมูลผู้ป่วยที่ถูกลบ</span>
+            </a>
+          </li>
           <div className="nav-logout">
             <li>
               <a href="./" onClick={logOut}>
@@ -246,11 +252,12 @@ export default function AllEquip({}) {
                 </tr>
               </thead>
               <tbody>
-                {data.map((i, index) => (
+              {data.length > 0 ? (
+                data.map((i, index) => (
                   <tr key={index}>
                     <td data-title="">{i.equipment_name}</td>
                     <td>{i.equipment_type}</td>
-                    <td>
+                    <td className="buttongroup-in-table">
                     <button className="editimg2" onClick={() => navigate("/updateequip", { state: { id: i._id,equip: i} })}>แก้ไข</button>
                       <button
                         className="deleteimg2"
@@ -260,7 +267,14 @@ export default function AllEquip({}) {
 
                     </td>
                   </tr>
-                ))}
+                  ))
+                ) : (
+                  <tr>
+                    <td colSpan="3" className="text-center">
+                     ไม่พบข้อมูลที่คุณค้นหา
+                    </td>
+                  </tr>
+                )}
               </tbody>
             </table>
           {/* </div> */}

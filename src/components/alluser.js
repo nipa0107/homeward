@@ -108,7 +108,9 @@ export default function AllUser({}) {
           <li>
             <a href="home">
               <i className="bi bi-book"></i>
-              <span className="links_name">จัดการข้อมูลคู่มือการดูแลผู้ป่วย</span>
+              <span className="links_name">
+                จัดการข้อมูลคู่มือการดูแลผู้ป่วย
+              </span>
             </a>
           </li>
           <li>
@@ -117,6 +119,7 @@ export default function AllUser({}) {
               <span className="links_name">จัดการข้อมูลผู้ป่วย</span>
             </a>
           </li>
+
           <li>
             <a href="allmpersonnel">
               <i className="bi bi-people"></i>
@@ -145,6 +148,12 @@ export default function AllUser({}) {
             <a href="alladmin" onClick={() => navigate("/alladmin")}>
               <i className="bi bi-person-gear"></i>
               <span className="links_name">จัดการแอดมิน</span>
+            </a>
+          </li>
+          <li>
+            <a href="recover-patients">
+              <i className="bi bi-trash"></i>
+              <span className="links_name">จัดการข้อมูลผู้ป่วยที่ถูกลบ</span>
             </a>
           </li>
           <div className="nav-logout">
@@ -210,7 +219,7 @@ export default function AllUser({}) {
             onClick={() => navigate("/adduser")}
             className="btn btn-outline py-1 px-4"
           >
-          <i className="bi bi-plus-circle" style={{ marginRight: '8px' }}></i>
+            <i className="bi bi-plus-circle" style={{ marginRight: "8px" }}></i>
             เพิ่มข้อมูลผู้ป่วย
           </button>
           <p className="countadmin">
@@ -231,11 +240,10 @@ export default function AllUser({}) {
               </tr>
             </thead>
             <tbody>
-              {data
-                .filter((user) => user.deletedAt === null) // กรองออกเฉพาะข้อมูลที่มีค่า deleteAt เป็น null
-
-                .map((i, index) => {
-                  return (
+              {data.filter((user) => user.deletedAt === null).length > 0 ? (
+                data
+                  .filter((user) => user.deletedAt === null)
+                  .map((i, index) => (
                     <tr key={index}>
                       <td>{i.username}</td>
                       <td>
@@ -252,8 +260,8 @@ export default function AllUser({}) {
                         </a>
                       </td>
                       <td className="centered-cell">
-                        {i.AdddataFirst ? (
-                          <span>-</span> // แสดง - เมื่อ AdddataFirst เป็น true
+                        {/* {i.AdddataFirst ? (
+                          <span>-</span>
                         ) : (
                           <button
                             className="btn btn-save"
@@ -271,11 +279,33 @@ export default function AllUser({}) {
                           >
                             <i className="bi bi-download"></i>
                           </button>
-                        )}
+                        )} */}
+                        <button
+                          className="btn btn-save"
+                          onClick={() => {
+                            if (i.physicalTherapy) {
+                              navigate("/physicalTherapyUser", {
+                                state: { userData: i },
+                              });
+                            } else {
+                              navigate("/displayUser", {
+                                state: { userData: i },
+                              });
+                            }
+                          }}
+                        >
+                          <i className="bi bi-download"></i>
+                        </button>
                       </td>
                     </tr>
-                  );
-                })}
+                  ))
+              ) : (
+                <tr>
+                  <td colSpan="4" className="text-center">
+                    ไม่พบข้อมูลที่คุณค้นหา
+                  </td>
+                </tr>
+              )}
             </tbody>
           </table>
         </div>
