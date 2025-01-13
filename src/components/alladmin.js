@@ -178,6 +178,12 @@ export default function Alladmin({}) {
               <span className="links_name">จัดการแอดมิน</span>
             </a>
           </li>
+          <li>
+            <a href="recover-patients">
+              <i className="bi bi-trash"></i>
+              <span className="links_name">จัดการข้อมูลผู้ป่วยที่ถูกลบ</span>
+            </a>
+          </li>
           <div className="nav-logout">
             <li>
               <a href="./" onClick={logOut}>
@@ -245,7 +251,14 @@ export default function Alladmin({}) {
           <p className="countadmin">จำนวนแอดมินทั้งหมด : {data.length} คน</p>
         </div>
         <div className="content">
-          {data.map((i) => (
+          {data.length > 0 ? (
+           data.sort((a, b) => {
+            // นำ adminData.username ไปเปรียบเทียบกับ a และ b
+            if (a.username === adminData.username) return -1; // ให้ admin ปัจจุบันอยู่ด้านบน
+            if (b.username === adminData.username) return 1;
+            return 0; // ไม่เปลี่ยนตำแหน่งหากไม่ใช่ admin ปัจจุบัน
+          })
+          .map((i) => (
             <div key={i._id} className="adminall card mb-3 ">
               <div className="card-body">
                 <h5 className="card-title">{i.username}</h5>
@@ -263,7 +276,12 @@ export default function Alladmin({}) {
                 )}
               </div>
             </div>
-          ))}
+          )) 
+        ) : (
+            <div className="no-results">
+              <p>ไม่พบข้อมูลที่คุณค้นหา</p>
+            </div>
+          )}
         </div>
       </div>
     </main>

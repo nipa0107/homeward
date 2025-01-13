@@ -163,6 +163,12 @@ export default function UpdateEquipment() {
               <span className="links_name">จัดการแอดมิน</span>
             </a>
           </li>
+          <li>
+            <a href="recover-patients">
+              <i className="bi bi-trash"></i>
+              <span className="links_name">จัดการข้อมูลผู้ป่วยที่ถูกลบ</span>
+            </a>
+          </li>
           <div className="nav-logout">
             <li>
               <a href="./" onClick={logOut}>

@@ -11,7 +11,7 @@
 
 .deleteimg {
   border-radius: 5px;
-  width: 15vh;
+  width: 5rem;
   background-color: rgb(236, 78, 78);
   color: white;
   border: none;
@@ -20,7 +20,7 @@
 
 .deleteimg2 {
   border-radius: 5px;
-  width: 15vh;
+  width: 5rem;
   background-color: rgb(236, 78, 78);
   margin: auto 1.6vh;
   color: white;
@@ -28,7 +28,7 @@
 }
 .editimg2 {
   border-radius: 5px;
-  width: 15vh;
+  width: 5rem;
   background-color: #ffde59;
   color: black;
   border: none;
@@ -52,12 +52,12 @@
 
 
 .adminall form {
-  padding: 20px;
+  padding: 1.25rem;
 }
 
 .editimg {
   border-radius: 5px;
-  width: 15vh;
+  width: 5rem;
   float: right;
   margin: auto auto;
   background-color: #ffde59;
@@ -233,7 +233,7 @@
 
 .deleteimg1 button {
   border-radius: 5px;
-  width: 10vh;
+  width: 7rem;
   background-color: rgb(236, 78, 78);
   color: white;
   border: none;
@@ -242,7 +242,7 @@
 
 .editimg1 button{
   border-radius: 5px;
-  width: 10vh;
+  width: 7rem;
   background-color: #ffde59;
   color: black;
   border: none;
@@ -259,7 +259,7 @@
 
 .adddata button{
   border-radius: 5px;
-  width: 11vh;
+  width: 7rem;
   background-color: #87CEFA;
   color: white;
   border: none;
@@ -293,7 +293,7 @@
   display: flex; /* Use flexbox */
   justify-content: space-between; /* Align items with space between */
   align-items: center; /* Center vertically */
-  padding: 20px;
+  padding: 1rem;
 }
 
 .both-info {
@@ -338,14 +338,14 @@
 } */
 
 .adminall {
-  width: 70%;
+  width: 75%;
   margin-left: auto;
   margin-right: auto;
   box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.1);
-  line-height: 40px;
-  padding: 20px;
+  line-height: 2.5rem;
+  padding: 1rem;
   border-radius: 10px;
-  min-height: 125px;
+  min-height: 6rem;
 }
 
 /* .adminall {
@@ -400,7 +400,7 @@ td {
 }
 
 .table {
-  width:70%; 
+  width:75%; 
   margin :0 auto;
   box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.1); 
   line-height: 50px; 
@@ -412,6 +412,11 @@ td {
   overflow: hidden;
 }
 
+.table .buttongroup-in-table button {
+  /* line-height: normal; */
+  line-height: 2.5rem;
+}
+
 .table th, .table td {
   padding: 10px;
   padding-left: 20px;
@@ -420,6 +425,7 @@ td {
 }
 
 .table th {
+  font-size: 1rem;
   /* font-weight: bold; */
   background-color: #87CEFA;
   color: #000;
@@ -473,7 +479,7 @@ td {
 }
 .success{
   text-align: center;
-
+  padding-left: 0 !important;
 }
 
 /* th.success {
@@ -538,11 +544,12 @@ h5 {
   display: flex;             
   justify-content: flex-end;  
   gap: 10px;      
-  line-height: 50px;
+  /* line-height: 50px; */
           
 }
 .card-title{
   margin: 0;
+  font-size: 1rem; 
 }
 
 /* ปุมลบไฟล์ */
@@ -617,6 +624,31 @@ h5 {
   font-size: 20px; 
 }
 
+.info-alert {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #f9f9f9;
+  height: 2rem;
+  color: #6c757d;
+}
+
+.no-results {
+  text-align: center;
+  color: gray;
+  font-size: 1rem;
+  margin-top: 20px;
+}
+
+  /* background-color: #f9f9f9;  */
+  /* background-color: #ffc107; 
+  color: #555;
+  font-size: 14px;
+  padding: .1rem 0; */
+  /* padding: 10px 15px;  */
+  /* border-left: 5px solid #ffc107; */
+  /* border-radius: 5px;
+  text-align: center;  */
 @media (max-width: 768px) {
   .card-body {
     flex-direction: column; 
@@ -627,4 +659,12 @@ h5 {
     margin-top: 10px; 
     width: 100%; 
   }
+}
+
+
+.no-data {
+  color: gray;
+  font-style: italic;
+  background-color: #fff; /* สีพื้นหลัง */
+  padding: 15px;
 }

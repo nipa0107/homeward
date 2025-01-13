@@ -72,7 +72,9 @@
     align-items: center;
 }
 
-.tablesetting td:last-child{
-    /* width: 20%; 
-    white-space: nowrap; */
+.tablesetting .success{
+    width: 25%; 
+    white-space: nowrap;
 }
+
+

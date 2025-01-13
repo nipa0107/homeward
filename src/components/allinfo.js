@@ -7,6 +7,7 @@ import "../css/styles.css";
 import logow from "../img/logow.png";
 import { useNavigate } from "react-router-dom";
 import { useLocation } from "react-router-dom";
+import { ToastContainer, toast } from 'react-toastify';
 
 export default function AllUser({ }) {
   const navigate = useNavigate();
@@ -36,6 +37,7 @@ export default function AllUser({ }) {
   const [docter, setDocter] = useState("");
   const [medicalEquipment, setMedicalEquipment] = useState(null);
   const [selectedEquipments, setSelectedEquipments] = useState([]);
+  const [error, setError] = useState("");
 
   useEffect(() => {
     const token = window.localStorage.getItem("token");
@@ -154,7 +156,39 @@ export default function AllUser({ }) {
     fetchData();
   }, [medicalInfo]);
 
+  // const deleteUser = async () => {
+  //   if (window.confirm(`คุณต้องการลบ ${username} หรือไม่ ?`)) {
+  //     try {
+  //       const response = await fetch(`http://localhost:5000/deleteUser/${id}`, {
+  //         method: "DELETE",
+  //         headers: {
+  //           "Content-Type": "application/json",
+  //           Accept: "application/json",
+  //           Authorization: `Bearer ${token}`,
+  //         },
+  //       });
+
+  //       const data = await response.json();
+
+  //       if (response.ok) {
+  //         alert(data.data);
+  //         navigate("/alluser");
+  //       } else {
+  //         console.error("Error during deletion:", data.data);
+  //       }
+  //     } catch (error) {
+  //       console.error("Error during fetch:", error);
+  //     }
+  //   }
+  // };
   const deleteUser = async () => {
+    const adminPassword = prompt("กรุณากรอกรหัสผ่านของคุณเพื่อยืนยันการลบ:");
+  
+    if (!adminPassword) {
+      alert("การลบถูกยกเลิกเนื่องจากไม่ได้กรอกรหัสผ่าน");
+      return;
+    }
+  
     if (window.confirm(`คุณต้องการลบ ${username} หรือไม่ ?`)) {
       try {
         const response = await fetch(`http://localhost:5000/deleteUser/${id}`, {
@@ -162,16 +196,26 @@ export default function AllUser({ }) {
           headers: {
             "Content-Type": "application/json",
             Accept: "application/json",
-            Authorization: `Bearer ${token}`,
+            Authorization: `Bearer ${token}`, // ใช้ token ของ Admin
           },
+          body: JSON.stringify({
+            adminPassword,
+            adminId: adminData._id, // ส่ง ID ของ Admin ที่เข้าสู่ระบบ
+          }),
         });
-
+  
         const data = await response.json();
-
+  
         if (response.ok) {
-          alert(data.data);
-          navigate("/alluser");
+          // alert(data.data);
+          toast.success("ลบข้อมูลผู้ป่วยสำเร็จ");
+                    setTimeout(() => {
+                      navigate("/alluser");
+                    },1050);
         } else {
+          setError(data.error); 
+
+          // alert(data.data);
           console.error("Error during deletion:", data.data);
         }
       } catch (error) {
@@ -179,6 +223,7 @@ export default function AllUser({ }) {
       }
     }
   };
+  
 
   const handleDeleteEquipment = async (equipmentName) => {
     if (window.confirm(`คุณต้องการลบอุปกรณ์ ${equipmentName} หรือไม่?`)) {
@@ -303,6 +348,7 @@ export default function AllUser({ }) {
   };
   return (
     <main className="body">
+      <ToastContainer />
       <div className={`sidebar ${isActive ? "active" : ""}`}>
         <div className="logo_content">
           <div className="logo">
@@ -353,6 +399,12 @@ export default function AllUser({ }) {
             <a href="alladmin" onClick={() => navigate("/alladmin")}>
               <i className="bi bi-person-gear"></i>
               <span className="links_name">จัดการแอดมิน</span>
+            </a>
+          </li>
+          <li>
+            <a href="recover-patients">
+              <i className="bi bi-trash"></i>
+              <span className="links_name">จัดการข้อมูลผู้ป่วยที่ถูกลบ</span>
             </a>
           </li>
           <div className="nav-logout">

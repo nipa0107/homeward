@@ -182,6 +182,12 @@ export default function AllMpersonnel({}) {
               <span className="links_name">จัดการแอดมิน</span>
             </a>
           </li>
+          <li>
+            <a href="recover-patients">
+              <i className="bi bi-trash"></i>
+              <span className="links_name">จัดการข้อมูลผู้ป่วยที่ถูกลบ</span>
+            </a>
+          </li>
           <div className="nav-logout">
             <li>
               <a href="./" onClick={logOut}>
@@ -249,7 +255,8 @@ export default function AllMpersonnel({}) {
         </div>
 
         <div className="content">
-          {data.map((i) => (
+        {data.length > 0 ? (
+          data.map((i) => (
             <div key={i._id} className="adminall card mb-3 ">
               <div className="card-body">
                 <h5 className="card-title">
@@ -281,7 +288,12 @@ export default function AllMpersonnel({}) {
                 </div>
               </div>
             </div>
-          ))}
+         )) 
+        ) : (
+            <div className="no-results">
+              <p>ไม่พบข้อมูลที่คุณค้นหา</p>
+            </div>
+          )}
         </div>
 
         {/* <div className="content">

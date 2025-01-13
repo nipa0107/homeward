@@ -147,7 +147,12 @@ export default function AlluserInSetting({ }) {
               <span className="links_name" >จัดการแอดมิน</span>
             </a>
           </li>
-          
+          <li>
+            <a href="recover-patients">
+              <i className="bi bi-trash"></i>
+              <span className="links_name">จัดการข้อมูลผู้ป่วยที่ถูกลบ</span>
+            </a>
+          </li>
           <div className="nav-logout">
             <li>
               <a href="./" onClick={logOut}>
@@ -201,12 +206,13 @@ export default function AlluserInSetting({ }) {
         </div>
 
         <div className="toolbar">
-          {/* <button
-            onClick={() => navigate("/adduser")}
-            className="bi bi-plus-circle btn btn-outline py-1 px-4"
+        <button
+            onClick={() => navigate("/updatedefault")}
+            className="btn btn-outline py-1 px-4"
           >
-            เพิ่มข้อมูลผู้ป่วย
-          </button> */}
+          <i className="bi bi-pencil" style={{ marginRight: '8px' }}></i>
+          ตั้งค่าการแจ้งเตือนเริ่มต้น
+          </button>
           <p className="countadmin">จำนวนผู้ป่วยทั้งหมด : {data.filter(user => user.deletedAt === null).length} คน</p>
         </div>
 
@@ -217,27 +223,33 @@ export default function AlluserInSetting({ }) {
                 <tr>
                   <th>ชื่อผู้ใช้</th>
                   <th>ชื่อ-สกุล</th>
-                  <th>ตั้งค่าการแจ้งเตือน</th>
+                  <th className="success">ตั้งค่าการแจ้งเตือน</th>
                 </tr>
               </thead>
               <tbody>
                 
-                {data
-                .filter(user => user.deletedAt === null) // กรองออกเฉพาะข้อมูลที่มีค่า deleteAt เป็น null
-
-                .map((i, index) => {
-                  return (
+              {data.filter(user => user.deletedAt === null).length > 0 ? (
+        data
+          .filter(user => user.deletedAt === null)
+          .map((i, index) => (
+               
                     <tr key={index}>
                       <td>{i.username}</td>
                       <td>{i.name}{' '}{i.surname}</td>
-                      <td>
+                      <td className="success"> 
                       <a
                       className="info"
                        onClick={() => navigate("/settingnoti", { state: { id: i._id } })}>ตั้งค่าการแจ้งเตือน</a>
                       </td>
                     </tr>
-                  );
-                })}
+                         ))
+                        ) : (
+                          <tr>               
+                            <td colSpan="3" className="text-center">
+                            ไม่พบข้อมูลที่คุณค้นหา
+                            </td>
+                          </tr>
+                        )}
               </tbody>
             </table>
             
