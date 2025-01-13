@@ -119,13 +119,13 @@ export default function UpdateUser() {
         nationality,
         Address,
         user: id, // เชื่อมโยงกับผู้ใช้
-        caregiverName,
-        caregiverSurname,
-        caregiverTel,
+        caregivername: caregiverName, // เปลี่ยนเป็น lowercase ตาม Backend
+        caregiversurname: caregiverSurname,
+        caregivertel: caregiverTel,
         Relationship
       };
 
-      const response = await fetch(`http://localhost:5000/updateuserinfo/${id}`, {
+      const response = await fetch(`http://localhost:5000/updateuserinfo`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -239,8 +239,8 @@ export default function UpdateUser() {
           </li>
           <li>
             <a href="/alluserinsetting" >
-            <i className="bi bi-bell"></i>              
-            <span className="links_name" >ตั้งค่าการแจ้งเตือน</span>
+              <i className="bi bi-bell"></i>
+              <span className="links_name" >ตั้งค่าการแจ้งเตือน</span>
             </a>
           </li>
           <li>
@@ -260,17 +260,17 @@ export default function UpdateUser() {
         </ul>
       </div>
       <div className="home_content">
-      <div className="homeheader">
-        <div className="header">จัดการข้อมูลผู้ป่วย</div>
-        <div className="profile_details ">
-        <ul className="nav-list">
-          <li>
-            <a href="profile" >
-              <i className="bi bi-person"></i>
-              <span className="links_name" >{adminData && adminData.username}</span>
-            </a>
-          </li>
-          </ul>
+        <div className="homeheader">
+          <div className="header">จัดการข้อมูลผู้ป่วย</div>
+          <div className="profile_details ">
+            <ul className="nav-list">
+              <li>
+                <a href="profile" >
+                  <i className="bi bi-person"></i>
+                  <span className="links_name" >{adminData && adminData.username}</span>
+                </a>
+              </li>
+            </ul>
           </div>
         </div>
         <div className="breadcrumbs">

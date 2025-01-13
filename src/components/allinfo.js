@@ -556,7 +556,7 @@ export default function AllUser({ }) {
                             window.open(`${medicalInfo.fileP}`, "_blank");
                           }}
                         >
-                          
+
                           {medicalInfo.fileP.replace("?alt=media", "").split("/").pop().split("\\").pop()}
                         </a>
                       ) : (
@@ -578,8 +578,8 @@ export default function AllUser({ }) {
                             window.open(`${medicalInfo.fileM}`, "_blank");
                           }}
                         >
-    {medicalInfo.fileM.replace("?alt=media", "").split("/").pop().split("\\").pop()}
-    </a>
+                          {medicalInfo.fileM.replace("?alt=media", "").split("/").pop().split("\\").pop()}
+                        </a>
                       ) : (
                         "-"
                       )}
