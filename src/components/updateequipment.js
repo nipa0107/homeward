@@ -58,9 +58,30 @@ export default function UpdateEquipment() {
     fetchData();
   }, [id]);
 
+  const checkDuplicateName = async (equipment_name) => {
+    try {
+      const response = await fetch(
+        `http://localhost:5000/check-equip-name?equipment_name=${equipment_name}`
+      );
+      const data = await response.json();
+      return data.exists; // ถ้าชื่อซ้ำจะ return true
+    } catch (error) {
+      console.error("Error checking duplicate name:", error);
+      return false; // กรณีมีข้อผิดพลาด
+    }
+  };
+
   const UpdateEquipment = async () => {
     console.log(equipment_name, equipment_type);
-
+      if (!equipment_name) {
+          toast.error("กรุณากรอกชื่ออุปกรณ์ก่อนทำการบันทึก");
+          return; // หยุดการดำเนินการถ้าเงื่อนไขไม่ตรง
+        }
+   const isDuplicate = await checkDuplicateName(equipment_name);
+    if (isDuplicate) {
+      toast.error("ชื่ออุปกรณ์ซ้ำในระบบ กรุณาเปลี่ยนชื่อ");
+      return; // หยุดการดำเนินการถ้าชื่อซ้ำ
+    }
     try {
       const EquipUpdate = {
         equipment_name,

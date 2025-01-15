@@ -66,12 +66,25 @@ export default function AddEquip({ }) {
       .then((data) => {
         console.log(data);
         if (data.status === "ok") {
-          // window.location.href = "./allequip";
+          // Success notification
           toast.success("เพิ่มข้อมูลสำเร็จ");
           setTimeout(() => {
             navigate("/allequip");
           }, 1000);
+        } else if (data.error === "Equipment Exists") {
+          // Display error message for duplicate equipment
+          toast.error("ชื่ออุปกรณ์นี้มีอยู่แล้วในระบบ");
+          // setValidationMessage("ชื่ออุปกรณ์นี้มีอยู่แล้วในระบบ");
+        } else {
+          // Generic error handling
+          toast.error("เกิดข้อผิดพลาดในการเพิ่มข้อมูล");
+          // setValidationMessage("เกิดข้อผิดพลาดในการเพิ่มข้อมูล");
         }
+      })
+      .catch((error) => {
+        console.error("Error:", error);
+        toast.error("เกิดข้อผิดพลาดทางเซิร์ฟเวอร์");
+        setValidationMessage("เกิดข้อผิดพลาดทางเซิร์ฟเวอร์");
       });
   };
 
@@ -85,6 +98,7 @@ export default function AddEquip({ }) {
   };
   return (
     <main className="body">
+      <ToastContainer/>
       <div className={`sidebar ${isActive ? 'active' : ''}`}>
         <div className="logo_content">
           <div className="logo">

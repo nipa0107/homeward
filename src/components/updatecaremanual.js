@@ -148,12 +148,29 @@ export default function UpdateCareManual() {
       toast.error("เกิดข้อผิดพลาดในการลบไฟล์");
     }
   };
-
+  const checkDuplicateName = async (name) => {
+    try {
+      const response = await fetch(
+        `http://localhost:5000/check-caremanual-name?caremanual_name=${name}`
+      );
+      const data = await response.json();
+      return data.exists; // ถ้าชื่อซ้ำจะ return true
+    } catch (error) {
+      console.error("Error checking duplicate name:", error);
+      return false; // กรณีมีข้อผิดพลาด
+    }
+  };
+  
   const UpdateCareManual = async () => {
     console.log(caremanual_name, image, file, detail);
     if (!caremanual_name || !image) {
       toast.error("กรุณากรอกชื่อคู่มือและเลือกภาพก่อนทำการบันทึก");
       return; // หยุดการดำเนินการถ้าเงื่อนไขไม่ตรง
+    }
+    const isDuplicate = await checkDuplicateName(caremanual_name);
+    if (isDuplicate) {
+      toast.error("ชื่อคู่มือซ้ำในระบบ กรุณาเปลี่ยนชื่อ");
+      return; // หยุดการดำเนินการถ้าชื่อซ้ำ
     }
     try {
       const formData = new FormData();
@@ -317,8 +334,8 @@ export default function UpdateCareManual() {
           </ul>
         </div>
         <h3>แก้ไขคู่มือ</h3>
-        <div className="adminall card mb-3">
-          <div className="mb-3">
+        <div className="adminall card mb-1">
+          <div className="mb-1">
             <label>หัวข้อ</label>
             <input
               type="text"
@@ -328,7 +345,7 @@ export default function UpdateCareManual() {
             />
           </div>
 
-          <div className="mb-3">
+          <div className="mb-1">
             <label>รูปภาพ</label> <br />
             <div className="centered-image">
               {image ? (
@@ -357,9 +374,7 @@ export default function UpdateCareManual() {
               >
                 <i className="bi bi-x"></i> 
               </button>
-              // <button className="btn btn-danger mt-2" onClick={removeImage}>
-              //   ลบรูปภาพ
-              // </button>
+        
             )}
             </div>
     
@@ -373,7 +388,7 @@ export default function UpdateCareManual() {
             )}
           </div>
 
-          <div className="mb-3">
+          <div className="mb-1">
             <label>แนบไฟล์</label>
             {file ? (
               <div className="filename">
@@ -414,7 +429,7 @@ export default function UpdateCareManual() {
             )}
           </div>
 
-          <div className="mb-3">
+          <div className="mb-1">
             <label>รายละเอียด</label>
             <input
               type="text"

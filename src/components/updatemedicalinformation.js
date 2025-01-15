@@ -30,6 +30,9 @@ export default function Updatemedicalinformation() {
   const [fileM, setFileM] = useState(null);
   const [fileP, setFileP] = useState(null);
   const [filePhy, setFilePhy] = useState(null);
+  const [fileMName, setFileMName] = useState(null);
+  const [filePName, setFilePName] = useState(null);
+  const [filePhyName, setFilePhyName] = useState(null);
   const [pdfURL, setPdfURL] = useState(null);
   const [selectedFileNameP, setSelectedFileNameP] = useState("");
   const [selectedFileNameM, setSelectedFileNameM] = useState("");
@@ -132,7 +135,9 @@ export default function Updatemedicalinformation() {
           setFileP(medicalData.data.fileP);
           setFileM(medicalData.data.fileM);
           setFilePhy(medicalData.data.filePhy);
-
+          setFilePName(medicalData.data.filePName);
+          setFileMName(medicalData.data.fileMName);
+          setFilePhyName(medicalData.data.filePhyName);
           // const filePath = medicalData.data.fileP.replace(/\\/g, "/");
           // const fileName = filePath.split("/").pop();
           // setFileP(fileName);
@@ -478,7 +483,7 @@ export default function Updatemedicalinformation() {
                         );
                       }}
                     >
-                      {fileP.split("/").pop().split("\\").pop()}
+                      {filePName}
                     </a>
                   )
                 )}
@@ -516,7 +521,7 @@ export default function Updatemedicalinformation() {
                         );
                       }}
                     >
-                      {fileM.split("/").pop().split("\\").pop()}
+                      {fileMName}
                     </a>
                   )
                 )}
@@ -555,7 +560,7 @@ export default function Updatemedicalinformation() {
                         );
                       }}
                     >
-                      {filePhy.split("/").pop().split("\\").pop()}
+                      {filePhyName}
                     </a>
                   )
                 )}

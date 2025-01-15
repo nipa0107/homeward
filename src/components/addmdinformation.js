@@ -99,7 +99,9 @@ export default function AddMedicalInformation() {
         console.log(data, "Addmdinformation");
         if (data.status === "ok") {
           toast.success("เพิ่มข้อมูลสำเร็จ");
+          setTimeout(() => {
           navigate("/allinfo", { state: { id } });
+        },1050); 
         }
       })
       .catch((error) => {

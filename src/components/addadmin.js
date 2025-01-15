@@ -4,6 +4,7 @@ import "../css/alladmin.css"
 import "bootstrap-icons/font/bootstrap-icons.css";
 import logow from "../img/logow.png";
 import { useNavigate } from "react-router-dom";
+import { ToastContainer, toast } from 'react-toastify';
 
 
 export default function AddAdmin() {
@@ -67,8 +68,12 @@ export default function AddAdmin() {
       .then((data) => {
         console.log(data, "Addadmain");
         if (data.status === "ok") {
-          console.log(username, password, confirmPassword);
-          window.location.href = "./alladmin";
+          toast.success("เพิ่มข้อมูลสำเร็จ");
+          setTimeout(() => {
+            navigate("/alladmin");
+          },1050); 
+          // console.log(username, password, confirmPassword);
+          // window.location.href = "./alladmin";
         }else {
           // เมื่อเกิดข้อผิดพลาด
           setError(data.error); // กำหนดข้อความ error ให้กับ state
@@ -87,6 +92,7 @@ export default function AddAdmin() {
 
   return (
     <main className="body">
+      <ToastContainer />
       <div className={`sidebar ${isActive ? 'active' : ''}`}>
         <div className="logo_content">
           <div className="logo">

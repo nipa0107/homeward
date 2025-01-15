@@ -118,14 +118,14 @@ export default function UpdateUser() {
         ID_card_number,
         nationality,
         Address,
-        // user: id,
-        // caregivername: caregiverName,
-        // caregiversurname: caregiverSurname,
-        // caregivertel: caregiverTel,
-        // Relationship
+        user: id, // เชื่อมโยงกับผู้ใช้
+        caregivername: caregiverName, // เปลี่ยนเป็น lowercase ตาม Backend
+        caregiversurname: caregiverSurname,
+        caregivertel: caregiverTel,
+        Relationship
       };
 
-      const response = await fetch(`http://localhost:5000/updateuserapp`, {
+      const response = await fetch(`http://localhost:5000/updateuserinfo`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -197,7 +197,6 @@ export default function UpdateUser() {
   };
   return (
     <main className="body">
-      <ToastContainer/>
       <div className={`sidebar ${isActive ? "active" : ""}`}>
         <div className="logo_content">
           <div className="logo">
@@ -352,8 +351,6 @@ export default function UpdateUser() {
 
           <div className="mb-3">
             <label>เพศ</label>
-            <div class="relationship-container">
-            <div class="relationship-group">
             <div>
               <label>
                 <input
@@ -397,8 +394,6 @@ export default function UpdateUser() {
                 />
                 อื่นๆ
               </label>
-              </div>
-              </div>
               {showOtherInput && (
                 <div className="mt-2">
                   <label>กรุณาระบุ:</label>
@@ -461,7 +456,7 @@ export default function UpdateUser() {
               onChange={(e) => setTel(e.target.value)}
             />
           </div>
-          {/* <div className="mb-3">
+          <div className="mb-3">
             <label>ชื่อ(ผู้ดูแล)</label>
             <input
               type="text"
@@ -567,7 +562,7 @@ export default function UpdateUser() {
               value={caregiverTel}
               onChange={(e) => setCaregiverTel(e.target.value)}
             />
-          </div> */}
+          </div>
           <div className="d-grid">
             <button
               onClick={UpdateUser}

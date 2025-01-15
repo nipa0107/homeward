@@ -47,6 +47,8 @@ import Emailverification from "./components/email-verification";
 import VerifyOtp from "./components/VerifyOtp";
 import UpdateDefault from "./components/updatedefaultThreshold";
 import Recover from "./components/recover";
+import UpdateCaregiver from "./components/updatecaregiver";
+import AddCaregiver from "./components/addcaregiver";
 const PrivateRoute = ({ element, isLoggedIn }) => {
   return isLoggedIn === "true" ? (
     element
@@ -135,6 +137,15 @@ function App() {
               />
             }
           />
+            <Route
+            path="/addcaregiver"
+            element={
+              <PrivateRoute
+                element={<AddCaregiver />}
+                isLoggedIn={isLoggedIn}
+              />
+            }
+          />
           <Route
             path="/updatecaremanual"
             element={
@@ -191,6 +202,12 @@ function App() {
             path="/alluser"
             element={
               <PrivateRoute element={<AllUser />} isLoggedIn={isLoggedIn} />
+            }
+          />
+             <Route
+            path="/updatecaregiver"
+            element={
+              <PrivateRoute element={<UpdateCaregiver />} isLoggedIn={isLoggedIn} />
             }
           />
           <Route

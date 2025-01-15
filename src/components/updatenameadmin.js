@@ -262,9 +262,7 @@ export default function UpdateName() {
         </div>
        
       </div>
-      <button onClick={logOut} className="btn btn-primary">
-        Log Out
-      </button>
+     
     </main>
   );
 }

@@ -66,7 +66,9 @@ export default function AddSymptom({ }) {
               setTimeout(() => {
                 navigate("/allsymptom");
               }, 1000);
-            }
+            } else if (data.error) {
+              toast.error(data.error);  // Display error message if symptom exists
+          }
           });
       };
 
@@ -81,6 +83,7 @@ export default function AddSymptom({ }) {
 
       return (
         <main className="body">
+          <ToastContainer />
           <div className={`sidebar ${isActive ? 'active' : ''}`}>
             <div className="logo_content">
               <div className="logo">

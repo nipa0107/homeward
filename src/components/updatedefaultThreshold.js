@@ -135,6 +135,7 @@ function UpdateDefault() {
   return (
    
     <main className="body">
+      <ToastContainer />
     <div className={`sidebar ${isActive ? "active" : ""}`}>
       <div className="logo_content">
         <div className="logo">

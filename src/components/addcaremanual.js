@@ -97,9 +97,9 @@ export default function AddCaremanual({ }) {
     fetch(`http://localhost:5000/addcaremanual1`, {
       method: "POST",
       body: formData,
-      headers: {
-        Authorization: `Bearer ${token}` 
-      }
+      // headers: {
+      //   Authorization: `Bearer ${token}` 
+      // }
     })
       .then((res) => res.json())
       .then((data) => {

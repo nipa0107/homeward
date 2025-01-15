@@ -28,7 +28,6 @@ export default function AllUser({}) {
   const [ID_card_number, setIDCardNumber] = useState("");
   const [nationality, setNationality] = useState("");
   const [Address, setAddress] = useState("");
-  const [email, setEmail] = useState("");
   const [caregiverName, setCaregiverName] = useState("");
   const [caregiverSurname, setCaregiverSurname] = useState("");
   const [Relationship, setRelationship] = useState("");
@@ -41,37 +40,6 @@ export default function AllUser({}) {
   const [error, setError] = useState("");
   const [caregiverInfo, setCaregiverInfo] = useState(null);
   const [currentIndex, setCurrentIndex] = useState(0);
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [selectedCaregiver, setSelectedCaregiver] = useState(null);
-  const [formData, setFormData] = useState({
-    user: "",
-    name: "",
-    surname: "",
-    tel: "",
-    Relationship: "",
-  });
-
-  const handleAddCaregiver = () => {
-    navigate("/addcaregiver", { state: { userId: id, id } }); // `userId` อาจเป็น ID ของผู้ป่วย
-  };
-
-  const handleEdit = (caregiver) => {
-    console.log("caregiver ที่กำลังแก้ไข:", caregiver);
-    navigate("/updatecaregiver", { state: { caregiver, id }});
-    setSelectedCaregiver(caregiver);
-    setFormData({
-      user: caregiver.user || "",
-      name: caregiver.name || "",
-      surname: caregiver.surname || "",
-      tel: caregiver.tel || "",
-      Relationship: caregiver.Relationship || "",
-    });
-  };
-
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData((prev) => ({ ...prev, [name]: value }));
-  };
 
   useEffect(() => {
     const token = window.localStorage.getItem("token");
@@ -112,7 +80,6 @@ export default function AllUser({}) {
         setIDCardNumber(userdata.data.ID_card_number);
         setTel(userdata.data.tel);
         setAddress(userdata.data.Address);
-        setEmail(userdata.data.email);
       } catch (error) {
         console.error("Error fetching user ID:", error);
       }
@@ -402,54 +369,6 @@ export default function AllUser({}) {
     }
   };
 
-  const handleDelete = async (caregiverId) => {
-    if (window.confirm("คุณต้องการลบข้อมูลผู้ดูแลนี้หรือไม่?")) {
-      try {
-        const response = await fetch(`http://localhost:5000/deletecaregiver`, {
-          method: "POST", // ใช้ POST หรือ DELETE ตาม API ของคุณ
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ _id: caregiverId }), // ส่ง `_id` ของผู้ดูแลไป
-        });
-
-        const data = await response.json();
-        if (response.ok) {
-          alert("ลบข้อมูลสำเร็จ");
-          // อัปเดต caregiverInfo เพื่อรีเฟรชข้อมูล
-          setCaregiverInfo((prev) =>
-            prev.filter((caregiver) => caregiver._id !== caregiverId)
-          );
-        } else {
-          alert(`เกิดข้อผิดพลาด: ${data.error}`);
-        }
-      } catch (error) {
-        console.error("Error deleting caregiver:", error);
-        alert("เกิดข้อผิดพลาดในการลบข้อมูล");
-      }
-    }
-  };
-
-  const handleSave = async () => {
-    console.log("Selected Caregiver:", selectedCaregiver.user); // Debugging
-    console.log("FormData:", formData);
-    try {
-      const response = await fetch("http://localhost:5000/updatecaregiver", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ user: selectedCaregiver.user, ...formData }),
-      });
-      const data = await response.json();
-      if (response.ok) {
-        alert("แก้ไขข้อมูลสำเร็จ");
-        setIsModalOpen(false);
-        window.location.reload();
-      } else {
-        alert(`เกิดข้อผิดพลาด: ${data.error}`);
-      }
-    } catch (error) {
-      console.error("Error saving data:", error);
-      alert("เกิดข้อผิดพลาดในการบันทึกข้อมูล");
-    }
-  };
   return (
     <main className="body">
       <ToastContainer />
@@ -578,9 +497,6 @@ export default function AllUser({}) {
                 <span>เลขบัตรประชาชน</span>
               </p>
               <p>
-                <span>อีเมล</span>
-              </p>
-              <p>
                 <span>อายุ</span>
               </p>
               <p>
@@ -611,9 +527,6 @@ export default function AllUser({}) {
               </p>
               <p>
                 <b>{ID_card_number || "-"}</b>
-              </p>
-              <p>
-                <b>{email || "-"}</b>
               </p>
               <p>
                 <b>{userAge}</b>
@@ -661,120 +574,36 @@ export default function AllUser({}) {
           </div>
         </div>
         <br></br>
-        {isModalOpen && (
-          <div className="modal">
-            <div className="modal-content">
-              <h3>แก้ไขข้อมูลผู้ดูแล</h3>
-              <form>
-                <label>
-                  ชื่อ:
-                  <input
-                    type="text"
-                    name="name"
-                    value={formData.name}
-                    onChange={handleChange}
-                  />
-                </label>
-                <label>
-                  นามสกุล:
-                  <input
-                    type="text"
-                    name="surname"
-                    value={formData.surname}
-                    onChange={handleChange}
-                  />
-                </label>
-                <label>
-                  เบอร์โทรศัพท์:
-                  <input
-                    type="text"
-                    name="tel"
-                    value={formData.tel}
-                    onChange={handleChange}
-                  />
-                </label>
-                <label>
-                  ความสัมพันธ์:
-                  <input
-                    type="text"
-                    name="Relationship"
-                    value={formData.Relationship}
-                    onChange={handleChange}
-                  />
-                </label>
-                <button type="button" onClick={handleSave}>
-                  บันทึก
-                </button>
-                <button type="button" onClick={() => setIsModalOpen(false)}>
-                  ยกเลิก
-                </button>
-              </form>
-            </div>
-          </div>
-        )}
         <div className="info3 card mb-3">
           <div className="header">
             <b>ข้อมูลผู้ดูแล</b>
           </div>
-          <div>
+          <div className="user-info-caregiver">
             {caregiverInfo && caregiverInfo.length > 0 ? (
               <div>
-                <div className="user-info-caregiver">
-                  {caregiverInfo.map((caregiver, index) => (
-                    <div className="inline-container" key={index}>
+                {caregiverInfo.map((caregiver, index) => (
+                  <div className="inline-container" key={index}>
+                    <p>
+                    <span>ผู้ดูแลคนที่ {index + 1}:</span>
+                    </p>
+                    <div className="caregiver-card">
                       <p>
-                        <span>ผู้ดูแลคนที่ {index + 1}:</span>
+                        <span>ชื่อ-สกุล:</span> {caregiver.name || "-"}{" "}
+                        {caregiver.surname || "-"}
                       </p>
-                      <div className="caregiver-card">
-                      <div className="caregiver-info">
-                        <p>
-                          <span>ชื่อ-สกุล:</span> {caregiver.name || "-"}{" "}
-                          {caregiver.surname || "-"}
-                        </p>
-                        <p>
-                          <span>ความสัมพันธ์:</span>{" "}
-                          {caregiver.Relationship || "-"}
-                        </p>
-                        <p>
-                          <span>เบอร์โทรศัพท์:</span> {caregiver.tel || "-"}
-                        </p>
-                        </div>
-                        <div class="button-container-vertical">
-                      <button class="button-edit" 
-                      onClick={() => handleEdit(caregiver)}>
-                        แก้ไข
-                      </button>
-                      <button  class="button-delete" 
-                      onClick={() => handleDelete(caregiver._id)}>
-                        ลบ
-                      </button>
+                      <p>
+                        <span>ความสัมพันธ์:</span> {caregiver.Relationship || "-"}
+                      </p>
+                      <p>
+                        <span>เบอร์โทรศัพท์:</span> {caregiver.tel || "-"}
+                      </p>
                     </div>
-                      </div>
-                
-                      {/* <button
-                                onClick={() =>
-                                  navigate("/updatecaregiver", { state: { caregiver  }}
-                                  )
-                                }>
-                                แก้ไข</button> */}
-                    </div>
-                  ))}
-                 </div>
-                 <div className="btn-group mb-4">
-                  <div className="adddata">
-                    <button onClick={handleAddCaregiver}>เพิ่มผู้ดูแล</button>
                   </div>
-                </div>
-             
+                ))}
               </div>
             ) : (
               <div>
-                <p className="no-equipment">ไม่มีข้อมูลผู้ดูแล</p>
-                <div className="btn-group mb-4">
-                  <div className="adddata">
-                    <button onClick={handleAddCaregiver}>เพิ่มผู้ดูแล</button>
-                  </div>
-                </div>
+                <p>ไม่มีข้อมูลผู้ดูแล</p>
               </div>
             )}
           </div>
@@ -961,7 +790,7 @@ export default function AllUser({}) {
             </>
           ) : (
             <div>
-              <p className="no-equipment">ไม่พบข้อมูลการเจ็บป่วย</p>
+              <p className="no-equipment">ไม่พบข้อมูล</p>
               <div className="btn-group mb-4">
                 <div className="adddata">
                   <button
@@ -1098,7 +927,7 @@ export default function AllUser({}) {
             </>
           ) : (
             <>
-              <div className="no-equipment">ไม่พบข้อมูลอุปกรณ์ทางการแพทย์</div>
+              <div className="no-equipment">ไม่พบข้อมูล</div>
               <div className="btn-group mb-4">
                 <div className="adddata">
                   <button

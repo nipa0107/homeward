@@ -4,6 +4,7 @@ import "../css/alladmin.css";
 import "../css/sidebar.css";
 import logow from "../img/logow.png";
 import { useNavigate } from "react-router-dom";
+import { ToastContainer, toast } from "react-toastify";
 
 export default function Allsymptom({}) {
   const navigate = useNavigate();
@@ -67,7 +68,6 @@ export default function Allsymptom({}) {
         );
 
         const data = await response.json();
-
         if (response.ok) {
           alert(data.data);
           getSymptom();

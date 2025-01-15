@@ -253,10 +253,9 @@ export default function Alladmin({}) {
         <div className="content">
           {data.length > 0 ? (
            data.sort((a, b) => {
-            // นำ adminData.username ไปเปรียบเทียบกับ a และ b
-            if (a.username === adminData.username) return -1; // ให้ admin ปัจจุบันอยู่ด้านบน
+            if (a.username === adminData.username) return -1; 
             if (b.username === adminData.username) return 1;
-            return 0; // ไม่เปลี่ยนตำแหน่งหากไม่ใช่ admin ปัจจุบัน
+            return new Date(a.createdAt) - new Date(b.createdAt);
           })
           .map((i) => (
             <div key={i._id} className="adminall card mb-3 ">

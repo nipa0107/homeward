@@ -14,7 +14,6 @@ export default function AddUser() {
   const [username, setUsername] = useState("");
   const [name, setName] = useState("");
   const [surname, setSurname] = useState("");
-
   const [tel, setTel] = useState("");
   const navigate = useNavigate();
   const [adminData, setAdminData] = useState("");

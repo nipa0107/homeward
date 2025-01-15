@@ -57,8 +57,29 @@ export default function UpdateSymptom() {
       fetchData();
     }, [id]);
    
+    const checkDuplicateName = async (name) => {
+      try {
+        const response = await fetch(
+          `http://localhost:5000/check-symptom-name?name=${name}`
+        );
+        const data = await response.json();
+        return data.exists; // ถ้าชื่อซ้ำจะ return true
+      } catch (error) {
+        console.error("Error checking duplicate name:", error);
+        return false; // กรณีมีข้อผิดพลาด
+      }
+    };
     const UpdateSymptom = async () => {
 
+      if (!name) {
+        toast.error("กรุณากรอกชื่ออาการก่อนทำการบันทึก");
+        return; // หยุดการดำเนินการถ้าเงื่อนไขไม่ตรง
+      }
+   const isDuplicate = await checkDuplicateName(name);
+    if (isDuplicate) {
+      toast.error("ชื่ออาการซ้ำในระบบ กรุณาเปลี่ยนชื่อ");
+      return; // หยุดการดำเนินการถ้าชื่อซ้ำ
+    }
       try {
         const SymptomUpdate = {
           name,
