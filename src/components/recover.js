@@ -14,6 +14,11 @@ export default function Recover({}) {
   const [searchKeyword, setSearchKeyword] = useState(""); //ค้นหา
   const [token, setToken] = useState("");
 
+  const formatIDCardNumber = (id) => {
+    if (!id) return "";
+    return id.replace(/(\d{1})(\d{4})(\d{5})(\d{2})(\d{1})/, "$1-$2-$3-$4-$5");
+  };
+
   useEffect(() => {
     const token = window.localStorage.getItem("token");
     setToken(token);
@@ -266,8 +271,8 @@ export default function Recover({}) {
               <tr>
                 <th>เลขประจำตัวประชาชน</th>
                 <th>ชื่อ-นามสกุล</th>
+                <th>รายละเอียด</th>
                 <th>วันที่ลบข้อมูล</th>
-                {/* <th>รายละเอียด</th> */}
                 <th className="centered-cell">กู้คืนข้อมูลผู้ป่วย</th>
               </tr>
             </thead>
@@ -279,20 +284,20 @@ export default function Recover({}) {
                 .map((i, index) => (
                   
                     <tr key={index}>
-                      <td>{i.username}</td>
+                      <td>{formatIDCardNumber(i.username)}</td>
                       <td>
                         {i.name} {i.surname}
                       </td>
-                      {/* <td>
+                      <td>
                         <a
                           className="info"
                           onClick={() =>
-                            navigate("/allinfo", { state: { id: i._id } })
+                            navigate("/allinfodeleted", { state: { id: i._id } })
                           }
                         >
                           รายละเอียด
                         </a>
-                      </td> */}
+                      </td>
                       <td>
                         {new Date(i.deletedAt).toLocaleDateString("th-TH", {
                           year: "numeric",

@@ -15,6 +15,8 @@ export default function AddEquip({ }) {
   const [adminData, setAdminData] = useState("");
   const [isActive, setIsActive] = useState(false);
   const [token, setToken] = useState('');
+  const [nameError, setNameError] = useState("");
+  const [typeError, setTypeError] = useState("");
 
   useEffect(() => {
     const token = window.localStorage.getItem("token");
@@ -42,12 +44,25 @@ export default function AddEquip({ }) {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    if (!equipment_name.trim() || !equipment_type) {
-      console.log("Please fill in all fields");
-      setValidationMessage("ชื่ออุปกรณ์และประเภทอุปกรณ์ไม่ควรเป็นค่าว่าง");
-      return;
+    let hasError = false;
+    // if (!equipment_name.trim() || !equipment_type) {
+    //   console.log("Please fill in all fields");
+    //   setValidationMessage("ชื่ออุปกรณ์และประเภทอุปกรณ์ไม่ควรเป็นค่าว่าง");
+    //   return;
+    // }
+    if (!equipment_name.trim()) {
+      setNameError("กรุณากรอกชื่ออุปกรณ์");
+      hasError = true;
+    } else {
+      setNameError("");
     }
-
+    if (!equipment_type.trim()) {
+      setTypeError("กรุณาเลือกประเภทอุปกรณ์");
+      hasError = true;
+    } else {
+      setTypeError("");
+    }
+    if (hasError) return; 
     fetch("http://localhost:5000/addequip", {
       method: "POST",
       headers: {
@@ -95,6 +110,26 @@ export default function AddEquip({ }) {
   // bi-list
   const handleToggleSidebar = () => {
     setIsActive(!isActive);
+  };
+
+  const handleInputNameChange = (e) => {
+    const input = e.target.value;
+    if (!input.trim()) {
+      setNameError("");
+    } else {
+      setNameError(""); 
+    }
+    setEquipName(input);
+  };
+
+  const handleInputTypeChange = (e) => {
+    const input = e.target.value;
+    if (!input.trim()) {
+      setTypeError("");
+    } else {
+      setTypeError(""); 
+    }
+    setEquipType(input);
   };
   return (
     <main className="body">
@@ -212,22 +247,23 @@ export default function AddEquip({ }) {
               <label>ชื่ออุปกรณ์<span className="required">*</span></label>
               <input
                 type="text"
-                className="form-control"
-                onChange={(e) => setEquipName(e.target.value)}
-              />
+                className={`form-control ${nameError ? "input-error" : ""}`}
+                onChange={handleInputNameChange}              />
+            {nameError && <span className="error-text">{nameError}</span>}
+
             </div>
             <div className="mb-1">
               <label>ประเภทอุปกรณ์<span className="required">*</span></label>
               <select
-                className="form-control"
-                onChange={(e) => setEquipType(e.target.value)}
-              >
+            className={`form-control ${typeError ? "input-error" : ""}`}
+            onChange={handleInputTypeChange}              >
                 <option value="">กรุณาเลือก</option>
                 <option value="อุปกรณ์ติดตัว">อุปกรณ์ติดตัว</option>
                 <option value="อุปกรณ์เสริม">อุปกรณ์เสริม</option>
                 <option value="อุปกรณ์อื่นๆ">อุปกรณ์อื่น ๆ</option>
               </select>
-            </div>
+              {typeError && <span className="error-text">{typeError}</span>}
+              </div>
             {validationMessage && (
               <div style={{ color: "red" }}>{validationMessage}</div>
             )}

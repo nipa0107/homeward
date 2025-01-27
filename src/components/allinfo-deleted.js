@@ -9,7 +9,7 @@ import { useNavigate } from "react-router-dom";
 import { useLocation } from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
 
-export default function AllUser({}) {
+export default function AllInfoDeleted({}) {
   const navigate = useNavigate();
   const [data, setData] = useState([]);
   const [adminData, setAdminData] = useState("");
@@ -55,14 +55,14 @@ export default function AllUser({}) {
     if (!id) return "";
     return id.replace(/(\d{1})(\d{4})(\d{5})(\d{2})(\d{1})/, "$1-$2-$3-$4-$5");
   };
-
+  
   const handleAddCaregiver = () => {
     navigate("/addcaregiver", { state: { userId: id, id } }); // `userId` อาจเป็น ID ของผู้ป่วย
   };
 
   const handleEdit = (caregiver) => {
     console.log("caregiver ที่กำลังแก้ไข:", caregiver);
-    navigate("/updatecaregiver", { state: { caregiver, id } });
+    navigate("/updatecaregiver", { state: { caregiver, id }});
     setSelectedCaregiver(caregiver);
     setFormData({
       user: caregiver.user || "",
@@ -407,13 +407,13 @@ export default function AllUser({}) {
     }
   };
 
-  const handleDelete = async (caregiverId, id) => {
+  const handleDelete = async (caregiverId) => {
     if (window.confirm("คุณต้องการลบข้อมูลผู้ดูแลนี้หรือไม่?")) {
       try {
         const response = await fetch(`http://localhost:5000/deletecaregiver`, {
           method: "POST", // ใช้ POST หรือ DELETE ตาม API ของคุณ
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ _id: caregiverId, userId: id }), // ส่ง `_id` ของผู้ดูแลไป
+          body: JSON.stringify({ _id: caregiverId }), // ส่ง `_id` ของผู้ดูแลไป
         });
 
         const data = await response.json();
@@ -534,7 +534,7 @@ export default function AllUser({}) {
       </div>
       <div className="home_content">
         <div className="homeheader">
-          <div className="header">จัดการข้อมูลผู้ป่วย</div>
+          <div className="header">จัดการข้อมูลผู้ป่วยที่ถูกลบ</div>
           <div className="profile_details ">
             <ul className="nav-list">
               <li>
@@ -559,7 +559,7 @@ export default function AllUser({}) {
               <i className="bi bi-chevron-double-right"></i>
             </li>
             <li>
-              <a href="alluser">จัดการข้อมูลผู้ป่วย</a>
+              <a href="recover-patients">จัดการข้อมูลผู้ป่วยที่ถูกลบ</a>
             </li>
             <li className="arrow">
               <i className="bi bi-chevron-double-right"></i>
@@ -600,15 +600,7 @@ export default function AllUser({}) {
               <p>
                 <span>เบอร์โทรศัพท์</span>
               </p>
-              {/* <p>
-                <span>ผู้ดูแล</span>
-              </p>
-              <p>
-                <span>ความสัมพันธ์</span>
-              </p>
-              <p>
-                <span>เบอร์โทรศัพท์ผู้ดูแล</span>
-              </p> */}
+        
             </div>
             <div className="right-info">
               <p>
@@ -635,37 +627,14 @@ export default function AllUser({}) {
               <p>
                 <b>{tel || "-"}</b>
               </p>
-              {/* <p>
-
-                <b>{caregiverName || '-'}</b> <b>{caregiverSurname || '-'}</b>
-              </p>
-              <p>
-                <b>{Relationship || '-'}</b>
-              </p>
-              <p>
-                <b>{caregiverTel || '-'}</b>
-              </p> */}
+            
             </div>
           </div>
 
-          <div className="btn-group mb-4">
-            <div className="editimg1">
-              <button
-                onClick={() =>
-                  navigate("/updateuser", {
-                    state: { id },
-                  })
-                }
-              >
-                แก้ไข
-              </button>
-            </div>
-            <div className="deleteimg1">
-              <button onClick={() => deleteUser()}>ลบ</button>
-            </div>
-          </div>
+         
         </div>
         <br></br>
+      
         <div className="info3 card mb-3">
           <div className="header">
             <b>ข้อมูลผู้ดูแล</b>
@@ -680,70 +649,35 @@ export default function AllUser({}) {
                         <span>ผู้ดูแลคนที่ {index + 1}:</span>
                       </p>
                       <div className="caregiver-card">
-                        <div className="caregiver-info">
-                          <p>
-                            <span>เลขประจําตัวประชาชน:</span>{" "}
-                            {formatIDCardNumber(
-                              caregiver.ID_card_number || "-"
-                            )}{" "}
-                          </p>
-                          <p>
-                            <span>ชื่อ-สกุล:</span> {caregiver.name || "-"}{" "}
-                            {caregiver.surname || "-"}
-                          </p>
-                          <p>
-                            <span>ความสัมพันธ์กับผู้ป่วย:</span>{" "}
-                            {caregiver.userRelationships &&
-                            caregiver.userRelationships.length > 0
-                              ? caregiver.userRelationships
-                                  .map((rel) => rel.relationship)
-                                  .filter((relationship) => relationship) // กรองค่าว่าง
-                                  .join(", ") || "-" // ถ้าไม่มีก็แสดง "-"
-                              : "-"}
-                          </p>
-                          <p>
-                            <span>เบอร์โทรศัพท์:</span> {caregiver.tel || "-"}
-                          </p>
+                      <div className="caregiver-info">
+                      <p>
+                          <span>เลขประจําตัวประชาชน:</span> {formatIDCardNumber(caregiver.ID_card_number || "-")}{" "}
+                        </p>
+                        <p>
+                          <span>ชื่อ-สกุล:</span> {caregiver.name || "-"}{" "}
+                          {caregiver.surname || "-"}
+                        </p>
+                        <p>
+                          <span>ความสัมพันธ์:</span>{" "}
+                          {caregiver.Relationship || "-"}
+                        </p>
+                        <p>
+                          <span>เบอร์โทรศัพท์:</span> {caregiver.tel || "-"}
+                        </p>
                         </div>
-                        <div class="button-container-vertical">
-                          <button
-                            class="button-edit"
-                            onClick={() => handleEdit(caregiver)}
-                          >
-                            แก้ไข
-                          </button>
-                          <button
-                            class="button-delete"
-                            onClick={() => handleDelete(caregiver._id, id)}
-                          >
-                            ลบ
-                          </button>
-                        </div>
+                
                       </div>
-
-                      {/* <button
-                                onClick={() =>
-                                  navigate("/updatecaregiver", { state: { caregiver  }}
-                                  )
-                                }>
-                                แก้ไข</button> */}
+                
+                
                     </div>
                   ))}
-                </div>
-                <div className="btn-group mb-4">
-                  <div className="adddata">
-                    <button onClick={handleAddCaregiver}>เพิ่มผู้ดูแล</button>
-                  </div>
-                </div>
+                 </div>
+               
               </div>
             ) : (
               <div>
                 <p className="no-equipment">ไม่มีข้อมูลผู้ดูแล</p>
-                <div className="btn-group mb-4">
-                  <div className="adddata">
-                    <button onClick={handleAddCaregiver}>เพิ่มผู้ดูแล</button>
-                  </div>
-                </div>
+            
               </div>
             )}
           </div>
@@ -850,9 +784,7 @@ export default function AllUser({}) {
                           style={{ color: "grey" }}
                           href=""
                           onClick={() => {
-                            // const filePath = medicalInfo.fileP.replace(/\\/g, "/");
-                            // const fileName = filePath.split("/").pop();
-                            // console.log("fileName:", fileName);
+                        
                             window.open(`${medicalInfo.fileP}`, "_blank");
                           }}
                         >
@@ -873,9 +805,7 @@ export default function AllUser({}) {
                           style={{ color: "grey" }}
                           href=""
                           onClick={() => {
-                            // const filePath = medicalInfo.fileM.replace(/\\/g, "/");
-                            // const fileName = filePath.split("/").pop();
-                            // console.log("fileName:", fileName);
+                          
                             window.open(`${medicalInfo.fileM}`, "_blank");
                           }}
                         >
@@ -896,9 +826,7 @@ export default function AllUser({}) {
                           style={{ color: "grey" }}
                           href=""
                           onClick={() => {
-                            // const filePath = medicalInfo.filePhy.replace(/\\/g, "/");
-                            // const fileName = filePath.split("/").pop();
-                            // console.log("fileName:", fileName);
+                        
                             window.open(`${medicalInfo.filePhy}`, "_blank");
                           }}
                         >
@@ -911,36 +839,13 @@ export default function AllUser({}) {
                   </p>
                 </div>
               </div>
-              <div className="btn-group mb-4">
-                <div className="editimg1">
-                  <button
-                    onClick={() =>
-                      navigate("/updatemedicalinformation", {
-                        state: { id },
-                      })
-                    }
-                  >
-                    แก้ไข
-                  </button>
-                </div>
-                <div className="deleteimg1">
-                  <button onClick={handleDeleteMedicalInfo}>ลบ</button>
-                </div>
-              </div>
+            
             </>
           ) : (
             <div>
               <p className="no-equipment">ไม่พบข้อมูลการเจ็บป่วย</p>
               <div className="btn-group mb-4">
-                <div className="adddata">
-                  <button
-                    onClick={() =>
-                      navigate("/addmdinformation", { state: { id } })
-                    }
-                  >
-                    เพิ่มข้อมูล
-                  </button>
-                </div>
+               
               </div>
             </div>
           )}
@@ -967,14 +872,14 @@ export default function AllUser({}) {
                 );
 
                 return (
-                  <div key={type} className="equipment-category">
+                  <div key={type} className="equipment-category-recover">
                     <h4 className="mt-3">
                       <b>{type}</b>
                     </h4>
-                    <table className="equipment-table mb-5">
+                    <table className="equipment-table-recover mb-5">
                       <thead>
                         <tr>
-                          <th>
+                          {/* <th>
                             <input
                               type="checkbox"
                               checked={allSelected}
@@ -1010,7 +915,7 @@ export default function AllUser({}) {
                                 }
                               }}
                             />
-                          </th>
+                          </th> */}
                           <th>ลำดับ</th>
                           <th>ชื่ออุปกรณ์</th>
                           <th>วันที่เพิ่ม</th>
@@ -1019,7 +924,7 @@ export default function AllUser({}) {
                       <tbody>
                         {equipments.map((equipment, index) => (
                           <tr key={equipment._id}>
-                            <td>
+                            {/* <td>
                               <input
                                 type="checkbox"
                                 className="mb-2"
@@ -1032,7 +937,7 @@ export default function AllUser({}) {
                                   )
                                 }
                               />
-                            </td>
+                            </td> */}
                             <td>{index + 1}</td>
                             <td>{equipment.equipmentname_forUser}</td>
                             <td>
@@ -1052,31 +957,12 @@ export default function AllUser({}) {
                   </div>
                 );
               })}
-              <div className="btn-group mb-4">
-                <div className="adddata">
-                  <button
-                    onClick={() => navigate("/addequipuser", { state: { id } })}
-                  >
-                    เพิ่มอุปกรณ์
-                  </button>
-                </div>
-                <div className="deleteimg1 mt-2">
-                  <button onClick={handleDeleteSelected}>ลบอุปกรณ์</button>
-                </div>
-              </div>
+              
             </>
           ) : (
             <>
               <div className="no-equipment">ไม่พบข้อมูลอุปกรณ์ทางการแพทย์</div>
-              <div className="btn-group mb-4">
-                <div className="adddata">
-                  <button
-                    onClick={() => navigate("/addequipuser", { state: { id } })}
-                  >
-                    เพิ่มอุปกรณ์
-                  </button>
-                </div>
-              </div>
+        
             </>
           )}
         </div>

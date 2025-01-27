@@ -164,7 +164,7 @@
 }
 
 .d-grid {
-  margin-top: 3%; /* ลดช่องว่าง */
+  margin-top: 1%; /* ลดช่องว่าง */
   padding: 0;
 }
 .equipment-item {
@@ -485,6 +485,7 @@ td {
 }
 .success{
   text-align: center;
+  align-items: center;
   padding-left: 0 !important;
 }
 
@@ -512,22 +513,35 @@ td {
   align-items: center; 
   position: relative; 
 }
+
 .error-messageotp {
   display: inline-block; 
   margin: 0;
+  color: #dc3545; 
 }
-
-.newotp {
-  display: inline-block; 
+.success-message{
+  color: #28a745;
+}
+.resend-link {
+  color: #6c757d; /* สีเทาอ่อนสำหรับลิงก์ */
   text-decoration: underline;
-  color: blue;
   cursor: pointer;
 }
-/* .label-container {
-  display: flex;
-  align-items: center; 
+.resend-link:hover {
+  color: #007bff; /* สีฟ้าสำหรับลิงก์เมื่อ Hover */
 }
 
+.label-container {
+  display: flex;
+  align-items: center; 
+  gap: 8px;
+  justify-content: center;
+}
+.email-text {
+  font-weight: bold; /* เพิ่มความชัดเจน */
+  color: #333; /* ใช้สีที่เหมาะสม */
+}
+/* 
 .label-inline {
   margin-right: 10px;
 }
@@ -537,6 +551,7 @@ h5 {
 .message-container {
   display: flex;
   align-items: center;
+  justify-content: center;
   gap: 10px;
 }
 
@@ -799,4 +814,94 @@ h5 {
 
 input[type="radio"] {
   margin-right: 5px;
+}
+.otp-input-container {
+  text-align: center;
+}
+
+.otp-inputs {
+  display: flex;
+  justify-content: center;
+  gap: 10px; /* ระยะห่างระหว่างช่อง */
+  margin: 10px 0;
+}
+
+.otp-input {
+  width: 40px;
+  height: 40px;
+  text-align: center;
+  font-size: 18px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  outline: none;
+}
+
+.otp-input:focus {
+  border-color: #007bff;
+  box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+}
+
+.otp-instructions{
+  text-align: center;
+}
+
+.password-container {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.password-container input {
+  width: 100%;
+  padding-right: 40px; /* เพิ่มระยะให้ input มีพื้นที่สำหรับไอคอน */
+  box-sizing: border-box;
+}
+
+.password-container .toggle-password {
+  position: absolute;
+  right: 10px; /* ตำแหน่งไอคอนใน input */
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 20px;
+  cursor: pointer;
+  color: #6c757d; /* สีไอคอน */
+  transition: color 0.3s;
+}
+
+.password-container .toggle-password:hover {
+  color: #000; /* สีไอคอนเมื่อ hover */
+}
+
+
+input[type="password"]::-ms-reveal,
+input[type="password"]::-ms-clear {
+  display: none;
+}
+
+input[type="password"]::-webkit-clear-button,
+input[type="password"]::-webkit-inner-spin-button,
+input[type="password"]::-webkit-outer-spin-button,
+input[type="password"]::-webkit-reveal-button {
+  display: none;
+}
+/* ตำแหน่งของไอคอนที่สร้างเอง */
+.password-input {
+  position: relative;
+}
+
+.password-input input {
+  padding-right: 30px; /* เผื่อพื้นที่สำหรับไอคอน */
+}
+
+.password-input i {
+  position: absolute;
+  top: 50%;
+  right: 10px;
+  transform: translateY(-50%);
+  cursor: pointer;
+  color: #6c757d;
+}
+
+.password-input i:hover {
+  color: #495057;
 }

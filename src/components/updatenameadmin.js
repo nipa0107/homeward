@@ -20,7 +20,8 @@ export default function UpdateName() {
     const [isActive, setIsActive] = useState(false);
     const [error, setError] = useState("");
     const [token, setToken] = useState("");
-
+    const [nameError, setNameError] = useState("");
+    const [surnameError, setSurnameError] = useState("");
 
     useEffect(() => {
         // const fetchData = async () => {
@@ -64,7 +65,25 @@ export default function UpdateName() {
           }, [location]);
 
     //แก้ไขชื่อ
-    const UpdateName = async () => {
+    const UpdateName = async (e) => {
+      e.preventDefault();
+      let hasError = false;
+      if (!name.trim()) {
+        setNameError("กรุณากรอกชื่อ");
+        hasError = true;
+      } else {
+        setNameError("");
+      }
+    
+      if (!surname.trim()) {
+        setSurnameError("กรุณากรอกนามสกุล");
+        hasError = true;
+      } else {
+        setSurnameError("");
+      }
+
+      
+      if (hasError) return;
     try {
       const adminData = 
       { name,
@@ -105,7 +124,31 @@ export default function UpdateName() {
   const handleToggleSidebar = () => {
     setIsActive(!isActive);
   };
+  
+  const handleInputNameChange = (e) => {
+    const input = e.target.value;
+  
+    if (/[^ก-๙\s]/.test(input)) {
+      setNameError("ชื่อควรเป็นตัวอักษรเท่านั้น");
+    } else {
+      setNameError("");
+    }
+  
+    setName(input.replace(/[^ก-๙\s]/g, "")); 
+  };
+  
 
+  const handleInputSurnameChange = (e) => {
+    const input = e.target.value;
+
+    if (/[^ก-๙\s]/.test(input)) {
+      setSurnameError("นามสกุลควรเป็นตัวอักษรเท่านั้น");
+    } else {
+      setSurnameError("");
+    }
+
+    setSurname(input.replace(/[^ก-๙\s]/g, "")); 
+  };
   return (
     <main className="body">
       <ToastContainer />
@@ -227,19 +270,21 @@ export default function UpdateName() {
           <label>ชื่อ</label>
           <input
               type="text"
-              className="form-control"
               value={name}
-              onChange={(e) => setName(e.target.value)}
-            />
+              className={`form-control ${nameError ? "input-error" : ""}`}
+              onChange={handleInputNameChange}              
+              />
+            {nameError && <span className="error-text">{nameError}</span>}
           </div>
           <div className="mb-2">
           <label>นามสกุล</label>
           <input
               type="text"
-              className="form-control"
               value={surname}
-              onChange={(e) => setSurname(e.target.value)}
+              className={`form-control ${surnameError ? "input-error" : ""}`}
+              onChange={handleInputSurnameChange}
             />
+            {surnameError && <span className="error-text">{surnameError}</span>}
           </div>
           <div className="mb-2">
           <label>อีเมล</label>

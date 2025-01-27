@@ -10,106 +10,99 @@ import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
 export default function UpdateSymptom() {
-    const navigate = useNavigate();
-    const location = useLocation();
-    const [token, setToken] = useState("");
-    const [adminData, setAdminData] = useState("");
-    const {id} = location.state;
-    const [isActive, setIsActive] = useState(false);
-    const [name, setName] = useState("");
+  const navigate = useNavigate();
+  const location = useLocation();
+  const [token, setToken] = useState("");
+  const [adminData, setAdminData] = useState("");
+  const { id } = location.state;
+  const [isActive, setIsActive] = useState(false);
+  const [name, setName] = useState("");
+  const [nameError, setNameError] = useState("");
 
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await fetch(`http://localhost:5000/getsymptom/${id}`);
+        const data = await response.json();
+        setName(data.name);
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      }
+    };
 
-    useEffect(() => {
-      const fetchData = async () => {
-        try {
-          const response = await fetch(
-            `http://localhost:5000/getsymptom/${id}`
-          );
-          const data = await response.json();
-          setName(data.name);
-        } catch (error) {
-          console.error("Error fetching data:", error);
-        }
+    const token = window.localStorage.getItem("token");
+    setToken(token);
+    if (token) {
+      fetch("http://localhost:5000/profile", {
+        method: "POST",
+        crossDomain: true,
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "application/json",
+          "Access-Control-Allow-Origin": "*",
+        },
+        body: JSON.stringify({
+          token: token,
+        }),
+      })
+        .then((res) => res.json())
+        .then((data) => {
+          console.log(data);
+          setAdminData(data.data);
+        });
+    }
+    fetchData();
+  }, [id]);
+
+  const UpdateSymptom = async () => {
+    let hasError = false;
+
+    if (!name.trim()) {
+      setNameError("กรุณากรอกชื่ออาการ");
+      hasError = true;
+    } else {
+      setNameError("");
+    }
+
+    if (hasError) return;
+
+    try {
+      const SymptomUpdate = {
+        name,
       };
-  
-      const token = window.localStorage.getItem("token");
-      setToken(token);
-      if (token) {
-        fetch("http://localhost:5000/profile", {
+      const response = await fetch(
+        `http://localhost:5000/updatesymptom/${id}`,
+        {
           method: "POST",
-          crossDomain: true,
           headers: {
             "Content-Type": "application/json",
-            Accept: "application/json",
-            "Access-Control-Allow-Origin": "*",
+            Authorization: `Bearer ${token}`, // เพิ่ม Authorization header เพื่อส่ง token ในการร้องขอ
           },
-          body: JSON.stringify({
-            token: token,
-          }),
-        })
-          .then((res) => res.json())
-          .then((data) => {
-            console.log(data);
-            setAdminData(data.data);
-            
-          });
-      }
-      fetchData();
-    }, [id]);
-   
-    const checkDuplicateName = async (name) => {
-      try {
-        const response = await fetch(
-          `http://localhost:5000/check-symptom-name?name=${name}`
-        );
-        const data = await response.json();
-        return data.exists; // ถ้าชื่อซ้ำจะ return true
-      } catch (error) {
-        console.error("Error checking duplicate name:", error);
-        return false; // กรณีมีข้อผิดพลาด
-      }
-    };
-    const UpdateSymptom = async () => {
-
-      if (!name) {
-        toast.error("กรุณากรอกชื่ออาการก่อนทำการบันทึก");
-        return; // หยุดการดำเนินการถ้าเงื่อนไขไม่ตรง
-      }
-   const isDuplicate = await checkDuplicateName(name);
-    if (isDuplicate) {
-      toast.error("ชื่ออาการซ้ำในระบบ กรุณาเปลี่ยนชื่อ");
-      return; // หยุดการดำเนินการถ้าชื่อซ้ำ
-    }
-      try {
-        const SymptomUpdate = {
-          name,
-        };
-        const response = await fetch(
-       `http://localhost:5000/updatesymptom/${id}`,          
-          {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-              Authorization: `Bearer ${token}` // เพิ่ม Authorization header เพื่อส่ง token ในการร้องขอ
-            },
-            body: JSON.stringify(SymptomUpdate),
-          }
-        );
-        if (response.ok) {
-          const UpdateSymptom = await response.json();
-          console.log("แก้ไขอาการแล้ว:", UpdateSymptom);
-          toast.success("แก้ไขข้อมูลสำเร็จ");
-          setTimeout(() => {
-            navigate("/allsymptom");
-          }, 1100);
-        } else {
-          console.error("แก้ไขไม่ได้:", response.statusText);
+          body: JSON.stringify(SymptomUpdate),
         }
-      } catch (error) {
-        console.error("การแก้ไขมีปัญหา:", error);
+      );
+      const UpdateSymptom = await response.json();
+      if (response.ok && UpdateSymptom.status === "ok") {
+        console.log("แก้ไขอาการแล้ว:", UpdateSymptom);
+        toast.success("แก้ไขข้อมูลสำเร็จ");
+        setTimeout(() => {
+          navigate("/allsymptom");
+        }, 1100);
+      } else {
+        if (UpdateSymptom.error) {
+          toast.error(UpdateSymptom.error); // แสดงข้อความจาก Backend
+        } else {
+          toast.error("ไม่สามารถแก้ไขอาการได้");
+        }
+        console.error(
+          "แก้ไขไม่ได้:",
+          UpdateSymptom.error || response.statusText
+        );
       }
-    };
-
+    } catch (error) {
+      console.error("การแก้ไขมีปัญหา:", error);
+    }
+  };
 
   const logOut = () => {
     window.localStorage.clear();
@@ -123,10 +116,19 @@ export default function UpdateSymptom() {
   const handleBreadcrumbClick = () => {
     navigate("/allsymptom");
   };
+  const handleInputNameChange = (e) => {
+    const input = e.target.value;
+    if (!input.trim()) {
+      setNameError("");
+    } else {
+      setNameError("");
+    }
+    setName(input);
+  };
 
   return (
     <main className="body">
-            <ToastContainer />
+      <ToastContainer />
       <div className={`sidebar ${isActive ? "active" : ""}`}>
         <div className="logo_content">
           <div className="logo">
@@ -140,7 +142,9 @@ export default function UpdateSymptom() {
           <li>
             <a href="home">
               <i className="bi bi-book"></i>
-              <span className="links_name">จัดการข้อมูลคู่มือการดูแลผู้ป่วย</span>
+              <span className="links_name">
+                จัดการข้อมูลคู่มือการดูแลผู้ป่วย
+              </span>
             </a>
           </li>
           <li>
@@ -164,13 +168,13 @@ export default function UpdateSymptom() {
           <li>
             <a href="allsymptom" onClick={() => navigate("/allsymptom")}>
               <i className="bi bi-bandaid"></i>
-              <span className="links_name" >จัดการอาการผู้ป่วย</span>
+              <span className="links_name">จัดการอาการผู้ป่วย</span>
             </a>
           </li>
           <li>
-            <a href="/alluserinsetting" >
-            <i className="bi bi-bell"></i>              
-            <span className="links_name" >ตั้งค่าการแจ้งเตือน</span>
+            <a href="/alluserinsetting">
+              <i className="bi bi-bell"></i>
+              <span className="links_name">ตั้งค่าการแจ้งเตือน</span>
             </a>
           </li>
           <li>
@@ -200,17 +204,19 @@ export default function UpdateSymptom() {
         </ul>
       </div>
       <div className="home_content">
-      <div className="homeheader">
-        <div className="header">จัดการอาการผู้ป่วย</div>
-        <div className="profile_details ">
-        <ul className="nav-list">
-          <li>
-            <a href="profile">
-              <i className="bi bi-person"></i>
-              <span className="links_name">{adminData && adminData.username}</span>
-            </a>
-          </li>
-          </ul>
+        <div className="homeheader">
+          <div className="header">จัดการอาการผู้ป่วย</div>
+          <div className="profile_details ">
+            <ul className="nav-list">
+              <li>
+                <a href="profile">
+                  <i className="bi bi-person"></i>
+                  <span className="links_name">
+                    {adminData && adminData.username}
+                  </span>
+                </a>
+              </li>
+            </ul>
           </div>
         </div>
         <div className="breadcrumbs">
@@ -241,11 +247,12 @@ export default function UpdateSymptom() {
             <input
               type="text"
               value={name}
-              className="form-control"
-              onChange={(e) => setName(e.target.value)}
+              className={`form-control ${nameError ? "input-error" : ""}`}
+              onChange={handleInputNameChange}
             />
-          </div>
+           {nameError && <span className="error-text">{nameError}</span>}
 
+          </div>
 
           <div className="d-grid">
             <button
@@ -263,4 +270,3 @@ export default function UpdateSymptom() {
     </main>
   );
 }
-

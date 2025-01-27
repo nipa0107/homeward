@@ -38,4 +38,14 @@
   .form-check-input:checked::before {
     transform: translateX(1rem);
   }
+
+.input-error {
+  border-radius: 4px; 
+  box-shadow: 0 0 5px rgba(255, 0, 0, 0.5); 
+}
+
+.error-text {
+    color: red;
+    font-size: 0.875em;
+}
   

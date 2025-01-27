@@ -14,6 +14,13 @@ export default function AllUser({}) {
   const [searchKeyword, setSearchKeyword] = useState(""); //ค้นหา
   const [token, setToken] = useState("");
 
+  const formatIDCardNumber = (id) => {
+    if (!id) return "";
+    return id.replace(/(\d{1})(\d{4})(\d{5})(\d{2})(\d{1})/, "$1-$2-$3-$4-$5");
+  };
+  
+
+  
   useEffect(() => {
     const token = window.localStorage.getItem("token");
     setToken(token);
@@ -245,8 +252,8 @@ export default function AllUser({}) {
                   .filter((user) => user.deletedAt === null)
                   .map((i, index) => (
                     <tr key={index}>
-                      <td>{i.username}</td>
-                      <td>
+          <td>{formatIDCardNumber(i.username)}</td>
+          <td>
                         {i.name} {i.surname}
                       </td>
                       <td>

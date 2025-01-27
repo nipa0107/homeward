@@ -16,6 +16,7 @@ export default function UpdateCareManual() {
   const [caremanual_name, setCaremanualName] = useState("");
   const [image, setImage] = useState(null);
   const [file, setFile] = useState(null);
+  const [fileName, setFileName] = useState(null);
   const [detail, setDetail] = useState("");
   const navigate = useNavigate();
   const [adminData, setAdminData] = useState("");
@@ -23,7 +24,11 @@ export default function UpdateCareManual() {
   const [selectedFileName, setSelectedFileName] = useState("");
   const [pdfURL, setPdfURL] = useState(null);
   const [token, setToken] = useState("");
-
+  const [caremanualNameError, setCaremanualNameError] = useState(""); 
+  const [imageError, setImageError] = useState("");
+  const [deletedImage, setDeletedImage] = useState(false); // สำหรับภาพ
+  const [deletedFile, setDeletedFile] = useState(false); // สำหรับไฟล์
+  
   const defaultImageURL = imgdefault;
   // const defaultImageURL =
   //   "https://gnetradio.com/wp-content/uploads/2019/10/no-image.jpg";
@@ -74,6 +79,7 @@ export default function UpdateCareManual() {
         setDetail(data.detail);
         setImage(data.image);
         setFile(data.file);
+        setFileName(data.originalFileName);
       } catch (error) {
         console.error("Error fetching caremanual data:", error);
       }
@@ -103,75 +109,94 @@ export default function UpdateCareManual() {
     fetchData();
   }, [id]);
 
-  const removeImage = async () => {
-    try {
-      const response = await fetch(`http://localhost:5000/remove-image/${id}`, {
-        method: "DELETE",
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
+  // const removeImage = async () => {
+  //   try {
+  //     const response = await fetch(`http://localhost:5000/remove-image/${id}`, {
+  //       method: "DELETE",
+  //       headers: {
+  //         Authorization: `Bearer ${token}`,
+  //       },
+  //     });
 
-      if (response.ok) {
-        setImage(null);
-        const previewImageElement = document.getElementById("previewImage");
-        if (previewImageElement) {
-          previewImageElement.src = defaultImageURL;
-        }
-      } else {
-        toast.error("ไม่สามารถลบรูปภาพได้");
-      }
-    } catch (error) {
-      console.error("เกิดข้อผิดพลาดในการลบรูปภาพ:", error);
-      toast.error("เกิดข้อผิดพลาดในการลบรูปภาพ");
-    }
-  };
+  //     if (response.ok) {
+  //       setImage(null);
+  //       const previewImageElement = document.getElementById("previewImage");
+  //       if (previewImageElement) {
+  //         previewImageElement.src = defaultImageURL;
+  //       }
+  //     } else {
+  //       toast.error("ไม่สามารถลบรูปภาพได้");
+  //     }
+  //   } catch (error) {
+  //     console.error("เกิดข้อผิดพลาดในการลบรูปภาพ:", error);
+  //     toast.error("เกิดข้อผิดพลาดในการลบรูปภาพ");
+  //   }
+  // };
 
-  const removeFile = async () => {
-    try {
-      const response = await fetch(`http://localhost:5000/remove-file/${id}`, {
-        method: "DELETE",
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
+  // const removeFile = async () => {
+  //   try {
+  //     const response = await fetch(`http://localhost:5000/remove-file/${id}`, {
+  //       method: "DELETE",
+  //       headers: {
+  //         Authorization: `Bearer ${token}`,
+  //       },
+  //     });
 
-      if (response.ok) {
-        setFile(null);
-        setSelectedFileName("");
-        setPdfURL(null);
-      } else {
-        toast.error("ไม่สามารถลบไฟล์ได้");
-      }
-    } catch (error) {
-      console.error("เกิดข้อผิดพลาดในการลบไฟล์:", error);
-      toast.error("เกิดข้อผิดพลาดในการลบไฟล์");
-    }
+  //     if (response.ok) {
+  //       setFile(null);
+  //       setSelectedFileName("");
+  //       setPdfURL(null);
+  //     } else {
+  //       toast.error("ไม่สามารถลบไฟล์ได้");
+  //     }
+  //   } catch (error) {
+  //     console.error("เกิดข้อผิดพลาดในการลบไฟล์:", error);
+  //     toast.error("เกิดข้อผิดพลาดในการลบไฟล์");
+  //   }
+  // };
+  const removeImage = () => {
+    setImage(null); // ลบภาพออกจากหน้า
+    setDeletedImage(true); // ระบุว่าภาพถูกลบ
   };
-  const checkDuplicateName = async (name) => {
-    try {
-      const response = await fetch(
-        `http://localhost:5000/check-caremanual-name?caremanual_name=${name}`
-      );
-      const data = await response.json();
-      return data.exists; // ถ้าชื่อซ้ำจะ return true
-    } catch (error) {
-      console.error("Error checking duplicate name:", error);
-      return false; // กรณีมีข้อผิดพลาด
-    }
+  
+  const removeFile = () => {
+    setFile(null); // ลบไฟล์ออกจากหน้า
+    setSelectedFileName(""); // รีเซ็ตชื่อไฟล์ที่เลือก
+    setPdfURL(null); // ลบลิงก์ PDF
+    setDeletedFile(true); // ระบุว่าไฟล์ถูกลบ
   };
+  
+
   
   const UpdateCareManual = async () => {
     console.log(caremanual_name, image, file, detail);
-    if (!caremanual_name || !image) {
-      toast.error("กรุณากรอกชื่อคู่มือและเลือกภาพก่อนทำการบันทึก");
-      return; // หยุดการดำเนินการถ้าเงื่อนไขไม่ตรง
+    // if (!caremanual_name || !image) {
+    //   toast.error("กรุณากรอกชื่อคู่มือและเลือกภาพก่อนทำการบันทึก");
+    //   return; // หยุดการดำเนินการถ้าเงื่อนไขไม่ตรง
+    // }
+    let hasError = false;
+    if (!caremanual_name.trim()) {
+      setCaremanualNameError("กรุณากรอกชื่อคู่มือ");
+      hasError = true;
+    } else {
+      setCaremanualNameError(""); // เคลียร์ error ถ้ามีการกรอกค่า
     }
-    const isDuplicate = await checkDuplicateName(caremanual_name);
-    if (isDuplicate) {
-      toast.error("ชื่อคู่มือซ้ำในระบบ กรุณาเปลี่ยนชื่อ");
-      return; // หยุดการดำเนินการถ้าชื่อซ้ำ
+    if (!image) {
+      setImageError("กรุณาเลือกภาพ");
+      hasError = true;
+    } else {
+      setImageError(""); // เคลียร์ error ถ้ามีการเลือกภาพ
     }
+    if (!caremanual_name.trim() || !image) {
+      return;
+    }
+    if (hasError) return; 
+
+    // const isDuplicate = await checkDuplicateName(caremanual_name);
+    // if (isDuplicate) {
+    //   toast.error("ชื่อคู่มือซ้ำในระบบ กรุณาเปลี่ยนชื่อ");
+    //   return; // หยุดการดำเนินการถ้าชื่อซ้ำ
+    // }
     try {
       const formData = new FormData();
       formData.append("caremanual_name", caremanual_name);
@@ -195,17 +220,39 @@ export default function UpdateCareManual() {
           },
         }
       );
-
+      const result = await response.json();
       if (response.ok) {
-        const updatedCaremanual = await response.json();
-        console.log("แก้ไขคู่มือแล้ว:", updatedCaremanual);
+        console.log("แก้ไขคู่มือแล้ว:", result);
         toast.success("แก้ไขข้อมูลสำเร็จ");
+        if (deletedImage) {
+          await fetch(`http://localhost:5000/remove-image/${id}`, {
+            method: "DELETE",
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          });
+        }
+  
+        if (deletedFile) {
+          await fetch(`http://localhost:5000/remove-file/${id}`, {
+            method: "DELETE",
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          });
+        }
+  
         setTimeout(() => {
           navigate("/home");
         }, 1100);
       } else {
-        console.error("แก้ไขไม่ได้:", response.statusText);
-      }
+        if (result.error) {
+                  toast.error(result.error); // แสดงข้อความจาก Backend
+                } else {
+                  toast.error("ไม่สามารถแก้ไขคู่มือได้");
+                }
+                console.error("แก้ไขไม่ได้:", result.error || response.statusText);
+              }
     } catch (error) {
       console.error("การแก้ไขมีปัญหา:", error);
     }
@@ -339,10 +386,15 @@ export default function UpdateCareManual() {
             <label>หัวข้อ</label>
             <input
               type="text"
-              className="form-control"
+              className={`form-control ${
+                caremanualNameError ? "input-error" : ""
+              }`} 
               value={caremanual_name}
               onChange={(e) => setCaremanualName(e.target.value)}
             />
+            {caremanualNameError && (
+                <span className="error-text">{caremanualNameError}</span>
+              )}
           </div>
 
           <div className="mb-1">
@@ -381,11 +433,13 @@ export default function UpdateCareManual() {
             {!image && (
               <input
                 type="file"
-                className="form-control"
+                className={`form-control ${imageError ? "input-error" : ""}`}
                 accept="image/*"
                 onChange={handleImageChange}
               />
             )}
+             {imageError && <span className="error-text">{imageError}</span>} 
+
           </div>
 
           <div className="mb-1">
@@ -399,7 +453,7 @@ export default function UpdateCareManual() {
                       className="bi bi-filetype-pdf"
                       style={{ color: "red" }}
                     ></i>{" "}
-                    {selectedFileName || "ดูไฟล์"}
+                    {selectedFileName || fileName}
                   </a>
                 ) : (
                   // กรณีที่ไฟล์เพิ่งถูกอัปโหลดใหม่
@@ -408,7 +462,7 @@ export default function UpdateCareManual() {
                       className="bi bi-filetype-pdf"
                       style={{ color: "red" }}
                     ></i>{" "}
-                    {selectedFileName || "ดูไฟล์"}
+                    {selectedFileName || fileName}
                   </a>
                 )}
                 <button

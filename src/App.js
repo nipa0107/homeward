@@ -49,6 +49,8 @@ import UpdateDefault from "./components/updatedefaultThreshold";
 import Recover from "./components/recover";
 import UpdateCaregiver from "./components/updatecaregiver";
 import AddCaregiver from "./components/addcaregiver";
+import AllInfoDeleted from "./components/allinfo-deleted";
+
 const PrivateRoute = ({ element, isLoggedIn }) => {
   return isLoggedIn === "true" ? (
     element
@@ -348,6 +350,12 @@ function App() {
             path="/recover-patients"
             element={
               <PrivateRoute element={<Recover />} isLoggedIn={isLoggedIn} />
+            }
+          />
+              <Route
+            path="/allinfodeleted"
+            element={
+              <PrivateRoute element={<AllInfoDeleted />} isLoggedIn={isLoggedIn} />
             }
           />
         </Routes>

@@ -16,6 +16,7 @@ export default function SettingNoti() {
   const location = useLocation();
   const [adminData, setAdminData] = useState("");
   const [isActive, setIsActive] = useState(false);
+  const [medicalData, setMedicalData] = useState([]);
   const [min, setMin] = useState({
     SBP: "",
     DBP: "",
@@ -32,10 +33,29 @@ export default function SettingNoti() {
     DTX: "",
     Respiration: "",
   });
-  const [painscore, setPainscore] = useState("")
+  const [painscore, setPainscore] = useState("");
 
-  const { id } = location.state || {};
+  const { id, name, surname,gender,birthday } = location.state || {};
+  const [userAge, setUserAge] = useState(0);
+  const [userAgeInMonths, setUserAgeInMonths] = useState(0);
+  const currentDate = new Date();
+  useEffect(() => {
+    if (birthday) {
+      const userBirthday = new Date(birthday);
+      const ageDiff = currentDate.getFullYear() - userBirthday.getFullYear();
+      const monthDiff = currentDate.getMonth() - userBirthday.getMonth();
+      setUserAgeInMonths(monthDiff >= 0 ? monthDiff : 12 + monthDiff);
 
+      if (
+        monthDiff < 0 ||
+        (monthDiff === 0 && currentDate.getDate() < userBirthday.getDate())
+      ) {
+        setUserAge(ageDiff - 1);
+      } else {
+        setUserAge(ageDiff);
+      }
+    }
+  }, [currentDate]);
   useEffect(() => {
     const token = window.localStorage.getItem("token");
     if (token) {
@@ -66,6 +86,27 @@ export default function SettingNoti() {
   const handleToggleSidebar = () => {
     setIsActive(!isActive);
   };
+
+
+  useEffect(() => {
+    if (id) {
+      const fetchMedicalInfo = async () => {
+        try {
+          const response = await fetch(
+            `http://localhost:5000/medicalInformation/${id}`
+          );
+          const data = await response.json();
+          console.log("Medical Information:", data);
+          setMedicalData(data.data);
+          console.log("22:", medicalData);
+        } catch (error) {
+          console.error("Error fetching medical information:", error);
+        }
+      };
+
+      fetchMedicalInfo();
+    }
+  }, [id]);
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -138,7 +179,7 @@ export default function SettingNoti() {
               DTX: data.max.DTX,
               Respiration: data.max.Respiration,
             });
-            setPainscore(data.Painscore)
+            setPainscore(data.Painscore);
           } else {
             // ถ้าไม่พบข้อมูล threshold ใช้ค่าเริ่มต้น
             setMin({
@@ -158,7 +199,7 @@ export default function SettingNoti() {
               DTX: threshold.DTX.max,
               Respiration: threshold.Respiration.max,
             });
-            setPainscore(threshold.Painscore)
+            setPainscore(threshold.Painscore);
           }
         }
       } catch (error) {
@@ -189,7 +230,9 @@ export default function SettingNoti() {
           <li>
             <a href="home">
               <i className="bi bi-book"></i>
-              <span className="links_name">จัดการข้อมูลคู่มือการดูแลผู้ป่วย</span>
+              <span className="links_name">
+                จัดการข้อมูลคู่มือการดูแลผู้ป่วย
+              </span>
             </a>
           </li>
           <li>
@@ -249,18 +292,20 @@ export default function SettingNoti() {
         </ul>
       </div>
       <div className="home_content">
-      <div className="homeheader">
-        <div className="header">ตั้งค่าการแจ้งเตือน</div>
-        <div className="profile_details ">
-        <ul className="nav-list">
-          <li>
-            <a href="profile">
-              <i className="bi bi-person"></i>
-              <span className="links_name">{adminData && adminData.username}</span>
-            </a>
-          </li>
-          </ul>
-        </div>
+        <div className="homeheader">
+          <div className="header">ตั้งค่าการแจ้งเตือน</div>
+          <div className="profile_details ">
+            <ul className="nav-list">
+              <li>
+                <a href="profile">
+                  <i className="bi bi-person"></i>
+                  <span className="links_name">
+                    {adminData && adminData.username}
+                  </span>
+                </a>
+              </li>
+            </ul>
+          </div>
         </div>
         <div className="breadcrumbs">
           <ul>
@@ -283,11 +328,31 @@ export default function SettingNoti() {
             </li>
           </ul>
         </div>
+        <div className="user-details">
+  <p><strong>ชื่อ-สกุล:</strong> {name} {surname}</p>
+  {birthday ? (
+    <p className="textassesment">
+      <strong>อายุ:</strong> {userAge} ปี {userAgeInMonths} เดือน{" "}
+      <strong>เพศ:</strong> {gender}
+    </p>
+  ) : (
+    <p className="textassesment">
+      <strong>อายุ:</strong> 0 ปี 0 เดือน <strong>เพศ:</strong> {gender}
+    </p>
+  )}
+  <p className="textassesment">
+    <strong>HN:</strong> {medicalData && medicalData.HN ? medicalData.HN : "ไม่มีข้อมูล"}{" "}
+    <strong>AN:</strong> {medicalData && medicalData.AN ? medicalData.AN : "ไม่มีข้อมูล"}{" "}
+    <strong>ผู้ป่วยโรค:</strong> {medicalData && medicalData.Diagnosis ? medicalData.Diagnosis : "ไม่มีข้อมูล"}
+  </p>
+</div>
+
         <div className="formsetnoti">
+          
           <form onSubmit={handleSubmit}>
             <div className="input-group-header">
               <label className="titlenoti"></label>
-              <label  className="titlenoti-min">ค่าต่ำสุด</label>
+              <label className="titlenoti-min">ค่าต่ำสุด</label>
               <label className="titlenoti-max">ค่าสูงสุด</label>
               <label className="unitnoti"></label>
             </div>
@@ -416,14 +481,14 @@ export default function SettingNoti() {
             </div>
 
             <div className="input-group">
-            <label className="titlenoti">ระดับความเจ็บปวด</label>
-            {/* <label>Min:</label> */}
-            <input
-              type="number"
-              value={painscore}
-              onChange={(e) => setPainscore( e.target.value )}
-              required
-            />          
+              <label className="titlenoti">ระดับความเจ็บปวด</label>
+              {/* <label>Min:</label> */}
+              <input
+                type="number"
+                value={painscore}
+                onChange={(e) => setPainscore(e.target.value)}
+                required
+              />
             </div>
 
             <div className="d-grid">

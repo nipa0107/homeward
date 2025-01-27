@@ -25,7 +25,11 @@ export default function UpdateMPersonnel() {
   const [surname, setSurname] = useState("");
   const [nametitle, setNameTitle] = useState("");
   const [error, setError] = useState("");
-
+  const [telError, setTelError] = useState("");
+  const [nameError, setNameError] = useState("");
+  const [surnameError, setSurnameError] = useState("");
+  const [nametitleError, setNametitleError] = useState("");
+  
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -70,7 +74,38 @@ export default function UpdateMPersonnel() {
     fetchData();
   }, [id]);
 
-  const UpdateMP = async () => {
+  const UpdateMP = async (e) => {
+    e.preventDefault();
+    let hasError = false;
+    if (!tel.trim() && !tel.length !== 10) {
+      setTelError("เบอร์โทรศัพท์ต้องมี 10 หลัก");
+      hasError = true;
+    } else {
+      setTelError("");
+    }
+
+    if (!name.trim()) {
+      setNameError("กรุณากรอกชื่อ");
+      hasError = true;
+    } else {
+      setNameError("");
+    }
+
+    if (!surname.trim()) {
+      setSurnameError("กรุณากรอกนามสกุล");
+      hasError = true;
+    } else {
+      setSurnameError("");
+    }
+
+    if (!nametitle.trim()) {
+      setNametitleError("กรุณาเลือกคำนำหน้าชื่อ");
+      hasError = true;
+    } else {
+      setNametitleError("");
+    }
+
+    if (hasError) return;
     try {
       const MPUpdate = {
         username,
@@ -116,6 +151,52 @@ export default function UpdateMPersonnel() {
 
   const handleBreadcrumbClick = () => {
     navigate("/allequipment");
+  };
+  const handleInputChange = (e) => {
+    const input = e.target.value;
+    if (/[^0-9]/.test(input)) {
+      setTelError("เบอร์โทรศัพท์ต้องเป็นตัวเลขเท่านั้น");
+    } else {
+      setTelError("");
+    }
+    setTel(input.replace(/\D/g, ""));
+  };
+  const handleInputNameChange = (e) => {
+    const input = e.target.value;
+
+    // ตรวจสอบว่ามีตัวเลขหรืออักขระพิเศษหรือไม่
+    if (/[^a-zA-Zก-ฮะ-ูไ-์\s]/.test(input)) {
+      setNameError("ชื่อควรเป็นตัวอักษรเท่านั้น");
+    } else {
+      setNameError("");
+    }
+
+    setName(input.replace(/[^a-zA-Zก-ฮะ-ูไ-์\s]/g, "")); // กรองเฉพาะตัวอักษรและช่องว่าง
+  };
+
+  const handleInputSurnameChange = (e) => {
+    const input = e.target.value;
+
+    // ตรวจสอบว่ามีตัวเลขหรืออักขระพิเศษหรือไม่
+    if (/[^a-zA-Zก-ฮะ-ูไ-์\s]/.test(input)) {
+      setSurnameError("นามสกุลควรเป็นตัวอักษรเท่านั้น");
+    } else {
+      setSurnameError(""); // ล้าง error หากไม่มีปัญหา
+    }
+
+    setSurname(input.replace(/[^a-zA-Zก-ฮะ-ูไ-์\s]/g, "")); // กรองเฉพาะตัวอักษรและช่องว่าง
+  };
+
+  const handleInputNameTitleChange = (e) => {
+    const input = e.target.value;
+  
+    if (!input.trim()) {
+      setNametitleError("กรุณาเลือกคำนำหน้าชื่อ");
+    } else {
+      setNametitleError(""); 
+    }
+  
+    setNameTitle(input);
   };
 
   return (
@@ -241,22 +322,6 @@ export default function UpdateMPersonnel() {
               onChange={(e) => setUsername(e.target.value)}
             />
           </div>
-          {/* <div className="mb-3">
-              <label>รหัสผ่าน</label>
-              <input
-                type="password"
-                className="form-control"
-                onChange={(e) => setPassword(e.target.value)}
-              />
-            </div>
-            <div className="mb-3">
-              <label>ยืนยันรหัสผ่าน</label>
-              <input
-                type="password"
-                className="form-control"
-                onChange={(e) => setConfirmPassword(e.target.value)}
-              />
-            </div> */}
           <div className="mb-3">
             <label>อีเมล</label>
             <input
@@ -272,16 +337,20 @@ export default function UpdateMPersonnel() {
             <input
               value={tel}
               type="text"
-              className="form-control"
-              onChange={(e) => setTel(e.target.value)}
-            />
+               maxLength="10"
+               className={`form-control ${telError ? "input-error" : ""}`}
+               onChange={handleInputChange}
+               />
+            {telError && <span className="error-text">{telError}</span>}
+
           </div>
           <div className="mb-1">
             <label>คำนำหน้าชื่อ</label>
             <select
-              className="form-control"
+                className={`form-control ${nametitleError ? "input-error" : ""}`}
               value={nametitle}
-              onChange={(e) => setNameTitle(e.target.value)}
+              onChange={handleInputNameTitleChange}
+              // onChange={(e) => setNameTitle(e.target.value)}
             >
               <option value="">กรุณาเลือก</option>
               <option value="แพทย์หญิง">แพทย์หญิง</option>
@@ -291,24 +360,29 @@ export default function UpdateMPersonnel() {
                 <option value="นาง">นาง</option>
                 <option value="นางสาว">นางสาว</option>
             </select>
+            {nametitleError && <span className="error-text">{nametitleError}</span>}
+
           </div>
           <div className="mb-3">
             <label>ชื่อ</label>
             <input
               type="text"
               value={name}
-              className="form-control"
-              onChange={(e) => setName(e.target.value)}
+              className={`form-control ${nameError ? "input-error" : ""}`}
+              onChange={handleInputNameChange}
             />
-          </div>
+            {nameError && <span className="error-text">{nameError}</span>}
+            </div>
           <div className="mb-3">
             <label>นามสกุล</label>
             <input
               type="text"
               value={surname}
-              className="form-control"
-              onChange={(e) => setSurname(e.target.value)}
+              className={`form-control ${surnameError ? "input-error" : ""}`}
+              onChange={handleInputSurnameChange}
             />
+            {surnameError && <span className="error-text">{surnameError}</span>}
+
           </div>
           <div className="d-grid">
             <button

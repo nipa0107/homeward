@@ -22,6 +22,12 @@ export default function AddMpersonnel() {
   const [error, setError] = useState(""); 
   const [adminData, setAdminData] = useState("");
   const [token, setToken] = useState('');
+  const [usernameError, setUsernameError] = useState("");
+  const [telError, setTelError] = useState("");
+  const [nameError, setNameError] = useState("");
+  const [nametitleError, setNametitleError] = useState("");
+  const [surnameError, setSurnameError] = useState("");
+  const [emailError, setEmailError] = useState("");
 
   useEffect(() => {
     const token = window.localStorage.getItem("token");
@@ -51,7 +57,49 @@ export default function AddMpersonnel() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    let hasError = false;
+    if (!username.trim()) {
+      setUsernameError("กรุณากรอกเลขที่ใบประกอบวิชาชีพ");
+      hasError = true;
+    } else {
+      setUsernameError("");
+    }
 
+    if (!tel.trim()) {
+      setTelError("กรุณากรอกเบอร์โทรศัพท์");
+      hasError = true;
+    } else if (tel.length !== 10) {
+      setTelError("เบอร์โทรศัพท์ต้องมี 10 หลัก");
+      hasError = true;
+    } else {
+      setTelError("");
+    }
+    if (!name.trim()) {
+      setNameError("กรุณากรอกชื่อ");
+      hasError = true;
+    } else {
+      setNameError("");
+    }
+  
+    if (!surname.trim()) {
+      setSurnameError("กรุณากรอกนามสกุล");
+      hasError = true;
+    } else {
+      setSurnameError("");
+    }
+    if (!email.trim()) {
+      setEmailError("กรุณากรอกอีเมล");
+      hasError = true;
+    } else {
+      setEmailError("");
+    }
+    if (!nametitle.trim()) {
+      setNametitleError("กรุณาเลือกคำนำหน้าชื่อ");
+      hasError = true;
+    } else {
+      setNametitleError("");
+    }
+    if (hasError) return; 
     fetch("http://localhost:5000/addmpersonnel", {
       method: "POST",
       headers: {
@@ -97,8 +145,80 @@ export default function AddMpersonnel() {
     setIsActive(!isActive);
   };
 
-
+  const handleInputChange = (e) => {
+    const input = e.target.value;
+    if (/[^0-9]/.test(input)) {
+      setTelError("เบอร์โทรศัพท์ต้องเป็นตัวเลขเท่านั้น");
+    } else {
+      setTelError("");
+    }
+    setTel(input.replace(/\D/g, ""));
+  };
+  
+    const handleInputUsernameChange = (e) => {
+      let input = e.target.value;
+  
+      if (/[^0-9-]/.test(input)) {
+        setUsernameError("เลขที่ใบประกอบวิชาชีพต้องเป็นตัวเลขเท่านั้น");
+        return;
+      } else {
+        setUsernameError("");
+      }
+  
+      setUsername(input.replace(/\D/g, "")); 
+    };
+    const handleInputNameChange = (e) => {
+      const input = e.target.value;
+    
+      if (/[^ก-๙\s]/.test(input)) {
+        setNameError("ชื่อควรเป็นตัวอักษรเท่านั้น");
+      } else {
+        setNameError("");
+      }
+    
+      setName(input.replace(/[^ก-๙\s]/g, "")); 
+    };
+    
+  
+    const handleInputSurnameChange = (e) => {
+      const input = e.target.value;
+  
+      if (/[^ก-๙\s]/.test(input)) {
+        setSurnameError("นามสกุลควรเป็นตัวอักษรเท่านั้น");
+      } else {
+        setSurnameError("");
+      }
+  
+      setSurname(input.replace(/[^ก-๙\s]/g, "")); 
+    };
  
+    const handleInputEmailChange = (e) => {
+      const input = e.target.value;
+    
+      if (!input.trim()) {
+        setEmailError(""); 
+      } else if (!/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(input)) {
+        setEmailError("รูปแบบอีเมลไม่ถูกต้อง");
+      } else {
+        setEmailError(""); 
+      }
+    
+      setEmail(input);
+    };
+    
+    const handleInputNameTitleChange = (e) => {
+      const input = e.target.value;
+    
+      if (!input.trim()) {
+        setNametitleError("กรุณาเลือกคำนำหน้าชื่อ");
+      } else {
+        setNametitleError(""); 
+      }
+    
+      setNameTitle(input);
+    };
+
+    
   return (
     <main className="body">
       <ToastContainer />
@@ -210,9 +330,10 @@ export default function AddMpersonnel() {
               <label>เลขที่ใบประกอบวิชาชีพ<span className="required">*</span></label>
               <input
                 type="text"
-                className="form-control"
-                onChange={(e) => setUsername(e.target.value)}
+                className={`form-control ${usernameError ? "input-error" : ""}`}
+                onChange={handleInputUsernameChange}
               />
+              {usernameError && <span className="error-text">{usernameError}</span>}
             </div>
 
             {/* <div className="mb-3">
@@ -236,24 +357,27 @@ export default function AddMpersonnel() {
               <label>อีเมล<span className="required">*</span></label>
               <input
                 type="email"
-                className="form-control"
-                onChange={(e) => setEmail(e.target.value)}
-              />
+                className={`form-control ${emailError ? "input-error" : ""}`}
+                onChange={handleInputEmailChange}
+                />
+             {emailError && <span className="error-text">{emailError}</span>}
             </div>
             <div className="mb-3">
               <label>เบอร์โทรศัพท์<span className="required">*</span></label>
               <input
                 type="text"
-                className="form-control"
-                onChange={(e) => setTel(e.target.value)}
+                 maxLength="10"
+                className={`form-control ${telError ? "input-error" : ""}`}
+                onChange={handleInputChange}
               />
+              {telError && <span className="error-text">{telError}</span>}
             </div>
             <div className="mb-3">
               <label>คำนำหน้าชื่อ<span className="required">*</span></label>
               <select
-                className="form-control"
-                onChange={(e) => setNameTitle(e.target.value)}
-              >
+                className={`form-control ${nametitleError ? "input-error" : ""}`}
+                onChange={handleInputNameTitleChange}
+                >
                 <option value="">กรุณาเลือก</option>
                 <option value="แพทย์หญิง">แพทย์หญิง</option>
                 <option value="นายแพทย์">นายแพทย์</option>
@@ -262,22 +386,25 @@ export default function AddMpersonnel() {
                 <option value="นาง">นาง</option>
                 <option value="นางสาว">นางสาว</option>
               </select>
+              {nametitleError && <span className="error-text">{nametitleError}</span>}
             </div>
             <div className="mb-3">
               <label>ชื่อ<span className="required">*</span></label>
               <input
                 type="text"
-                className="form-control"
-                onChange={(e) => setName(e.target.value)}
-              />
+                className={`form-control ${nameError ? "input-error" : ""}`}
+                onChange={handleInputNameChange}              
+                />
+              {nameError && <span className="error-text">{nameError}</span>}
             </div>
             <div className="mb-3">
               <label>นามสกุล<span className="required">*</span></label>
               <input
                 type="text"
-                className="form-control"
-                onChange={(e) => setSurname(e.target.value)}
+                className={`form-control ${surnameError ? "input-error" : ""}`}
+                onChange={handleInputSurnameChange}
               />
+              {surnameError && <span className="error-text">{surnameError}</span>}
             </div>
 
             {/* แสดงข้อความ error */}

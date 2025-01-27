@@ -6,17 +6,37 @@ import "bootstrap-icons/font/bootstrap-icons.css";
 import logow from "../img/logow.png";
 
 export default function UpdateOTP() {
-  const [otp, setOtp] = useState("");
+  const [otp, setOtp] = useState(new Array(6).fill(""));
   const [errorMessage, setErrorMessage] = useState("");
   const [successMessage, setSuccessMessage] = useState("");
   const [isActive, setIsActive] = useState(false);
   const navigate = useNavigate();
   const location = useLocation();
-  const { username, email } = location.state || {};
+  const { username, email, oldEmail } = location.state || {};
   const adminData = location.state?.adminData;
   const [timer, setTimer] = useState(300); // นับถอยหลัง 5 นาที (300 วินาที)
   const [isOtpExpired, setIsOtpExpired] = useState(false);
 
+  const handleKeyDown = (event, index) => {
+    if (event.key === "Backspace" && otp[index] === "") {
+      if (event.target.previousSibling) {
+        event.target.previousSibling.focus();
+      }
+    }
+  };
+
+  const handleChange = (element, index) => {
+    if (!isNaN(element.value)) {
+      const newOtp = [...otp];
+      newOtp[index] = element.value;
+      setOtp(newOtp);
+
+      // เลื่อนไปยังช่องถัดไปอัตโนมัติ
+      if (element.nextSibling && element.value) {
+        element.nextSibling.focus();
+      }
+    }
+  };
   // useEffect(() => {
   //   if (adminData) {
   //     setEmail(adminData.email);
@@ -36,30 +56,36 @@ export default function UpdateOTP() {
       setErrorMessage("OTP หมดอายุ");
       setSuccessMessage("");
     }
-    return () => clearInterval(countdown); // ล้าง interval เมื่อ component unmount หรือ timer เปลี่ยน
+    return () => clearInterval(countdown);
   }, [timer]);
   const handleSubmit = (e) => {
     e.preventDefault();
     if (isOtpExpired) {
       setErrorMessage("OTP หมดอายุ");
+      setSuccessMessage("");
       return;
     }
+    const otpValue = otp.join("");
+    console.log("Submitted OTP:", otpValue);
+
     fetch("http://localhost:5000/verify-otp1", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({ username, otp, newEmail: email }), // ส่ง username, otp และ newEmail
+      body: JSON.stringify({ username, otp: otpValue, newEmail: email }), // ส่ง username, otp และ newEmail
     })
       .then((res) => res.json())
       .then((data) => {
         if (data.success) {
           setSuccessMessage("ยืนยันอีเมลสำเร็จ");
+          setErrorMessage("");
           setTimeout(() => {
             navigate("/profile"); // เปลี่ยนเส้นทางไปยังโปรไฟล์หลังจากยืนยัน
           }, 1000);
         } else {
           setErrorMessage("OTP ไม่ถูกต้องหรือหมดอายุ");
+          setSuccessMessage("");
         }
       })
       .catch((error) => {
@@ -77,6 +103,9 @@ export default function UpdateOTP() {
   };
 
   const handleRequestNewOtp = () => {
+    setIsOtpExpired(false);
+    setErrorMessage("");
+    setSuccessMessage("");
     fetch("http://localhost:5000/send-otp1", {
       method: "POST",
       headers: {
@@ -88,7 +117,7 @@ export default function UpdateOTP() {
       .then((data) => {
         if (data.success) {
           setSuccessMessage("ส่ง OTP ใหม่เรียบร้อย");
-          setTimer(300); // รีเซ็ต timer
+          setTimer(300);
           setIsOtpExpired(false);
         } else {
           setErrorMessage("เกิดข้อผิดพลาดในการส่ง OTP ใหม่");
@@ -107,6 +136,10 @@ export default function UpdateOTP() {
     return `${minutes}:${seconds < 10 ? `0${seconds}` : seconds}`;
   };
 
+  const handleBreadcrumbClick = () => {
+    navigate("/updateemail", { state: { adminData } });
+  };
+
   return (
     <main className="body">
       <div className={`sidebar ${isActive ? "active" : ""}`}>
@@ -122,7 +155,9 @@ export default function UpdateOTP() {
           <li>
             <a href="home">
               <i className="bi bi-book"></i>
-              <span className="links_name">จัดการข้อมูลคู่มือการดูแลผู้ป่วย</span>
+              <span className="links_name">
+                จัดการข้อมูลคู่มือการดูแลผู้ป่วย
+              </span>
             </a>
           </li>
           <li>
@@ -212,7 +247,7 @@ export default function UpdateOTP() {
               <i className="bi bi-chevron-double-right"></i>
             </li>
             <li>
-              <a href="updateemail">เปลี่ยนอีเมล</a>
+              <a className="info" onClick={handleBreadcrumbClick}>เปลี่ยนอีเมล</a>
             </li>
             <li className="arrow">
               <i className="bi bi-chevron-double-right"></i>
@@ -225,41 +260,67 @@ export default function UpdateOTP() {
 
         <h3>กรอกรหัสยืนยัน</h3>
         <div className="formcontainerpf card mb-3">
-          <div className="mb-3">
-            <label>คุณจะได้รับรหัสยืนยันตัวตนที่</label>
-            <h5>{email}</h5>
+          <div className="label-container">
+            <p className="label-inline">คุณจะได้รับรหัสยืนยันตัวตนที่อีเมล</p>
+            <p className="email-text">{email}</p>
           </div>
-          <div className="mb-3">
-            <label>กรอกรหัส OTP</label>
-            <input
-              type="text"
-              className="form-control"
-              placeholder="กรอกรหัส OTP"
-              value={otp}
-              onChange={(e) => setOtp(e.target.value)}
-            />
+          <div className="otp-input-container">
+            <label>กรอก OTP ที่ได้รับ</label>
+            <div className="otp-inputs">
+              {otp.map((data, index) => (
+                <input
+                  key={index}
+                  type="text"
+                  maxLength="1"
+                  className="otp-input"
+                  value={data}
+                  onChange={(e) => handleChange(e.target, index)}
+                  onKeyDown={(e) => handleKeyDown(e, index)}
+                  onFocus={(e) => e.target.select()}
+                />
+              ))}
+            </div>
           </div>
-
           {timer > 0 && (
-            <p className="timer">กรุณากรอก OTP ภายในเวลา {formatTime(timer)}</p>
+            <p className="otp-instructions">
+              กรุณากรอก OTP ภายในเวลา {formatTime(timer)}
+            </p>
           )}
-          {isOtpExpired && (
+          {/* {isOtpExpired && (
             <div className="message-container">
               <p className="error-messageotp">{errorMessage}</p>
-              <a className="newotp" onClick={handleRequestNewOtp}>
+              <a className="resend-link" onClick={handleRequestNewOtp}>
                 ขอ OTP ใหม่
               </a>
             </div>
           )}
+<div className="message-container">
+  {errorMessage && <p className="error-messageotp">{errorMessage}</p>}
+  {successMessage && <p className="success-message">{successMessage}</p>}
+</div> */}
 
-          {/* {errorMessage && <p className="error-message">{errorMessage}</p>} */}
-          {successMessage && (
-            <p className="success-message">{successMessage}</p>
+          {isOtpExpired ? (
+            <div className="message-container">
+              <p className="error-messageotp">{errorMessage}</p>
+              <a className="resend-link" onClick={handleRequestNewOtp}>
+                ขอ OTP ใหม่
+              </a>
+            </div>
+          ) : (
+            <div className="message-container">
+              {errorMessage && !isOtpExpired && (
+                <p className="error-messageotp">{errorMessage}</p>
+              )}
+              {successMessage && (
+                <p className="success-message">{successMessage}</p>
+              )}
+            </div>
           )}
+
           <div className="d-grid">
             <button
               onClick={handleSubmit}
-              disabled={isOtpExpired}
+              disabled={otp.includes("") || isOtpExpired}
               className="btn btn-outline py-2"
             >
               ยืนยัน

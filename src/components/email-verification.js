@@ -40,7 +40,7 @@ export default function EmailVerification() {
       .then((res) => res.json())
       .then((data) => {
         if (data.success) {
-          navigate('/verifyotp', { state: { username, email } }); // ส่ง username และ email ไปยังหน้า VerifyOtp
+          navigate('/verifyotp', { state: { username, email,adminData  } }); // ส่ง username และ email ไปยังหน้า VerifyOtp
         } else {
           setErrorMessage(data.error || 'เกิดข้อผิดพลาดในการส่ง OTP');
         }

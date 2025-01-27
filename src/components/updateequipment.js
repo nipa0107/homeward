@@ -18,7 +18,8 @@ export default function UpdateEquipment() {
   const [isActive, setIsActive] = useState(false);
   const [equipment_name, setEquipName] = useState("");
   const [equipment_type, setEquipType] = useState("");
-
+  const [nameError, setNameError] = useState("");
+  const [typeError, setTypeError] = useState("");
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -58,30 +59,39 @@ export default function UpdateEquipment() {
     fetchData();
   }, [id]);
 
-  const checkDuplicateName = async (equipment_name) => {
-    try {
-      const response = await fetch(
-        `http://localhost:5000/check-equip-name?equipment_name=${equipment_name}`
-      );
-      const data = await response.json();
-      return data.exists; // ถ้าชื่อซ้ำจะ return true
-    } catch (error) {
-      console.error("Error checking duplicate name:", error);
-      return false; // กรณีมีข้อผิดพลาด
-    }
-  };
+  // const checkDuplicateName = async (equipment_name) => {
+  //   try {
+  //     const response = await fetch(
+  //       `http://localhost:5000/check-equip-name?equipment_name=${equipment_name}`
+  //     );
+  //     const data = await response.json();
+  //     return data.exists; // ถ้าชื่อซ้ำจะ return true
+  //   } catch (error) {
+  //     console.error("Error checking duplicate name:", error);
+  //     return false; // กรณีมีข้อผิดพลาด
+  //   }
+  // };
 
   const UpdateEquipment = async () => {
-    console.log(equipment_name, equipment_type);
-      if (!equipment_name) {
-          toast.error("กรุณากรอกชื่ออุปกรณ์ก่อนทำการบันทึก");
-          return; // หยุดการดำเนินการถ้าเงื่อนไขไม่ตรง
-        }
-   const isDuplicate = await checkDuplicateName(equipment_name);
-    if (isDuplicate) {
-      toast.error("ชื่ออุปกรณ์ซ้ำในระบบ กรุณาเปลี่ยนชื่อ");
-      return; // หยุดการดำเนินการถ้าชื่อซ้ำ
+    let hasError = false;
+    // if (!equipment_name.trim() || !equipment_type) {
+    //   console.log("Please fill in all fields");
+    //   setValidationMessage("ชื่ออุปกรณ์และประเภทอุปกรณ์ไม่ควรเป็นค่าว่าง");
+    //   return;
+    // }
+    if (!equipment_name.trim()) {
+      setNameError("กรุณากรอกชื่ออุปกรณ์");
+      hasError = true;
+    } else {
+      setNameError("");
     }
+    if (!equipment_type.trim()) {
+      setTypeError("กรุณาเลือกประเภทอุปกรณ์");
+      hasError = true;
+    } else {
+      setTypeError("");
+    }
+    if (hasError) return; 
     try {
       const EquipUpdate = {
         equipment_name,
@@ -99,16 +109,21 @@ export default function UpdateEquipment() {
           body: JSON.stringify(EquipUpdate),
         }
       );
-
-      if (response.ok) {
-        const UpdatedEquipment = await response.json();
-        console.log("แก้ไขอุปกรณ์สำเร็จ:", UpdatedEquipment);
+      const result = await response.json();
+      if (response.ok && result.status === "ok") {
+        // const UpdatedEquipment = await response.json();
+        console.log("แก้ไขอุปกรณ์สำเร็จ:", result);
         toast.success("แก้ไขอุปกรณ์สำเร็จ");
         setTimeout(() => {
           navigate("/allequip");
         }, 1100);
       } else {
-        console.error("แก้ไขไม่ได้:", response.statusText);
+        if (result.error) {
+          toast.error(result.error); // แสดงข้อความจาก Backend
+        } else {
+          toast.error("ไม่สามารถแก้ไขอุปกรณ์ได้");
+        }
+        console.error("แก้ไขไม่ได้:", result.error || response.statusText);
       }
     } catch (error) {
       console.error("การแก้ไขมีปัญหา:", error);
@@ -128,7 +143,25 @@ export default function UpdateEquipment() {
   const handleBreadcrumbClick = () => {
     navigate("/allequipment");
   };
+  const handleInputNameChange = (e) => {
+    const input = e.target.value;
+    if (!input.trim()) {
+      setNameError("");
+    } else {
+      setNameError(""); 
+    }
+    setEquipName(input);
+  };
 
+  const handleInputTypeChange = (e) => {
+    const input = e.target.value;
+    if (!input.trim()) {
+      setTypeError("");
+    } else {
+      setTypeError(""); 
+    }
+    setEquipType(input);
+  };
   return (
     <main className="body">
       <ToastContainer />
@@ -246,22 +279,24 @@ export default function UpdateEquipment() {
             <input
               type="text"
               value={equipment_name}
-              className="form-control"
-              onChange={(e) => setEquipName(e.target.value)}
+              className={`form-control ${nameError ? "input-error" : ""}`}
+              onChange={handleInputNameChange}   
             />
+            {nameError && <span className="error-text">{nameError}</span>}
           </div>
           <div className="mb-1">
             <label>ประเภทอุปกรณ์</label>
             <select
-              className="form-control"
+              className={`form-control ${typeError ? "input-error" : ""}`}
+               onChange={handleInputTypeChange}      
               value={equipment_type}
-              onChange={(e) => setEquipType(e.target.value)}
             >
               <option value="">กรุณาเลือก</option>
               <option value="อุปกรณ์ติดตัว">อุปกรณ์ติดตัว</option>
               <option value="อุปกรณ์เสริม">อุปกรณ์เสริม</option>
               <option value="อุปกรณ์อื่นๆ">อุปกรณ์อื่น ๆ</option>
             </select>
+            {typeError && <span className="error-text">{typeError}</span>}
           </div>
 
           <div className="d-grid">

@@ -20,15 +20,21 @@ export default function AddCaregiver() {
   const [isActive, setIsActive] = useState(false);
   const [error, setError] = useState("");
   const [token, setToken] = useState("");
-    const [showOtherInput, setShowOtherInput] = useState(false);
-    const [otherRelationship, setOtherRelationship] = useState("");
+  const [showOtherInput, setShowOtherInput] = useState(false);
+  const [otherRelationship, setOtherRelationship] = useState("");
   const [formData, setFormData] = useState({
+    ID_card_number: "",
     user: userId || "",
     name: "",
     surname: "",
     tel: "",
     Relationship: "",
   });
+  const [usernameError, setUsernameError] = useState("");
+  const [telError, setTelError] = useState("");
+  const [nameError, setNameError] = useState("");
+  const [surnameError, setSurnameError] = useState("");
+  const [isDataFetched, setIsDataFetched] = useState(false);  // เพิ่ม state เพื่อเก็บสถานะการดึงข้อมูล
 
     useEffect(() => {
       const token = window.localStorage.getItem("token");
@@ -55,18 +61,61 @@ export default function AddCaregiver() {
     }, []);
   
 
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData((prev) => ({ ...prev, [name]: value }));
-  };
+  // const handleChange = (e) => {
+  //   const { name, value } = e.target;
+  //   setFormData((prev) => ({ ...prev, [name]: value }));
+  // };
 
   const handleSave = async (event) => {
     event.preventDefault();
+    let hasError = false;
+    const cleanedUsername = formData.ID_card_number.replace(/-/g, ""); // ลบเครื่องหมาย "-" หากมี
+    if (!cleanedUsername.trim()) {
+      setUsernameError("กรุณากรอกเลขประจำตัวบัตรประชาชน");
+      hasError = true;
+    } else if (cleanedUsername.length !== 13 || !/^\d+$/.test(cleanedUsername)) {
+      setUsernameError("เลขประจำตัวบัตรประชาชนต้องเป็นตัวเลข 13 หลัก");
+      hasError = true;
+    } else {
+      setUsernameError("");
+    }
+    // if (formData.tel.trim() && formData.tel.length !== 10) {
+    //   setTelError("เบอร์โทรศัพท์ต้องมี 10 หลัก");
+    //   hasError = true;
+    // } else {
+    //   setTelError("");
+    // }
+    if (!formData.tel.trim()) {
+      setTelError("กรุณากรอกเบอร์โทรศัพท์");
+      hasError = true;
+    } else if (formData.tel.length !== 10) {
+      setTelError("เบอร์โทรศัพท์ต้องมี 10 หลัก");
+      hasError = true;
+    } else {
+      setTelError("");
+    }
+    if (!formData.name.trim()) {
+      setNameError("กรุณากรอกชื่อ");
+      hasError = true;
+    } else {
+      setNameError("");
+    }
+  
+    if (!formData.surname.trim()) {
+      setSurnameError("กรุณากรอกนามสกุล");
+      hasError = true;
+    } else {
+      setSurnameError("");
+    }
+  
+    if (hasError) return; 
+    const updatedFormData = { ...formData, ID_card_number: cleanedUsername };
+
     try {
       const response = await fetch("http://localhost:5000/addcaregiver", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(formData),
+        body: JSON.stringify(updatedFormData), // ส่ง formData ที่อัปเดตแล้ว
       });
 
       const data = await response.json();
@@ -112,6 +161,97 @@ export default function AddCaregiver() {
     setOtherRelationship(value);
     setFormData((prev) => ({ ...prev, Relationship: value })); // อัปเดต Relationship ด้วยค่าอื่นๆ
   };
+
+  const handleChange  = async (e) => {
+    const { name, value } = e.target;
+  
+    setFormData((prev) => ({ ...prev, [name]: value }));
+   
+      // หากลบเลขบัตรออก ให้เคลียร์ข้อมูลที่ดึงมา
+  if (name === "ID_card_number" && value === "") {
+    setFormData((prev) => ({
+      ...prev,
+      name: "",
+      surname: "",
+      tel: "",
+    }));
+    setIsDataFetched(false); // ไม่ให้ดึงข้อมูลใหม่จนกว่าจะกรอกเลขบัตร
+  }
+
+    if (name === "tel") {
+      // ตรวจสอบเบอร์โทรศัพท์
+      if (/[^0-9]/.test(value)) {
+        setTelError("เบอร์โทรศัพท์ต้องเป็นตัวเลขเท่านั้น");
+      } else {
+        setTelError("");
+      }
+    } else if (name === "ID_card_number") {
+      // ตรวจสอบเลขประจำตัวประชาชน
+      let input = value.replace(/\D/g, "");
+      if (input.length > 13) input = input.slice(0, 13);
+      const formatted = input.replace(
+        /^(\d{1})(\d{0,4})(\d{0,5})(\d{0,2})(\d{0,1})$/,
+        (match, g1, g2, g3, g4, g5) => {
+          let result = g1; // กลุ่มที่ 1
+          if (g2) result += `-${g2}`; // กลุ่มที่ 2
+          if (g3) result += `-${g3}`; // กลุ่มที่ 3
+          if (g4) result += `-${g4}`; // กลุ่มที่ 4
+          if (g5) result += `-${g5}`; // กลุ่มที่ 5
+          return result;
+        }
+      );
+      setFormData((prev) => ({ ...prev, [name]: formatted }));
+      setUsernameError(input.length === 13 ? "" : "เลขประจำตัวประชาชนไม่ครบ 13 หลัก");
+    } else if (name === "name" || name === "surname") {
+      // ตรวจสอบชื่อและนามสกุล
+      if (/[^ก-๙\s]/.test(value)
+) {
+        if (name === "name") {
+          setNameError("ชื่อควรเป็นตัวอักษรเท่านั้น");
+        } else {
+          setSurnameError("นามสกุลควรเป็นตัวอักษรเท่านั้น");
+        }
+      } else {
+        if (name === "name") setNameError("");
+        if (name === "surname") setSurnameError("");
+      }
+    }
+
+    if (name === "ID_card_number" && (value.length === 17 || value.length === 13|| value.length === 16)) {
+      try {
+        const cleanedId = value.replace(/-/g, "");
+        const response = await fetch(`http://localhost:5000/getCaregiverById/${cleanedId}`, {
+          method: "GET",
+          headers: { "Content-Type": "application/json" },
+        });
+  
+        const data = await response.json();
+        if (data.status === "Ok") {
+          // หากเจอข้อมูล อัปเดตฟอร์มด้วยชื่อ-นามสกุลที่ได้
+          setFormData((prev) => ({
+            ...prev,
+            name: data.caregiver.name || "",
+            surname: data.caregiver.surname || "",
+            tel: data.caregiver.tel || "", 
+          }));
+          setIsDataFetched(true); 
+        } else {
+          // toast.error("ไม่พบข้อมูลผู้ดูแลสำหรับเลขบัตรนี้");
+          setFormData((prev) => ({
+            ...prev,
+            name: "",
+            surname: "",
+            tel:"",
+          }));
+          setIsDataFetched(false); 
+        }
+      } catch (error) {
+        console.error("Error fetching caregiver data:", error);
+        toast.error("เกิดข้อผิดพลาดในการดึงข้อมูลผู้ดูแล");
+      }
+    }
+  };
+  
   return (
      <main className="body">
       <ToastContainer />
@@ -234,25 +374,44 @@ export default function AddCaregiver() {
 
       <form>
       <div className="mb-1">
+          <label>เลขประจําตัวประชาชน<span className="required"> *</span></label>
+          <input
+            type="text"
+            className={`form-control ${usernameError ? "input-error" : ""}`}
+            name="ID_card_number"
+            value={formData.ID_card_number}
+            onChange={handleChange }
+            onPaste={(e) => handleChange(e)}
+          />
+          {usernameError && <span className="error-text">{usernameError}</span>}
+
+        </div>
+      <div className="mb-1">
           <label>ชื่อ<span className="required"> *</span></label>
           <input
             type="text"
-             className="form-control"
+            className={`form-control ${nameError ? "input-error" : ""}`}
             name="name"
             value={formData.name}
+            disabled={isDataFetched}             
             onChange={handleChange}
           />
+          {nameError && <span className="error-text">{nameError}</span>}
+
         </div>
         <div className="mb-1">
           <label>นามสกุล<span className="required"> *</span></label>
           <input
             type="text"
-            className="form-control"
+            className={`form-control ${surnameError ? "input-error" : ""}`}
 
             name="surname"
             value={formData.surname}
+            disabled={isDataFetched}            
             onChange={handleChange}
           />
+                         {surnameError && <span className="error-text">{surnameError}</span>}
+
         </div>
         <div className="mb-1">
         <label>ความสัมพันธ์</label>
@@ -339,14 +498,18 @@ export default function AddCaregiver() {
             </div>
           </div>
         <div className="mb-1">
-          <label>เบอร์โทรศัพท์</label>
+          <label>เบอร์โทรศัพท์<span className="required"> *</span></label>
           <input
             type="text"
-            className="form-control"
+            className={`form-control ${telError ? "input-error" : ""}`}
             name="tel"
+            maxLength="10"
             value={formData.tel}
+            disabled={isDataFetched}          
             onChange={handleChange}
           />
+                        {telError && <span className="error-text">{telError}</span>}
+
         </div>
         {/* <p id="errormessage" className="errormessage">
               {error}

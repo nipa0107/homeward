@@ -11,9 +11,10 @@ import "../css/adduser.css";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 export default function AddUser() {
-  const [username, setUsername] = useState("");
+  const [originalTel, setOriginalTel] = useState("");
   const [name, setName] = useState("");
   const [surname, setSurname] = useState("");
+  const [username, setUsername] = useState("");
   const [tel, setTel] = useState("");
   const navigate = useNavigate();
   const [adminData, setAdminData] = useState("");
@@ -21,6 +22,10 @@ export default function AddUser() {
   const [error, setError] = useState("");
   const [token, setToken] = useState("");
   const [physicalTherapy, setPhysicalTherapy] = useState(false);
+  const [usernameError, setUsernameError] = useState("");
+  const [telError, setTelError] = useState("");
+  const [nameError, setNameError] = useState("");
+  const [surnameError, setSurnameError] = useState("");
 
   useEffect(() => {
     const token = window.localStorage.getItem("token");
@@ -48,11 +53,45 @@ export default function AddUser() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    if (username.length !== 13) {
-      setError("เลขประจำตัวบัตรประชาชนต้องมีความยาว 13 ตัวอักษร");
-      // toast.error("เลขประจำตัวบัตรประชาชนต้องมีความยาว 13 ตัวอักษร");
-      return;
+    let hasError = false;
+    const cleanedUsername = username.replace(/-/g, ""); // ลบเครื่องหมาย "-" หากมี
+    if (!cleanedUsername.trim()) {
+      setUsernameError("กรุณากรอกเลขประจำตัวประชาชน");
+      hasError = true;
+    } else if (cleanedUsername.length !== 13 || !/^\d+$/.test(cleanedUsername)) {
+      setUsernameError("เลขประจำตัวประชาชนต้องเป็นตัวเลข 13 หลัก");
+      hasError = true;
+    } else {
+      setUsernameError("");
     }
+    if (!tel.trim()) {
+      setTelError("กรุณากรอกเบอร์โทรศัพท์");
+      hasError = true;
+    } else if (tel.length !== 10) {
+      setTelError("เบอร์โทรศัพท์ต้องมี 10 หลัก");
+      hasError = true;
+    } else {
+      setTelError("");
+    }
+    
+  
+    if (!name.trim()) {
+      setNameError("กรุณากรอกชื่อ");
+      hasError = true;
+    } else {
+      setNameError("");
+    }
+  
+    if (!surname.trim()) {
+      setSurnameError("กรุณากรอกนามสกุล");
+      hasError = true;
+    } else {
+      setSurnameError("");
+    }
+  
+    if (hasError) return; 
+    // const cleanedUsername = username.replace(/-/g, '');
+
     fetch("http://localhost:5000/adduser", {
       method: "POST",
       headers: {
@@ -62,7 +101,7 @@ export default function AddUser() {
         Authorization: `Bearer ${token}`,
       },
       body: JSON.stringify({
-        username,
+        username: cleanedUsername,
         name,
         surname,
         tel,
@@ -81,8 +120,8 @@ export default function AddUser() {
             navigate("/displayUser", { state: { userData: data.user } });
           }
         } else {
-          setError(data.error);
-          // toast.error(data.error);
+          // setError(data.error);
+          toast.error(data.error);
         }
       })
       .catch((error) => {
@@ -91,7 +130,71 @@ export default function AddUser() {
       });
   };
   
+const handleInputChange = (e) => {
+  const input = e.target.value;
+  if (/[^0-9]/.test(input)) {
+    setTelError("เบอร์โทรศัพท์ต้องเป็นตัวเลขเท่านั้น");
+  } else {
+    setTelError("");
+  }
+  setTel(input.replace(/\D/g, ""));
+};
 
+  const handleInputUsernameChange = (e) => {
+    let input = e.target.value;
+
+    if (/[^0-9-]/.test(input)) {
+      setUsernameError("เลขประจำตัวประชาชนต้องเป็นตัวเลขเท่านั้น");
+      return;
+    } else {
+      setUsernameError(""); // Clear error if valid
+    }
+
+    // เอาเฉพาะตัวเลขและจัดรูปแบบ
+    input = input.replace(/\D/g, ""); // เอาเฉพาะตัวเลข
+    if (input.length > 13) input = input.slice(0, 13); // จำกัดความยาวไม่เกิน 13 หลัก
+
+    const formatted = input.replace(
+      /^(\d{1})(\d{0,4})(\d{0,5})(\d{0,2})(\d{0,1})$/,
+      (match, g1, g2, g3, g4, g5) => {
+        let result = g1; // กลุ่มที่ 1
+        if (g2) result += `-${g2}`; // กลุ่มที่ 2
+        if (g3) result += `-${g3}`; // กลุ่มที่ 3
+        if (g4) result += `-${g4}`; // กลุ่มที่ 4
+        if (g5) result += `-${g5}`; // กลุ่มที่ 5
+        return result;
+      }
+    );
+    setUsername(formatted); // อัปเดตฟิลด์ข้อมูล
+  };
+
+  const handleInputNameChange = (e) => {
+    const input = e.target.value;
+  
+    // ตรวจสอบว่ามีตัวเลขหรืออักขระพิเศษหรือไม่
+    if (/[^ก-๙\s]/.test(input)) {
+      setNameError("ชื่อควรเป็นตัวอักษรเท่านั้น");
+    } else {
+      setNameError("");
+    }
+  
+    setName(input.replace(/[^ก-๙\s]/g, "")); // กรองเฉพาะตัวอักษรและช่องว่าง
+  };
+  
+
+  const handleInputSurnameChange = (e) => {
+    const input = e.target.value;
+
+    // ตรวจสอบว่ามีตัวเลขหรืออักขระพิเศษหรือไม่
+    if (/[^ก-๙\s]/.test(input)) {
+      setSurnameError("นามสกุลควรเป็นตัวอักษรเท่านั้น");
+    } else {
+      setSurnameError(""); // ล้าง error หากไม่มีปัญหา
+    }
+
+    setSurname(input.replace(/[^ก-๙\s]/g, "")); // กรองเฉพาะตัวอักษรและช่องว่าง
+  };
+  
   const logOut = () => {
     window.localStorage.clear();
     window.location.href = "./";
@@ -100,6 +203,7 @@ export default function AddUser() {
   const handleToggleSidebar = () => {
     setIsActive(!isActive);
   };
+
 
   return (
     <main className="body">
@@ -217,13 +321,17 @@ export default function AddUser() {
           <form onSubmit={handleSubmit}>
             <div className="mb-1">
               <label>
-                เลขประจำตัวบัตรประชาชน<span className="required"> *</span>
+                เลขประจำตัวประชาชน<span className="required"> *</span>
               </label>
               <input
                 type="text"
-                className="form-control"
-                onChange={(e) => setUsername(e.target.value)}
-              />
+                className={`form-control ${usernameError ? "input-error" : ""}`}
+                maxLength="17"
+                // placeholder="1-2345-67890-12-3"
+                value={username}
+                onChange={handleInputUsernameChange}/>
+                {usernameError && <span className="error-text">{usernameError}</span>}
+
             </div>
 
             <div className="mb-1">
@@ -232,9 +340,14 @@ export default function AddUser() {
               </label>
               <input
                 type="text"
-                className="form-control"
-                onChange={(e) => setTel(e.target.value)}
+                maxLength="10"
+                className={`form-control ${telError ? "input-error" : ""}`}
+                value={tel}
+                onChange={handleInputChange}
+
               />
+              {telError && <span className="error-text">{telError}</span>}
+
             </div>
             <div className="mb-1">
               <label>
@@ -242,9 +355,12 @@ export default function AddUser() {
               </label>
               <input
                 type="text"
-                className="form-control"
-                onChange={(e) => setName(e.target.value)}
+                onChange={handleInputNameChange}
+                className={`form-control ${nameError ? "input-error" : ""}`}
+                // onChange={(e) => setName(e.target.value)}
               />
+              {nameError && <span className="error-text">{nameError}</span>}
+
             </div>
             <div className="mb-1">
               <label>
@@ -252,9 +368,12 @@ export default function AddUser() {
               </label>
               <input
                 type="text"
-                className="form-control"
-                onChange={(e) => setSurname(e.target.value)}
+                onChange={handleInputSurnameChange}
+                className={`form-control ${surnameError ? "input-error" : ""}`}
+                // onChange={(e) => setSurname(e.target.value)}
               />
+               {surnameError && <span className="error-text">{surnameError}</span>}
+
             </div>
             <div className="mb-1 form-container">
               <label>ผู้ป่วยต้องทำกายภาพบำบัด</label>
@@ -276,9 +395,9 @@ export default function AddUser() {
                 </label>
             </div>
 
-            <p id="errormessage" className="errormessage">
+            {error && <span id="errormessage" className="errormessage">
               {error}
-            </p>
+            </span>}
             <div className="d-grid">
               <button type="submit" className="btn btn-outline py-2">
                 บันทึก

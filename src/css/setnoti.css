@@ -72,9 +72,30 @@
     align-items: center;
 }
 
-.tablesetting .success{
+/* .tablesetting .success{
     width: 25%; 
     white-space: nowrap;
+} */
+
+.tablesetting th:nth-child(1), 
+.tablesetting th:nth-child(2),
+.tablesetting td:nth-child(1), 
+.tablesetting td:nth-child(2) {
+  width: 12%;
 }
 
-
+.tablesetting th:nth-child(3),
+.tablesetting th:nth-child(4),
+.tablesetting td:nth-child(3),
+.tablesetting td:nth-child(4){
+  width: 20%;
+}
+.tablesetting th:nth-child(5),
+.tablesetting td:nth-child(5){
+    width: 20%;
+}
+.user-details{
+    margin: 0.3rem auto;
+    align-items: center;
+    text-align: center;
+}

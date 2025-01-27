@@ -159,3 +159,41 @@
     width: 45%; /* Width for date added column */
 }
 
+
+/* หน้าลบข้อมูล */
+.equipment-table-recover {
+    width: 100%; /* Full width of the container */
+    border-collapse: collapse; /* Collapse borders */
+}
+
+.equipment-table-recover th, .equipment-table-recover td {
+    padding: 2px 55px; /* More padding for better spacing */
+    text-align: left; /* Align text to the left */
+    border-bottom: 1px solid #dee2e6; /* Bottom border */
+}
+
+.equipment-table-recover th {
+    background-color: #f1f1f1; 
+    color: hsl(0, 0%, 0%); /* Header text color */
+    text-transform: uppercase; /* Uppercase text for header */
+}
+
+/* .equipment-table tr:nth-child(even) {
+    background-color: #f9f9f9; 
+} */
+
+.equipment-table-recover tr:nth-child(odd) {
+    background-color: #ffffff; /* White for odd rows */
+}
+
+
+.equipment-category-recover h4 {
+	font: bold;
+    margin-left: 25px; /* Add margin to separate from the table */
+    color: #333; /* Color of category headers */
+    font-size: 1.2em;
+    text-transform: uppercase;
+}
+.equipment-table-recover th{
+    width: 33%; /* Width for date added column */
+}

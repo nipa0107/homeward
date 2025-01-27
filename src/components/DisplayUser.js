@@ -202,7 +202,7 @@ export default function DisplayUser() {
                 </div>
                 <div className="label-saveimg">
                   <label className="label-name">รหัสผ่าน:</label>
-                  <span className="user-data">{userData.tel}</span>
+                  <span className="user-data">{userData.originalTel}</span>
                 </div>
                 
               </div>

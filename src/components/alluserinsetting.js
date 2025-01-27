@@ -6,14 +6,19 @@ import "../css/sidebar.css";
 import logow from "../img/logow.png";
 import { useNavigate } from "react-router-dom";
 
-
-export default function AlluserInSetting({ }) {
+export default function AlluserInSetting({}) {
   const navigate = useNavigate();
   const [data, setData] = useState([]);
   const [adminData, setAdminData] = useState("");
   const [isActive, setIsActive] = useState(false);
   const [searchKeyword, setSearchKeyword] = useState(""); //ค้นหา
   const [token, setToken] = useState("");
+  const [medicalData, setMedicalData] = useState({});
+
+  const formatIDCardNumber = (id) => {
+    if (!id) return "";
+    return id.replace(/(\d{1})(\d{4})(\d{5})(\d{2})(\d{1})/, "$1-$2-$3-$4-$5");
+  };
 
   useEffect(() => {
     const token = window.localStorage.getItem("token");
@@ -53,6 +58,50 @@ export default function AlluserInSetting({ }) {
         setData(data.data);
       });
   };
+  useEffect(() => {
+    const fetchMedicalData = async () => {
+      const promises = data.map(async (user) => {
+        if (user.deletedAt === null) {
+          try {
+            const response = await fetch(
+              `http://localhost:5000/medicalInformation/${user._id}`
+            );
+            const medicalInfo = await response.json();
+            return {
+              userId: user._id,
+              hn: medicalInfo.data?.HN,
+              an: medicalInfo.data?.AN,
+              diagnosis: medicalInfo.data?.Diagnosis,
+            };
+          } catch (error) {
+            console.error(
+              `Error fetching medical information for user ${user._id}:`,
+              error
+            );
+            return {
+              userId: user._id,
+              hn: "Error",
+              an: "Error",
+              diagnosis: "Error fetching data",
+            };
+          }
+        }
+        return null;
+      });
+      const results = await Promise.all(promises);
+      const medicalDataMap = results.reduce((acc, result) => {
+        if (result) {
+          acc[result.userId] = result;
+        }
+        return acc;
+      }, {});
+      setMedicalData(medicalDataMap);
+    };
+
+    if (data.length > 0) {
+      fetchMedicalData();
+    }
+  }, [data]);
 
   const logOut = () => {
     window.localStorage.clear();
@@ -64,34 +113,35 @@ export default function AlluserInSetting({ }) {
   };
 
   useEffect(() => {
-  const searchUser = async () => {
-    try {
-      const response = await fetch(
-        `http://localhost:5000/searchuser?keyword=${encodeURIComponent(searchKeyword)}`,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`, // เพิ่ม Authorization header เพื่อส่ง token ในการร้องขอค้นหา
-          },
-        }
-      );
+    const searchUser = async () => {
+      try {
+        const response = await fetch(
+          `http://localhost:5000/searchuser?keyword=${encodeURIComponent(
+            searchKeyword
+          )}`,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`, // เพิ่ม Authorization header เพื่อส่ง token ในการร้องขอค้นหา
+            },
+          }
+        );
 
-      const searchData = await response.json();
-      if (response.ok) {
-        if (searchData.data.length > 0) {
-          setData(searchData.data);
+        const searchData = await response.json();
+        if (response.ok) {
+          if (searchData.data.length > 0) {
+            setData(searchData.data);
+          } else {
+            setData([]); // ล้างข้อมูลเดิมในกรณีไม่พบข้อมูล
+          }
         } else {
-          setData([]); // ล้างข้อมูลเดิมในกรณีไม่พบข้อมูล
+          console.error("Error during search:", searchData.status);
         }
-      } else {
-        console.error('Error during search:', searchData.status);
+      } catch (error) {
+        console.error("Error during search:", error);
       }
-    } catch (error) {
-      console.error("Error during search:", error);
-    }
-  };
-  searchUser();
-}, [searchKeyword, token]);
-
+    };
+    searchUser();
+  }, [searchKeyword, token]);
 
   return (
     <main className="body">
@@ -108,43 +158,45 @@ export default function AlluserInSetting({ }) {
           <li>
             <a href="home">
               <i className="bi bi-book"></i>
-              <span className="links_name" >จัดการข้อมูลคู่มือการดูแลผู้ป่วย</span>
+              <span className="links_name">
+                จัดการข้อมูลคู่มือการดูแลผู้ป่วย
+              </span>
             </a>
           </li>
           <li>
             <a href="alluser">
               <i className="bi bi-person-plus"></i>
-              <span className="links_name" >จัดการข้อมูลผู้ป่วย</span>
+              <span className="links_name">จัดการข้อมูลผู้ป่วย</span>
             </a>
           </li>
           <li>
             <a href="allmpersonnel">
               <i className="bi bi-people"></i>
-              <span className="links_name" >จัดการข้อมูลบุคลากร</span>
+              <span className="links_name">จัดการข้อมูลบุคลากร</span>
             </a>
           </li>
           <li>
             <a href="allequip">
               <i className="bi bi-prescription2"></i>
-              <span className="links_name" >จัดการอุปกรณ์ทางการแพทย์</span>
+              <span className="links_name">จัดการอุปกรณ์ทางการแพทย์</span>
             </a>
           </li>
           <li>
             <a href="allsymptom" onClick={() => navigate("/allsymptom")}>
               <i className="bi bi-bandaid"></i>
-              <span className="links_name" >จัดการอาการผู้ป่วย</span>
+              <span className="links_name">จัดการอาการผู้ป่วย</span>
             </a>
           </li>
           <li>
-            <a href="/alluserinsetting" >
-            <i className="bi bi-bell"></i>              
-            <span className="links_name" >ตั้งค่าการแจ้งเตือน</span>
+            <a href="/alluserinsetting">
+              <i className="bi bi-bell"></i>
+              <span className="links_name">ตั้งค่าการแจ้งเตือน</span>
             </a>
           </li>
           <li>
             <a href="alladmin" onClick={() => navigate("/alladmin")}>
               <i className="bi bi-person-gear"></i>
-              <span className="links_name" >จัดการแอดมิน</span>
+              <span className="links_name">จัดการแอดมิน</span>
             </a>
           </li>
           <li>
@@ -156,31 +208,37 @@ export default function AlluserInSetting({ }) {
           <div className="nav-logout">
             <li>
               <a href="./" onClick={logOut}>
-                <i className='bi bi-box-arrow-right' id="log_out" onClick={logOut}></i>
-                <span className="links_name" >ออกจากระบบ</span>
+                <i
+                  className="bi bi-box-arrow-right"
+                  id="log_out"
+                  onClick={logOut}
+                ></i>
+                <span className="links_name">ออกจากระบบ</span>
               </a>
             </li>
           </div>
         </ul>
       </div>
       <div className="home_content">
-      <div className="homeheader">
-        <div className="header">ตั้งค่าการแจ้งเตือน</div>
-        <div className="profile_details">
-        <ul className="nav-list">
-          <li>
-            <a href="profile" >
-              <i className="bi bi-person"></i>
-              <span className="links_name" >{adminData && adminData.username}</span>
-            </a>
-          </li>
-          </ul>
-        </div>
+        <div className="homeheader">
+          <div className="header">ตั้งค่าการแจ้งเตือน</div>
+          <div className="profile_details">
+            <ul className="nav-list">
+              <li>
+                <a href="profile">
+                  <i className="bi bi-person"></i>
+                  <span className="links_name">
+                    {adminData && adminData.username}
+                  </span>
+                </a>
+              </li>
+            </ul>
+          </div>
         </div>
         <div className="breadcrumbs">
           <ul>
             <li>
-            <a href="home">
+              <a href="home">
                 <i className="bi bi-house-fill"></i>
               </a>
             </li>
@@ -206,55 +264,112 @@ export default function AlluserInSetting({ }) {
         </div>
 
         <div className="toolbar">
-        <button
+          <button
             onClick={() => navigate("/updatedefault")}
             className="btn btn-outline py-1 px-4"
           >
-          <i className="bi bi-pencil" style={{ marginRight: '8px' }}></i>
-          ตั้งค่าการแจ้งเตือนเริ่มต้น
+            <i className="bi bi-pencil" style={{ marginRight: "8px" }}></i>
+            ตั้งค่าการแจ้งเตือนเริ่มต้น
           </button>
-          <p className="countadmin">จำนวนผู้ป่วยทั้งหมด : {data.filter(user => user.deletedAt === null).length} คน</p>
+          <p className="countadmin">
+            จำนวนผู้ป่วยทั้งหมด :{" "}
+            {data.filter((user) => user.deletedAt === null).length} คน
+          </p>
         </div>
 
         <div className="content">
           {/* <div className="table100"> */}
-            <table className="table tablesetting">
-              <thead>
-                <tr>
-                  <th>ชื่อผู้ใช้</th>
-                  <th>ชื่อ-สกุล</th>
-                  <th className="success">ตั้งค่าการแจ้งเตือน</th>
-                </tr>
-              </thead>
-              <tbody>
-                
-              {data.filter(user => user.deletedAt === null).length > 0 ? (
-        data
-          .filter(user => user.deletedAt === null)
-          .map((i, index) => (
-               
+          <table className="table tablesetting">
+            <thead>
+              <tr>
+                <th>HN </th>
+                <th>AN</th>
+                <th>ชื่อ-สกุล</th>
+                {/* <th>อายุ</th> */}
+                <th>ผู้ป่วยโรค</th>
+                <th className="success">ตั้งค่าการแจ้งเตือน</th>
+              </tr>
+            </thead>
+            <tbody>
+              {data.filter((user) => user.deletedAt === null).length > 0 ? (
+                data
+                  .filter((user) => user.deletedAt === null)
+                  .map((i, index) => (
                     <tr key={index}>
-                      <td>{i.username}</td>
-                      <td>{i.name}{' '}{i.surname}</td>
-                      <td className="success"> 
-                      <a
-                      className="info"
-                       onClick={() => navigate("/settingnoti", { state: { id: i._id } })}>ตั้งค่าการแจ้งเตือน</a>
+                      <td>
+                        <span
+                          style={{
+                            color: medicalData[i._id]?.hn
+                              ? "inherit"
+                              : "#B2B2B2",
+                          }}
+                        >
+                          {medicalData[i._id]?.hn
+                            ? medicalData[i._id]?.hn
+                            : "ไม่มีข้อมูล"}
+                        </span>
+                      </td>
+                      <td>
+                        <span
+                          style={{
+                            color: medicalData[i._id]?.an
+                              ? "inherit"
+                              : "#B2B2B2",
+                          }}
+                        >
+                          {medicalData[i._id]?.an
+                            ? medicalData[i._id]?.an
+                            : "ไม่มีข้อมูล"}
+                        </span>
+                      </td>
+
+                      <td>
+                        {i.name} {i.surname}
+                      </td>
+                      <td>
+                        <span
+                          style={{
+                            color: medicalData[i._id]?.diagnosis
+                              ? "inherit"
+                              : "#B2B2B2",
+                          }}
+                        >
+                          {medicalData[i._id]?.diagnosis
+                            ? medicalData[i._id]?.diagnosis
+                            : "ไม่มีข้อมูล"}
+                        </span>
+                      </td>
+                      <td className="success">
+                        <a
+                          className="info"
+                          onClick={() =>
+                            navigate("/settingnoti", {
+                              state: {
+                                id: i._id,
+                                name: i.name,
+                                surname: i.surname,
+                                gender:i.gender,
+                                birthday:i.birthday,
+                              },
+                            })
+                          }
+                        >
+                          ตั้งค่าการแจ้งเตือน
+                        </a>
                       </td>
                     </tr>
-                         ))
-                        ) : (
-                          <tr>               
-                            <td colSpan="3" className="text-center">
-                            ไม่พบข้อมูลที่คุณค้นหา
-                            </td>
-                          </tr>
-                        )}
-              </tbody>
-            </table>
-            
-          </div>
+                  ))
+              ) : (
+                <tr>
+                  <td colSpan="3" className="text-center">
+                    ไม่พบข้อมูลที่คุณค้นหา
+                  </td>
+                </tr>
+              )}
+            </tbody>
+          </table>
         </div>
+      </div>
       {/* </div> */}
     </main>
   );

@@ -19,6 +19,12 @@ export default function AddAdmin() {
   const [isActive, setIsActive] = useState(false);
   const [error, setError] = useState(""); 
   const [token, setToken] = useState('');
+  const [usernameError, setUsernameError] = useState("");
+  const [nameError, setNameError] = useState("");
+  const [surnameError, setSurnameError] = useState("");
+  const [emailError, setEmailError] = useState("");
+  const [passwordError, setPasswordError] = useState("");
+  const [confirmPasswordError, setConfirmPasswordError] = useState("");
 
   useEffect(() => {
     const token = window.localStorage.getItem("token");
@@ -47,6 +53,54 @@ export default function AddAdmin() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    let hasError = false;
+    if (!username.trim()) {
+      setUsernameError("กรุณากรอกชื่อผู้ใช้");
+      hasError = true;
+    } else {
+      setUsernameError("");
+    }
+
+    if (!name.trim()) {
+      setNameError("กรุณากรอกชื่อ");
+      hasError = true;
+    } else {
+      setNameError("");
+    }
+  
+    if (!surname.trim()) {
+      setSurnameError("กรุณากรอกนามสกุล");
+      hasError = true;
+    } else {
+      setSurnameError("");
+    }
+    if (!email.trim()) {
+      setEmailError("กรุณากรอกอีเมล");
+      hasError = true;
+    } else {
+      setEmailError("");
+    }
+    if (!password.trim()) {
+      setPasswordError("กรุณากรอกรหัสผ่าน");
+      hasError = true;
+    } else if (password.length < 8) {
+      setPasswordError("รหัสผ่านต้องมีความยาวอย่างน้อย 8 ตัวอักษร");
+      hasError = true;
+    } else {
+      setPasswordError("");
+    }
+    
+    if (!confirmPassword.trim()) {
+      setConfirmPasswordError("กรุณากรอกยืนยันรหัสผ่าน");
+      hasError = true;
+    } else if (password !== confirmPassword) {
+      setConfirmPasswordError("รหัสผ่านและยืนยันรหัสผ่านไม่ตรงกัน");
+      hasError = true;
+    } else {
+      setConfirmPasswordError("");
+    }
+    
+    if (hasError) return;
     fetch("http://localhost:5000/addadmin", {
       method: "POST",
       headers: {
@@ -72,11 +126,9 @@ export default function AddAdmin() {
           setTimeout(() => {
             navigate("/alladmin");
           },1050); 
-          // console.log(username, password, confirmPassword);
-          // window.location.href = "./alladmin";
         }else {
-          // เมื่อเกิดข้อผิดพลาด
-          setError(data.error); // กำหนดข้อความ error ให้กับ state
+          // setError(data.error); 
+          toast.error(data.error);
         }
       });
   };
@@ -89,7 +141,86 @@ export default function AddAdmin() {
     setIsActive(!isActive);
   };
 
+  const handleInputUsernameChange = (e) => {
+    let input = e.target.value;
 
+    if (!input.trim()) {
+      setUsernameError("");
+      return;
+    } else {
+      setUsernameError("");
+    }
+
+    setUsername(input.replace(/\D/g, "")); 
+  };
+  const handleInputNameChange = (e) => {
+    const input = e.target.value;
+  
+    if (/[^ก-๙\s]/.test(input)) {
+      setNameError("ชื่อควรเป็นตัวอักษรเท่านั้น");
+    } else {
+      setNameError("");
+    }
+  
+    setName(input.replace(/[^ก-๙\s]/g, "")); 
+  };
+  
+
+  const handleInputSurnameChange = (e) => {
+    const input = e.target.value;
+
+    if (/[^ก-๙\s]/.test(input)) {
+      setSurnameError("นามสกุลควรเป็นตัวอักษรเท่านั้น");
+    } else {
+      setSurnameError("");
+    }
+
+    setSurname(input.replace(/[^ก-๙\s]/g, "")); 
+  };
+
+  const handleInputEmailChange = (e) => {
+    const input = e.target.value;
+  
+    if (!input.trim()) {
+      setEmailError(""); 
+    } else if (!/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(input)) {
+      setEmailError("รูปแบบอีเมลไม่ถูกต้อง");
+    } else {
+      setEmailError(""); 
+    }
+  
+    setEmail(input);
+  };
+  const validatePassword = (input) => {
+    if (!input.trim()) {
+      setPasswordError("กรุณากรอกรหัสผ่าน");
+    } else if (input.length < 8) {
+      setPasswordError("รหัสผ่านต้องมีความยาวอย่างน้อย 8 ตัวอักษร");
+    } else {
+      setPasswordError("");
+    }
+    setPassword(input);
+  
+    // ตรวจสอบรหัสผ่านและยืนยันรหัสผ่านเมื่อรหัสผ่านเปลี่ยน
+    if (confirmPassword && input !== confirmPassword) {
+      setConfirmPasswordError("รหัสผ่านและยืนยันรหัสผ่านไม่ตรงกัน");
+    } else {
+      setConfirmPasswordError("");
+    }
+  };
+  
+  const validateConfirmPassword = (input) => {
+    if (!input.trim()) {
+      setConfirmPasswordError("กรุณากรอกยืนยันรหัสผ่าน");
+    } else if (input !== password) {
+      setConfirmPasswordError("รหัสผ่านและยืนยันรหัสผ่านไม่ตรงกัน");
+    } else {
+      setConfirmPasswordError("");
+    }
+    setConfirmPassword(input);
+  };
+  
+  
   return (
     <main className="body">
       <ToastContainer />
@@ -203,52 +334,61 @@ export default function AddAdmin() {
               <label>ชื่อผู้ใช้<span className="required">*</span></label>
               <input
                 type="text"
-                className="form-control"
-                onChange={(e) => setUsername(e.target.value)}
-              />
+                className={`form-control ${usernameError ? "input-error" : ""}`}
+                onChange={handleInputUsernameChange}              
+                />
+               {usernameError && <span className="error-text">{usernameError}</span>}
             </div>
 
             <div className="mb-1">
               <label>ชื่อ<span className="required">*</span></label>
               <input
                 type="text"
-                className="form-control"
-                onChange={(e) => setName(e.target.value)}
-              />
+                className={`form-control ${nameError ? "input-error" : ""}`}
+                onChange={handleInputNameChange}              
+                />
+              {nameError && <span className="error-text">{nameError}</span>}
             </div>
             <div className="mb-1">
               <label>นามสกุล<span className="required">*</span></label>
               <input
                 type="text"
-                className="form-control"
-                onChange={(e) => setSurname(e.target.value)}
+                className={`form-control ${surnameError ? "input-error" : ""}`}
+                onChange={handleInputSurnameChange}
               />
+              {surnameError && <span className="error-text">{surnameError}</span>}
             </div>
+
             <div className="mb-1">
               <label>อีเมล<span className="required">*</span></label>
               <input
                 type="email"
-                className="form-control"
-                onChange={(e) => setEmail(e.target.value)}
-              />
+                className={`form-control ${emailError ? "input-error" : ""}`}
+                onChange={handleInputEmailChange}
+                />
+             {emailError && <span className="error-text">{emailError}</span>}
             </div>
 
             <div className="mb-1">
               <label>รหัสผ่าน<span className="required">*</span></label>
               <input
                 type="password"
-                className="form-control"
-                onChange={(e) => setPassword(e.target.value)}
-              />
+                className={`form-control ${passwordError ? "input-error" : ""}`}
+                onChange={(e) => validatePassword(e.target.value)}
+                />
+                {passwordError && <span className="error-text">{passwordError}</span>}
+
             </div>
 
             <div className="mb-1">
               <label>ยืนยันรหัสผ่าน<span className="required">*</span></label>
               <input
                 type="password"
-                className="form-control"
-                onChange={(e) => setConfirmPassword(e.target.value)}
-              />
+                className={`form-control ${confirmPasswordError ? "input-error" : ""}`}
+                onChange={(e) => validateConfirmPassword(e.target.value)}
+                />
+                {confirmPasswordError && <span className="error-text">{confirmPasswordError}</span>}
+
             </div>
                 {/* แสดงข้อความ error */}
                 <p id="errormessage" className="errormessage">{error}</p>

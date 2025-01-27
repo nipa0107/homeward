@@ -6,8 +6,8 @@ import "bootstrap-icons/font/bootstrap-icons.css";
 import logow from "../img/logow.png";
 import { useNavigate } from "react-router-dom";
 
-import { ToastContainer, toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 export default function UpdateUser() {
   const location = useLocation();
@@ -23,10 +23,10 @@ export default function UpdateUser() {
   const [ID_card_number, setIDCardNumber] = useState("");
   const [nationality, setNationality] = useState("");
   const [Address, setAddress] = useState("");
-  const [caregiverName, setCaregiverName] = useState('');
-  const [caregiverSurname, setCaregiverSurname] = useState('');
-  const [Relationship, setRelationship] = useState('');
-  const [caregiverTel, setCaregiverTel] = useState('');
+  const [caregiverName, setCaregiverName] = useState("");
+  const [caregiverSurname, setCaregiverSurname] = useState("");
+  const [Relationship, setRelationship] = useState("");
+  const [caregiverTel, setCaregiverTel] = useState("");
   const navigate = useNavigate();
   const [adminData, setAdminData] = useState("");
   const [isActive, setIsActive] = useState(false);
@@ -35,6 +35,15 @@ export default function UpdateUser() {
   const [otherGender, setOtherGender] = useState("");
   const [showOtherInput, setShowOtherInput] = useState(false);
   const [otherRelationship, setOtherRelationship] = useState("");
+  const [usernameError, setUsernameError] = useState("");
+  const [telError, setTelError] = useState("");
+  const [nameError, setNameError] = useState("");
+  const [surnameError, setSurnameError] = useState("");
+
+  const formatIDCardNumber = (id) => {
+    if (!id) return "";
+    return id.replace(/(\d{1})(\d{4})(\d{5})(\d{2})(\d{1})/, "$1-$2-$3-$4-$5");
+  };
 
   const formatDate = (date) => {
     const formattedDate = new Date(date);
@@ -42,7 +51,7 @@ export default function UpdateUser() {
     if (isNaN(formattedDate.getTime())) {
       return ""; // ถ้าเป็น NaN ให้ส่งค่าว่างกลับไป
     }
-    return formattedDate.toISOString().split('T')[0];
+    return formattedDate.toISOString().split("T")[0];
   };
 
   useEffect(() => {
@@ -68,9 +77,11 @@ export default function UpdateUser() {
 
     const fetchCaregiverData = async () => {
       try {
-        const response = await fetch(`http://localhost:5000/getcaregiver/${id}`);
+        const response = await fetch(
+          `http://localhost:5000/getcaregiver/${id}`
+        );
         const caregiverData = await response.json();
-        if (caregiverData.status === 'ok') {
+        if (caregiverData.status === "ok") {
           setCaregiverName(caregiverData.data.name);
           setCaregiverSurname(caregiverData.data.surname);
           setCaregiverTel(caregiverData.data.tel);
@@ -104,7 +115,47 @@ export default function UpdateUser() {
     fetchCaregiverData();
   }, [id]);
 
+  const validateInput = () => {
+ 
+  };
+
   const UpdateUser = async () => {
+    let hasError = false;
+    const cleanedUsername = ID_card_number.replace(/-/g, ""); // ลบเครื่องหมาย "-" หากมี
+    if (!cleanedUsername.trim()) {
+      setUsernameError("กรุณากรอกเลขประจําตัวประชาชน");
+      hasError = true;
+    } else if (
+      cleanedUsername.length !== 13 ||
+      !/^\d+$/.test(cleanedUsername)
+    ) {
+      setUsernameError("เลขประจําตัวประชาชนต้องเป็นตัวเลข 13 หลัก");
+      hasError = true;
+    } else {
+      setUsernameError("");
+    }
+    if (tel.trim() && tel.length !== 10) {
+      setTelError("เบอร์โทรศัพท์ต้องมี 10 หลัก");
+      hasError = true;
+    } else {
+      setTelError("");
+    }
+
+    if (!name.trim()) {
+      setNameError("กรุณากรอกชื่อ");
+      hasError = true;
+    } else {
+      setNameError("");
+    }
+
+    if (!surname.trim()) {
+      setSurnameError("กรุณากรอกนามสกุล");
+      hasError = true;
+    } else {
+      setSurnameError("");
+    }
+
+    if (hasError) return;
     try {
       const userData = {
         username,
@@ -195,9 +246,74 @@ export default function UpdateUser() {
     setOtherRelationship(value);
     setRelationship(value); // Update gender to the value of otherGender
   };
+
+  const handleInputChange = (e) => {
+    const input = e.target.value;
+    if (/[^0-9]/.test(input)) {
+      setTelError("เบอร์โทรศัพท์ต้องเป็นตัวเลขเท่านั้น");
+    } else {
+      setTelError("");
+    }
+    setTel(input.replace(/\D/g, ""));
+  };
+
+  const handleInputUsernameChange = (e) => {
+    let input = e.target.value;
+
+    if (/[^0-9-]/.test(input)) {
+      setUsernameError("เลขประจําตัวประชาชนต้องเป็นตัวเลขเท่านั้น");
+      return;
+    } else {
+      setUsernameError(""); // Clear error if valid
+    }
+
+    // เอาเฉพาะตัวเลขและจัดรูปแบบ
+    input = input.replace(/\D/g, ""); // เอาเฉพาะตัวเลข
+    if (input.length > 13) input = input.slice(0, 13); // จำกัดความยาวไม่เกิน 13 หลัก
+
+    const formatted = input.replace(
+      /^(\d{1})(\d{0,4})(\d{0,5})(\d{0,2})(\d{0,1})$/,
+      (match, g1, g2, g3, g4, g5) => {
+        let result = g1;
+        if (g2) result += `-${g2}`;
+        if (g3) result += `-${g3}`;
+        if (g4) result += `-${g4}`;
+        if (g5) result += `-${g5}`;
+        return result;
+      }
+    );
+
+    setIDCardNumber(formatted); // อัปเดตฟิลด์ข้อมูล
+  };
+
+  const handleInputNameChange = (e) => {
+    const input = e.target.value;
+
+    // ตรวจสอบว่ามีตัวเลขหรืออักขระพิเศษหรือไม่
+    if (/[^ก-๙\s]/.test(input)) {
+      setNameError("ชื่อควรเป็นตัวอักษรเท่านั้น");
+    } else {
+      setNameError("");
+    }
+
+    setName(input.replace(/[^ก-๙\s]/g, "")); // กรองเฉพาะตัวอักษรและช่องว่าง
+  };
+
+  const handleInputSurnameChange = (e) => {
+    const input = e.target.value;
+
+    // ตรวจสอบว่ามีตัวเลขหรืออักขระพิเศษหรือไม่
+    if (/[^ก-๙\s]/.test(input)) {
+      setSurnameError("นามสกุลควรเป็นตัวอักษรเท่านั้น");
+    } else {
+      setSurnameError(""); // ล้าง error หากไม่มีปัญหา
+    }
+
+    setSurname(input.replace(/[^ก-๙\s]/g, "")); // กรองเฉพาะตัวอักษรและช่องว่าง
+  };
   return (
     <main className="body">
-      <ToastContainer/>
+      <ToastContainer />
       <div className={`sidebar ${isActive ? "active" : ""}`}>
         <div className="logo_content">
           <div className="logo">
@@ -211,43 +327,45 @@ export default function UpdateUser() {
           <li>
             <a href="home">
               <i className="bi bi-book"></i>
-              <span className="links_name" >จัดการข้อมูลคู่มือการดูแลผู้ป่วย</span>
+              <span className="links_name">
+                จัดการข้อมูลคู่มือการดูแลผู้ป่วย
+              </span>
             </a>
           </li>
           <li>
             <a href="alluser">
               <i className="bi bi-person-plus"></i>
-              <span className="links_name" >จัดการข้อมูลผู้ป่วย</span>
+              <span className="links_name">จัดการข้อมูลผู้ป่วย</span>
             </a>
           </li>
           <li>
             <a href="allmpersonnel">
               <i className="bi bi-people"></i>
-              <span className="links_name" >จัดการข้อมูลบุคลากร</span>
+              <span className="links_name">จัดการข้อมูลบุคลากร</span>
             </a>
           </li>
           <li>
             <a href="allequip">
               <i className="bi bi-prescription2"></i>
-              <span className="links_name" >จัดการอุปกรณ์ทางการแพทย์</span>
+              <span className="links_name">จัดการอุปกรณ์ทางการแพทย์</span>
             </a>
           </li>
           <li>
             <a href="allsymptom" onClick={() => navigate("/allsymptom")}>
               <i className="bi bi-bandaid"></i>
-              <span className="links_name" >จัดการอาการผู้ป่วย</span>
+              <span className="links_name">จัดการอาการผู้ป่วย</span>
             </a>
           </li>
           <li>
-            <a href="/alluserinsetting" >
+            <a href="/alluserinsetting">
               <i className="bi bi-bell"></i>
-              <span className="links_name" >ตั้งค่าการแจ้งเตือน</span>
+              <span className="links_name">ตั้งค่าการแจ้งเตือน</span>
             </a>
           </li>
           <li>
             <a href="alladmin" onClick={() => navigate("/alladmin")}>
               <i className="bi bi-person-gear"></i>
-              <span className="links_name" >จัดการแอดมิน</span>
+              <span className="links_name">จัดการแอดมิน</span>
             </a>
           </li>
           <li>
@@ -259,8 +377,12 @@ export default function UpdateUser() {
           <div className="nav-logout">
             <li>
               <a href="./" onClick={logOut}>
-                <i className='bi bi-box-arrow-right' id="log_out" onClick={logOut}></i>
-                <span className="links_name" >ออกจากระบบ</span>
+                <i
+                  className="bi bi-box-arrow-right"
+                  id="log_out"
+                  onClick={logOut}
+                ></i>
+                <span className="links_name">ออกจากระบบ</span>
               </a>
             </li>
           </div>
@@ -272,9 +394,11 @@ export default function UpdateUser() {
           <div className="profile_details ">
             <ul className="nav-list">
               <li>
-                <a href="profile" >
+                <a href="profile">
                   <i className="bi bi-person"></i>
-                  <span className="links_name" >{adminData && adminData.username}</span>
+                  <span className="links_name">
+                    {adminData && adminData.username}
+                  </span>
                 </a>
               </li>
             </ul>
@@ -290,13 +414,16 @@ export default function UpdateUser() {
             <li className="arrow">
               <i className="bi bi-chevron-double-right"></i>
             </li>
-            <li><a href="alluser">จัดการข้อมูลผู้ป่วย</a>
+            <li>
+              <a href="alluser">จัดการข้อมูลผู้ป่วย</a>
             </li>
             <li className="arrow">
               <i className="bi bi-chevron-double-right"></i>
             </li>
             <li>
-              <a onClick={handleBreadcrumbClick} className="info">ข้อมูลการดูแลผู้ป่วย</a>
+              <a onClick={handleBreadcrumbClick} className="info">
+                ข้อมูลการดูแลผู้ป่วย
+              </a>
               {/* <a href="allinfo">ข้อมูลการดูแลผู้ป่วย</a> */}
             </li>
             <li className="arrow">
@@ -315,11 +442,10 @@ export default function UpdateUser() {
               type="text"
               readOnly
               className="form-control gray-background"
-              value={username}
+              value={formatIDCardNumber(username)}
               onChange={(e) => setUsername(e.target.value)}
             />
           </div>
-
 
           <div className="mb-3">
             <label>อีเมล</label>
@@ -332,72 +458,88 @@ export default function UpdateUser() {
             />
           </div>
           <div className="mb-3">
+            <label>เลขประจําตัวประชาชน</label>
+            <input
+              value={formatIDCardNumber(ID_card_number)}
+              type="text"
+              readOnly
+              className="form-control gray-background"
+              onChange={(e) => setIDCardNumber(e.target.value)}
+            />
+          </div>
+
+          <div className="mb-3">
             <label>ชื่อ</label>
             <input
               value={name}
               type="text"
-              className="form-control"
-              onChange={(e) => setName(e.target.value)}
+              // className={`form-control ${nameError ? "input-error is-invalid" : ""}`}
+              className={`form-control ${nameError ? "input-error" : ""}`}
+              // onChange={(e) => setName(e.target.value)}
+              onChange={handleInputNameChange}
             />
+            {nameError && <span className="error-text">{nameError}</span>}
           </div>
           <div className="mb-3">
             <label>นามสกุล</label>
             <input
               type="text"
-              className="form-control"
+              onChange={handleInputSurnameChange}
+              className={`form-control ${surnameError ? "input-error" : ""}`}
               value={surname}
-              onChange={(e) => setSurname(e.target.value)}
+              // onChange={(e) => setSurname(e.target.value)}
             />
+            {surnameError && <span className="error-text">{surnameError}</span>}
           </div>
 
           <div className="mb-3">
             <label>เพศ</label>
             <div class="relationship-container">
-            <div class="relationship-group">
-            <div>
-              <label>
-                <input
-                  type="radio"
-                  value="ชาย"
-                  checked={gender === "ชาย"}
-                  onChange={handleGenderChange}
-                />
-                ชาย
-              </label>
-            </div>
-            <div>
-              <label>
-                <input
-                  type="radio"
-                  value="หญิง"
-                  checked={gender === "หญิง"}
-                  onChange={handleGenderChange}
-                />
-                หญิง
-              </label>
-            </div>
-            <div>
-              <label>
-                <input
-                  type="radio"
-                  value="ไม่ต้องการระบุ"
-                  checked={gender === "ไม่ต้องการระบุ"}
-                  onChange={handleGenderChange}
-                />
-                ไม่ต้องการระบุ
-              </label>
-            </div>
-            <div>
-              <label>
-                <input
-                  type="radio"
-                  value="อื่นๆ"
-                  checked={showOtherInput}
-                  onChange={handleGenderChange}
-                />
-                อื่นๆ
-              </label>
-              </div>
+              <div class="relationship-group">
+                <div>
+                  <label>
+                    <input
+                      type="radio"
+                      value="ชาย"
+                      checked={gender === "ชาย"}
+                      onChange={handleGenderChange}
+                    />
+                    ชาย
+                  </label>
+                </div>
+                <div>
+                  <label>
+                    <input
+                      type="radio"
+                      value="หญิง"
+                      checked={gender === "หญิง"}
+                      onChange={handleGenderChange}
+                    />
+                    หญิง
+                  </label>
+                </div>
+                <div>
+                  <label>
+                    <input
+                      type="radio"
+                      value="ไม่ต้องการระบุ"
+                      checked={gender === "ไม่ต้องการระบุ"}
+                      onChange={handleGenderChange}
+                    />
+                    ไม่ต้องการระบุ
+                  </label>
+                </div>
+                <div>
+                  <label>
+                    <input
+                      type="radio"
+                      value="อื่นๆ"
+                      checked={showOtherInput}
+                      onChange={handleGenderChange}
+                    />
+                    อื่นๆ
+                  </label>
+                </div>
               </div>
               {showOtherInput && (
                 <div className="mt-2">
@@ -424,16 +566,6 @@ export default function UpdateUser() {
           </div>
 
           <div className="mb-3">
-            <label>เลขประจำตัวบัตรประชาชน</label>
-            <input
-              value={ID_card_number}
-              type="text"
-              className="form-control"
-              onChange={(e) => setIDCardNumber(e.target.value)}
-            />
-          </div>
-
-          <div className="mb-3">
             <label>สัญชาติ</label>
             <input
               value={nationality}
@@ -456,118 +588,15 @@ export default function UpdateUser() {
             <label>เบอร์โทรศัพท์</label>
             <input
               type="text"
+              maxLength="10"
               value={tel}
-              className="form-control"
-              onChange={(e) => setTel(e.target.value)}
+              className={`form-control ${telError ? "input-error" : ""}`}
+              onChange={handleInputChange}
+              // onChange={(e) => setTel(e.target.value)}
             />
+            {telError && <span className="error-text">{telError}</span>}
           </div>
-          {/* <div className="mb-3">
-            <label>ชื่อ(ผู้ดูแล)</label>
-            <input
-              type="text"
-              className="form-control"
-              value={caregiverName}
-              onChange={(e) => setCaregiverName(e.target.value)}
-            />
-          </div>
-          <div className="mb-3">
-            <label>นามสกุล(ผู้ดูแล)</label>
-            <input
-              type="text"
-              className="form-control"
-              value={caregiverSurname}
-              onChange={(e) => setCaregiverSurname(e.target.value)}
-            />
-          </div>
-          <div className="mb-3">
-            <label>ความสัมพันธ์</label>
-            <div>
-              <label>
-                <input
-                  type="radio"
-                  value="พ่อ"
-                  checked={Relationship === "พ่อ"}
-                  onChange={handleRelationshipChange}
-                />
-                พ่อ
-              </label>
-            </div>
-            <div>
-              <label>
-                <input
-                  type="radio"
-                  value="แม่"
-                  checked={Relationship === "แม่"}
-                  onChange={handleRelationshipChange}
-                />
-                แม่
-              </label>
-            </div>
-            <div>
-              <label>
-                <input
-                  type="radio"
-                  value="ลูก"
-                  checked={Relationship === "ลูก"}
-                  onChange={handleRelationshipChange}
-                />
-                ลูก
-              </label>
-            </div>
-            <div>
-              <label>
-                <input
-                  type="radio"
-                  value="ภรรยา"
-                  checked={Relationship === "ภรรยา"}
-                  onChange={handleRelationshipChange}
-                />
-                ภรรยา
-              </label>
-            </div>
-            <div>
-              <label>
-                <input
-                  type="radio"
-                  value="สามี"
-                  checked={Relationship === "สามี"}
-                  onChange={handleRelationshipChange}
-                />
-                สามี
-              </label>
-            </div>
-            <div>
-              <label>
-                <input
-                  type="radio"
-                  value="อื่นๆ"
-                  checked={showOtherInput}
-                  onChange={handleRelationshipChange}
-                />
-                อื่นๆ
-              </label>
-              {showOtherInput && (
-                <div className="mt-2">
-                  <label>กรุณาระบุ:</label>
-                  <input
-                    type="text"
-                    className="form-control"
-                    value={otherRelationship}
-                    onChange={handleOtherRelationshipChange}
-                  />
-                </div>
-              )}
-            </div>
-          </div>
-          <div className="mb-3">
-            <label>เบอร์โทรศัพท์(ผู้ดูแล)</label>
-            <input
-              type="text"
-              className="form-control"
-              value={caregiverTel}
-              onChange={(e) => setCaregiverTel(e.target.value)}
-            />
-          </div> */}
+
           <div className="d-grid">
             <button
               onClick={UpdateUser}

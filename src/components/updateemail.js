@@ -11,21 +11,35 @@ export default function UpdateEmail() {
   const adminData = location.state?.adminData;
   const navigate = useNavigate();
   const [username, setUsername] = useState("");
-  const [email, setEmail] = useState("");
+  // const [email, setEmail] = useState("");
+  const [oldEmail, setOldEmail] = useState("");
+  const [newEmail, setNewEmail] = useState(""); 
   const [isActive, setIsActive] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
-
+  const [emailError, setEmailError] = useState("");
   useEffect(() => {
     if (adminData) {
-      setEmail(adminData.email);
+      setOldEmail(adminData.email); 
       setUsername(adminData.username); 
     }
   }, [adminData]);
   const handleSubmit = (e) => {
     e.preventDefault();
+    let hasError = false;
 
+    setErrorMessage("");
+    setEmailError("");
+    
+    if (!newEmail.trim()) {
+      setEmailError("กรุณากรอกอีเมลใหม่");
+      hasError = true;
+    } else {
+      setEmailError("");
+    }
+  
+    if (hasError) return;
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailRegex.test(email)) {
+    if (!emailRegex.test(newEmail)) {
       setErrorMessage("กรุณาใส่อีเมลที่ถูกต้อง");
       return;
     }
@@ -35,12 +49,12 @@ export default function UpdateEmail() {
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({ username, email }), // ส่ง username และ email
+      body: JSON.stringify({ username, email: newEmail }),
     })
       .then((res) => res.json())
       .then((data) => {
         if (data.success) {
-          navigate("/updateotp", { state: { username, email } }); // ส่ง username และ email ไปยังหน้า VerifyOtp
+          navigate("/updateotp", { state: { username, email: newEmail, oldEmail,adminData  } });
         } else {
           setErrorMessage(data.error || "เกิดข้อผิดพลาดในการส่ง OTP");
         }
@@ -51,6 +65,11 @@ export default function UpdateEmail() {
       });
   };
 
+  const handleEmailChange = (e) => {
+    setNewEmail(e.target.value);  // อัปเดตค่าอีเมลที่กรอก
+    setErrorMessage("");          // ล้าง error ที่แสดงอยู่
+    setEmailError("");           // ล้าง error ที่แสดงอยู่
+  };
   const logOut = () => {
     window.localStorage.clear();
     window.location.href = "./";
@@ -179,10 +198,11 @@ export default function UpdateEmail() {
               <label>อีเมลใหม่</label>
               <input
                 type="text"
-                className="form-control"
-                // value={email}
-                onChange={(e) => setEmail(e.target.value)}
+                className={`form-control ${emailError ? "input-error" : ""}`}
+                value={newEmail} 
+                onChange={handleEmailChange} 
               />
+              {emailError && <span className="error-text">{emailError}</span>}
             </div>
             <div className="d-grid">
               {errorMessage && <p className="error-message">{errorMessage}</p>}
