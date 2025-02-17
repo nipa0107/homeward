@@ -1,12 +1,13 @@
 import React, { useEffect, useState } from "react";
 import "../css/alladmin.css";
-import deleteimg from "../img/delete.png";
 import "../css/sidebar.css";
+import "../css/mpersonnel.css";
+
 import "bootstrap-icons/font/bootstrap-icons.css";
 import logow from "../img/logow.png";
 import { useNavigate } from "react-router-dom";
 
-export default function AllMpersonnel({}) {
+export default function AllMpersonnel() {
   const [data, setData] = useState([]);
   const [isActive, setIsActive] = useState(false);
   const navigate = useNavigate();
@@ -53,9 +54,6 @@ export default function AllMpersonnel({}) {
       });
   };
 
-  const home = () => {
-    window.location.href = "./home";
-  };
   const add = () => {
     window.location.href = "./addmpersonnel";
   };
@@ -143,7 +141,9 @@ export default function AllMpersonnel({}) {
           <li>
             <a href="home">
               <i className="bi bi-book"></i>
-              <span className="links_name">จัดการข้อมูลคู่มือการดูแลผู้ป่วย</span>
+              <span className="links_name">
+                จัดการข้อมูลคู่มือการดูแลผู้ป่วย
+              </span>
             </a>
           </li>
           <li>
@@ -245,16 +245,19 @@ export default function AllMpersonnel({}) {
             onChange={(e) => setSearchKeyword(e.target.value)}
           />
         </div>
-
-        <div className="toolbar">
-          <button onClick={add} className="btn btn-outline py-1 px-4">
-            <i className="bi bi-plus-circle" style={{ marginRight: "8px" }}></i>
-            เพิ่มบุคลากร
-          </button>
-          <p className="countadmin">จำนวนบุคลากรทั้งหมด : {data.length} คน</p>
+        <div className="content-toolbar">
+          <div className="toolbar">
+            <button onClick={add} className="btn btn-outline py-1 px-4">
+              <i
+                className="bi bi-plus-circle"
+                style={{ marginRight: "8px" }}
+              ></i>
+              เพิ่มบุคลากร
+            </button>
+            <p className="countadmin">จำนวนบุคลากรทั้งหมด : {data.length} คน</p>
+          </div>
         </div>
-
-        <div className="content">
+        {/* <div className="content">
         {data.length > 0 ? (
           data.map((i) => (
             <div key={i._id} className="adminall card mb-3 ">
@@ -275,7 +278,7 @@ export default function AllMpersonnel({}) {
                       })
                     }
                   >
-                    แก้ไข
+                    <i className="bi bi-pencil-square"></i>
                   </button>
 
                   <button
@@ -283,7 +286,8 @@ export default function AllMpersonnel({}) {
                     alt="deleteimg"
                     onClick={() => deleteMPersonnel(i._id, i.nametitle, i.name)}
                   >
-                    ลบ
+                                               <i className="bi bi-trash"></i>
+
                   </button>
                 </div>
               </div>
@@ -294,6 +298,63 @@ export default function AllMpersonnel({}) {
               <p>ไม่พบข้อมูลที่คุณค้นหา</p>
             </div>
           )}
+        </div> */}
+        <div className="content">
+          
+            <table className="mpersonnel-table">
+              <thead>
+                <tr>
+                  <th>เลขใบประกอบวิชาชีพ</th>
+                  <th>คำนำหน้าชื่อ</th>
+                  <th>ชื่อ-สกุล</th>
+                  {/* <th>อีเมล</th> */}
+                  <th>จัดการ</th>
+                </tr>
+              </thead>
+              <tbody>
+              {data.length > 0 ? (
+                data.map((i) => (
+                  <tr key={i._id}>
+                    <td>{i.username}</td>
+                    <td>{i.nametitle}</td>
+                    <td>
+                      {i.name} {i.surname}
+                    </td>
+                    <td className="buttongroup-in-table">
+                      <button
+                        className="editimg2"
+                        onClick={() =>
+                          navigate("/updatempersonnel", {
+                            state: { id: i._id, caremanual: i },
+                          })
+                        }
+                      >
+                        <i className="bi bi-pencil-square"></i>
+                      </button>
+
+                      <button
+                        className="deleteimg2"
+                        alt="deleteimg"
+                        onClick={() =>
+                          deleteMPersonnel(i._id, i.nametitle, i.name)
+                        }
+                      >
+                        <i className="bi bi-trash"></i>
+                      </button>
+                    </td>
+                  </tr>
+                ))
+              ) : (
+                <tr>
+                  <td colSpan="4" style={{ textAlign: "center", padding: "10px" }}>
+                    ไม่พบข้อมูลที่คุณค้นหา
+                  </td>
+                </tr>
+                )
+              }
+              </tbody>
+            </table>
+        
         </div>
 
         {/* <div className="content">

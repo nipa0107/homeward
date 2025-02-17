@@ -163,7 +163,6 @@ function Updateadmin() {
     } else {
       setConfirmNewPassword(input);
 
-      // ตรวจสอบเฉพาะกรณีที่ newPassword มีค่า
       if (newPassword.trim() && input !== newPassword) {
         setConfirmPasswordError("รหัสผ่านและยืนยันรหัสผ่านไม่ตรงกัน");
       } else {

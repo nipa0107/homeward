@@ -131,7 +131,8 @@ export default function AddMpersonnel() {
           },1000);
         }else {
           // เมื่อเกิดข้อผิดพลาด
-          setError(data.error); // กำหนดข้อความ error ให้กับ state
+          toast.error(data.error);
+          // setError(data.error);
         }
       });
   };
@@ -170,26 +171,26 @@ export default function AddMpersonnel() {
     const handleInputNameChange = (e) => {
       const input = e.target.value;
     
-      if (/[^ก-๙\s]/.test(input)) {
+      if (/[^ก-๙a-zA-Z\s]/.test(input)) {
         setNameError("ชื่อควรเป็นตัวอักษรเท่านั้น");
       } else {
         setNameError("");
       }
     
-      setName(input.replace(/[^ก-๙\s]/g, "")); 
+      setName(input.replace(/[^ก-๙a-zA-Z\s]/g, "")); 
     };
     
   
     const handleInputSurnameChange = (e) => {
       const input = e.target.value;
   
-      if (/[^ก-๙\s]/.test(input)) {
+      if (/[^ก-๙a-zA-Z\s]/.test(input)) {
         setSurnameError("นามสกุลควรเป็นตัวอักษรเท่านั้น");
       } else {
         setSurnameError("");
       }
   
-      setSurname(input.replace(/[^ก-๙\s]/g, "")); 
+      setSurname(input.replace(/[^ก-๙a-zA-Z\s]/g, "")); 
     };
  
     const handleInputEmailChange = (e) => {
@@ -324,9 +325,9 @@ export default function AddMpersonnel() {
           </ul>
         </div>
         <h3>เพิ่มบุคลากร</h3>
-        <div className="adminall card mb-3">
+        <div className="adminall card mb-1">
           <form onSubmit={handleSubmit}>
-            <div className="mb-3">
+            <div className="mb-1">
               <label>เลขที่ใบประกอบวิชาชีพ<span className="required">*</span></label>
               <input
                 type="text"
@@ -336,7 +337,7 @@ export default function AddMpersonnel() {
               {usernameError && <span className="error-text">{usernameError}</span>}
             </div>
 
-            {/* <div className="mb-3">
+            {/* <div className="mb-1">
               <label>รหัสผ่าน<span className="required">*</span></label>
               <input
                 type="password"
@@ -345,7 +346,7 @@ export default function AddMpersonnel() {
               />
             </div>
 
-            <div className="mb-3">
+            <div className="mb-1">
               <label>ยืนยันรหัสผ่าน<span className="required">*</span></label>
               <input
                 type="password"
@@ -353,7 +354,7 @@ export default function AddMpersonnel() {
                 onChange={(e) => setConfirmPassword(e.target.value)}
               />
             </div> */}
-            <div className="mb-3">
+            <div className="mb-1">
               <label>อีเมล<span className="required">*</span></label>
               <input
                 type="email"
@@ -362,7 +363,7 @@ export default function AddMpersonnel() {
                 />
              {emailError && <span className="error-text">{emailError}</span>}
             </div>
-            <div className="mb-3">
+            <div className="mb-1">
               <label>เบอร์โทรศัพท์<span className="required">*</span></label>
               <input
                 type="text"
@@ -372,7 +373,7 @@ export default function AddMpersonnel() {
               />
               {telError && <span className="error-text">{telError}</span>}
             </div>
-            <div className="mb-3">
+            <div className="mb-1">
               <label>คำนำหน้าชื่อ<span className="required">*</span></label>
               <select
                 className={`form-control ${nametitleError ? "input-error" : ""}`}
@@ -388,7 +389,7 @@ export default function AddMpersonnel() {
               </select>
               {nametitleError && <span className="error-text">{nametitleError}</span>}
             </div>
-            <div className="mb-3">
+            <div className="mb-1">
               <label>ชื่อ<span className="required">*</span></label>
               <input
                 type="text"
@@ -397,7 +398,7 @@ export default function AddMpersonnel() {
                 />
               {nameError && <span className="error-text">{nameError}</span>}
             </div>
-            <div className="mb-3">
+            <div className="mb-1">
               <label>นามสกุล<span className="required">*</span></label>
               <input
                 type="text"

@@ -20,16 +20,25 @@
 
 .deleteimg {
   border-radius: 5px;
-  width: 5rem;
+  width: 2.5rem;
   background-color: rgb(236, 78, 78);
   color: white;
   border: none;
-  margin-left: 10px; /* Space between username and button */
+  /* margin-left: 10px;  */
 }
 
+.editimg {
+  border-radius: 5px;
+  width: 2.5rem;
+  float: right;
+  margin: auto auto;
+  background-color: #ffde59;
+  color: black;
+  border: none;
+}
 .deleteimg2 {
   border-radius: 5px;
-  width: 5rem;
+  width: 2.5rem;
   background-color: rgb(236, 78, 78);
   margin: auto 1.6vh;
   color: white;
@@ -37,7 +46,7 @@
 }
 .editimg2 {
   border-radius: 5px;
-  width: 5rem;
+  width: 2.5rem;
   background-color: #ffde59;
   color: black;
   border: none;
@@ -64,15 +73,6 @@
   padding: 1.25rem;
 }
 
-.editimg {
-  border-radius: 5px;
-  width: 5rem;
-  float: right;
-  margin: auto auto;
-  background-color: #ffde59;
-  color: black;
-  border: none;
-}
 
 .content {
   /* margin-top: 110px; */
@@ -83,7 +83,14 @@
 .content1 {
   margin-top: 100px;
 }
-
+.content-toolbar{
+  width: 80%;
+  margin: 0 auto;
+}
+.content-toolbar-symtom{
+  width: 75%;
+  margin: 0 auto;
+}
 .not-found-data {
   display: 'flex';
   text-align: center;
@@ -295,11 +302,16 @@
 /* .adminall .card-body .deleteimg1 {
   float: none;
 } */
+.card-body{
+  padding: 0;
+}
 .adminall .card-body {
   display: flex; /* Use flexbox */
   justify-content: space-between; /* Align items with space between */
   align-items: center; /* Center vertically */
-  padding: 1rem;
+  /* padding: 1rem; */
+  padding-left: 1rem;
+  padding-right: 1rem;
 }
 
 .both-info {
@@ -351,7 +363,7 @@
   line-height: 2.5rem;
   padding: 1rem;
   border-radius: 10px;
-  min-height: 6rem;
+  min-height: 4rem;
 }
 
 /* .adminall {
@@ -406,10 +418,11 @@ td {
 }
 
 .table {
-  width:75%; 
+  width:80%; 
   margin :0 auto;
   box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.1); 
-  line-height: 50px; 
+  /* line-height: 50px;  */
+  line-height: 2.5rem; 
   padding: 15px; 
   border-collapse: collapse; 
   border-spacing: 1; 
@@ -461,7 +474,8 @@ td {
   margin-left: auto;
   margin-right: auto;
   box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.1);
-  line-height: 50px;
+  /* line-height: 50px; */
+  line-height: 2.5rem; 
 }
 
 
@@ -713,66 +727,15 @@ h5 {
 }
 
 
-.user-info-caregiver {
-  padding-left: 7%;
-}
-.caregiver-section {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-}
-.caregiver-card {
-  display: flex; /* จัดการ layout ให้เป็น flexbox */
-  justify-content: space-between; 
-  /* align-items: flex-start;  */
-  gap: 20px;
-  line-height: normal;
-  max-width: 80%; /* หรือค่าที่เหมาะสม */
-  width: 100%; /* ให้ขยายเต็มเฉพาะ container */
-  margin: 10px ; /* จัดให้อยู่กึ่งกลาง */
-  padding: 10px;
-  border: 1px solid #ddd;
-  border-radius: 8px;
-  background-color: #f9f9f9;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-}
-
-/* .caregiver-card {
-  flex: 1 1 calc(20% - 1rem);
-  box-sizing: border-box; 
-  width: 30em; 
-  border: 1px solid #ddd;
-  border-radius: 8px;
-  background-color: #f9f9f9;
-  padding: 10px;
-  margin: 10px 0;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-} */
-
-.caregiver-card p {
-  margin: 5px 0;
-}
-
-/* .caregiver-card b {
-  color: #007bff;
-} */
-
-.inline-container {
+/* .inline-container {
   margin-left: 21px;
   display: flex;
   flex-wrap: wrap; 
   gap: 1rem;
   justify-content: flex-start;
-}
+} */
 
-.button-container-vertical {
-  display: flex;
-  flex-direction: column; 
-  align-items: center; 
-  gap: 10px; 
-  line-height: 2.2rem;
-  justify-content: center;
-}
+
 
 .button-edit {
   background-color: #ffde59; /* สีเขียว */
@@ -904,4 +867,92 @@ input[type="password"]::-webkit-reveal-button {
 
 .password-input i:hover {
   color: #495057;
+}
+.error-text-username {
+  display: block; 
+  color: red;
+  font-size: 14px;
+  padding: 0;
+  line-height:2;
+  white-space: pre-line; /* ขึ้นบรรทัดใหม่ถ้ามี \n */
+}
+
+.verified {
+  color: #42bd41;
+}
+
+.not-verified {
+  color: #bdbdbd;
+}
+
+.table-alladmin{
+  width:80%; 
+  margin :0 auto;
+  box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.1); 
+  line-height: 2.5rem; 
+  padding: 15px; 
+  border-collapse: collapse; 
+  border-spacing: 1; 
+  border-radius: 10px; 
+  position: relative;
+  overflow: hidden;
+}
+
+
+.table-alladmin th, .table-alladmin td {
+  padding: 10px;
+  padding-left: 20px;
+  /* text-align: left; */
+  border-bottom: 1px solid #dee2e6;
+}
+
+.table-alladmin th {
+  font-size: 1rem;
+  background-color: #87CEFA;
+  color: #000;
+  text-transform: uppercase;
+  border-bottom: 2px solid #87CEFA; 
+}
+
+.table th i {
+  font-size: 0.9rem;
+  margin-left: 5px;
+  cursor: pointer;
+  align-items: center;
+}
+
+
+
+
+
+
+
+/* ปรับขนาดและรูปลักษณ์ของ Select */
+.custom-select .custom__control {
+  border-radius: 4px; /* ปรับขอบ */
+  border-color: #ccc; /* สีขอบ */
+  font-size: 2vh;
+  line-height: normal;
+}
+
+.custom__placeholder{
+  color: grey;  
+  font-size: 2vh;
+}
+.custom__single-value {
+  color: black; 
+  font-size: 2vh; 
+}
+.custom-select .custom__option {
+  color: #333; /* สีข้อความ */
+  font-size:2vh;
+}
+
+.custom-select .custom__menu {
+  font-size: 2vh;
+  width: 100%; 
+}
+
+.custom-select .custom__option--is-selected {
+  color: #fff;
 }

@@ -3,14 +3,17 @@ import "../css/styles.css";
 import logo from "../img/logo.png";
 
 export default class Login extends Component {
+  
   constructor(props) {
     super(props);
     this.state = {
       username: "",
       password: "",
-      errorMessage: "", // เพิ่ม state เก็บข้อความผิดพลาด
+      errorMessage: "",
+      showPassword: false,
     };
     this.handleSubmit = this.handleSubmit.bind(this);
+    this.togglePassword = this.togglePassword.bind(this);
   }
 
   handleSubmit(e) {
@@ -35,12 +38,10 @@ export default class Login extends Component {
       .then((data) => {
         console.log(data, "userLogin");
         if (data.status === "ok") {
-          // เก็บข้อมูลเข้าสู่ระบบไว้
           window.localStorage.setItem("token", data.data);
           window.localStorage.setItem("loggedIn", true);
           window.location.href = "./home";
         } else {
-          //ถ้าเข้าสู่ระบบไม่สำเร็จ
           this.setState({
             errorMessage: "เข้าสู่ระบบไม่สำเร็จ กรุณาลองใหม่อีกครั้ง",
           });
@@ -48,7 +49,15 @@ export default class Login extends Component {
       });
   }
 
+  togglePassword() {
+    this.setState((prevState) => ({
+      showPassword: !prevState.showPassword,
+    }));
+  }
+
   render() {
+    const { showPassword } = this.state;
+
     return (
       <div className="logincontainer">
         <div className="formcontainer">
@@ -63,7 +72,6 @@ export default class Login extends Component {
               </div>
 
               <div className="mb-3">
-                {/* <label>Username</label> */}
                 <input
                   type="username"
                   className="form-control"
@@ -72,30 +80,32 @@ export default class Login extends Component {
                 />
               </div>
 
-              <div className="mb-3">
-                {/* <label>Password</label> */}
+              <div className="mb-3 position-relative">
                 <input
-                  type="password"
+                  type={showPassword ? "text" : "password"} 
                   className="form-control"
                   placeholder="รหัสผ่าน"
                   onChange={(e) => this.setState({ password: e.target.value })}
                 />
+                  <i
+                  className={`bi ${
+                    showPassword ? "bi-eye-slash" : "bi-eye"
+                  }`}
+                  onClick={this.togglePassword}
+                  style={{
+                    position: "absolute",
+                    top: "50%",
+                    right: "10px",
+                    transform: "translateY(-50%)", 
+                    cursor: "pointer", 
+                  }}
+                >
+                
+                  
+                </i>
+
               </div>
 
-              {/* <div className="mb-3">
-          <div className="custom-control custom-checkbox">
-            <input
-              type="checkbox"
-              className="custom-control-input"
-              id="customCheck1"
-            />
-            <label className="custom-control-label" htmlFor="customCheck1">
-              Remember me
-            </label>
-          </div>
-        </div> */}
-
-              {/* แสดงข้อความผิดพลาด */}
               <p id="errormessage" className="errormessage">
                 {this.state.errorMessage}
               </p>

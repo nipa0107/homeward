@@ -1,19 +1,20 @@
 import React, { useEffect, useState } from "react";
 import "../css/sidebar.css";
 import "../css/alladmin.css";
+import "../css/caremanual.css";
 import "bootstrap-icons/font/bootstrap-icons.css";
 import logow from "../img/logow.png";
 import { useNavigate } from "react-router-dom";
-import deleteimg from "../img/delete.png";
-import editimg from "../img/edit.png";
 
-export default function Home({}) {
+export default function Home() {
   const [data, setData] = useState([]);
   const navigate = useNavigate();
   const [adminData, setAdminData] = useState("");
   const [isActive, setIsActive] = useState(false);
   const [searchKeyword, setSearchKeyword] = useState(""); // ค้นหา
   const [token, setToken] = useState("");
+  const [sortBy, setSortBy] = useState("createdAt");
+  const [sortOrder, setSortOrder] = useState("asc");
 
   useEffect(() => {
     const token = window.localStorage.getItem("token");
@@ -135,6 +136,46 @@ export default function Home({}) {
     searchCaremanual();
   }, [searchKeyword, token]);
 
+  const handleSort = (field) => {
+    setSortBy(field);
+    setSortOrder(sortOrder === "asc" ? "desc" : "asc");
+  };
+
+  const sortedData = [...data].sort((a, b) => {
+    const dateA = new Date(a[sortBy]);
+    const dateB = new Date(b[sortBy]);
+
+    // การจัดเรียงตามลำดับ ascending หรือ descending
+    return sortOrder === "asc" ? dateA - dateB : dateB - dateA;
+  });
+
+  const formatDate = (date) => {
+    const options = {
+      day: "2-digit",
+      month: "2-digit",
+      year: "numeric",
+      hour: "2-digit",
+      minute: "2-digit",
+      hour12: false,
+    };
+    const formattedDate = new Intl.DateTimeFormat("th-TH", options).format(
+      new Date(date)
+    );
+    const [datePart, timePart] = formattedDate.split(" ");
+    const [hour, minute] = timePart.split(":");
+    return `${datePart}, ${hour}.${minute} น.`;
+  };
+
+  const getSortIcon = (column) => {
+    if (sortBy === column) {
+      return sortOrder === "asc" ? (
+        <i class="bi bi-caret-up-fill"></i>
+      ) : (
+        <i class="bi bi-caret-down-fill"></i>
+      );
+    }
+    return <i class="bi bi-caret-down-fill"></i>;
+  };
   return (
     <main className="body">
       <div className={`sidebar ${isActive ? "active" : ""}`}>
@@ -150,7 +191,9 @@ export default function Home({}) {
           <li>
             <a href="home">
               <i className="bi bi-book"></i>
-              <span className="links_name">จัดการข้อมูลคู่มือการดูแลผู้ป่วย</span>
+              <span className="links_name">
+                จัดการข้อมูลคู่มือการดูแลผู้ป่วย
+              </span>
             </a>
           </li>
           <li>
@@ -195,6 +238,18 @@ export default function Home({}) {
               <span className="links_name">จัดการข้อมูลผู้ป่วยที่ถูกลบ</span>
             </a>
           </li>
+          {/* เชื่อมลิงกไปอีเว็บอยู่ที่ testlink */}
+          <li>
+            <a
+              href={`http://localhost:3002?token=${token}`}
+              // target="_blank"
+              rel="noopener noreferrer"
+            >
+              <i className="bi bi-window"></i>
+              <span className="links_name">เว็บ PTHA</span>
+            </a>
+          </li>
+
           <div className="nav-logout">
             <li>
               <a href="./" onClick={logOut}>
@@ -252,24 +307,26 @@ export default function Home({}) {
             onChange={(e) => setSearchKeyword(e.target.value)}
           />
         </div>
-
-        <div className="toolbar">
-          <button
-            className="btn btn-outline py-1 px-4"
-            onClick={() => navigate("/addcaremanual", { state: adminData })}
-          >
-          <i className="bi bi-plus-circle" style={{ marginRight: '8px' }}></i>
-          เพิ่มคู่มือ
-          </button>
-          <p className="countadmin">
-            จำนวนคู่มือทั้งหมด : {data.length} คู่มือ
-          </p>
+        <div className="content-toolbar">
+          <div className="toolbar">
+            <button
+              className="btn btn-outline py-1 px-4"
+              onClick={() => navigate("/addcaremanual", { state: adminData })}
+            >
+              <i
+                className="bi bi-plus-circle"
+                style={{ marginRight: "8px" }}
+              ></i>
+              เพิ่มคู่มือ
+            </button>
+            <p className="countadmin">
+              จำนวนคู่มือทั้งหมด : {data.length} คู่มือ
+            </p>
+          </div>
         </div>
-
-        <div className="content">
+        {/* <div className="content">
         {data.length > 0 ? (
            data.map((i) => {
-                // แปลงเวลา
                 const formattedDate = new Intl.DateTimeFormat("th-TH", {
                   day: "numeric",
                   month: "long",
@@ -282,7 +339,7 @@ export default function Home({}) {
                   <div className="adminall card mb-3 ">
                     <div className="card-body">
                       <h5 className="card-title">{i.caremanual_name}</h5>
-                      {/* <h5 className="card-title">แก้ไขครั้งล่าสุดเมื่อ : {formattedDate}</h5> */}
+                      <h5 className="card-title">แก้ไขครั้งล่าสุดเมื่อ : {formattedDate}</h5>
                       <div className="buttongroup">
                         <button
                           className="editimg"
@@ -292,7 +349,7 @@ export default function Home({}) {
                             })
                           }
                         >
-                          แก้ไข
+                          <i className="bi bi-pencil-square"></i>
                         </button>
 
                         <button
@@ -301,7 +358,8 @@ export default function Home({}) {
                             deleteCaremanual(i._id, i.caremanual_name)
                           }
                         >
-                          ลบ
+                         <i className="bi bi-trash"></i>
+
                         </button>
                       </div>
                     </div>
@@ -313,6 +371,65 @@ export default function Home({}) {
                 <p>ไม่พบข้อมูลที่คุณค้นหา</p>
               </div>
             )}
+        </div> */}
+        <div className="content">
+          <table className="caremanual-table">
+            <thead>
+              <tr>
+                <th>ชื่อคู่มือ</th>
+                <th onClick={() => handleSort("createdAt")}>
+                  สร้างเมื่อวันที่ {getSortIcon("createdAt")}
+                </th>
+                <th onClick={() => handleSort("updatedAt")}>
+                  แก้ไขครั้งล่าสุดเมื่อ {getSortIcon("updatedAt")}
+                </th>
+                <th>จัดการ</th>
+              </tr>
+            </thead>
+            <tbody>
+              {sortedData.length > 0 ? (
+                sortedData.map((i, index) => {
+                  const formattedCreateDate = formatDate(i.createdAt);
+                  const formattedUpdateDate = formatDate(i.updatedAt);
+
+                  return (
+                    <tr key={index}>
+                      <td>{i.caremanual_name}</td>
+                      <td>{formattedCreateDate}</td>
+                      <td>{formattedUpdateDate}</td>
+                      <td className="buttongroup-in-table">
+                        <button
+                          className="editimg2"
+                          onClick={() =>
+                            navigate("/updatecaremanual", {
+                              state: { id: i._id, caremanual: i },
+                            })
+                          }
+                        >
+                          <i className="bi bi-pencil-square"></i>
+                        </button>
+
+                        <button
+                          className="deleteimg2"
+                          onClick={() =>
+                            deleteCaremanual(i._id, i.caremanual_name)
+                          }
+                        >
+                          <i className="bi bi-trash"></i>
+                        </button>
+                      </td>
+                    </tr>
+                  );
+                })
+              ) : (
+                <tr>
+                  <td colSpan="4" className="text-center">
+                    ไม่พบข้อมูลที่คุณค้นหา
+                  </td>
+                </tr>
+              )}
+            </tbody>
+          </table>
         </div>
       </div>
     </main>

@@ -26,7 +26,7 @@ export default function Updatecaregiver() {
   const [formData, setFormData] = useState({
     ID_card_number: caregiver?. ID_card_number|| "",
     // user: caregiver?.user|| "",
-     user: caregiver?.userRelationships?.[0]?.user || "",
+   user: caregiver?.userRelationships?.[0]?.user || "",
     name: caregiver?.name || "",
     surname: caregiver?.surname || "",
     tel: caregiver?.tel || "",
@@ -167,7 +167,7 @@ const handleChange = (e) => {
     }
   } 
    else if (name === "name" || name === "surname") {
-    if (/[^ก-๙\s]/.test(value)) {
+    if (/[^ก-๙a-zA-Z\s]/.test(value)) {
       if (name === "name") {
         setNameError("ชื่อต้องเป็นตัวอักษรเท่านั้น");
       } else {

@@ -128,26 +128,26 @@ export default function UpdateName() {
   const handleInputNameChange = (e) => {
     const input = e.target.value;
   
-    if (/[^ก-๙\s]/.test(input)) {
+    if (/[^ก-๙a-zA-Z\s]/.test(input)) {
       setNameError("ชื่อควรเป็นตัวอักษรเท่านั้น");
     } else {
       setNameError("");
     }
   
-    setName(input.replace(/[^ก-๙\s]/g, "")); 
+    setName(input.replace(/[^ก-๙a-zA-Z\s]/g, "")); 
   };
   
 
   const handleInputSurnameChange = (e) => {
     const input = e.target.value;
 
-    if (/[^ก-๙\s]/.test(input)) {
+    if (/[^ก-๙a-zA-Z\s]/.test(input)) {
       setSurnameError("นามสกุลควรเป็นตัวอักษรเท่านั้น");
     } else {
       setSurnameError("");
     }
 
-    setSurname(input.replace(/[^ก-๙\s]/g, "")); 
+    setSurname(input.replace(/[^ก-๙a-zA-Z\s]/g, "")); 
   };
   return (
     <main className="body">

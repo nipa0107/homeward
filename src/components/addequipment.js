@@ -7,7 +7,7 @@ import { useNavigate } from "react-router-dom";
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
-export default function AddEquip({ }) {
+export default function AddEquip() {
   const navigate = useNavigate();
   const [equipment_name, setEquipName] = useState("");
   const [equipment_type, setEquipType] = useState("");
@@ -227,7 +227,7 @@ export default function AddEquip({ }) {
               <i className="bi bi-chevron-double-right"></i>
             </li>
             <li>
-              <a href="alluser">
+              <a href="allequip">
                 จัดการอุปกรณ์ทางการแพทย์
               </a>
             </li>

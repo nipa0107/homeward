@@ -5,6 +5,7 @@ import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import logow from "../img/logow.png";
 import qrcode from "../img/QRcode.svg";
+import logo from "../img/logo.png";
 
 export default function PhysicalTherapyUser() {
   const location = useLocation();
@@ -185,6 +186,7 @@ export default function PhysicalTherapyUser() {
         <ToastContainer />
         <div className="save-img card mb-1">
           <div id="user-data" className="user-data-container">
+          {/* <img src={logo} className="logo-qr" alt="QR Code"/> */}
             <p className="header-saveimg">ข้อมูลสำหรับใช้ในการเข้าสู่ระบบของผู้ป่วย</p>
             <div className="label-saveimg-container">
               <div className="data-container">

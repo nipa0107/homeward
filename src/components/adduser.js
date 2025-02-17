@@ -115,9 +115,13 @@ export default function AddUser() {
           console.log("User data to navigate: ", data.user);
           toast.success("เพิ่มข้อมูลสำเร็จ");
           if (physicalTherapy) {
+            setTimeout(() => {
             navigate("/physicalTherapyUser", { state: { userData: data.user } });
+          }, 1000);
           } else {
+            setTimeout(() => {
             navigate("/displayUser", { state: { userData: data.user } });
+          }, 1000);
           }
         } else {
           // setError(data.error);
@@ -172,13 +176,13 @@ const handleInputChange = (e) => {
     const input = e.target.value;
   
     // ตรวจสอบว่ามีตัวเลขหรืออักขระพิเศษหรือไม่
-    if (/[^ก-๙\s]/.test(input)) {
+    if (/[^ก-๙a-zA-Z\s]/.test(input)) {
       setNameError("ชื่อควรเป็นตัวอักษรเท่านั้น");
     } else {
       setNameError("");
     }
   
-    setName(input.replace(/[^ก-๙\s]/g, "")); // กรองเฉพาะตัวอักษรและช่องว่าง
+    setName(input.replace(/[^ก-๙a-zA-Z\s]/g, "")); // กรองเฉพาะตัวอักษรและช่องว่าง
   };
   
 
@@ -186,13 +190,13 @@ const handleInputChange = (e) => {
     const input = e.target.value;
 
     // ตรวจสอบว่ามีตัวเลขหรืออักขระพิเศษหรือไม่
-    if (/[^ก-๙\s]/.test(input)) {
+    if (/[^ก-๙a-zA-Z\s]/.test(input)) {
       setSurnameError("นามสกุลควรเป็นตัวอักษรเท่านั้น");
     } else {
       setSurnameError(""); // ล้าง error หากไม่มีปัญหา
     }
 
-    setSurname(input.replace(/[^ก-๙\s]/g, "")); // กรองเฉพาะตัวอักษรและช่องว่าง
+    setSurname(input.replace(/[^ก-๙a-zA-Z\s]/g, "")); // กรองเฉพาะตัวอักษรและช่องว่าง
   };
   
   const logOut = () => {

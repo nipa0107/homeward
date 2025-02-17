@@ -1,12 +1,14 @@
-.header-saveimg{
+.header-saveimg {
   font-size: 1.4em;
   font-weight: bold;
   text-align: center;
   margin: 1% 0;
+  color: #03a9f4;
 }
+
 .save-img {
-  display: flex;
-  flex-direction: column;
+  /* display: flex;
+  flex-direction: column; */
   background-color: #f9f9f9;
   border: 2px solid #87CEFA;
   padding: 25px;
@@ -14,49 +16,52 @@
   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
   margin-bottom: 20px;
   margin-top: 2rem;
+
 }
+
 .data-container {
-  flex: 1;
+  /* flex: 1; */
   padding: 10px;
   margin-left: 10%;
   /* background-color: #ffffff;
   border-radius: 8px;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); */
 }
-  
-  .data-container {
-    flex: 1;
-  }
-  .user-data-container {
-    padding: 1.5rem;
-    display: flex;
-    flex-direction: column;
-    background-color: #fafafa;
-    border-radius: 8px;
-    border: 1px solid #e0e0e0;
+
+.user-data-container {
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  background-color: #fafafa;
+  border-radius: 8px;
+  border: 1px solid #e0e0e0;
 }
-  
+
 .qrcode-container {
   display: flex;
-  /* justify-content: space-around; */
-justify-content: center;
+  flex-direction: column;
+  justify-content: center;
   align-items: center;
-  gap: 20px; 
-  /* padding: 20px; */
-  flex-wrap: wrap; /* ช่วยให้รูปเลื่อนลงถ้าไม่พอกับหน้าจอ */
+  gap: 1rem;
+  /* width: 100%; */
 }
 
 .qrcode-item {
+  /* flex: 1; */
   text-align: center;
+  max-width: 250px;
+  margin-bottom: 1rem; 
 }
-.qrcode-item {
-  flex: 1;
-  text-align: center;
-  margin: 10px;
-  max-width: 200px; /* จำกัดความกว้างของแต่ละ QR Code */
+.logo-qr {
+  width: 100%; 
+  max-width: 250px;
+  height: auto; 
+  margin-bottom: 1rem;
+  margin-left: auto;
+  margin-right: auto;
 }
 .qrcode {
-  width: 100%; /* ทำให้รูป QR Code เต็มพื้นที่ของ .qrcode-item */
+  width: 100%;
   height: auto;
 }
 
@@ -65,73 +70,176 @@ justify-content: center;
   /* margin-top: 10px; */
 }
 
-.button-container {
-  justify-content: center;
-  display: flex;
-  gap: 15px;
-  /* margin-top: 20px; */
-}
+
 .label-saveimg {
   display: flex;
   align-items: center;
   gap: 12px;
   font-size: 16px;
   color: #333;
+  flex-wrap: wrap; 
 }
 
 .label-name {
-  font-weight: bold;
   /* margin-left: 4rem; */
   color: #333;
+  white-space: nowrap;
 }
+
 .label-saveimg-scan {
   display: flex;
   justify-content: center;
 }
+
 .label-scan {
   font-weight: bold;
   color: #ff4500;
   text-align: center;
 
 }
-label-scan-save{
+
+.label-scan-save {
   text-align: center;
 }
-  .user-data {
-    margin: 0;
-    padding: 0;
-    line-height: inherit; 
-  }
 
-  .btn-manage-user, .btn-save-image {
-    width: 15rem;
-    margin-right: 10px;
-    font-size: 16px;
-    cursor: pointer;
-    border-radius: 5px;
-    transition: background-color 0.3s ease;
-  }
- .btn-manage-user{
+.user-data {
+  font-weight: bold;
+  margin: 0;
+  padding: 0;
+  line-height: inherit;
+}
+
+.button-container {
+  justify-content: center;
+  display: flex;
+  gap: 15px;
+}
+
+.btn-manage-user,
+.btn-save-image {
+  width: 15rem;
+  margin-right: 10px;
+  font-size: 16px;
+  cursor: pointer;
+  border-radius: 5px;
+  transition: background-color 0.3s ease;
+}
+
+.btn-manage-user {
   background-color: #fff;
   border: 2px solid #87CEFA;
   text-align: center;
-    margin-top: 20px;
-  }
+  margin-top: 20px;
+}
 
-  .btn-save-image{
-    background-color: #87CEFA;
-    color: #fff;    
-    text-align: center;
-    margin-top: 20px;
-    border: none;
-  }
+.btn-save-image {
+  background-color: #87CEFA;
+  color: #fff;
+  text-align: center;
+  margin-top: 20px;
+  border: none;
+}
 
-  .btn-manage-user:hover {
-    background-color: #87CEFA;
-    color: #fff;
+.btn-manage-user:hover {
+  background-color: #87CEFA;
+  color: #fff;
 }
 
 .btn-save-image:hover {
-    background-color: #00BFFF;
+  background-color: #00BFFF;
 }
-  
+
+/* Responsive Design */
+@media (max-width: 992px) {
+  .save-img {
+    padding: 20px;
+  }
+
+  .data-container {
+    margin-left: 0;
+    padding: 5px;
+  }
+
+  .qrcode-item {
+    max-width: 200px;
+  }
+
+  .header-saveimg {
+    font-size: 1.2em;
+  }
+
+  .label-saveimg {
+    font-size: 14px;
+  }
+
+  .label-scan {
+    font-size: 14px;
+  }
+
+  .btn-manage-user, .btn-save-image {
+    width: 100%;
+  }
+  .logo-qr {
+    margin-bottom: 0.2rem;
+  }
+  .image-description {
+    font-size: 12px;
+    /* margin-top: 10px; */
+  }
+}
+
+@media (max-width: 767px) {
+  .card{
+    width: 80%;
+  }
+  .save-img {
+    padding: 15px;
+  }
+
+  .header-saveimg {
+    font-size: 1em;
+  }
+
+  .label-saveimg {
+    gap: 5px;
+    font-size: 14px;
+    flex-direction: column;
+    align-items: flex-start;
+    margin-bottom: 5px;
+  }
+  .qrcode-item {
+    max-width: 180px;
+  }
+
+  /* .btn-manage-user, .btn-save-image {
+    width: 100%;
+    font-size: 14px;
+  } */
+
+  .qrcode-container {
+    gap: 0rem;
+  }
+  .btn-manage-user,
+  .btn-save-image {
+    width:40%;
+    font-size: 14px;
+  }
+
+/* .btn-manage-user {
+  background-color: #fff;
+  border: 2px solid #87CEFA;
+  text-align: center;
+  margin-top: 20px;
+}
+
+.btn-save-image {
+  background-color: #87CEFA;
+  color: #fff;
+  text-align: center;
+  margin-top: 20px;
+  border: none;
+} */
+.label-scan {
+  font-size: 12px;
+}
+}

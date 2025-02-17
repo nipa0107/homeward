@@ -9,7 +9,7 @@ import { useNavigate } from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
-export default function AddCaremanual({}) {
+export default function AddCaremanual() {
   const [caremanual_name, setCaremanualName] = useState("");
   const [file, setFile] = useState(null);
   const [image, setImage] = useState(null);

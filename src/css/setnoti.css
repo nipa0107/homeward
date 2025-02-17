@@ -1,6 +1,6 @@
 .formsetnoti {
     border: 1px solid #ddd;
-    box-shadow: 0 4px 21px -12px rgba(0, 0, 0, 0.66);    
+    box-shadow: 0 4px 21px -12px rgba(0, 0, 0, 0.66);
     width: 60%;
     padding: 2rem;
     margin: 30px auto;
@@ -26,7 +26,7 @@
 
 .formsetnoti .unitnoti {
     /* margin-right: 20px; */
-    flex: 10% 0 0 ;
+    flex: 10% 0 0;
     display: flex;
     align-items: center;
 }
@@ -46,10 +46,10 @@
     box-sizing: border-box;
     width: 100px;
     flex: 1;
-    
+
 }
 
-.formsetnoti form .input-group-header{
+.formsetnoti form .input-group-header {
     display: flex;
     align-items: center;
     flex-wrap: nowrap;
@@ -58,44 +58,110 @@
 
 }
 
-.formsetnoti .titlenoti-min{
+.formsetnoti .titlenoti-min {
     display: flex;
     align-items: center;
     font-weight: 600;
-    
+
 }
 
-.formsetnoti .titlenoti-max{
+.formsetnoti .titlenoti-max {
     margin-left: 27%;
     font-weight: 600;
     display: flex;
     align-items: center;
 }
 
-/* .tablesetting .success{
-    width: 25%; 
-    white-space: nowrap;
-} */
-
-.tablesetting th:nth-child(1), 
-.tablesetting th:nth-child(2),
-.tablesetting td:nth-child(1), 
-.tablesetting td:nth-child(2) {
-  width: 12%;
-}
-
-.tablesetting th:nth-child(3),
-.tablesetting th:nth-child(4),
-.tablesetting td:nth-child(3),
-.tablesetting td:nth-child(4){
-  width: 20%;
-}
-.tablesetting th:nth-child(5),
-.tablesetting td:nth-child(5){
-    width: 20%;
-}
-.user-details{
+.user-details {
     margin: 0.3rem auto;
     align-items: center;
     text-align: center;
 }
+
+
+.setting-table {
+    width: 80%;
+    border-collapse: collapse;
+    margin: 0 auto;
+    box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.1);
+    padding: 15px;
+    border-collapse: collapse;
+    border-spacing: 1;
+    border-radius: 0.5rem;
+    line-height: 2rem;
+}
+
+.setting-table th {
+    font-size: 1rem;
+    background-color: #87CEFA;
+    color: #000;
+    text-transform: uppercase;
+    border-bottom: 2px solid #87CEFA;
+}
+
+.setting-table th:first-child {
+    border-top-left-radius: 0.5rem;
+}
+
+.setting-table th:last-child {
+    border-top-right-radius: 0.5rem;
+}
+
+.setting-table th,
+.setting-table td {
+    padding: 10px;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+    word-wrap: break-word;
+    white-space: normal;
+}
+
+.setting-table th:nth-child(1),
+.setting-table td:first-child {
+    width: 40%;
+    min-width: 180px;
+}
+
+.setting-table th:nth-child(2),
+.setting-table td:nth-child(2) {
+    width: 40%;
+    min-width: 180px;
+}
+
+.setting-table th:nth-child(3),
+.setting-table td.buttongroup-in-table {
+    width: 20%;
+    min-width: 130px;
+    text-align: center;
+    white-space: nowrap;
+}
+
+.setting-table .buttongroup-in-table button {
+    margin: 0 3px;
+    padding: 5px 8px;
+}
+.icon-container-out{
+    border-radius: 5px;
+    width: 2.5rem; 
+    border: none;
+    background-color: #738ffe;
+    color: #ffffff;
+}
+/* .icon-container {
+    position: relative;
+    display: inline-block;
+    color: #ffffff; 
+}
+
+.icon-bell {
+    font-size:20px; 
+ color: black;
+}
+
+.icon-gear {
+    position: absolute;
+    top: 8px;
+    right: 7.5px;
+    font-size: 2px;
+    
+} */

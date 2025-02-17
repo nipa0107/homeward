@@ -1,12 +1,9 @@
 import React, { useEffect, useState } from "react";
-import deleteimg from "../img/delete.png";
-import editimg from "../img/edit.png";
 import "../css/alladmin.css";
 import "../css/sidebar.css";
 import "../css/setnoti.css";
 import logow from "../img/logow.png";
 import { useNavigate } from "react-router-dom";
-import { useLocation } from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 function UpdateDefault() {

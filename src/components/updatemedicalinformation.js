@@ -5,6 +5,7 @@ import "../css/styles.css";
 import logow from "../img/logow.png";
 import { useNavigate } from "react-router-dom";
 import { useLocation } from "react-router-dom";
+import Select from "react-select";
 
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -41,13 +42,30 @@ export default function Updatemedicalinformation() {
   const [pdfURLM, setPdfURLM] = useState("");
   const [pdfURLPhy, setPdfURLPhy] = useState("");
   const [data, setData] = useState([]);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [filteredPersonnel, setFilteredPersonnel] = useState([]);
+
+    useEffect(() => {
+      setFilteredPersonnel(data);
+    }, [data]);
+  
+    const handleSearchChange = (inputValue) => {
+      setSearchTerm(inputValue);
+      const filtered = data.filter((personnel) =>
+        `${personnel.nametitle} ${personnel.name} ${personnel.surname}`
+          .toLowerCase()
+          .includes(inputValue.toLowerCase())
+      );
+      setFilteredPersonnel(filtered);
+    };
+  
 
   const initialSelectedPersonnel = medicalInfo
     ? medicalInfo.selectedPersonnel
     : "";
 
   const [selectedPersonnel, setSelectedPersonnel] = useState(
-    initialSelectedPersonnel
+    ""
   );
 
 
@@ -130,7 +148,7 @@ export default function Updatemedicalinformation() {
           setPhychosocial_assessment(medicalData.data.Phychosocial_assessment);
           setManagement_plan(medicalData.data.Management_plan);
           setDate_Admit(formatDate(medicalData.data.Date_Admit));
-          setSelectedPersonnel(medicalData.data.selectedPersonnel);
+          setSelectedPersonnel(medicalData.data.selectedPersonnel   || "");
           setDate_DC(formatDate(medicalData.data.Date_DC));
           setFileP(medicalData.data.fileP);
           setFileM(medicalData.data.fileM);
@@ -193,8 +211,8 @@ export default function Updatemedicalinformation() {
 
   const UpdateMedical = async () => {
     console.log(HN, AN,);
-    const selectedPersonnelValue =
-      document.getElementById("selectedPersonnel").value;
+    // const selectedPersonnelValue =
+    //   document.getElementById("selectedPersonnel").value;
 
     try {
       if (!medicalInfo) {
@@ -202,7 +220,7 @@ export default function Updatemedicalinformation() {
         return;
       }
 
-      const updatedSelectedPersonnel = selectedPersonnelValue !== "" ? selectedPersonnelValue : selectedPersonnel;
+      const updatedSelectedPersonnel = selectedPersonnel ? selectedPersonnel : medicalInfo.selectedPersonnel;
 
       const formData = new FormData();
       formData.append("HN", HN);
@@ -401,7 +419,7 @@ export default function Updatemedicalinformation() {
               />
             </div>
 
-            <div className="mb-1">
+            <div className="mb-2">
               <label>วันที่ Admit </label>
               <input
                 type="date"
@@ -410,7 +428,7 @@ export default function Updatemedicalinformation() {
                 onChange={(e) => setDate_Admit(e.target.value)}
               />
             </div>
-            <div className="mb-1">
+            <div className="mb-2">
               <label>วันที่ D/C</label>
               <input
                 type="date"
@@ -419,7 +437,7 @@ export default function Updatemedicalinformation() {
                 onChange={(e) => setDate_DC(e.target.value)}
               />
             </div>
-            <div className="mb-1">
+            {/* <div className="mb-2">
               <label>แพทย์ผู้ดูแล</label>
               <select
                 id="selectedPersonnel"
@@ -438,29 +456,63 @@ export default function Updatemedicalinformation() {
                   <option value="">ไม่มีข้อมูลแพทย์</option>
                 )}
               </select>
+            </div> */}
+              <div className="mb-2">
+              <label>แพทย์ผู้ดูแล</label>
+              <Select
+  
+                options={filteredPersonnel.map((personnel) => ({
+                  value: personnel._id,
+                  label: `${personnel.nametitle} ${personnel.name} ${personnel.surname}`,
+                }))}
+                value={
+                  selectedPersonnel
+                    ? {
+                        value: selectedPersonnel,
+                        label: `${filteredPersonnel.find((personnel) => personnel._id === selectedPersonnel)?.nametitle} ${filteredPersonnel.find((personnel) => personnel._id === selectedPersonnel)?.name} ${filteredPersonnel.find((personnel) => personnel._id === selectedPersonnel)?.surname}`,
+                      }
+                    : null
+                }
+                onInputChange={handleSearchChange}
+                onChange={(selectedOption) => {
+                  setSelectedPersonnel(
+                    selectedOption ? selectedOption.value : null
+                  );
+                  setSearchTerm("");
+                }}
+                placeholder="ค้นหาแพทย์..."
+                isSearchable
+                isClearable
+                className="custom-select"
+                classNamePrefix="custom"
+                noOptionsMessage={() => "ไม่มีข้อมูลแพทย์"}
+              />
+              {filteredPersonnel.length === 0 && searchTerm && (
+                <div className="no-results">ไม่มีข้อมูลแพทย์</div>
+              )}
             </div>
 
-            <div className="mb-1">
+            <div className="mb-2">
               <label>Diagnosis</label>
               <textarea
                 className="form-control"
                 value={Diagnosis}
-                rows="3" // กำหนดจำนวนแถวเริ่มต้น
+                rows="2" // กำหนดจำนวนแถวเริ่มต้น
                 style={{ resize: "vertical" }} // ให้ textarea สามารถปรับขนาดได้ในทิศทางดิสพล์เมนต์
                 onChange={(e) => setDiagnosis(e.target.value)}
               />
             </div>
-            <div className="mb-1">
+            <div className="mb-2">
               <label>Chief complaint</label>
               <textarea
                 className="form-control"
                 value={Chief_complaint}
-                rows="3" // กำหนดจำนวนแถวเริ่มต้น
+                rows="2" // กำหนดจำนวนแถวเริ่มต้น
                 style={{ resize: "vertical" }}
                 onChange={(e) => setChief_complaint(e.target.value)}
               />
             </div>
-            <div className="mb-1">
+            <div className="mb-2">
               <label>Present illness</label>
               <input
                 type="file"
@@ -491,14 +543,14 @@ export default function Updatemedicalinformation() {
               <textarea
                 className="form-control"
                 value={Present_illness} // Set the value attribute
-                rows="3"
+                rows="2"
                 style={{ resize: "vertical" }}
                 onChange={(e) => setPresent_illness(e.target.value)}
               />
 
             </div>
 
-            <div className="mb-1">
+            <div className="mb-2">
               <label>Management plan</label>
               <input
                 type="file"
@@ -529,13 +581,13 @@ export default function Updatemedicalinformation() {
               <textarea
                 className="form-control"
                 value={Management_plan} // Set the value here
-                rows="3"
+                rows="2"
                 style={{ resize: "vertical" }}
                 onChange={(e) => setManagement_plan(e.target.value)}
               />
             </div>
 
-            <div className="mb-1">
+            <div className="mb-2">
               <label>Psychosocial assessment</label>
 
               <input
@@ -568,7 +620,7 @@ export default function Updatemedicalinformation() {
               <textarea
                 className="form-control"
                 value={Phychosocial_assessment} // Set the value here
-                rows="3"
+                rows="2"
                 style={{ resize: "vertical" }}
                 onChange={(e) => setPhychosocial_assessment(e.target.value)}
               />

@@ -1,6 +1,4 @@
 import React, { useEffect, useState } from "react";
-import deleteimg from "../img/delete.png";
-import editimg from "../img/edit.png";
 import "../css/alladmin.css";
 import "../css/sidebar.css";
 import "../css/styles.css";
@@ -9,12 +7,11 @@ import { useNavigate } from "react-router-dom";
 import { useLocation } from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
 
-export default function AllUser({}) {
+export default function AllUser() {
   const navigate = useNavigate();
   const [data, setData] = useState([]);
   const [adminData, setAdminData] = useState("");
   const [isActive, setIsActive] = useState(false);
-  const [searchKeyword, setSearchKeyword] = useState(""); //ค้นหา
   const [token, setToken] = useState("");
   const location = useLocation();
   const { id } = location.state;

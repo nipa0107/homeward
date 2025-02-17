@@ -1,6 +1,4 @@
 import React, { useEffect, useState } from "react";
-import deleteimg from "../img/delete.png";
-import editimg from "../img/edit.png";
 import "../css/alladmin.css";
 import "../css/sidebar.css";
 import "../css/setnoti.css";
@@ -329,21 +327,21 @@ export default function SettingNoti() {
           </ul>
         </div>
         <div className="user-details">
-  <p><strong>ชื่อ-สกุล:</strong> {name} {surname}</p>
+  <p>ชื่อ-สกุล: <strong>{name} {surname}</strong></p>
   {birthday ? (
     <p className="textassesment">
-      <strong>อายุ:</strong> {userAge} ปี {userAgeInMonths} เดือน{" "}
-      <strong>เพศ:</strong> {gender}
+      อายุ: <strong>{userAge} ปี {userAgeInMonths} เดือน{" "}</strong>
+      เพศ: <strong>{gender}</strong>
     </p>
   ) : (
     <p className="textassesment">
-      <strong>อายุ:</strong> 0 ปี 0 เดือน <strong>เพศ:</strong> {gender}
+      อายุ: <strong>0 ปี 0 เดือน </strong> เพศ: <strong>{gender}</strong>
     </p>
   )}
   <p className="textassesment">
-    <strong>HN:</strong> {medicalData && medicalData.HN ? medicalData.HN : "ไม่มีข้อมูล"}{" "}
-    <strong>AN:</strong> {medicalData && medicalData.AN ? medicalData.AN : "ไม่มีข้อมูล"}{" "}
-    <strong>ผู้ป่วยโรค:</strong> {medicalData && medicalData.Diagnosis ? medicalData.Diagnosis : "ไม่มีข้อมูล"}
+    {/* <strong>HN:</strong> {medicalData && medicalData.HN ? medicalData.HN : "ไม่มีข้อมูล"}{" "}
+    <strong>AN:</strong> {medicalData && medicalData.AN ? medicalData.AN : "ไม่มีข้อมูล"}{" "} */}
+    ผู้ป่วยโรค:<strong>{medicalData && medicalData.Diagnosis ? medicalData.Diagnosis : "ไม่มีข้อมูล"}</strong> 
   </p>
 </div>
 

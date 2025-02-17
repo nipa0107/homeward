@@ -25,6 +25,10 @@ export default function AddAdmin() {
   const [emailError, setEmailError] = useState("");
   const [passwordError, setPasswordError] = useState("");
   const [confirmPasswordError, setConfirmPasswordError] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+
+  const toggleShowPassword = (setter) => setter((prev) => !prev);
 
   useEffect(() => {
     const token = window.localStorage.getItem("token");
@@ -51,15 +55,23 @@ export default function AddAdmin() {
   }, []); //ส่งไปครั้งเดียว
 
 
+  
   const handleSubmit = (e) => {
     e.preventDefault();
     let hasError = false;
-    if (!username.trim()) {
-      setUsernameError("กรุณากรอกชื่อผู้ใช้");
-      hasError = true;
-    } else {
-      setUsernameError("");
-    }
+    const usernameErrorMessage = /^[a-zA-Z0-9._-]{3,20}$/.test(username)
+    ? "" // ไม่มีข้อผิดพลาด
+    : "ชื่อผู้ใช้ต้องประกอบด้วยตัวอักษร, ตัวเลข, จุด, ขีดล่าง, หรือ ขีดกลาง และต้องมีความยาวระหว่าง 3 ถึง 20 ตัวอักษร";
+
+  if (!username.trim()) {
+    setUsernameError("กรุณากรอกชื่อผู้ใช้");
+    hasError = true;
+  } else if (usernameErrorMessage) {
+    setUsernameError(usernameErrorMessage);
+    hasError = true;
+  } else {
+    setUsernameError(""); // ลบข้อผิดพลาดถ้ากรอกถูกต้อง
+  }
 
     if (!name.trim()) {
       setNameError("กรุณากรอกชื่อ");
@@ -120,7 +132,7 @@ export default function AddAdmin() {
     })
       .then((res) => res.json())
       .then((data) => {
-        console.log(data, "Addadmain");
+        // console.log(data, "Addadmain");
         if (data.status === "ok") {
           toast.success("เพิ่มข้อมูลสำเร็จ");
           setTimeout(() => {
@@ -143,39 +155,45 @@ export default function AddAdmin() {
 
   const handleInputUsernameChange = (e) => {
     let input = e.target.value;
-
-    if (!input.trim()) {
+    setUsername(input);
+  
+    if (input.trim() === "") {
       setUsernameError("");
       return;
-    } else {
-      setUsernameError("");
     }
-
-    setUsername(input.replace(/\D/g, "")); 
+  
+    const usernameErrorMessage = /^[a-zA-Z0-9._-]{3,20}$/.test(input)
+      ? "" 
+      : "ชื่อผู้ใช้ต้องเป็นตัวอักษร, ตัวเลข, จุด, ขีดล่าง, หรือ ขีดกลางและต้องมีความยาวระหว่าง 3 ถึง 20 ตัวอักษร";
+  
+    setUsernameError(usernameErrorMessage);
   };
+  
+
   const handleInputNameChange = (e) => {
     const input = e.target.value;
   
-    if (/[^ก-๙\s]/.test(input)) {
+    if (/[^ก-๙a-zA-Z\s]/.test(input)) {
       setNameError("ชื่อควรเป็นตัวอักษรเท่านั้น");
     } else {
       setNameError("");
     }
   
-    setName(input.replace(/[^ก-๙\s]/g, "")); 
+    setName(input.replace(/[^ก-๙a-zA-Z\s]/g, "")); 
   };
   
 
   const handleInputSurnameChange = (e) => {
     const input = e.target.value;
 
-    if (/[^ก-๙\s]/.test(input)) {
+ 
+    if (/[^ก-๙a-zA-Z\s]/.test(input)) {
       setSurnameError("นามสกุลควรเป็นตัวอักษรเท่านั้น");
     } else {
       setSurnameError("");
     }
 
-    setSurname(input.replace(/[^ก-๙\s]/g, "")); 
+    setSurname(input.replace(/[^ก-๙a-zA-Z\s]/g, "")); 
   };
 
   const handleInputEmailChange = (e) => {
@@ -193,7 +211,7 @@ export default function AddAdmin() {
   };
   const validatePassword = (input) => {
     if (!input.trim()) {
-      setPasswordError("กรุณากรอกรหัสผ่าน");
+      setPasswordError("");
     } else if (input.length < 8) {
       setPasswordError("รหัสผ่านต้องมีความยาวอย่างน้อย 8 ตัวอักษร");
     } else {
@@ -371,27 +389,39 @@ export default function AddAdmin() {
 
             <div className="mb-1">
               <label>รหัสผ่าน<span className="required">*</span></label>
+              <div className="password-input">
               <input
-                type="password"
-                className={`form-control ${passwordError ? "input-error" : ""}`}
+                  type={showPassword ? "text" : "password"}
+                  className={`form-control ${passwordError ? "input-error" : ""}`}
                 onChange={(e) => validatePassword(e.target.value)}
                 />
-                {passwordError && <span className="error-text">{passwordError}</span>}
-
+                <i
+                  className={`bi ${showPassword ? "bi-eye-slash" : "bi-eye"}`}
+                  onClick={() => toggleShowPassword(setShowPassword)}
+                ></i>
             </div>
+            </div>
+            {passwordError && <span className="error-text">{passwordError}</span>}
 
             <div className="mb-1">
               <label>ยืนยันรหัสผ่าน<span className="required">*</span></label>
+              <div className="password-input">
               <input
-                type="password"
-                className={`form-control ${confirmPasswordError ? "input-error" : ""}`}
+                  type={showConfirmPassword ? "text" : "password"}
+                  className={`form-control ${confirmPasswordError ? "input-error" : ""}`}
                 onChange={(e) => validateConfirmPassword(e.target.value)}
                 />
-                {confirmPasswordError && <span className="error-text">{confirmPasswordError}</span>}
-
+ <i
+                  className={`bi ${
+                    showConfirmPassword ? "bi-eye-slash" : "bi-eye"
+                  }`}
+                  onClick={() => toggleShowPassword(setShowConfirmPassword)}
+                ></i>
+                </div>
             </div>
-                {/* แสดงข้อความ error */}
-                <p id="errormessage" className="errormessage">{error}</p>
+            {confirmPasswordError && <span className="error-text">{confirmPasswordError}</span>}
+
+                {/* <p id="errormessage" className="errormessage">{error}</p> */}
                 <div className="d-grid">
               <button type="submit"className="btn btn-outline py-2">
                 บันทึก

@@ -2,18 +2,19 @@ import React, { useEffect, useState } from "react";
 import deleteimg from "../img/delete.png";
 import editimg from "../img/edit.png";
 import "../css/alladmin.css";
+import "../css/recover.css";
 import "../css/sidebar.css";
 import logow from "../img/logow.png";
 import { useNavigate } from "react-router-dom";
 
-export default function Recover({}) {
+export default function Recover() {
   const navigate = useNavigate();
   const [data, setData] = useState([]);
   const [adminData, setAdminData] = useState("");
   const [isActive, setIsActive] = useState(false);
   const [searchKeyword, setSearchKeyword] = useState(""); //ค้นหา
   const [token, setToken] = useState("");
-
+  const [sortOrder, setSortOrder] = useState("desc"); 
   const formatIDCardNumber = (id) => {
     if (!id) return "";
     return id.replace(/(\d{1})(\d{4})(\d{5})(\d{2})(\d{1})/, "$1-$2-$3-$4-$5");
@@ -129,6 +130,43 @@ export default function Recover({}) {
   }
 };
   
+const formatDate = (date) => {
+  // ตรวจสอบว่า date เป็นวันที่ที่ถูกต้องหรือไม่
+  const validDate = new Date(date);
+  if (isNaN(validDate)) {
+    return "ข้อมูลวันที่ไม่ถูกต้อง";
+  }
+
+  // กำหนดรูปแบบวันที่
+  const options = {
+    day: "2-digit",
+    month: "2-digit",
+    year: "numeric",
+    hour: "2-digit",
+    minute: "2-digit",
+    hour12: false,
+  };
+
+  // ใช้ Intl.DateTimeFormat เพื่อแสดงวันที่และเวลา
+  const formattedDate = new Intl.DateTimeFormat("th-TH", options).format(validDate);
+  
+  // แยกวันที่และเวลา
+  const [datePart, timePart] = formattedDate.split(" ");
+  const [hour, minute] = timePart.split(":");
+
+  return `${datePart}, ${hour}.${minute} น.`;
+};
+
+
+const handleSort = () => {
+  const sortedData = [...data].sort((a, b) => {
+    const dateA = new Date(a.deletedAt);
+    const dateB = new Date(b.deletedAt);
+    return sortOrder === "desc" ? dateB - dateA : dateA - dateB;
+  });
+  setData(sortedData); // อัปเดตข้อมูลหลังจากการเรียงลำดับ
+  setSortOrder(sortOrder === "desc" ? "asc" : "desc"); // เปลี่ยนทิศทางการเรียง
+};
 
   return (
     <main className="body">
@@ -250,14 +288,14 @@ export default function Recover({}) {
             onChange={(e) => setSearchKeyword(e.target.value)}
           />
         </div>
-       
+        <div className="content-toolbar">
         <div className="toolbar">
           <p className="countadmin">
             จำนวนผู้ป่วยที่ถูกลบทั้งหมด :{" "}
             {data.filter((user) => user.deletedAt !== null).length} คน
           </p>
         </div>
-       
+        </div>
         <div className="content">
         {/* <div className="info-alert"> */}
               <p className="info-alert">
@@ -266,24 +304,28 @@ export default function Recover({}) {
               </p>
         {/* </div> */}
           {/* <div className="table100"> */}
-          <table className="table">
+          <table className="recover-table">
             <thead>
               <tr>
+              {/* <th>ลำดับ</th> */}
                 <th>เลขประจำตัวประชาชน</th>
                 <th>ชื่อ-นามสกุล</th>
                 <th>รายละเอียด</th>
-                <th>วันที่ลบข้อมูล</th>
-                <th className="centered-cell">กู้คืนข้อมูลผู้ป่วย</th>
+                <th onClick={handleSort} >วันที่ลบข้อมูล 
+                    {sortOrder === "desc" ? <i class="bi bi-caret-down-fill"></i>:  <i class="bi bi-caret-up-fill"></i>} {/* แสดงลูกศรขึ้นหรือลง */}
+                </th>
+                <th>กู้คืนข้อมูลผู้ป่วย</th>
               </tr>
             </thead>
             <tbody>
             {data.filter((user) => user.deletedAt !== null).length > 0 ? (
             data
                 .filter((user) => user.deletedAt !== null) // กรองออกเฉพาะข้อมูลที่มีค่า deleteAt เป็น null
-                .sort((a, b) => new Date(a.deletedAt) - new Date(b.deletedAt))
+                // .sort((a, b) => new Date(a.deletedAt) - new Date(b.deletedAt))
                 .map((i, index) => (
                   
                     <tr key={index}>
+                      {/* <td>{index + 1}</td> */}
                       <td>{formatIDCardNumber(i.username)}</td>
                       <td>
                         {i.name} {i.surname}
@@ -299,26 +341,22 @@ export default function Recover({}) {
                         </a>
                       </td>
                       <td>
-                        {new Date(i.deletedAt).toLocaleDateString("th-TH", {
-                          year: "numeric",
-                          month: "long",
-                          day: "numeric",
-                        })}
+                        {formatDate(i.deletedAt)}
+      
                       </td>
-                      <td className="centered-cell">
+                      <td className="buttongroup-in-table">
                         <button
-                          className="btn btn-recover"
+                          className="btn-recover"
                           onClick={() => recoverUser(i._id, i.username)} // เรียกใช้ฟังก์ชัน recoverUser
                         >
                           <i className="bi bi-arrow-counterclockwise"></i>{" "}
-                          กู้คืน
                         </button>
                       </td>
                     </tr>
                     ))
                   ) : (
                     <tr>
-                      <td colSpan="4" className="text-center">
+                      <td colSpan="5" className="text-center">
                         ไม่พบข้อมูลที่คุณค้นหา
                       </td>
                     </tr>

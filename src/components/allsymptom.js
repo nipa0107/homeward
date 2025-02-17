@@ -1,12 +1,10 @@
 import React, { useEffect, useState } from "react";
-import deleteimg from "../img/delete.png";
 import "../css/alladmin.css";
 import "../css/sidebar.css";
 import logow from "../img/logow.png";
 import { useNavigate } from "react-router-dom";
-import { ToastContainer, toast } from "react-toastify";
 
-export default function Allsymptom({}) {
+export default function Allsymptom() {
   const navigate = useNavigate();
   const [data, setData] = useState([]);
   const [adminData, setAdminData] = useState("");
@@ -242,12 +240,14 @@ export default function Allsymptom({}) {
           />
         </div>
 
+        <div className="content-toolbar-symtom">
         <div className="toolbar">
           <button onClick={add} className="btn btn-outline py-1 px-4">
             <i className="bi bi-plus-circle" style={{ marginRight: "8px" }}></i>
             เพิ่มอาการ
           </button>
           <p className="countadmin">จำนวนอาการทั้งหมด : {data.length} อาการ</p>
+        </div>
         </div>
         <div className="content">
         {data.length > 0 ? (
@@ -264,14 +264,15 @@ export default function Allsymptom({}) {
                       })
                     }
                   >
-                    แก้ไข
+                    <i className="bi bi-pencil-square"></i>
                   </button>
                   <button
                     className="deleteimg"
                     alt="deleteimg"
                     onClick={() => deleteSymptom(i._id, i.name)}
                   >
-                    ลบ
+                                               <i className="bi bi-trash"></i>
+
                   </button>
                 </div>
               </div>
@@ -279,7 +280,7 @@ export default function Allsymptom({}) {
             )) 
           ) : (
               <div className="no-results">
-                <p>ไม่พบข้อมูลที่คุณค้นหา</p>
+                <p>ไม่พบข้อมูลที่อาการ</p>
               </div>
             )}
         </div>

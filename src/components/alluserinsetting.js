@@ -1,24 +1,17 @@
 import React, { useEffect, useState } from "react";
-import deleteimg from "../img/delete.png";
-import editimg from "../img/edit.png";
 import "../css/alladmin.css";
 import "../css/sidebar.css";
 import logow from "../img/logow.png";
 import { useNavigate } from "react-router-dom";
 
-export default function AlluserInSetting({}) {
+export default function AlluserInSetting() {
   const navigate = useNavigate();
   const [data, setData] = useState([]);
   const [adminData, setAdminData] = useState("");
   const [isActive, setIsActive] = useState(false);
-  const [searchKeyword, setSearchKeyword] = useState(""); //ค้นหา
+  const [searchKeyword, setSearchKeyword] = useState(""); 
   const [token, setToken] = useState("");
   const [medicalData, setMedicalData] = useState({});
-
-  const formatIDCardNumber = (id) => {
-    if (!id) return "";
-    return id.replace(/(\d{1})(\d{4})(\d{5})(\d{2})(\d{1})/, "$1-$2-$3-$4-$5");
-  };
 
   useEffect(() => {
     const token = window.localStorage.getItem("token");
@@ -263,31 +256,32 @@ export default function AlluserInSetting({}) {
           />
         </div>
 
-        <div className="toolbar">
-          <button
-            onClick={() => navigate("/updatedefault")}
-            className="btn btn-outline py-1 px-4"
-          >
-            <i className="bi bi-pencil" style={{ marginRight: "8px" }}></i>
-            ตั้งค่าการแจ้งเตือนเริ่มต้น
-          </button>
-          <p className="countadmin">
-            จำนวนผู้ป่วยทั้งหมด :{" "}
-            {data.filter((user) => user.deletedAt === null).length} คน
-          </p>
+        <div className="content-toolbar">
+          <div className="toolbar">
+            <button
+              onClick={() => navigate("/updatedefault")}
+              className="btn btn-outline py-1 px-4"
+            >
+              <i className="bi bi-pencil" style={{ marginRight: "8px" }}></i>
+              ตั้งค่าการแจ้งเตือนเริ่มต้น
+            </button>
+            <p className="countadmin">
+              จำนวนผู้ป่วยทั้งหมด :{" "}
+              {data.filter((user) => user.deletedAt === null).length} คน
+            </p>
+          </div>
         </div>
-
         <div className="content">
           {/* <div className="table100"> */}
-          <table className="table tablesetting">
+          <table className="setting-table">
             <thead>
               <tr>
-                <th>HN </th>
-                <th>AN</th>
+                {/* <th>HN </th>
+                <th>AN</th> */}
                 <th>ชื่อ-สกุล</th>
                 {/* <th>อายุ</th> */}
                 <th>ผู้ป่วยโรค</th>
-                <th className="success">ตั้งค่าการแจ้งเตือน</th>
+                <th>ตั้งค่าการแจ้งเตือน</th>
               </tr>
             </thead>
             <tbody>
@@ -296,7 +290,7 @@ export default function AlluserInSetting({}) {
                   .filter((user) => user.deletedAt === null)
                   .map((i, index) => (
                     <tr key={index}>
-                      <td>
+                      {/* <td>
                         <span
                           style={{
                             color: medicalData[i._id]?.hn
@@ -321,7 +315,7 @@ export default function AlluserInSetting({}) {
                             ? medicalData[i._id]?.an
                             : "ไม่มีข้อมูล"}
                         </span>
-                      </td>
+                      </td> */}
 
                       <td>
                         {i.name} {i.surname}
@@ -339,23 +333,27 @@ export default function AlluserInSetting({}) {
                             : "ไม่มีข้อมูล"}
                         </span>
                       </td>
-                      <td className="success">
-                        <a
-                          className="info"
+                      <td className="buttongroup-in-table">
+                        <button
+                          className="icon-container-out"
                           onClick={() =>
                             navigate("/settingnoti", {
                               state: {
                                 id: i._id,
                                 name: i.name,
                                 surname: i.surname,
-                                gender:i.gender,
-                                birthday:i.birthday,
+                                gender: i.gender,
+                                birthday: i.birthday,
                               },
                             })
                           }
                         >
-                          ตั้งค่าการแจ้งเตือน
-                        </a>
+                            {/* <div className="icon-container">
+                              <i className="bi bi-bell icon-bell"></i> */}
+                              <i className="bi bi-gear icon-gear"></i>
+                            {/* </div> */}
+                          {/* ตั้งค่าการแจ้งเตือน */}
+                        </button>
                       </td>
                     </tr>
                   ))

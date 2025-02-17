@@ -1,0 +1,68 @@
+.caremanual-table {
+    width: 80%;
+    border-collapse: collapse;
+    margin :0 auto;
+    box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.1); 
+    padding: 15px; 
+    border-collapse: collapse; 
+    border-spacing: 1; 
+    border-radius: 0.5rem; 
+    line-height: 2rem;
+  }
+  .caremanual-table th{
+    font-size: 1rem;
+    background-color: #87CEFA;
+    color: #000;
+    text-transform: uppercase;
+    border-bottom: 2px solid #87CEFA; 
+  }
+
+  .caremanual-table th:first-child {
+    border-top-left-radius: 0.5rem;
+  }
+  
+  .caremanual-table th:last-child {
+    border-top-right-radius: 0.5rem;
+  }
+  
+  .caremanual-table th,
+  .caremanual-table td {
+    padding: 10px;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+    word-wrap: break-word;
+    white-space: normal;
+  }
+  
+  .caremanual-table th:nth-child(1),
+  .caremanual-table td:first-child {
+    width: 40%; 
+    min-width: 150px;
+  }
+  
+  .caremanual-table th:nth-child(2),
+  .caremanual-table th:nth-child(3),
+  .caremanual-table td:nth-child(2),
+  .caremanual-table td:nth-child(3) {
+    width: 25%;
+    min-width: 120px;
+    text-align: center;
+  }
+  
+  .caremanual-table th:nth-child(4),
+  .caremanual-table td.buttongroup-in-table {
+    width: 10%;
+    min-width: 90px;
+    text-align: center;
+    white-space: nowrap;
+  }
+  
+  .caremanual-table .buttongroup-in-table button {
+    margin: 0 3px;
+    padding: 5px 8px;
+  }
+  
+  .caremanual-table th i.bi-caret-up-fill,
+.caremanual-table th i.bi-caret-down-fill {
+  color: #757575; 
+}

@@ -32,7 +32,7 @@ export default function VerifyOtp() {
       const newOtp = [...otp];
       newOtp[index] = element.value;
       setOtp(newOtp);
-
+      setErrorMessage('');
       // เลื่อนไปยังช่องถัดไปอัตโนมัติ
       if (element.nextSibling && element.value) {
         element.nextSibling.focus();

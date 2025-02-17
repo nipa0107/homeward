@@ -7,6 +7,7 @@ import { useNavigate } from "react-router-dom";
 import { useLocation } from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import Select from "react-select";
 
 export default function AddMedicalInformation() {
   const [data, setData] = useState([]);
@@ -37,7 +38,22 @@ export default function AddMedicalInformation() {
   const [pdfURL3, setPdfURL3] = useState(null);
   const [selectedPersonnel, setSelectedPersonnel] = useState("");
   const { state } = useLocation();
+  const [searchTerm, setSearchTerm] = useState("");
+  const [filteredPersonnel, setFilteredPersonnel] = useState([]);
 
+  useEffect(() => {
+    setFilteredPersonnel(data);
+  }, [data]);
+
+  const handleSearchChange = (inputValue) => {
+    setSearchTerm(inputValue);
+    const filtered = data.filter((personnel) =>
+      `${personnel.nametitle} ${personnel.name} ${personnel.surname}`
+        .toLowerCase()
+        .includes(inputValue.toLowerCase())
+    );
+    setFilteredPersonnel(filtered);
+  };
 
   useEffect(() => {
     const token = window.localStorage.getItem("token");
@@ -100,8 +116,8 @@ export default function AddMedicalInformation() {
         if (data.status === "ok") {
           toast.success("เพิ่มข้อมูลสำเร็จ");
           setTimeout(() => {
-          navigate("/allinfo", { state: { id } });
-        },1050); 
+            navigate("/allinfo", { state: { id } });
+          }, 1050);
         }
       })
       .catch((error) => {
@@ -197,13 +213,13 @@ export default function AddMedicalInformation() {
           <li>
             <a href="allsymptom" onClick={() => navigate("/allsymptom")}>
               <i className="bi bi-bandaid"></i>
-              <span className="links_name" >จัดการอาการผู้ป่วย</span>
+              <span className="links_name">จัดการอาการผู้ป่วย</span>
             </a>
           </li>
           <li>
-            <a href="/alluserinsetting" >
-            <i className="bi bi-bell"></i>              
-            <span className="links_name" >ตั้งค่าการแจ้งเตือน</span>
+            <a href="/alluserinsetting">
+              <i className="bi bi-bell"></i>
+              <span className="links_name">ตั้งค่าการแจ้งเตือน</span>
             </a>
           </li>
           <li>
@@ -233,20 +249,20 @@ export default function AddMedicalInformation() {
         </ul>
       </div>
       <div className="home_content">
-      <div className="homeheader">
-        <div className="header">จัดการข้อมูลผู้ป่วย</div>
-        <div className="profile_details">
-        <ul className="nav-list">
-          <li>
-            <a href="profile">
-              <i className="bi bi-person"></i>
-              <span className="links_name">
-                {adminData && adminData.username}
-              </span>
-            </a>
-          </li>
-          </ul>
-        </div>
+        <div className="homeheader">
+          <div className="header">จัดการข้อมูลผู้ป่วย</div>
+          <div className="profile_details">
+            <ul className="nav-list">
+              <li>
+                <a href="profile">
+                  <i className="bi bi-person"></i>
+                  <span className="links_name">
+                    {adminData && adminData.username}
+                  </span>
+                </a>
+              </li>
+            </ul>
+          </div>
         </div>
         <div className="breadcrumbs">
           <ul>
@@ -265,7 +281,12 @@ export default function AddMedicalInformation() {
               <i className="bi bi-chevron-double-right"></i>
             </li>
             <li>
-              <a href="allinfo" onClick={() => navigate("/allinfo", { state: { id } })} >ข้อมูลการดูแลผู้ป่วย</a>
+              <a
+                href="allinfo"
+                onClick={() => navigate("/allinfo", { state: { id } })}
+              >
+                ข้อมูลการดูแลผู้ป่วย
+              </a>
             </li>
             <li className="arrow">
               <i className="bi bi-chevron-double-right"></i>
@@ -278,7 +299,7 @@ export default function AddMedicalInformation() {
         <h3>เพิ่มข้อมูลการเจ็บป่วย</h3>
         <div className="adminall card mb-3">
           <form onSubmit={handleSubmit}>
-            <div className="mb-1">
+            <div className="mb-2">
               <label>HN</label>
               <input
                 type="text"
@@ -286,7 +307,7 @@ export default function AddMedicalInformation() {
                 onChange={(e) => setHN(e.target.value)}
               />
             </div>
-            <div className="mb-1">
+            <div className="mb-2">
               <label>AN</label>
               <input
                 type="text"
@@ -295,7 +316,7 @@ export default function AddMedicalInformation() {
               />
             </div>
 
-            <div className="mb-1">
+            <div className="mb-2">
               <label>วันที่ Admit </label>
               <input
                 type="date"
@@ -304,7 +325,7 @@ export default function AddMedicalInformation() {
               />
             </div>
 
-            <div className="mb-1">
+            <div className="mb-2">
               <label>วันที่ D/C</label>
               <input
                 type="date"
@@ -313,7 +334,7 @@ export default function AddMedicalInformation() {
               />
             </div>
 
-            <div className="mb-1">
+            {/* <div className="mb-2">
               <label>แพทย์ผู้ดูแล</label>
               <select
                 className="form-select"
@@ -331,29 +352,54 @@ export default function AddMedicalInformation() {
                   <option value="">ไม่มีข้อมูลแพทย์</option>
                 )}
               </select>
+            </div> */}
+            <div className="mb-2">
+              <label>แพทย์ผู้ดูแล</label>
+              <Select
+                options={filteredPersonnel.map((personnel) => ({
+                  value: personnel._id,
+                  label: `${personnel.nametitle} ${personnel.name} ${personnel.surname}`,
+                }))}
+                onInputChange={handleSearchChange}
+                onChange={(selectedOption) => {
+                  setSelectedPersonnel(
+                    selectedOption ? selectedOption.value : null
+                  );
+                  setSearchTerm("");
+                }}
+                placeholder="ค้นหาแพทย์..."
+                isSearchable
+                isClearable
+                className="custom-select"
+                classNamePrefix="custom"
+                noOptionsMessage={() => "ไม่มีข้อมูลแพทย์"}
+              />
+              {filteredPersonnel.length === 0 && searchTerm && (
+                <div className="no-results">ไม่มีข้อมูลแพทย์</div>
+              )}
             </div>
 
-            <div className="mb-1">
+            <div className="mb-2">
               <label>Diagnosis</label>
               <textarea
                 className="form-control"
-                rows="3" // กำหนดจำนวนแถวเริ่มต้น
+                rows="2" // กำหนดจำนวนแถวเริ่มต้น
                 style={{ resize: "vertical" }} // ให้ textarea สามารถปรับขนาดได้ในทิศทางดิสพล์เมนต์
                 onChange={(e) => setDiagnosis(e.target.value)}
               />
             </div>
 
-            <div className="mb-1">
+            <div className="mb-2">
               <label>Chief complaint</label>
               <textarea
                 className="form-control"
-                rows="3" // กำหนดจำนวนแถวเริ่มต้น
+                rows="2" // กำหนดจำนวนแถวเริ่มต้น
                 style={{ resize: "vertical" }}
                 onChange={(e) => setChief_complaint(e.target.value)}
               />
             </div>
 
-            <div className="mb-1">
+            <div className="mb-2">
               <label>Present illness</label>
               <input
                 type="file"
@@ -364,10 +410,11 @@ export default function AddMedicalInformation() {
               <div className="filename ">
                 {selectedFileName1 && (
                   <div className="mb-3 pdf">
-
                     <a href={pdfURL1} target="_blank" rel="noopener noreferrer">
-                                 <i className="bi bi-filetype-pdf" style={{ color: "red" }}></i>{" "}
-
+                      <i
+                        className="bi bi-filetype-pdf"
+                        style={{ color: "red" }}
+                      ></i>{" "}
                       {selectedFileName1}
                     </a>
                   </div>
@@ -376,13 +423,13 @@ export default function AddMedicalInformation() {
 
               <textarea
                 className="form-control"
-                rows="3" // กำหนดจำนวนแถวเริ่มต้น
+                rows="2" // กำหนดจำนวนแถวเริ่มต้น
                 style={{ resize: "vertical" }}
                 onChange={(e) => setPresent_illness(e.target.value)}
               />
             </div>
 
-            <div className="mb-1">
+            <div className="mb-2">
               <label>Management plan</label>
               <input
                 type="file"
@@ -401,13 +448,13 @@ export default function AddMedicalInformation() {
               </div>
               <textarea
                 className="form-control"
-                rows="3" // กำหนดจำนวนแถวเริ่มต้น
+                rows="2" // กำหนดจำนวนแถวเริ่มต้น
                 style={{ resize: "vertical" }}
                 onChange={(e) => setManagement_plan(e.target.value)}
               />
             </div>
 
-            <div className="mb-1">
+            <div className="mb-2">
               <label>Psychosocial assessment</label>
 
               <input
@@ -427,7 +474,7 @@ export default function AddMedicalInformation() {
               </div>
               <textarea
                 className="form-control"
-                rows="3" // กำหนดจำนวนแถวเริ่มต้น
+                rows="1" // กำหนดจำนวนแถวเริ่มต้น
                 style={{ resize: "vertical" }}
                 onChange={(e) => setPhychosocial_assessment(e.target.value)}
               />

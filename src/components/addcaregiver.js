@@ -3,7 +3,7 @@ import "../css/sidebar.css";
 import "../css/alladmin.css";
 import "bootstrap-icons/font/bootstrap-icons.css";
 import logow from "../img/logow.png";
-import { useNavigate , useLocation } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import th from "date-fns/locale/th";
@@ -14,7 +14,7 @@ import "react-toastify/dist/ReactToastify.css";
 export default function AddCaregiver() {
   const navigate = useNavigate();
   const location = useLocation();
-  const { id } = location.state || {};  
+  const { id } = location.state || {};
   const userId = location.state?.userId;
   const [adminData, setAdminData] = useState("");
   const [isActive, setIsActive] = useState(false);
@@ -34,32 +34,31 @@ export default function AddCaregiver() {
   const [telError, setTelError] = useState("");
   const [nameError, setNameError] = useState("");
   const [surnameError, setSurnameError] = useState("");
-  const [isDataFetched, setIsDataFetched] = useState(false);  // เพิ่ม state เพื่อเก็บสถานะการดึงข้อมูล
+  const [isDataFetched, setIsDataFetched] = useState(false); // เพิ่ม state เพื่อเก็บสถานะการดึงข้อมูล
 
-    useEffect(() => {
-      const token = window.localStorage.getItem("token");
-      setToken(token);
-      if (token) {
-        fetch("http://localhost:5000/profile", {
-          method: "POST",
-          crossDomain: true,
-          headers: {
-            "Content-Type": "application/json",
-            Accept: "application/json",
-            "Access-Control-Allow-Origin": "*",
-          },
-          body: JSON.stringify({
-            token: token,
-          }),
-        })
-          .then((res) => res.json())
-          .then((data) => {
-            console.log(data);
-            setAdminData(data.data);
-          });
-      }
-    }, []);
-  
+  useEffect(() => {
+    const token = window.localStorage.getItem("token");
+    setToken(token);
+    if (token) {
+      fetch("http://localhost:5000/profile", {
+        method: "POST",
+        crossDomain: true,
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "application/json",
+          "Access-Control-Allow-Origin": "*",
+        },
+        body: JSON.stringify({
+          token: token,
+        }),
+      })
+        .then((res) => res.json())
+        .then((data) => {
+          console.log(data);
+          setAdminData(data.data);
+        });
+    }
+  }, []);
 
   // const handleChange = (e) => {
   //   const { name, value } = e.target;
@@ -73,7 +72,10 @@ export default function AddCaregiver() {
     if (!cleanedUsername.trim()) {
       setUsernameError("กรุณากรอกเลขประจำตัวบัตรประชาชน");
       hasError = true;
-    } else if (cleanedUsername.length !== 13 || !/^\d+$/.test(cleanedUsername)) {
+    } else if (
+      cleanedUsername.length !== 13 ||
+      !/^\d+$/.test(cleanedUsername)
+    ) {
       setUsernameError("เลขประจำตัวบัตรประชาชนต้องเป็นตัวเลข 13 หลัก");
       hasError = true;
     } else {
@@ -100,15 +102,15 @@ export default function AddCaregiver() {
     } else {
       setNameError("");
     }
-  
+
     if (!formData.surname.trim()) {
       setSurnameError("กรุณากรอกนามสกุล");
       hasError = true;
     } else {
       setSurnameError("");
     }
-  
-    if (hasError) return; 
+
+    if (hasError) return;
     const updatedFormData = { ...formData, ID_card_number: cleanedUsername };
 
     try {
@@ -123,9 +125,9 @@ export default function AddCaregiver() {
         toast.success("เพิ่มข้อมูลสำเร็จ");
         console.log("Navigating to /allinfo with ID:", userId);
         setTimeout(() => {
-            navigate("/allinfo", { state: { id: id } });
-          }, 1000);
-    } else {
+          navigate("/allinfo", { state: { id: id } });
+        }, 1000);
+      } else {
         // setError(data.error);
         toast.error(data.error);
       }
@@ -144,7 +146,7 @@ export default function AddCaregiver() {
     setIsActive(!isActive);
   };
   const handleBreadcrumbClick = () => {
-    navigate("/allinfo", { state: {id:id} });
+    navigate("/allinfo", { state: { id: id } });
   };
   const handleRelationshipChange = (e) => {
     const value = e.target.value;
@@ -162,21 +164,21 @@ export default function AddCaregiver() {
     setFormData((prev) => ({ ...prev, Relationship: value })); // อัปเดต Relationship ด้วยค่าอื่นๆ
   };
 
-  const handleChange  = async (e) => {
+  const handleChange = async (e) => {
     const { name, value } = e.target;
-  
+
     setFormData((prev) => ({ ...prev, [name]: value }));
-   
-      // หากลบเลขบัตรออก ให้เคลียร์ข้อมูลที่ดึงมา
-  if (name === "ID_card_number" && value === "") {
-    setFormData((prev) => ({
-      ...prev,
-      name: "",
-      surname: "",
-      tel: "",
-    }));
-    setIsDataFetched(false); // ไม่ให้ดึงข้อมูลใหม่จนกว่าจะกรอกเลขบัตร
-  }
+
+    // หากลบเลขบัตรออก ให้เคลียร์ข้อมูลที่ดึงมา
+    if (name === "ID_card_number" && value === "") {
+      setFormData((prev) => ({
+        ...prev,
+        name: "",
+        surname: "",
+        tel: "",
+      }));
+      setIsDataFetched(false); // ไม่ให้ดึงข้อมูลใหม่จนกว่าจะกรอกเลขบัตร
+    }
 
     if (name === "tel") {
       // ตรวจสอบเบอร์โทรศัพท์
@@ -201,11 +203,12 @@ export default function AddCaregiver() {
         }
       );
       setFormData((prev) => ({ ...prev, [name]: formatted }));
-      setUsernameError(input.length === 13 ? "" : "เลขประจำตัวประชาชนไม่ครบ 13 หลัก");
+      setUsernameError(
+        input.length === 13 ? "" : "เลขประจำตัวประชาชนไม่ครบ 13 หลัก"
+      );
     } else if (name === "name" || name === "surname") {
       // ตรวจสอบชื่อและนามสกุล
-      if (/[^ก-๙\s]/.test(value)
-) {
+      if (/[^ก-๙a-zA-Z\s]/.test(value)) {
         if (name === "name") {
           setNameError("ชื่อควรเป็นตัวอักษรเท่านั้น");
         } else {
@@ -217,14 +220,20 @@ export default function AddCaregiver() {
       }
     }
 
-    if (name === "ID_card_number" && (value.length === 17 || value.length === 13|| value.length === 16)) {
+    if (
+      name === "ID_card_number" &&
+      (value.length === 17 || value.length === 13 || value.length === 16)
+    ) {
       try {
         const cleanedId = value.replace(/-/g, "");
-        const response = await fetch(`http://localhost:5000/getCaregiverById/${cleanedId}`, {
-          method: "GET",
-          headers: { "Content-Type": "application/json" },
-        });
-  
+        const response = await fetch(
+          `http://localhost:5000/getCaregiverById/${cleanedId}`,
+          {
+            method: "GET",
+            headers: { "Content-Type": "application/json" },
+          }
+        );
+
         const data = await response.json();
         if (data.status === "Ok") {
           // หากเจอข้อมูล อัปเดตฟอร์มด้วยชื่อ-นามสกุลที่ได้
@@ -232,18 +241,18 @@ export default function AddCaregiver() {
             ...prev,
             name: data.caregiver.name || "",
             surname: data.caregiver.surname || "",
-            tel: data.caregiver.tel || "", 
+            tel: data.caregiver.tel || "",
           }));
-          setIsDataFetched(true); 
+          setIsDataFetched(true);
         } else {
           // toast.error("ไม่พบข้อมูลผู้ดูแลสำหรับเลขบัตรนี้");
           setFormData((prev) => ({
             ...prev,
             name: "",
             surname: "",
-            tel:"",
+            tel: "",
           }));
-          setIsDataFetched(false); 
+          setIsDataFetched(false);
         }
       } catch (error) {
         console.error("Error fetching caregiver data:", error);
@@ -251,9 +260,9 @@ export default function AddCaregiver() {
       }
     }
   };
-  
+
   return (
-     <main className="body">
+    <main className="body">
       <ToastContainer />
       <div className={`sidebar ${isActive ? "active" : ""}`}>
         <div className="logo_content">
@@ -268,7 +277,9 @@ export default function AddCaregiver() {
           <li>
             <a href="home">
               <i className="bi bi-book"></i>
-              <span className="links_name">จัดการข้อมูลคู่มือการดูแลผู้ป่วย</span>
+              <span className="links_name">
+                จัดการข้อมูลคู่มือการดูแลผู้ป่วย
+              </span>
             </a>
           </li>
           <li>
@@ -328,21 +339,22 @@ export default function AddCaregiver() {
         </ul>
       </div>
       <div className="home_content">
-      <div className="homeheader">
-        <div className="header">จัดการข้อมูลผู้ป่วย</div>
-        <div className="profile_details ">
-        <ul className="nav-list">
-
-          <li>
-            <a href="profile">
-              <i className="bi bi-person"></i>
-              <span className="links_name">{adminData && adminData.username}</span>
-            </a>
-          </li>
-          </ul>
+        <div className="homeheader">
+          <div className="header">จัดการข้อมูลผู้ป่วย</div>
+          <div className="profile_details ">
+            <ul className="nav-list">
+              <li>
+                <a href="profile">
+                  <i className="bi bi-person"></i>
+                  <span className="links_name">
+                    {adminData && adminData.username}
+                  </span>
+                </a>
+              </li>
+            </ul>
+          </div>
         </div>
-      </div>
-      <div className="breadcrumbs">
+        <div className="breadcrumbs">
           <ul>
             <li>
               <a href="home">
@@ -352,13 +364,16 @@ export default function AddCaregiver() {
             <li className="arrow">
               <i className="bi bi-chevron-double-right"></i>
             </li>
-            <li><a href="alluser">จัดการข้อมูลผู้ป่วย</a>
+            <li>
+              <a href="alluser">จัดการข้อมูลผู้ป่วย</a>
             </li>
             <li className="arrow">
               <i className="bi bi-chevron-double-right"></i>
             </li>
             <li>
-              <a onClick={handleBreadcrumbClick} className="info">ข้อมูลการดูแลผู้ป่วย</a>
+              <a onClick={handleBreadcrumbClick} className="info">
+                ข้อมูลการดูแลผู้ป่วย
+              </a>
               {/* <a href="allinfo">ข้อมูลการดูแลผู้ป่วย</a> */}
             </li>
             <li className="arrow">
@@ -369,164 +384,172 @@ export default function AddCaregiver() {
             </li>
           </ul>
         </div>
-      <h3>เพิ่มข้อมูลผู้ดูแล</h3>
-      <div className="adminall card mb-1">
-
-      <form>
-      <div className="mb-1">
-          <label>เลขประจําตัวประชาชน<span className="required"> *</span></label>
-          <input
-            type="text"
-            className={`form-control ${usernameError ? "input-error" : ""}`}
-            name="ID_card_number"
-            value={formData.ID_card_number}
-            onChange={handleChange }
-            onPaste={(e) => handleChange(e)}
-          />
-          {usernameError && <span className="error-text">{usernameError}</span>}
-
-        </div>
-      <div className="mb-1">
-          <label>ชื่อ<span className="required"> *</span></label>
-          <input
-            type="text"
-            className={`form-control ${nameError ? "input-error" : ""}`}
-            name="name"
-            value={formData.name}
-            disabled={isDataFetched}             
-            onChange={handleChange}
-          />
-          {nameError && <span className="error-text">{nameError}</span>}
-
-        </div>
-        <div className="mb-1">
-          <label>นามสกุล<span className="required"> *</span></label>
-          <input
-            type="text"
-            className={`form-control ${surnameError ? "input-error" : ""}`}
-
-            name="surname"
-            value={formData.surname}
-            disabled={isDataFetched}            
-            onChange={handleChange}
-          />
-                         {surnameError && <span className="error-text">{surnameError}</span>}
-
-        </div>
-        <div className="mb-1">
-        <label>ความสัมพันธ์</label>
-        <div class="relationship-container">
-        <div class="relationship-group">
-            <div>
+        <h3>เพิ่มข้อมูลผู้ดูแล</h3>
+        <div className="adminall card mb-1">
+          <form>
+            <div className="mb-1">
               <label>
-                <input
-                  type="radio"
-                  value="พ่อ"
-                  checked={formData.Relationship === "พ่อ"} 
-                  onChange={handleRelationshipChange}
-                />
-                พ่อ
+                เลขประจําตัวประชาชน<span className="required"> *</span>
               </label>
-            </div>
-            <div>
-              <label>
-                <input
-                  type="radio"
-                  value="แม่"
-                  checked={formData.Relationship=== "แม่"}
-                  onChange={handleRelationshipChange}
-                />
-                แม่
-              </label>
-            </div>
-            <div>
-              <label>
-                <input
-                  type="radio"
-                  value="ลูก"
-                  checked={formData.Relationship === "ลูก"}
-                  onChange={handleRelationshipChange}
-                />
-                ลูก
-              </label>
-            </div>
-            <div>
-              <label>
-                <input
-                  type="radio"
-                  value="ภรรยา"
-                  checked={formData.Relationship === "ภรรยา"}
-                  onChange={handleRelationshipChange}
-                />
-                ภรรยา
-              </label>
-            </div>
-            <div>
-              <label>
-                <input
-                  type="radio"
-                  value="สามี"
-                  checked={formData.Relationship === "สามี"}
-                  onChange={handleRelationshipChange}
-                />
-                สามี
-              </label>
-            </div>
-            <div>
-              <label>
-                <input
-                  type="radio"
-                  value="อื่นๆ"
-                  checked={showOtherInput}
-                  onChange={handleRelationshipChange}
-                />
-                อื่นๆ
-              </label>
-              </div>
-              </div>
-              {showOtherInput && (
-                <div className="mt-2">
-                  <label>กรุณาระบุ:</label>
-                  <input
-                    type="text"
-                    className="form-control"
-                    value={otherRelationship}
-                    onChange={handleOtherRelationshipChange}
-                  />
-                </div>
+              <input
+                type="text"
+                className={`form-control ${usernameError ? "input-error" : ""}`}
+                name="ID_card_number"
+                value={formData.ID_card_number}
+                onChange={handleChange}
+                onPaste={(e) => handleChange(e)}
+              />
+              {usernameError && (
+                <span className="error-text">{usernameError}</span>
               )}
             </div>
-          </div>
-        <div className="mb-1">
-          <label>เบอร์โทรศัพท์<span className="required"> *</span></label>
-          <input
-            type="text"
-            className={`form-control ${telError ? "input-error" : ""}`}
-            name="tel"
-            maxLength="10"
-            value={formData.tel}
-            disabled={isDataFetched}          
-            onChange={handleChange}
-          />
-                        {telError && <span className="error-text">{telError}</span>}
-
-        </div>
-        {/* <p id="errormessage" className="errormessage">
+            <div className="mb-1">
+              <label>
+                ชื่อ<span className="required"> *</span>
+              </label>
+              <input
+                type="text"
+                className={`form-control ${nameError ? "input-error" : ""}`}
+                name="name"
+                value={formData.name}
+                disabled={isDataFetched}
+                onChange={handleChange}
+              />
+              {nameError && <span className="error-text">{nameError}</span>}
+            </div>
+            <div className="mb-1">
+              <label>
+                นามสกุล<span className="required"> *</span>
+              </label>
+              <input
+                type="text"
+                className={`form-control ${surnameError ? "input-error" : ""}`}
+                name="surname"
+                value={formData.surname}
+                disabled={isDataFetched}
+                onChange={handleChange}
+              />
+              {surnameError && (
+                <span className="error-text">{surnameError}</span>
+              )}
+            </div>
+            <div className="mb-1">
+              <label>ความสัมพันธ์</label>
+              <div class="relationship-container">
+                <div class="relationship-group">
+                  <div>
+                    <label>
+                      <input
+                        type="radio"
+                        value="พ่อ"
+                        checked={formData.Relationship === "พ่อ"}
+                        onChange={handleRelationshipChange}
+                      />
+                      พ่อ
+                    </label>
+                  </div>
+                  <div>
+                    <label>
+                      <input
+                        type="radio"
+                        value="แม่"
+                        checked={formData.Relationship === "แม่"}
+                        onChange={handleRelationshipChange}
+                      />
+                      แม่
+                    </label>
+                  </div>
+                  <div>
+                    <label>
+                      <input
+                        type="radio"
+                        value="ลูก"
+                        checked={formData.Relationship === "ลูก"}
+                        onChange={handleRelationshipChange}
+                      />
+                      ลูก
+                    </label>
+                  </div>
+                  <div>
+                    <label>
+                      <input
+                        type="radio"
+                        value="ภรรยา"
+                        checked={formData.Relationship === "ภรรยา"}
+                        onChange={handleRelationshipChange}
+                      />
+                      ภรรยา
+                    </label>
+                  </div>
+                  <div>
+                    <label>
+                      <input
+                        type="radio"
+                        value="สามี"
+                        checked={formData.Relationship === "สามี"}
+                        onChange={handleRelationshipChange}
+                      />
+                      สามี
+                    </label>
+                  </div>
+                  <div>
+                    <label>
+                      <input
+                        type="radio"
+                        value="อื่นๆ"
+                        checked={showOtherInput}
+                        onChange={handleRelationshipChange}
+                      />
+                      อื่นๆ
+                    </label>
+                  </div>
+                </div>
+                {showOtherInput && (
+                  <div className="mt-2">
+                    <label>กรุณาระบุ:</label>
+                    <input
+                      type="text"
+                      className="form-control"
+                      value={otherRelationship}
+                      onChange={handleOtherRelationshipChange}
+                    />
+                  </div>
+                )}
+              </div>
+            </div>
+            <div className="mb-1">
+              <label>
+                เบอร์โทรศัพท์<span className="required"> *</span>
+              </label>
+              <input
+                type="text"
+                className={`form-control ${telError ? "input-error" : ""}`}
+                name="tel"
+                maxLength="10"
+                value={formData.tel}
+                disabled={isDataFetched}
+                onChange={handleChange}
+              />
+              {telError && <span className="error-text">{telError}</span>}
+            </div>
+            {/* <p id="errormessage" className="errormessage">
               {error}
             </p> */}
-        <div className="d-grid">
-        <button type="submit"  className="btn btn-outline py-2"  onClick={handleSave}>
-          บันทึก
-        </button>
-        </div>
-        {/* <button type="button" onClick={() => navigate(-1)}>
+            <div className="d-grid">
+              <button
+                type="submit"
+                className="btn btn-outline py-2"
+                onClick={handleSave}
+              >
+                บันทึก
+              </button>
+            </div>
+            {/* <button type="button" onClick={() => navigate(-1)}>
           ยกเลิก
         </button> */}
-      </form>
+          </form>
+        </div>
       </div>
-      </div>
-      
     </main>
-
   );
 }

@@ -1,27 +1,22 @@
 import React, { useEffect, useState } from "react";
-import deleteimg from "../img/delete.png";
-import editimg from "../img/edit.png";
 import "../css/alladmin.css";
 import "../css/sidebar.css";
 import "../css/styles.css";
 import logow from "../img/logow.png";
 import { useNavigate } from "react-router-dom";
 import { useLocation } from "react-router-dom";
-import { ToastContainer, toast } from "react-toastify";
 
-export default function AllInfoDeleted({}) {
+export default function AllInfoDeleted() {
   const navigate = useNavigate();
   const [data, setData] = useState([]);
   const [adminData, setAdminData] = useState("");
   const [isActive, setIsActive] = useState(false);
-  const [searchKeyword, setSearchKeyword] = useState(""); //ค้นหา
   const [token, setToken] = useState("");
   const location = useLocation();
   const { id } = location.state;
   const [username, setUsername] = useState("");
   const [name, setName] = useState("");
   const [surname, setSurName] = useState("");
-  // const [email, setEmail] = useState("");
   const [tel, setTel] = useState("");
   const [gender, setGender] = useState("");
   const [birthday, setBirthday] = useState("");
@@ -40,7 +35,6 @@ export default function AllInfoDeleted({}) {
   const [selectedEquipments, setSelectedEquipments] = useState([]);
   const [error, setError] = useState("");
   const [caregiverInfo, setCaregiverInfo] = useState(null);
-  const [currentIndex, setCurrentIndex] = useState(0);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedCaregiver, setSelectedCaregiver] = useState(null);
   const [formData, setFormData] = useState({
@@ -56,28 +50,6 @@ export default function AllInfoDeleted({}) {
     return id.replace(/(\d{1})(\d{4})(\d{5})(\d{2})(\d{1})/, "$1-$2-$3-$4-$5");
   };
   
-  const handleAddCaregiver = () => {
-    navigate("/addcaregiver", { state: { userId: id, id } }); // `userId` อาจเป็น ID ของผู้ป่วย
-  };
-
-  const handleEdit = (caregiver) => {
-    console.log("caregiver ที่กำลังแก้ไข:", caregiver);
-    navigate("/updatecaregiver", { state: { caregiver, id }});
-    setSelectedCaregiver(caregiver);
-    setFormData({
-      user: caregiver.user || "",
-      name: caregiver.name || "",
-      surname: caregiver.surname || "",
-      tel: caregiver.tel || "",
-      Relationship: caregiver.Relationship || "",
-    });
-  };
-
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData((prev) => ({ ...prev, [name]: value }));
-  };
-
   useEffect(() => {
     const token = window.localStorage.getItem("token");
     setToken(token);
@@ -202,135 +174,6 @@ export default function AllInfoDeleted({}) {
     fetchData();
   }, [medicalInfo]);
 
-  // const deleteUser = async () => {
-  //   if (window.confirm(`คุณต้องการลบ ${username} หรือไม่ ?`)) {
-  //     try {
-  //       const response = await fetch(`http://localhost:5000/deleteUser/${id}`, {
-  //         method: "DELETE",
-  //         headers: {
-  //           "Content-Type": "application/json",
-  //           Accept: "application/json",
-  //           Authorization: `Bearer ${token}`,
-  //         },
-  //       });
-
-  //       const data = await response.json();
-
-  //       if (response.ok) {
-  //         alert(data.data);
-  //         navigate("/alluser");
-  //       } else {
-  //         console.error("Error during deletion:", data.data);
-  //       }
-  //     } catch (error) {
-  //       console.error("Error during fetch:", error);
-  //     }
-  //   }
-  // };
-  const deleteUser = async () => {
-    const adminPassword = prompt("กรุณากรอกรหัสผ่านของคุณเพื่อยืนยันการลบ:");
-
-    if (!adminPassword) {
-      alert("การลบถูกยกเลิกเนื่องจากไม่ได้กรอกรหัสผ่าน");
-      return;
-    }
-
-    if (window.confirm(`คุณต้องการลบ ${username} หรือไม่ ?`)) {
-      try {
-        const response = await fetch(`http://localhost:5000/deleteUser/${id}`, {
-          method: "DELETE",
-          headers: {
-            "Content-Type": "application/json",
-            Accept: "application/json",
-            Authorization: `Bearer ${token}`, // ใช้ token ของ Admin
-          },
-          body: JSON.stringify({
-            adminPassword,
-            adminId: adminData._id, // ส่ง ID ของ Admin ที่เข้าสู่ระบบ
-          }),
-        });
-
-        const data = await response.json();
-
-        if (response.ok) {
-          // alert(data.data);
-          toast.success("ลบข้อมูลผู้ป่วยสำเร็จ");
-          setTimeout(() => {
-            navigate("/alluser");
-          }, 1050);
-        } else {
-          // setError(data.error);
-
-          alert(data.data);
-          console.error("Error during deletion:", data.data);
-        }
-      } catch (error) {
-        console.error("Error during fetch:", error);
-      }
-    }
-  };
-
-  const handleDeleteEquipment = async (equipmentName) => {
-    if (window.confirm(`คุณต้องการลบอุปกรณ์ ${equipmentName} หรือไม่?`)) {
-      try {
-        const response = await fetch(
-          `http://localhost:5000/deleteEquipuser/${id}`,
-          {
-            method: "DELETE",
-            headers: {
-              "Content-Type": "application/json",
-              Accept: "application/json",
-              Authorization: `Bearer ${token}`,
-            },
-            body: JSON.stringify({ equipmentName, userId: id }),
-          }
-        );
-
-        const data = await response.json();
-
-        if (response.ok) {
-          alert(data.message);
-          // รีเฟรชหน้าหลังจากลบข้อมูล
-          window.location.reload();
-        } else {
-          console.error("Error during deletion:", data.message);
-        }
-      } catch (error) {
-        console.error("Error during fetch:", error);
-      }
-    }
-  };
-
-  const handleDeleteMedicalInfo = async () => {
-    if (window.confirm("คุณต้องการลบข้อมูลการเจ็บป่วยหรือไม่?")) {
-      try {
-        const response = await fetch(
-          `http://localhost:5000/deletemedicalInformation/${id}`,
-          {
-            method: "DELETE",
-            headers: {
-              "Content-Type": "application/json",
-              Authorization: `Bearer ${token}`,
-            },
-          }
-        );
-
-        const data = await response.json();
-        if (response.ok) {
-          alert(data.message);
-          window.location.reload(); // รีเฟรชหน้าหลังจากลบข้อมูล
-        } else {
-          console.error("Error during deletion:", data.message);
-        }
-      } catch (error) {
-        console.error("Error during fetch:", error);
-      }
-    }
-  };
-
-  const handleViewPDF = () => {
-    // ทำการเรียกดูไฟล์ PDF ที่เกี่ยวข้อง
-  };
 
   const logOut = () => {
     window.localStorage.clear();
@@ -360,104 +203,8 @@ export default function AllInfoDeleted({}) {
 
   console.log(userAge); // แสดงผลอายุผู้ใช้
 
-  const handleCheckboxChange = (equipmentName) => {
-    setSelectedEquipments((prevSelected) =>
-      prevSelected.includes(equipmentName)
-        ? prevSelected.filter((name) => name !== equipmentName)
-        : [...prevSelected, equipmentName]
-    );
-  };
-
-  const handleDeleteSelected = async () => {
-    if (selectedEquipments.length === 0) {
-      alert("กรุณาเลือกอุปกรณ์ที่ต้องการลบ");
-      return;
-    }
-
-    if (window.confirm(`คุณต้องการลบอุปกรณ์ที่เลือกหรือไม่?`)) {
-      try {
-        const response = await fetch(
-          `http://localhost:5000/deleteEquipuser/${id}`,
-          {
-            method: "DELETE",
-            headers: {
-              "Content-Type": "application/json",
-              Accept: "application/json",
-              Authorization: `Bearer ${token}`,
-            },
-            body: JSON.stringify({
-              equipmentNames: selectedEquipments,
-              userId: id,
-            }),
-          }
-        );
-
-        const data = await response.json();
-
-        if (response.ok) {
-          alert(data.message);
-          // รีเฟรชหน้าหลังจากลบข้อมูล
-          window.location.reload();
-        } else {
-          console.error("Error during deletion:", data.message);
-        }
-      } catch (error) {
-        console.error("Error during fetch:", error);
-      }
-    }
-  };
-
-  const handleDelete = async (caregiverId) => {
-    if (window.confirm("คุณต้องการลบข้อมูลผู้ดูแลนี้หรือไม่?")) {
-      try {
-        const response = await fetch(`http://localhost:5000/deletecaregiver`, {
-          method: "POST", // ใช้ POST หรือ DELETE ตาม API ของคุณ
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ _id: caregiverId }), // ส่ง `_id` ของผู้ดูแลไป
-        });
-
-        const data = await response.json();
-        if (response.ok) {
-          alert("ลบข้อมูลสำเร็จ");
-          // อัปเดต caregiverInfo เพื่อรีเฟรชข้อมูล
-          setCaregiverInfo((prev) =>
-            prev.filter((caregiver) => caregiver._id !== caregiverId)
-          );
-        } else {
-          alert(`เกิดข้อผิดพลาด: ${data.error}`);
-        }
-      } catch (error) {
-        console.error("Error deleting caregiver:", error);
-        alert("เกิดข้อผิดพลาดในการลบข้อมูล");
-      }
-    }
-  };
-
-  const handleSave = async () => {
-    console.log("Selected Caregiver:", selectedCaregiver.user); // Debugging
-    console.log("FormData:", formData);
-    try {
-      const response = await fetch("http://localhost:5000/updatecaregiver", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ user: selectedCaregiver.user, ...formData }),
-      });
-      const data = await response.json();
-      if (response.ok) {
-        alert("แก้ไขข้อมูลสำเร็จ");
-        setIsModalOpen(false);
-        window.location.reload();
-      } else {
-        alert(`เกิดข้อผิดพลาด: ${data.error}`);
-      }
-    } catch (error) {
-      console.error("Error saving data:", error);
-      alert("เกิดข้อผิดพลาดในการบันทึกข้อมูล");
-    }
-  };
   return (
     <main className="body">
-      <ToastContainer />
       <div className={`sidebar ${isActive ? "active" : ""}`}>
         <div className="logo_content">
           <div className="logo">
@@ -645,30 +392,51 @@ export default function AllInfoDeleted({}) {
                 <div className="user-info-caregiver">
                   {caregiverInfo.map((caregiver, index) => (
                     <div className="inline-container" key={index}>
-                      <p>
-                        <span>ผู้ดูแลคนที่ {index + 1}:</span>
-                      </p>
+                     
                       <div className="caregiver-card">
                       <div className="caregiver-info">
-                      <p>
-                          <span>เลขประจําตัวประชาชน:</span> {formatIDCardNumber(caregiver.ID_card_number || "-")}{" "}
-                        </p>
-                        <p>
-                          <span>ชื่อ-สกุล:</span> {caregiver.name || "-"}{" "}
-                          {caregiver.surname || "-"}
-                        </p>
-                        <p>
-                          <span>ความสัมพันธ์:</span>{" "}
-                          {caregiver.Relationship || "-"}
-                        </p>
-                        <p>
-                          <span>เบอร์โทรศัพท์:</span> {caregiver.tel || "-"}
-                        </p>
-                        </div>
-                
-                      </div>
-                
-                
+                      <p className="caregiver-title">
+                            ผู้ดูแลคนที่ {index + 1}
+                          </p>
+                          <p className="caregiver-row">
+                            <span className="label">เลขประจําตัวประชาชน</span>{" "}
+                            <span className="caregiver-data">
+                              {formatIDCardNumber(
+                                caregiver.ID_card_number || "-"
+                              )}
+                            </span>
+                          </p>
+                          <p className="caregiver-row">
+                            <span className="label">ชื่อ-สกุล</span>{" "}
+                            <span className="caregiver-data">
+                              {caregiver.name || "-"}
+                            </span>{" "}
+                            <span className="caregiver-data">
+                              {caregiver.surname || "-"}
+                            </span>
+                          </p>
+                          <p className="caregiver-row">
+                            <span className="label">
+                              ความสัมพันธ์กับผู้ป่วย
+                            </span>{" "}
+                            <span className="caregiver-data">
+                              {caregiver.userRelationships &&
+                              caregiver.userRelationships.length > 0
+                                ? caregiver.userRelationships
+                                    .map((rel) => rel.relationship)
+                                    .filter((relationship) => relationship)
+                                    .join(", ") || "-"
+                                : "-"}
+                            </span>
+                          </p>
+                          <p className="caregiver-row">
+                            <span className="label">เบอร์โทรศัพท์</span>{" "}
+                            <span className="caregiver-data">
+                              {caregiver.tel || "-"}
+                            </span>
+                          </p>
+                          </div> 
+                          </div>
                     </div>
                   ))}
                  </div>
@@ -878,44 +646,7 @@ export default function AllInfoDeleted({}) {
                     </h4>
                     <table className="equipment-table-recover mb-5">
                       <thead>
-                        <tr>
-                          {/* <th>
-                            <input
-                              type="checkbox"
-                              checked={allSelected}
-                              onChange={() => {
-                                if (allSelected) {
-                                  // Unselect all items in this category
-                                  setSelectedEquipments((prevSelected) =>
-                                    prevSelected.filter(
-                                      (name) =>
-                                        !equipments.some(
-                                          (equipment) =>
-                                            equipment.equipmentname_forUser ===
-                                            name
-                                        )
-                                    )
-                                  );
-                                } else {
-                                  // Select all items in this category
-                                  setSelectedEquipments((prevSelected) => [
-                                    ...prevSelected,
-                                    ...equipments
-                                      .filter(
-                                        (equipment) =>
-                                          !prevSelected.includes(
-                                            equipment.equipmentname_forUser
-                                          )
-                                      )
-                                      .map(
-                                        (equipment) =>
-                                          equipment.equipmentname_forUser
-                                      ),
-                                  ]);
-                                }
-                              }}
-                            />
-                          </th> */}
+                        <tr> 
                           <th>ลำดับ</th>
                           <th>ชื่ออุปกรณ์</th>
                           <th>วันที่เพิ่ม</th>
@@ -924,20 +655,6 @@ export default function AllInfoDeleted({}) {
                       <tbody>
                         {equipments.map((equipment, index) => (
                           <tr key={equipment._id}>
-                            {/* <td>
-                              <input
-                                type="checkbox"
-                                className="mb-2"
-                                checked={selectedEquipments.includes(
-                                  equipment.equipmentname_forUser
-                                )}
-                                onChange={() =>
-                                  handleCheckboxChange(
-                                    equipment.equipmentname_forUser
-                                  )
-                                }
-                              />
-                            </td> */}
                             <td>{index + 1}</td>
                             <td>{equipment.equipmentname_forUser}</td>
                             <td>

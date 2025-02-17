@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from "react";
-import deleteimg from "../img/delete.png";
-import editimg from "../img/edit.png";
+
 import "../css/alladmin.css";
 import "../css/sidebar.css";
+import "../css/user.css";
 import logow from "../img/logow.png";
 import { useNavigate } from "react-router-dom";
 
-export default function AllUser({}) {
+export default function AllUser() {
   const navigate = useNavigate();
   const [data, setData] = useState([]);
   const [adminData, setAdminData] = useState("");
@@ -18,9 +18,7 @@ export default function AllUser({}) {
     if (!id) return "";
     return id.replace(/(\d{1})(\d{4})(\d{5})(\d{2})(\d{1})/, "$1-$2-$3-$4-$5");
   };
-  
 
-  
   useEffect(() => {
     const token = window.localStorage.getItem("token");
     setToken(token);
@@ -220,7 +218,7 @@ export default function AllUser({}) {
             onChange={(e) => setSearchKeyword(e.target.value)}
           />
         </div>
-
+        <div className="content-toolbar">
         <div className="toolbar">
           <button
             onClick={() => navigate("/adduser")}
@@ -231,29 +229,30 @@ export default function AllUser({}) {
           </button>
           <p className="countadmin">
             จำนวนผู้ป่วยทั้งหมด :{" "}
-            {data.filter((user) => user.deletedAt === null).length} คน
+            {data.filter((user) => user.deletedAt === null || user.deletedAt === undefined).length} คน
           </p>
         </div>
-
+        </div>
         <div className="content">
           {/* <div className="table100"> */}
-          <table className="table">
+          <table className="user-table">
             <thead>
               <tr>
+                
                 <th>เลขประจำตัวประชาชน</th>
                 <th>ชื่อ-นามสกุล</th>
                 <th>รายละเอียด</th>
-                <th className="centered-cell">ข้อมูลใช้เข้าสู่ระบบ</th>
+                <th>ข้อมูลใช้เข้าสู่ระบบ</th>
               </tr>
             </thead>
             <tbody>
-              {data.filter((user) => user.deletedAt === null).length > 0 ? (
+            {data.filter((user) => user.deletedAt === null || user.deletedAt === undefined).length > 0 ? (
                 data
-                  .filter((user) => user.deletedAt === null)
-                  .map((i, index) => (
+                .filter((user) => user.deletedAt === null || user.deletedAt === undefined)
+                .map((i, index) => (
                     <tr key={index}>
-          <td>{formatIDCardNumber(i.username)}</td>
-          <td>
+                      <td>{formatIDCardNumber(i.username)}</td>
+                      <td>
                         {i.name} {i.surname}
                       </td>
                       <td>
@@ -266,7 +265,7 @@ export default function AllUser({}) {
                           รายละเอียด
                         </a>
                       </td>
-                      <td className="centered-cell">
+                      <td className="buttongroup-in-table">
                         {/* {i.AdddataFirst ? (
                           <span>-</span>
                         ) : (
@@ -288,7 +287,7 @@ export default function AllUser({}) {
                           </button>
                         )} */}
                         <button
-                          className="btn btn-save"
+                          className="save"
                           onClick={() => {
                             if (i.physicalTherapy) {
                               navigate("/physicalTherapyUser", {

@@ -165,26 +165,26 @@ export default function UpdateMPersonnel() {
     const input = e.target.value;
 
     // ตรวจสอบว่ามีตัวเลขหรืออักขระพิเศษหรือไม่
-    if (/[^a-zA-Zก-ฮะ-ูไ-์\s]/.test(input)) {
+    if (/[^ก-๙a-zA-Z\s]/.test(input)) {
       setNameError("ชื่อควรเป็นตัวอักษรเท่านั้น");
     } else {
       setNameError("");
     }
 
-    setName(input.replace(/[^a-zA-Zก-ฮะ-ูไ-์\s]/g, "")); // กรองเฉพาะตัวอักษรและช่องว่าง
+    setName(input.replace(/[^ก-๙a-zA-Z\s]/g, "")); // กรองเฉพาะตัวอักษรและช่องว่าง
   };
 
   const handleInputSurnameChange = (e) => {
     const input = e.target.value;
 
     // ตรวจสอบว่ามีตัวเลขหรืออักขระพิเศษหรือไม่
-    if (/[^a-zA-Zก-ฮะ-ูไ-์\s]/.test(input)) {
+    if (/[^ก-๙a-zA-Z\s]/.test(input)) {
       setSurnameError("นามสกุลควรเป็นตัวอักษรเท่านั้น");
     } else {
       setSurnameError(""); // ล้าง error หากไม่มีปัญหา
     }
 
-    setSurname(input.replace(/[^a-zA-Zก-ฮะ-ูไ-์\s]/g, "")); // กรองเฉพาะตัวอักษรและช่องว่าง
+    setSurname(input.replace(/[^ก-๙a-zA-Z\s]/g, "")); // กรองเฉพาะตัวอักษรและช่องว่าง
   };
 
   const handleInputNameTitleChange = (e) => {

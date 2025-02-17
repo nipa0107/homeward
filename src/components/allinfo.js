@@ -4,6 +4,7 @@ import editimg from "../img/edit.png";
 import "../css/alladmin.css";
 import "../css/sidebar.css";
 import "../css/styles.css";
+import "../css/caregiver.css";
 import logow from "../img/logow.png";
 import { useNavigate } from "react-router-dom";
 import { useLocation } from "react-router-dom";
@@ -676,35 +677,53 @@ export default function AllUser({}) {
                 <div className="user-info-caregiver">
                   {caregiverInfo.map((caregiver, index) => (
                     <div className="inline-container" key={index}>
-                      <p>
+                      {/* <p>
                         <span>ผู้ดูแลคนที่ {index + 1}:</span>
-                      </p>
+                      </p> */}
                       <div className="caregiver-card">
                         <div className="caregiver-info">
-                          <p>
-                            <span>เลขประจําตัวประชาชน:</span>{" "}
-                            {formatIDCardNumber(
-                              caregiver.ID_card_number || "-"
-                            )}{" "}
+                          <p className="caregiver-title">
+                            ผู้ดูแลคนที่ {index + 1}
                           </p>
-                          <p>
-                            <span>ชื่อ-สกุล:</span> {caregiver.name || "-"}{" "}
-                            {caregiver.surname || "-"}
+                          <p className="caregiver-row">
+                            <span className="label">เลขประจําตัวประชาชน</span>{" "}
+                            <span className="caregiver-data">
+                              {formatIDCardNumber(
+                                caregiver.ID_card_number || "-"
+                              )}
+                            </span>
                           </p>
-                          <p>
-                            <span>ความสัมพันธ์กับผู้ป่วย:</span>{" "}
-                            {caregiver.userRelationships &&
-                            caregiver.userRelationships.length > 0
-                              ? caregiver.userRelationships
-                                  .map((rel) => rel.relationship)
-                                  .filter((relationship) => relationship) // กรองค่าว่าง
-                                  .join(", ") || "-" // ถ้าไม่มีก็แสดง "-"
-                              : "-"}
+                          <p className="caregiver-row">
+                            <span className="label">ชื่อ-สกุล</span>{" "}
+                            <span className="caregiver-data">
+                              {caregiver.name || "-"}
+                            </span>{" "}
+                            <span className="caregiver-data">
+                              {caregiver.surname || "-"}
+                            </span>
                           </p>
-                          <p>
-                            <span>เบอร์โทรศัพท์:</span> {caregiver.tel || "-"}
+                          <p className="caregiver-row">
+                            <span className="label">
+                              ความสัมพันธ์กับผู้ป่วย
+                            </span>{" "}
+                            <span className="caregiver-data">
+                              {caregiver.userRelationships &&
+                              caregiver.userRelationships.length > 0
+                                ? caregiver.userRelationships
+                                    .map((rel) => rel.relationship)
+                                    .filter((relationship) => relationship)
+                                    .join(", ") || "-"
+                                : "-"}
+                            </span>
+                          </p>
+                          <p className="caregiver-row">
+                            <span className="label">เบอร์โทรศัพท์</span>{" "}
+                            <span className="caregiver-data">
+                              {caregiver.tel || "-"}
+                            </span>
                           </p>
                         </div>
+                        
                         <div class="button-container-vertical">
                           <button
                             class="button-edit"

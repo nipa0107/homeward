@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import deleteimg from "../img/delete.png";
 import "../css/sidebar.css";
 import "../css/alladmin.css";
+import "../css/equipment.css";
 import "bootstrap-icons/font/bootstrap-icons.css";
 import logow from "../img/logow.png";
 
-export default function AllEquip({}) {
+export default function AllEquip() {
   const navigate = useNavigate();
   const [data, setData] = useState([]);
   const [adminData, setAdminData] = useState("");
@@ -96,7 +96,9 @@ export default function AllEquip({}) {
     const searchEquipment = async () => {
       try {
         const response = await fetch(
-          `http://localhost:5000/searchequipment?keyword=${encodeURIComponent(searchKeyword)}`,
+          `http://localhost:5000/searchequipment?keyword=${encodeURIComponent(
+            searchKeyword
+          )}`,
           {
             headers: {
               Authorization: `Bearer ${token}`,
@@ -111,14 +113,14 @@ export default function AllEquip({}) {
             setData([]); // ล้างข้อมูลเดิมในกรณีไม่พบข้อมูล
           }
         } else {
-          console.error('Error during search:', searchData.status);
+          console.error("Error during search:", searchData.status);
         }
       } catch (error) {
         console.error("Error during search:", error);
       }
     };
     searchEquipment();
-}, [searchKeyword, token]);
+  }, [searchKeyword, token]);
 
   return (
     <main className="body">
@@ -135,43 +137,45 @@ export default function AllEquip({}) {
           <li>
             <a href="home">
               <i className="bi bi-book"></i>
-              <span className="links_name" >จัดการข้อมูลคู่มือการดูแลผู้ป่วย</span>
+              <span className="links_name">
+                จัดการข้อมูลคู่มือการดูแลผู้ป่วย
+              </span>
             </a>
           </li>
           <li>
             <a href="alluser">
               <i className="bi bi-person-plus"></i>
-              <span className="links_name" >จัดการข้อมูลผู้ป่วย</span>
+              <span className="links_name">จัดการข้อมูลผู้ป่วย</span>
             </a>
           </li>
           <li>
             <a href="allmpersonnel">
               <i className="bi bi-people"></i>
-              <span className="links_name" >จัดการข้อมูลบุคลากร</span>
+              <span className="links_name">จัดการข้อมูลบุคลากร</span>
             </a>
           </li>
           <li>
             <a href="allequip">
               <i className="bi bi-prescription2"></i>
-              <span className="links_name" >จัดการอุปกรณ์ทางการแพทย์</span>
+              <span className="links_name">จัดการอุปกรณ์ทางการแพทย์</span>
             </a>
           </li>
           <li>
             <a href="allsymptom" onClick={() => navigate("/allsymptom")}>
               <i className="bi bi-bandaid"></i>
-              <span className="links_name" >จัดการอาการผู้ป่วย</span>
+              <span className="links_name">จัดการอาการผู้ป่วย</span>
             </a>
           </li>
           <li>
-            <a href="/alluserinsetting" >
-            <i className="bi bi-bell"></i>              
-            <span className="links_name" >ตั้งค่าการแจ้งเตือน</span>
+            <a href="/alluserinsetting">
+              <i className="bi bi-bell"></i>
+              <span className="links_name">ตั้งค่าการแจ้งเตือน</span>
             </a>
           </li>
           <li>
             <a href="alladmin" onClick={() => navigate("/alladmin")}>
               <i className="bi bi-person-gear"></i>
-              <span className="links_name" >จัดการแอดมิน</span>
+              <span className="links_name">จัดการแอดมิน</span>
             </a>
           </li>
           <li>
@@ -183,38 +187,45 @@ export default function AllEquip({}) {
           <div className="nav-logout">
             <li>
               <a href="./" onClick={logOut}>
-                <i className='bi bi-box-arrow-right' id="log_out" onClick={logOut}></i>
-                <span className="links_name" >ออกจากระบบ</span>
+                <i
+                  className="bi bi-box-arrow-right"
+                  id="log_out"
+                  onClick={logOut}
+                ></i>
+                <span className="links_name">ออกจากระบบ</span>
               </a>
             </li>
           </div>
         </ul>
       </div>
       <div className="home_content">
-      <div className="homeheader">
-        <div className="header">จัดการอุปกรณ์ทางการแพทย์</div>
-        <div className="profile_details">
-          <ul className="nav-list">
-          <li>
-            <a href="profile" >
-              <i className="bi bi-person"></i>
-              <span className="links_name" >{adminData && adminData.username}</span>
-            </a>
-          </li>
-          </ul>
-        </div>
+        <div className="homeheader">
+          <div className="header">จัดการอุปกรณ์ทางการแพทย์</div>
+          <div className="profile_details">
+            <ul className="nav-list">
+              <li>
+                <a href="profile">
+                  <i className="bi bi-person"></i>
+                  <span className="links_name">
+                    {adminData && adminData.username}
+                  </span>
+                </a>
+              </li>
+            </ul>
+          </div>
         </div>
         <div className="breadcrumbs">
           <ul>
             <li>
-            <a href="home">
+              <a href="home">
                 <i className="bi bi-house-fill"></i>
               </a>
             </li>
             <li className="arrow">
               <i className="bi bi-chevron-double-right"></i>
             </li>
-            <li><a>จัดการอุปกรณ์ทางการแพทย์</a>
+            <li>
+              <a>จัดการอุปกรณ์ทางการแพทย์</a>
             </li>
           </ul>
         </div>
@@ -230,53 +241,65 @@ export default function AllEquip({}) {
             onChange={(e) => setSearchKeyword(e.target.value)}
           />
         </div>
-
+        <div className="content-toolbar">
         <div className="toolbar">
-      <button
-        className="btn btn-outline py-1 px-4"
-        onClick={() => navigate("/addequip", { state: adminData })}
-      >
-        <i className="bi bi-plus-circle" style={{ marginRight: '8px' }}></i>
-        เพิ่มอุปกรณ์
-      </button>
-      <p className="countadmin">จำนวนอุปกรณ์ทั้งหมด : {data.length} ชิ้น</p>
-    </div>
+          <button
+            className="btn btn-outline py-1 px-4"
+            onClick={() => navigate("/addequip", { state: adminData })}
+          >
+            <i className="bi bi-plus-circle" style={{ marginRight: "8px" }}></i>
+            เพิ่มอุปกรณ์
+          </button>
+          <p className="countadmin">จำนวนอุปกรณ์ทั้งหมด : {data.length} ชิ้น</p>
+          </div>
+        </div>
         <div className="content">
           {/* <div className="cardall card mb-3"> */}
-            <table className="table">
-              <thead>
-                <tr>
-                  <th>ชื่ออุปกรณ์</th>
-                  <th>ประเภทอุปกรณ์</th>
-                  <th className="success">จัดการ</th>
-                </tr>
-              </thead>
-              <tbody>
+          <table className="equipments-table">
+            <thead>
+              <tr>
+                <th>ชื่ออุปกรณ์</th>
+                <th>ประเภทอุปกรณ์</th>
+                <th>จัดการ</th>
+              </tr>
+            </thead>
+            <tbody>
               {data.length > 0 ? (
                 data.map((i, index) => (
                   <tr key={index}>
                     <td data-title="">{i.equipment_name}</td>
                     <td>{i.equipment_type}</td>
                     <td className="buttongroup-in-table">
-                    <button className="editimg2" onClick={() => navigate("/updateequip", { state: { id: i._id,equip: i} })}>แก้ไข</button>
+                      <button
+                        className="editimg2"
+                        onClick={() =>
+                          navigate("/updateequip", {
+                            state: { id: i._id, equip: i },
+                          })
+                        }
+                      >
+                        <i className="bi bi-pencil-square"></i>
+                      </button>
                       <button
                         className="deleteimg2"
                         alt="deleteimg"
                         onClick={() => deleteEquipment(i._id, i.equipment_name)}
-                      >ลบ</button>
-
+                      >
+                        {" "}
+                        <i className="bi bi-trash"></i>
+                      </button>
                     </td>
                   </tr>
-                  ))
-                ) : (
-                  <tr>
-                    <td colSpan="3" className="text-center">
-                     ไม่พบข้อมูลที่คุณค้นหา
-                    </td>
-                  </tr>
-                )}
-              </tbody>
-            </table>
+                ))
+              ) : (
+                <tr>
+                  <td colSpan="3" className="text-center">
+                    ไม่พบข้อมูลที่คุณค้นหา
+                  </td>
+                </tr>
+              )}
+            </tbody>
+          </table>
           {/* </div> */}
         </div>
       </div>

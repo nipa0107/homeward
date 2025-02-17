@@ -1,0 +1,67 @@
+.equipments-table {
+    width: 80%;
+    border-collapse: collapse;
+    margin :0 auto;
+    box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.1); 
+    padding: 15px; 
+    border-collapse: collapse; 
+    border-spacing: 1; 
+    border-radius: 0.5rem; 
+    line-height: 2rem;
+  }
+  .equipments-table th{
+    font-size: 1rem;
+    background-color: #87CEFA;
+    color: #000;
+    text-transform: uppercase;
+    border-bottom: 2px solid #87CEFA; 
+  }
+
+  .equipments-table th:first-child {
+    border-top-left-radius: 0.5rem;
+  }
+  
+  .equipments-table th:last-child {
+    border-top-right-radius: 0.5rem;
+  }
+  
+  .equipments-table th,
+  .equipments-table td {
+    padding: 10px;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+    word-wrap: break-word;
+    white-space: normal;
+  }
+  
+.equipments-table th:nth-child(1),
+.equipments-table td:nth-child(1) {
+  width: 40%;
+  min-width: 180px;
+}
+
+.equipments-table th:nth-child(2),
+.equipments-table td:nth-child(2) {
+  width:40%;
+  min-width: 180px;
+  /* text-align: center; */
+}
+
+.equipments-table th:nth-child(3),
+.equipments-table td:nth-child(3) {
+  width: 30%;
+  min-width: 130px;
+  text-align: center;
+  white-space: nowrap;
+}
+
+/* ปรับให้ปุ่มอยู่ตรงกลาง */
+.buttongroup-in-table {
+  text-align: center;
+}
+
+/* ปรับขนาดปุ่ม */
+.equipments-table .buttongroup-in-table button {
+  margin: 0 3px;
+  padding: 5px 8px;
+}
