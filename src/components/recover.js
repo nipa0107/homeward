@@ -14,8 +14,8 @@ export default function Recover() {
   const [isActive, setIsActive] = useState(false);
   const [searchKeyword, setSearchKeyword] = useState(""); //ค้นหา
   const [token, setToken] = useState("");
-  const [sortOrder, setSortOrder] = useState("desc"); 
-  const tokenExpiredAlertShown = useRef(false); 
+  const [sortOrder, setSortOrder] = useState("desc");
+  const tokenExpiredAlertShown = useRef(false);
 
   const formatIDCardNumber = (id) => {
     if (!id) return "";
@@ -42,8 +42,11 @@ export default function Recover() {
         .then((data) => {
           console.log(data);
           setAdminData(data.data);
-          if (data.data === "token expired" && !tokenExpiredAlertShown.current) {
-            tokenExpiredAlertShown.current = true; 
+          if (
+            data.data === "token expired" &&
+            !tokenExpiredAlertShown.current
+          ) {
+            tokenExpiredAlertShown.current = true;
             alert("Token expired login again");
             window.localStorage.clear();
             window.location.href = "./";
@@ -109,73 +112,75 @@ export default function Recover() {
 
   const recoverUser = async (id, username) => {
     if (window.confirm(`คุณต้องการกู้คืน ${username} นี้ใช่หรือไม่?`)) {
-
-    try {
-    
-      // ดำเนินการเรียก API
-      const response = await fetch(`http://localhost:5000/recoveruser/${id}`, {
-        method: "POST",
-        headers: {
-          Authorization: `Bearer ${token}`,
-          "Content-Type": "application/json",
-        },
-      });
-  
-      const result = await response.json();
-  
-      if (response.ok && result.success) {
-        alert("กู้คืนข้อมูลสำเร็จ");
-        // getAllUser(); 
-        navigate("/alluser")
-      } else {
-        alert(
-          "เกิดข้อผิดพลาด: " + (result.message || "ไม่สามารถกู้คืนข้อมูลได้")
+      try {
+        // ดำเนินการเรียก API
+        const response = await fetch(
+          `http://localhost:5000/recoveruser/${id}`,
+          {
+            method: "POST",
+            headers: {
+              Authorization: `Bearer ${token}`,
+              "Content-Type": "application/json",
+            },
+          }
         );
-      }
-    } catch (error) {
-      console.error("Error recovering user:", error);
-      alert("เกิดข้อผิดพลาด: " + error.message);
-    }
-  }
-};
-  
-const formatDate = (date) => {
-  // ตรวจสอบว่า date เป็นวันที่ที่ถูกต้องหรือไม่
-  const validDate = new Date(date);
-  if (isNaN(validDate)) {
-    return "ข้อมูลวันที่ไม่ถูกต้อง";
-  }
 
-  // กำหนดรูปแบบวันที่
-  const options = {
-    day: "2-digit",
-    month: "2-digit",
-    year: "numeric",
-    hour: "2-digit",
-    minute: "2-digit",
-    hour12: false,
+        const result = await response.json();
+
+        if (response.ok && result.success) {
+          alert("กู้คืนข้อมูลสำเร็จ");
+          // getAllUser();
+          navigate("/alluser");
+        } else {
+          alert(
+            "เกิดข้อผิดพลาด: " + (result.message || "ไม่สามารถกู้คืนข้อมูลได้")
+          );
+        }
+      } catch (error) {
+        console.error("Error recovering user:", error);
+        alert("เกิดข้อผิดพลาด: " + error.message);
+      }
+    }
   };
 
-  // ใช้ Intl.DateTimeFormat เพื่อแสดงวันที่และเวลา
-  const formattedDate = new Intl.DateTimeFormat("th-TH", options).format(validDate);
-  
-  // แยกวันที่และเวลา
-  const [datePart, timePart] = formattedDate.split(" ");
-  const [hour, minute] = timePart.split(":");
+  const formatDate = (date) => {
+    // ตรวจสอบว่า date เป็นวันที่ที่ถูกต้องหรือไม่
+    const validDate = new Date(date);
+    if (isNaN(validDate)) {
+      return "ข้อมูลวันที่ไม่ถูกต้อง";
+    }
 
-  return `${datePart}, ${hour}.${minute} น.`;
-};
+    // กำหนดรูปแบบวันที่
+    const options = {
+      day: "2-digit",
+      month: "2-digit",
+      year: "numeric",
+      hour: "2-digit",
+      minute: "2-digit",
+      hour12: false,
+    };
 
+    // ใช้ Intl.DateTimeFormat เพื่อแสดงวันที่และเวลา
+    const formattedDate = new Intl.DateTimeFormat("th-TH", options).format(
+      validDate
+    );
 
-const handleSort = () => {
-  const sortedData = [...data].sort((a, b) => {
-    const dateA = new Date(a.deletedAt);
-    const dateB = new Date(b.deletedAt);
-    return sortOrder === "desc" ? dateB - dateA : dateA - dateB;
-  });
-  setData(sortedData); // อัปเดตข้อมูลหลังจากการเรียงลำดับ
-  setSortOrder(sortOrder === "desc" ? "asc" : "desc"); // เปลี่ยนทิศทางการเรียง
-};
+    // แยกวันที่และเวลา
+    const [datePart, timePart] = formattedDate.split(" ");
+    const [hour, minute] = timePart.split(":");
+
+    return `${datePart}, ${hour}.${minute} น.`;
+  };
+
+  const handleSort = () => {
+    const sortedData = [...data].sort((a, b) => {
+      const dateA = new Date(a.deletedAt);
+      const dateB = new Date(b.deletedAt);
+      return sortOrder === "desc" ? dateB - dateA : dateA - dateB;
+    });
+    setData(sortedData); // อัปเดตข้อมูลหลังจากการเรียงลำดับ
+    setSortOrder(sortOrder === "desc" ? "asc" : "desc"); // เปลี่ยนทิศทางการเรียง
+  };
 
   return (
     <main className="body">
@@ -298,83 +303,89 @@ const handleSort = () => {
           />
         </div>
         <div className="content-toolbar">
-        <div className="toolbar">
-          <p className="countadmin">
-            จำนวนผู้ป่วยที่ถูกลบทั้งหมด :{" "}
-            {data.filter((user) => user.deletedAt !== null).length} คน
-          </p>
-        </div>
+          <div className="toolbar">
+            <p className="countadmin">
+              จำนวนผู้ป่วยที่ถูกลบทั้งหมด :{" "}
+              {data.filter((user) => user.deletedAt !== null).length} คน
+            </p>
+          </div>
         </div>
         <div className="content">
-        <div className="info-alert">
-  <p>ข้อมูลผู้ป่วยที่ถูกลบจะถูกเก็บไว้ในระบบ</p>
-  <p><strong>30 วัน</strong></p>
-  <p>หลังจากนั้นข้อมูลจะถูกลบถาวรจากฐานข้อมูล</p>
-</div>
+          <div className="info-alert">
+            <p>ข้อมูลผู้ป่วยที่ถูกลบจะถูกเก็บไว้ในระบบ</p>
+            <p>
+              <strong>30 วัน</strong>
+            </p>
+            <p>หลังจากนั้นข้อมูลจะถูกลบถาวรจากฐานข้อมูล</p>
+          </div>
 
-        <div className="table-container">         
-           <table className="recover-table table-all">
-            <thead>
-              <tr>
-              {/* <th>ลำดับ</th> */}
-                <th>เลขประจำตัวประชาชน</th>
-                <th>ชื่อ-นามสกุล</th>
-                <th>รายละเอียด</th>
-                <th onClick={handleSort} >วันที่ลบข้อมูล 
-                    {sortOrder === "desc" ? <i class="bi bi-caret-down-fill"></i>:  <i class="bi bi-caret-up-fill"></i>} {/* แสดงลูกศรขึ้นหรือลง */}
-                </th>
-                <th>กู้คืนข้อมูลผู้ป่วย</th>
-              </tr>
-            </thead>
-            <tbody>
-            {data.filter((user) => user.deletedAt !== null).length > 0 ? (
-            data
-                .filter((user) => user.deletedAt !== null) // กรองออกเฉพาะข้อมูลที่มีค่า deleteAt เป็น null
-                // .sort((a, b) => new Date(a.deletedAt) - new Date(b.deletedAt))
-                .map((i, index) => (
-                  
-                    <tr key={index}>
-                      {/* <td>{index + 1}</td> */}
-                      <td>{formatIDCardNumber(i.username)}</td>
-                      <td>
-                        {i.name} {i.surname}
-                      </td>
-                      <td>
-                        <a
-                          className="info"
-                          onClick={() =>
-                            navigate("/allinfodeleted", { state: { id: i._id } })
-                          }
-                        >
-                          รายละเอียด
-                        </a>
-                      </td>
-                      <td>
-                        {formatDate(i.deletedAt)}
-      
-                      </td>
-                      <td className="buttongroup-in-table">
-                        <button
-                          className="btn-recover"
-                          onClick={() => recoverUser(i._id, i.username)} // เรียกใช้ฟังก์ชัน recoverUser
-                        >
-                          <i class="bi bi-recycle"></i>{" "}
-                        </button>
-                      </td>
-                    </tr>
+          <div className="table-container">
+            <table className="recover-table table-all">
+              <thead>
+                <tr>
+                  {/* <th>ลำดับ</th> */}
+                  <th>เลขประจำตัวประชาชน</th>
+                  <th>ชื่อ-นามสกุล</th>
+                  <th>รายละเอียด</th>
+                  <th onClick={handleSort}>
+                    วันที่ลบข้อมูล
+                    {sortOrder === "desc" ? (
+                      <i class="bi bi-caret-down-fill"></i>
+                    ) : (
+                      <i class="bi bi-caret-up-fill"></i>
+                    )}{" "}
+                    {/* แสดงลูกศรขึ้นหรือลง */}
+                  </th>
+                  <th>กู้คืนข้อมูลผู้ป่วย</th>
+                </tr>
+              </thead>
+              <tbody>
+                {data.filter((user) => user.deletedAt !== null).length > 0 ? (
+                  data
+                    .filter((user) => user.deletedAt !== null) // กรองออกเฉพาะข้อมูลที่มีค่า deleteAt เป็น null
+                    // .sort((a, b) => new Date(a.deletedAt) - new Date(b.deletedAt))
+                    .map((i, index) => (
+                      <tr key={index}>
+                        {/* <td>{index + 1}</td> */}
+                        <td>{formatIDCardNumber(i.username)}</td>
+                        <td>
+                          {i.name} {i.surname}
+                        </td>
+                        <td>
+                          <a
+                            className="info"
+                            onClick={() =>
+                              navigate("/allinfodeleted", {
+                                state: { id: i._id },
+                              })
+                            }
+                          >
+                            รายละเอียด
+                          </a>
+                        </td>
+                        <td>{formatDate(i.deletedAt)}</td>
+                        <td className="buttongroup-in-table">
+                          <button
+                            className="btn-recover"
+                            onClick={() => recoverUser(i._id, i.username)} // เรียกใช้ฟังก์ชัน recoverUser
+                          >
+                            <i class="bi bi-recycle"></i>{" "}
+                          </button>
+                        </td>
+                      </tr>
                     ))
-                  ) : (
-                    <tr>
-                      <td colSpan="5" className="text-center">
-                        ไม่พบข้อมูลที่คุณค้นหา
-                      </td>
-                    </tr>
-                  )}
-            </tbody>
-          </table>
-          {/* <div className="content">
-         */}
-          </div> 
+                ) : (
+                  <tr>
+                    <td colSpan="5" className="text-center">
+                      ไม่พบข้อมูลที่คุณค้นหา
+                    </td>
+                  </tr>
+                )}
+              </tbody>
+            </table>
+            {/* <div className="content">
+             */}
+          </div>
         </div>
       </div>
       {/* </div> */}

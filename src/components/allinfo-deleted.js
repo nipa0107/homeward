@@ -282,7 +282,7 @@ export default function AllInfoDeleted() {
       </div>
       <div className="home_content">
         <div className="homeheader">
-          <div className="header">จัดการข้อมูลผู้ป่วยที่ถูกลบ</div>
+          <div className="header">จัดการข้อมูลผู้ป่วย</div>
           <div className="profile_details ">
             <ul className="nav-list">
               <li>
@@ -307,7 +307,13 @@ export default function AllInfoDeleted() {
               <i className="bi bi-chevron-double-right"></i>
             </li>
             <li>
-              <a href="recover-patients">จัดการข้อมูลผู้ป่วยที่ถูกลบ</a>
+              <a href="alluser">จัดการข้อมูลผู้ป่วย</a>
+            </li>
+            <li className="arrow">
+              <i className="bi bi-chevron-double-right"></i>
+            </li>
+            <li>
+              <a href="recover-patients">ข้อมูลผู้ป่วยที่ถูกลบ</a>
             </li>
             <li className="arrow">
               <i className="bi bi-chevron-double-right"></i>
