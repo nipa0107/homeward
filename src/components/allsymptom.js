@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import "../css/alladmin.css";
 import "../css/sidebar.css";
 import logow from "../img/logow.png";
@@ -11,6 +11,7 @@ export default function Allsymptom() {
   const [isActive, setIsActive] = useState(false);
   const [searchKeyword, setSearchKeyword] = useState(""); //ค้นหา
   const [token, setToken] = useState("");
+  const tokenExpiredAlertShown = useRef(false); 
 
   useEffect(() => {
     const token = window.localStorage.getItem("token");
@@ -32,6 +33,12 @@ export default function Allsymptom() {
         .then((data) => {
           console.log(data);
           setAdminData(data.data);
+          if (data.data === "token expired" && !tokenExpiredAlertShown.current) {
+            tokenExpiredAlertShown.current = true; 
+            alert("Token expired login again");
+            window.localStorage.clear();
+            window.location.href = "./";
+          }
         });
     }
     getSymptom();
@@ -173,12 +180,6 @@ export default function Allsymptom() {
             <a href="alladmin" onClick={() => navigate("/alladmin")}>
               <i className="bi bi-person-gear"></i>
               <span className="links_name">จัดการแอดมิน</span>
-            </a>
-          </li>
-          <li>
-            <a href="recover-patients">
-              <i className="bi bi-trash"></i>
-              <span className="links_name">จัดการข้อมูลผู้ป่วยที่ถูกลบ</span>
             </a>
           </li>
           <div className="nav-logout">

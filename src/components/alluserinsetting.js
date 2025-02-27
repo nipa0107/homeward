@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import "../css/alladmin.css";
 import "../css/sidebar.css";
 import logow from "../img/logow.png";
@@ -12,6 +12,8 @@ export default function AlluserInSetting() {
   const [searchKeyword, setSearchKeyword] = useState(""); 
   const [token, setToken] = useState("");
   const [medicalData, setMedicalData] = useState({});
+  const tokenExpiredAlertShown = useRef(false); 
+  const [thresholdData, setThresholdData] = useState([]);
 
   useEffect(() => {
     const token = window.localStorage.getItem("token");
@@ -33,9 +35,16 @@ export default function AlluserInSetting() {
         .then((data) => {
           console.log(data);
           setAdminData(data.data);
+          if (data.data === "token expired" && !tokenExpiredAlertShown.current) {
+            tokenExpiredAlertShown.current = true; 
+            alert("Token expired login again");
+            window.localStorage.clear();
+            window.location.href = "./";
+          }
         });
     }
     getAllUser();
+    getAllUserWithThreshold(); 
   }, []);
 
   const getAllUser = () => {
@@ -53,48 +62,51 @@ export default function AlluserInSetting() {
   };
   useEffect(() => {
     const fetchMedicalData = async () => {
-      const promises = data.map(async (user) => {
-        if (user.deletedAt === null) {
-          try {
-            const response = await fetch(
-              `http://localhost:5000/medicalInformation/${user._id}`
-            );
-            const medicalInfo = await response.json();
-            return {
-              userId: user._id,
-              hn: medicalInfo.data?.HN,
-              an: medicalInfo.data?.AN,
-              diagnosis: medicalInfo.data?.Diagnosis,
-            };
-          } catch (error) {
-            console.error(
-              `Error fetching medical information for user ${user._id}:`,
-              error
-            );
-            return {
-              userId: user._id,
-              hn: "Error",
-              an: "Error",
-              diagnosis: "Error fetching data",
-            };
-          }
+      if (data.length === 0) return; 
+  
+      const userIds = data
+        .filter((user) => user.deletedAt === null)
+        .map((user) => user._id); 
+  
+      if (userIds.length === 0) return;
+  
+      try {
+        const response = await fetch("http://localhost:5000/medicalInformation/batch", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ userIds }),
+        });
+  
+        const result = await response.json();
+        if (result.status === "ok") {
+          setMedicalData(result.data); 
+        } else {
+          console.error("Error fetching medical data:", result.message);
         }
-        return null;
-      });
-      const results = await Promise.all(promises);
-      const medicalDataMap = results.reduce((acc, result) => {
-        if (result) {
-          acc[result.userId] = result;
-        }
-        return acc;
-      }, {});
-      setMedicalData(medicalDataMap);
+      } catch (error) {
+        console.error("Error fetching medical data:", error);
+      }
     };
-
-    if (data.length > 0) {
-      fetchMedicalData();
-    }
+  
+    fetchMedicalData();
   }, [data]);
+
+
+  const getAllUserWithThreshold = () => {
+    fetch("http://localhost:5000/alluserwiththreshold", {
+      method: "GET",
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    })
+      .then((res) => res.json())
+      .then((thresholdData) => {
+        console.log(thresholdData, "UserWithThreshold");
+        setThresholdData(thresholdData.data); // Save threshold data
+      });
+  };
 
   const logOut = () => {
     window.localStorage.clear();
@@ -136,6 +148,7 @@ export default function AlluserInSetting() {
     searchUser();
   }, [searchKeyword, token]);
 
+  
   return (
     <main className="body">
       <div className={`sidebar ${isActive ? "active" : ""}`}>
@@ -190,12 +203,6 @@ export default function AlluserInSetting() {
             <a href="alladmin" onClick={() => navigate("/alladmin")}>
               <i className="bi bi-person-gear"></i>
               <span className="links_name">จัดการแอดมิน</span>
-            </a>
-          </li>
-          <li>
-            <a href="recover-patients">
-              <i className="bi bi-trash"></i>
-              <span className="links_name">จัดการข้อมูลผู้ป่วยที่ถูกลบ</span>
             </a>
           </li>
           <div className="nav-logout">
@@ -272,15 +279,13 @@ export default function AlluserInSetting() {
           </div>
         </div>
         <div className="content">
-          {/* <div className="table100"> */}
-          <table className="setting-table">
+        <div className="table-container">         
+           <table className="setting-table table-all">
             <thead>
               <tr>
-                {/* <th>HN </th>
-                <th>AN</th> */}
                 <th>ชื่อ-สกุล</th>
-                {/* <th>อายุ</th> */}
                 <th>ผู้ป่วยโรค</th>
+                <th>การแจ้งเตือน</th>
                 <th>ตั้งค่าการแจ้งเตือน</th>
               </tr>
             </thead>
@@ -288,35 +293,12 @@ export default function AlluserInSetting() {
               {data.filter((user) => user.deletedAt === null).length > 0 ? (
                 data
                   .filter((user) => user.deletedAt === null)
-                  .map((i, index) => (
+                  .map((i, index) => {
+                    const userThreshold = thresholdData.find(
+                      (userThreshold) => userThreshold.user === i._id
+                    );
+                    return (
                     <tr key={index}>
-                      {/* <td>
-                        <span
-                          style={{
-                            color: medicalData[i._id]?.hn
-                              ? "inherit"
-                              : "#B2B2B2",
-                          }}
-                        >
-                          {medicalData[i._id]?.hn
-                            ? medicalData[i._id]?.hn
-                            : "ไม่มีข้อมูล"}
-                        </span>
-                      </td>
-                      <td>
-                        <span
-                          style={{
-                            color: medicalData[i._id]?.an
-                              ? "inherit"
-                              : "#B2B2B2",
-                          }}
-                        >
-                          {medicalData[i._id]?.an
-                            ? medicalData[i._id]?.an
-                            : "ไม่มีข้อมูล"}
-                        </span>
-                      </td> */}
-
                       <td>
                         {i.name} {i.surname}
                       </td>
@@ -333,6 +315,13 @@ export default function AlluserInSetting() {
                             : "ไม่มีข้อมูล"}
                         </span>
                       </td>
+                      <td>
+                            {userThreshold && userThreshold.thresholdMatch ? (
+                              <span className="matches-default">ค่าเริ่มต้น</span>
+                            ) : (
+                              <span  className="not-matches">ค่าใหม่</span>
+                            )}
+                          </td>
                       <td className="buttongroup-in-table">
                         <button
                           className="icon-container-out"
@@ -348,15 +337,13 @@ export default function AlluserInSetting() {
                             })
                           }
                         >
-                            {/* <div className="icon-container">
-                              <i className="bi bi-bell icon-bell"></i> */}
                               <i className="bi bi-gear icon-gear"></i>
-                            {/* </div> */}
-                          {/* ตั้งค่าการแจ้งเตือน */}
+                         
                         </button>
                       </td>
                     </tr>
-                  ))
+                  );
+                })
               ) : (
                 <tr>
                   <td colSpan="3" className="text-center">
@@ -366,6 +353,7 @@ export default function AlluserInSetting() {
               )}
             </tbody>
           </table>
+        </div>
         </div>
       </div>
       {/* </div> */}

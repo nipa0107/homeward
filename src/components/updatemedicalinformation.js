@@ -1,7 +1,8 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import "../css/alladmin.css";
 import "../css/sidebar.css";
 import "../css/styles.css";
+import "../css/form.css"
 import logow from "../img/logow.png";
 import { useNavigate } from "react-router-dom";
 import { useLocation } from "react-router-dom";
@@ -44,6 +45,7 @@ export default function Updatemedicalinformation() {
   const [data, setData] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [filteredPersonnel, setFilteredPersonnel] = useState([]);
+  const tokenExpiredAlertShown = useRef(false); 
 
     useEffect(() => {
       setFilteredPersonnel(data);
@@ -124,6 +126,12 @@ export default function Updatemedicalinformation() {
         .then((data) => {
           console.log(data);
           setAdminData(data.data);
+          if (data.data === "token expired" && !tokenExpiredAlertShown.current) {
+            tokenExpiredAlertShown.current = true; 
+            alert("Token expired login again");
+            window.localStorage.clear();
+            window.location.href = "./";
+          }
         });
     }
     getAllMpersonnel();
@@ -332,12 +340,7 @@ export default function Updatemedicalinformation() {
               <span className="links_name">จัดการแอดมิน</span>
             </a>
           </li>
-          <li>
-            <a href="recover-patients">
-              <i className="bi bi-trash"></i>
-              <span className="links_name">จัดการข้อมูลผู้ป่วยที่ถูกลบ</span>
-            </a>
-          </li>
+
           <div className="nav-logout">
             <li>
               <a href="./" onClick={logOut}>
@@ -397,9 +400,10 @@ export default function Updatemedicalinformation() {
             </li>
           </ul>
         </div>
-        <h3>แก้ไขข้อมูลการเจ็บป่วย</h3>
+       
         {medicalInfo && (
           <div className="adminall card mb-3">
+             <p className="title-header">แก้ไขข้อมูลการเจ็บป่วย</p>
             <div className="mb-3">
               <label>HN</label>
               <input

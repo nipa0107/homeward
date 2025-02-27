@@ -1,7 +1,8 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import "../css/alladmin.css";
 import "../css/sidebar.css";
 import "../css/setnoti.css";
+import "../css/form.css"
 import logow from "../img/logow.png";
 import { useNavigate } from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
@@ -28,6 +29,7 @@ function UpdateDefault() {
     Respiration: "",
   });
   const [painscore, setPainscore] = useState("")
+  const tokenExpiredAlertShown = useRef(false); 
 
   useEffect(() => {
     const token = window.localStorage.getItem("token");
@@ -47,6 +49,12 @@ function UpdateDefault() {
         .then((data) => {
           console.log(data);
           setAdminData(data.data);
+          if (data.data === "token expired" && !tokenExpiredAlertShown.current) {
+            tokenExpiredAlertShown.current = true; 
+            alert("Token expired login again");
+            window.localStorage.clear();
+            window.location.href = "./";
+          }
         });
     }
   }, []);
@@ -86,6 +94,19 @@ function UpdateDefault() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+  if (
+    !min.SBP || !max.SBP ||
+    !min.DBP || !max.DBP ||
+    !min.PulseRate || !max.PulseRate ||
+    !min.Respiration || !max.Respiration ||
+    !min.Temperature || !max.Temperature ||
+    !min.DTX || !max.DTX ||
+    !painscore
+  ) {
+    toast.error('กรุณากรอกข้อมูลทุกช่อง');
+    return; 
+  }
     try {
       const response = await fetch('http://localhost:5000/update-default-threshold', {
         method: 'POST',
@@ -185,12 +206,6 @@ function UpdateDefault() {
             <span className="links_name">จัดการแอดมิน</span>
           </a>
         </li>
-        <li>
-            <a href="recover-patients">
-              <i className="bi bi-trash"></i>
-              <span className="links_name">จัดการข้อมูลผู้ป่วยที่ถูกลบ</span>
-            </a>
-          </li>
         <div className="nav-logout">
           <li>
             <a href="./" onClick={logOut}>
@@ -207,7 +222,7 @@ function UpdateDefault() {
     </div>
     <div className="home_content">
     <div className="homeheader">
-      <div className="header">ตั้งค่าการแจ้งเตือนเริ่มต้น</div>
+      <div className="header">ตั้งค่าการแจ้งเตือน</div>
       <div className="profile_details ">
       <ul className="nav-list">
         <li>
@@ -241,155 +256,65 @@ function UpdateDefault() {
         </ul>
       </div>
       <div className="formsetnoti">
-        <form  onSubmit={handleSubmit}>
-          <div className="input-group-header">
-            <label className="titlenoti"></label>
-            <label  className="titlenoti-min">ค่าต่ำสุด</label>
-            <label className="titlenoti-max">ค่าสูงสุด</label>
-            <label className="unitnoti"></label>
-          </div>
-          <div className="input-group">
-            <label className="titlenoti">ความดันตัวบน</label>
-            {/* <label>Min:</label> */}
-            <input
-              type="number"
-              value={min.SBP || ""}
-              onChange={(e) => setMin({ ...min, SBP: e.target.value })}
-              required
-            />
-            {/* <label>Max:</label> */}
-            <input
-              type="number"
-              value={max.SBP || ""}
-              onChange={(e) => setMax({ ...max, SBP: e.target.value })}
-              required
-            />
-            <label className="unitnoti">mmHg</label>
-          </div>
-
-          <div className="input-group">
-            <label className="titlenoti">ความดันตัวล่าง</label>
-            {/* <label>Min:</label> */}
-
-            <input
-              type="number"
-              value={min.DBP || ""}
-              onChange={(e) => setMin({ ...min, DBP: e.target.value })}
-              required
-            />
-            {/* <label>Max:</label> */}
-
-            <input
-              type="number"
-              value={max.DBP || ""}
-              onChange={(e) => setMax({ ...max, DBP: e.target.value })}
-              required
-            />
-            <label className="unitnoti">mmHg</label>
-          </div>
-
-          <div className="input-group">
-            <label className="titlenoti">ชีพจร</label>
-            {/* <label>Min:</label> */}
-            <input
-              type="number"
-              value={min.PulseRate || ""}
-              onChange={(e) => setMin({ ...min, PulseRate: e.target.value })}
-              required
-            />
-            {/* <label>Max:</label> */}
-
-            <input
-              type="number"
-              value={max.PulseRate || ""}
-              onChange={(e) => setMax({ ...max, PulseRate: e.target.value })}
-              required
-            />
-            <label className="unitnoti">ครั้ง/นาที</label>
-          </div>
-
-          <div className="input-group">
-            <label className="titlenoti">การหายใจ</label>
-            {/* <label>Min:</label> */}
-            <input
-              type="number"
-              value={min.Respiration || ""}
-              onChange={(e) =>
-                setMin({ ...min, Respiration: e.target.value })
-              }
-              required
-            />
-            {/* <label>Max:</label> */}
-            <input
-              type="number"
-              value={max.Respiration || ""}
-              onChange={(e) =>
-                setMax({ ...max, Respiration: e.target.value })
-              }
-              required
-            />
-            <label className="unitnoti">ครั้ง/นาที</label>
-          </div>
-          <div className="input-group">
-            <label className="titlenoti">อุณหภูมิ</label>
-            {/* <label>Min:</label> */}
-            <input
-              type="number"
-              value={min.Temperature || ""}
-              onChange={(e) =>
-                setMin({ ...min, Temperature: e.target.value })
-              }
-              required
-            />
-            {/* <label>Max:</label> */}
-            <input
-              type="number"
-              value={max.Temperature || ""}
-              onChange={(e) =>
-                setMax({ ...max, Temperature: e.target.value })
-              }
-              required
-            />
-            <label className="unitnoti">°C</label>
-          </div>
-
-          <div className="input-group">
-            <label className="titlenoti">ระดับน้ำตาลในเลือด</label>
-            {/* <label>Min:</label> */}
-            <input
-              type="number"
-              value={min.DTX || ""}
-              onChange={(e) => setMin({ ...min, DTX: e.target.value })}
-              required
-            />
-            {/* <label>Max:</label> */}
-            <input
-              type="number"
-              value={max.DTX || ""}
-              onChange={(e) => setMax({ ...max, DTX: e.target.value })}
-              required
-            />
-            <label className="unitnoti">mg/dL</label>
-          </div>
-          <div className="input-group">
-            <label className="titlenoti">ระดับความเจ็บปวด</label>
-            {/* <label>Min:</label> */}
-            <input
-              type="number"
-              value={painscore || ""}
-              onChange={(e) => setPainscore( e.target.value )}
-              required
-            />          
+          <form onSubmit={handleSubmit}>
+            {[
+              { label: "อุณหภูมิ", key: "Temperature", unit: "(°C)" },
+              { label: "ความดันตัวบน", key: "SBP", unit: "(mmHg)" },
+              { label: "ความดันตัวล่าง", key: "DBP", unit: "(mmHg)" },
+              { label: "ชีพจร", key: "PulseRate", unit: "(ครั้ง/นาที)" },
+              { label: "การหายใจ", key: "Respiration", unit: "(ครั้ง/นาที)" },
+              { label: "ระดับน้ำตาลในเลือด", key: "DTX", unit: "(mg/dL)" },
+            ].map(({ label, key, unit }) => (
+              <div className="input-group" key={key}>
+                <label className="titlenoti">{label}&nbsp;<span className="unit-label">{unit}</span></label>
+                <div className="input-wrapper">
+                  <div className="input-box">
+                    <span className="input-prefix">Min</span>
+                    <input
+                      type="number"
+                      value={min[key]}
+                      onChange={(e) =>
+                        setMin({ ...min, [key]: e.target.value })
+                      }
+                      required
+                    />
+                  </div>
+                  <div className="input-box">
+                    <span className="input-prefix">Max</span>
+                    <input
+                      type="number"
+                      value={max[key]}
+                      onChange={(e) =>
+                        setMax({ ...max, [key]: e.target.value })
+                      }
+                      required
+                    />
+                  </div>
+                  
+                </div>
+              </div>
+            ))}
+            <div className="input-group">
+              <label className="titlenoti">ระดับความเจ็บปวด</label>
+              <div className="input-wrapper">
+                <div className="input-box">
+                  <span className="input-prefix">Med</span>
+                  <input
+                    type="number"
+                    value={painscore}
+                    onChange={(e) => setPainscore(e.target.value)}
+                    required
+                  />
+                </div>
+              </div>
             </div>
-
-          <div className="d-grid">
-            {/* <button type="button" className="btn btn-outline py-2" onClick={handleCancel}>ยกเลิก</button> */}
-            <button type="submit" className="btn btn-outline py-2">
-              บันทึก
-            </button>
-          </div>
-        </form>
-      </div>
+            <div className="d-grid">
+              <button type="submit" className="btn btn-outline py-2">
+                บันทึก
+              </button>
+            </div>
+          </form>
+        </div>
     </div>
   </main>
   );

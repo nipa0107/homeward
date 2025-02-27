@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import "../css/sidebar.css";
 import "../css/alladmin.css";
 import "../css/caremanual.css";
@@ -15,6 +15,7 @@ export default function Home() {
   const [token, setToken] = useState("");
   const [sortBy, setSortBy] = useState("createdAt");
   const [sortOrder, setSortOrder] = useState("asc");
+  const tokenExpiredAlertShown = useRef(false);
 
   useEffect(() => {
     const token = window.localStorage.getItem("token");
@@ -36,8 +37,12 @@ export default function Home() {
         .then((data) => {
           console.log(data);
           setAdminData(data.data);
-          if (data.data == "token expired") {
-            // alert("Token expired login again");
+          if (
+            data.data === "token expired" &&
+            !tokenExpiredAlertShown.current
+          ) {
+            tokenExpiredAlertShown.current = true;
+            alert("Token expired login again");
             window.localStorage.clear();
             window.location.href = "./";
           }
@@ -176,6 +181,8 @@ export default function Home() {
     }
     return <i class="bi bi-caret-down-fill"></i>;
   };
+
+  
   return (
     <main className="body">
       <div className={`sidebar ${isActive ? "active" : ""}`}>
@@ -232,24 +239,30 @@ export default function Home() {
               <span className="links_name">จัดการแอดมิน</span>
             </a>
           </li>
-          <li>
-            <a href="recover-patients">
-              <i className="bi bi-trash"></i>
-              <span className="links_name">จัดการข้อมูลผู้ป่วยที่ถูกลบ</span>
-            </a>
-          </li>
           {/* เชื่อมลิงกไปอีเว็บอยู่ที่ testlink */}
           <li>
-            <a
-              href={`http://localhost:3002?token=${token}`}
-              // target="_blank"
+  {adminData?._id && (
+    <a href={`http://localhost:5173/auth?userId=${adminData._id}`}
+      target="_blank" 
+      rel="noopener noreferrer"
+    >
+      <i className="bi bi-window"></i>
+      <span className="links_name">PTAH</span>
+    </a>
+  )}
+</li>
+
+          {/* <li>
+          <a       onClick={() => {
+                sessionStorage.setItem("userId", adminData._id);
+                window.location.href = "http://localhost:5173/auth";
+              }}
               rel="noopener noreferrer"
             >
               <i className="bi bi-window"></i>
               <span className="links_name">เว็บ PTHA</span>
             </a>
-          </li>
-
+          </li> */}
           <div className="nav-logout">
             <li>
               <a href="./" onClick={logOut}>
@@ -260,10 +273,13 @@ export default function Home() {
                 ></i>
                 <span className="links_name">ออกจากระบบ</span>
               </a>
+              
             </li>
+            
           </div>
         </ul>
       </div>
+
       <div className="home_content">
         <div className="homeheader">
           <div className="header">จัดการข้อมูลคู่มือการดูแลผู้ป่วย</div>
@@ -324,112 +340,67 @@ export default function Home() {
             </p>
           </div>
         </div>
-        {/* <div className="content">
-        {data.length > 0 ? (
-           data.map((i) => {
-                const formattedDate = new Intl.DateTimeFormat("th-TH", {
-                  day: "numeric",
-                  month: "long",
-                  year: "numeric",
-                  hour: "numeric",
-                  minute: "numeric",
-                  second: "numeric",
-                }).format(new Date(i.updatedAt));
-                return (
-                  <div className="adminall card mb-3 ">
-                    <div className="card-body">
-                      <h5 className="card-title">{i.caremanual_name}</h5>
-                      <h5 className="card-title">แก้ไขครั้งล่าสุดเมื่อ : {formattedDate}</h5>
-                      <div className="buttongroup">
-                        <button
-                          className="editimg"
-                          onClick={() =>
-                            navigate("/updatecaremanual", {
-                              state: { id: i._id, caremanual: i },
-                            })
-                          }
-                        >
-                          <i className="bi bi-pencil-square"></i>
-                        </button>
 
-                        <button
-                          className="deleteimg"
-                          onClick={() =>
-                            deleteCaremanual(i._id, i.caremanual_name)
-                          }
-                        >
-                         <i className="bi bi-trash"></i>
-
-                        </button>
-                      </div>
-                    </div>
-                  </div>
-                );
-              })
-            ) : (
-              <div className="no-results">
-                <p>ไม่พบข้อมูลที่คุณค้นหา</p>
-              </div>
-            )}
-        </div> */}
         <div className="content">
-          <table className="caremanual-table">
-            <thead>
-              <tr>
-                <th>ชื่อคู่มือ</th>
-                <th onClick={() => handleSort("createdAt")}>
-                  สร้างเมื่อวันที่ {getSortIcon("createdAt")}
-                </th>
-                <th onClick={() => handleSort("updatedAt")}>
-                  แก้ไขครั้งล่าสุดเมื่อ {getSortIcon("updatedAt")}
-                </th>
-                <th>จัดการ</th>
-              </tr>
-            </thead>
-            <tbody>
-              {sortedData.length > 0 ? (
-                sortedData.map((i, index) => {
-                  const formattedCreateDate = formatDate(i.createdAt);
-                  const formattedUpdateDate = formatDate(i.updatedAt);
-
-                  return (
-                    <tr key={index}>
-                      <td>{i.caremanual_name}</td>
-                      <td>{formattedCreateDate}</td>
-                      <td>{formattedUpdateDate}</td>
-                      <td className="buttongroup-in-table">
-                        <button
-                          className="editimg2"
-                          onClick={() =>
-                            navigate("/updatecaremanual", {
-                              state: { id: i._id, caremanual: i },
-                            })
-                          }
-                        >
-                          <i className="bi bi-pencil-square"></i>
-                        </button>
-
-                        <button
-                          className="deleteimg2"
-                          onClick={() =>
-                            deleteCaremanual(i._id, i.caremanual_name)
-                          }
-                        >
-                          <i className="bi bi-trash"></i>
-                        </button>
-                      </td>
-                    </tr>
-                  );
-                })
-              ) : (
+          <div className="table-container">
+            <table className="caremanual-table table-all">
+              <thead>
                 <tr>
-                  <td colSpan="4" className="text-center">
-                    ไม่พบข้อมูลที่คุณค้นหา
-                  </td>
+                  <th>ชื่อคู่มือ</th>
+                  <th onClick={() => handleSort("createdAt")}>
+                    สร้างเมื่อวันที่ {getSortIcon("createdAt")}
+                  </th>
+                  <th onClick={() => handleSort("updatedAt")}>
+                    แก้ไขเมื่อวันที่ {getSortIcon("updatedAt")}
+                  </th>
+                  <th>จัดการ</th>
                 </tr>
-              )}
-            </tbody>
-          </table>
+              </thead>
+              <tbody>
+                {sortedData.length > 0 ? (
+                  sortedData.map((i, index) => {
+                    const formattedCreateDate = formatDate(i.createdAt);
+                    const formattedUpdateDate = formatDate(i.updatedAt);
+
+                    return (
+                      <tr key={index}>
+                        <td>{i.caremanual_name}</td>
+                        <td>{formattedCreateDate}</td>
+                        <td>{formattedUpdateDate}</td>
+                        <td className="buttongroup-in-table">
+                          <button
+                            className="editimg2"
+                            onClick={() =>
+                              navigate("/updatecaremanual", {
+                                state: { id: i._id, caremanual: i },
+                              })
+                            }
+                          >
+                            <i className="bi bi-pencil-square"></i>
+                          </button>
+
+                          <button
+                            className="deleteimg2"
+                            onClick={() =>
+                              deleteCaremanual(i._id, i.caremanual_name)
+                            }
+                          >
+                            <i className="bi bi-trash"></i>
+                          </button>
+                        </td>
+                      </tr>
+                    );
+                  })
+                ) : (
+                  <tr>
+                    <td colSpan="4" className="text-center">
+                      ไม่พบข้อมูลที่คุณค้นหา
+                    </td>
+                  </tr>
+                )}
+              </tbody>
+            </table>
+          </div>
         </div>
       </div>
     </main>

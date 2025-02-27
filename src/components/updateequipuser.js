@@ -1,6 +1,7 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from "react";
 import "../css/sidebar.css";
 import "../css/alladmin.css"
+import "../css/form.css"
 import "bootstrap-icons/font/bootstrap-icons.css";
 import logow from "../img/logow.png";
 import { useNavigate } from "react-router-dom";
@@ -20,6 +21,7 @@ export default function UpdateEquipUser() {
     const [selectedEquipType1, setSelectedEquipType1] = useState("");
     const [selectedEquipType2, setSelectedEquipType2] = useState("");
     const [selectedEquipType3, setSelectedEquipType3] = useState("");
+    const tokenExpiredAlertShown = useRef(false); 
 
     useEffect(() => {
         const token = window.localStorage.getItem("token");
@@ -39,6 +41,12 @@ export default function UpdateEquipUser() {
                 .then((data) => {
                     console.log(data);
                     setAdminData(data.data);
+                    if (data.data === "token expired" && !tokenExpiredAlertShown.current) {
+                        tokenExpiredAlertShown.current = true; 
+                        alert("Token expired login again");
+                        window.localStorage.clear();
+                        window.location.href = "./";
+                      }
                 });
         }
         getAllEquip();
@@ -181,12 +189,7 @@ export default function UpdateEquipUser() {
                             <span className="links_name">จัดการแอดมิน</span>
                         </a>
                     </li>
-                    <li>
-            <a href="recover-patients">
-              <i className="bi bi-trash"></i>
-              <span className="links_name">จัดการข้อมูลผู้ป่วยที่ถูกลบ</span>
-            </a>
-          </li>
+
                     <div className="nav-logout">
                         <li>
                             <a href="./" onClick={logOut}>
@@ -240,8 +243,9 @@ export default function UpdateEquipUser() {
                         </li>
                     </ul>
                 </div>
-                <h3>แก้ไขอุปกรณ์สำหรับผู้ป่วย</h3>
+                
                 <div className="adminall card mb-3">
+                <p className="title-header">แก้ไขอุปกรณ์สำหรับผู้ป่วย</p>
                     <form onSubmit={handleSubmit}>
                         <div className="mb-3">
                             <label>อุปกรณ์ติดตัว</label>

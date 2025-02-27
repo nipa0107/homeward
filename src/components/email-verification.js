@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect, useState, useRef } from "react";
 import { useNavigate, useLocation } from 'react-router-dom';
 import "../css/sidebar.css";
 import "../css/alladmin.css";
@@ -115,12 +115,6 @@ export default function EmailVerification() {
             <span className="links_name">จัดการแอดมิน</span>
           </a>
         </li>
-        <li>
-            <a href="recover-patients">
-              <i className="bi bi-trash"></i>
-              <span className="links_name">จัดการข้อมูลผู้ป่วยที่ถูกลบ</span>
-            </a>
-          </li>
         <div className="nav-logout">
           <li>
             <a href="./" onClick={logOut}>
@@ -173,8 +167,9 @@ export default function EmailVerification() {
         </ul>
       </div>
     
-      <h3>ยืนยันอีเมล</h3>
+      
       <div className="formcontainerpf card mb-3">
+      <p className="title-header">ยืนยันอีเมล</p>
       <form onSubmit={handleSubmit}>
         <div className="mb-3">
           <label htmlFor="email">อีเมล</label>

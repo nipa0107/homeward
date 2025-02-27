@@ -1,0 +1,102 @@
+.table-container {
+    /* width: 100%; */
+    overflow-x: auto;
+    white-space: nowrap;
+}
+
+.table-all {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 0 auto;
+    box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.1);
+    padding: 15px;
+    border-collapse: collapse;
+    border-spacing: 1;
+    border-radius: 0.5rem;
+    line-height: 2rem;
+}
+
+.table-all th {
+    font-size: 1rem;
+    background-color: #87CEFA;
+    color: #000;
+    text-transform: uppercase;
+    border-bottom: 2px solid #87CEFA;
+    white-space: nowrap;
+
+}
+
+.table-all td {
+    white-space: normal;
+}
+
+.table-all th:first-child {
+    border-top-left-radius: 0.5rem;
+}
+
+.table-all th:last-child {
+    border-top-right-radius: 0.5rem;
+}
+
+.table-all th,
+.table-all td {
+    padding: 10px;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+    word-wrap: break-word;
+    /* white-space: normal; */
+}
+
+
+/* .table-all th:nth-child(1),
+.table-all td:first-child {
+    position: sticky;
+    left: 0;
+    z-index: 1;
+} */
+
+.table-all td:first-child {
+    background-color: #ffff;
+}
+
+.table-all .buttongroup-in-table button {
+    margin: 0 3px;
+    padding: 5px 8px;
+}
+
+.table-all th i.bi-caret-up-fill,
+.table-all th i.bi-caret-down-fill {
+    color: #757575;
+}
+
+@media (max-width: 1120px) {}
+
+@media (max-width: 992px) {
+    .table-container {
+        justify-content: center;
+        margin: 0 auto;
+        border-radius: 0.5rem;
+    }
+
+    .table-all th,
+    .table-all td {
+        padding: 8px;
+        font-size: 0.9rem;
+    }
+}
+
+@media (max-width: 767px) {
+    .table-container {
+        width: 90%;
+        margin: 0 auto;
+    }
+
+    .table-all th,
+    .table-all td {
+        padding: 6px;
+    }
+
+    .table-all .buttongroup-in-table button {
+        padding: 4px 6px;
+    }
+}

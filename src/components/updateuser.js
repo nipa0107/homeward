@@ -1,7 +1,8 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { useLocation } from "react-router-dom";
 import "../css/sidebar.css";
 import "../css/alladmin.css";
+import "../css/form.css"
 import "bootstrap-icons/font/bootstrap-icons.css";
 import logow from "../img/logow.png";
 import { useNavigate } from "react-router-dom";
@@ -39,6 +40,8 @@ export default function UpdateUser() {
   const [telError, setTelError] = useState("");
   const [nameError, setNameError] = useState("");
   const [surnameError, setSurnameError] = useState("");
+  const tokenExpiredAlertShown = useRef(false); 
+  const [otherGenderError, setOtherGenderError] = useState("");
 
   const formatIDCardNumber = (id) => {
     if (!id) return "";
@@ -109,15 +112,18 @@ export default function UpdateUser() {
         .then((data) => {
           console.log(data);
           setAdminData(data.data);
+          if (data.data === "token expired" && !tokenExpiredAlertShown.current) {
+            tokenExpiredAlertShown.current = true; 
+            alert("Token expired login again");
+            window.localStorage.clear();
+            window.location.href = "./";
+          }
         });
     }
     fetchData();
     fetchCaregiverData();
   }, [id]);
 
-  const validateInput = () => {
- 
-  };
 
   const UpdateUser = async () => {
     let hasError = false;
@@ -134,12 +140,16 @@ export default function UpdateUser() {
     } else {
       setUsernameError("");
     }
-    if (tel.trim() && tel.length !== 10) {
+    if (!tel.trim()) {
+      setTelError("กรุณากรอกเบอร์โทรศัพท์");
+      hasError = true;
+    } else if (tel.length !== 10) {
       setTelError("เบอร์โทรศัพท์ต้องมี 10 หลัก");
       hasError = true;
     } else {
       setTelError("");
     }
+    
 
     if (!name.trim()) {
       setNameError("กรุณากรอกชื่อ");
@@ -153,6 +163,13 @@ export default function UpdateUser() {
       hasError = true;
     } else {
       setSurnameError("");
+    }
+
+    if (showOtherInput && !otherGender.trim()) {
+      setOtherGenderError("กรุณากรอกเพศ");
+      hasError = true;
+    } else {
+      setOtherGenderError("");
     }
 
     if (hasError) return;
@@ -368,12 +385,7 @@ export default function UpdateUser() {
               <span className="links_name">จัดการแอดมิน</span>
             </a>
           </li>
-          <li>
-            <a href="recover-patients">
-              <i className="bi bi-trash"></i>
-              <span className="links_name">จัดการข้อมูลผู้ป่วยที่ถูกลบ</span>
-            </a>
-          </li>
+
           <div className="nav-logout">
             <li>
               <a href="./" onClick={logOut}>
@@ -434,8 +446,9 @@ export default function UpdateUser() {
             </li>
           </ul>
         </div>
-        <h3>แก้ไขข้อมูลผู้ป่วย</h3>
+        
         <div className="adminall card mb-3">
+        <p className="title-header">แก้ไขข้อมูลผู้ป่วย</p>
           <div className="mb-3">
             <label>ชื่อผู้ใช้</label>
             <input
@@ -546,10 +559,12 @@ export default function UpdateUser() {
                   <label>กรุณาระบุ:</label>
                   <input
                     type="text"
-                    className="form-control"
+                    className={`form-control ${otherGenderError ? "input-error" : ""}`}
                     value={otherGender}
                     onChange={handleOtherGenderChange}
                   />
+                    {otherGenderError && <span className="error-text">{otherGenderError}</span>}
+
                 </div>
               )}
             </div>

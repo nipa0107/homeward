@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import "../css/alladmin.css";
 import "../css/admin.css";
 import "../css/sidebar.css";
@@ -12,6 +12,7 @@ export default function Alladmin() {
   const [isActive, setIsActive] = useState(false);
   const [searchKeyword, setSearchKeyword] = useState(""); //ค้นหา
   const [token, setToken] = useState("");
+  const tokenExpiredAlertShown = useRef(false); 
 
   useEffect(() => {
     const token = window.localStorage.getItem("token");
@@ -33,6 +34,12 @@ export default function Alladmin() {
         .then((data) => {
           console.log(data);
           setAdminData(data.data);
+          if (data.data === "token expired" && !tokenExpiredAlertShown.current) {
+            tokenExpiredAlertShown.current = true; 
+            alert("Token expired login again");
+            window.localStorage.clear();
+            window.location.href = "./";
+          }
         });
     }
     getAllAdmin();
@@ -180,12 +187,6 @@ export default function Alladmin() {
               <span className="links_name">จัดการแอดมิน</span>
             </a>
           </li>
-          <li>
-            <a href="recover-patients">
-              <i className="bi bi-trash"></i>
-              <span className="links_name">จัดการข้อมูลผู้ป่วยที่ถูกลบ</span>
-            </a>
-          </li>
           <div className="nav-logout">
             <li>
               <a href="./" onClick={logOut}>
@@ -285,80 +286,61 @@ export default function Alladmin() {
             </div>
           )}
         </div> */}
-        <div className="content">
-          
-            <table className="admin-table">
-              <thead>
-                <tr>
-                  {/* <th>ลำดับ</th> */}
-                  <th>ชื่อผู้ใช้</th>
-                  <th>อีเมล</th>
-                  <th>สถานะ</th>
-                  <th>จัดการ</th>
-                </tr>
-              </thead>
-              <tbody>
-              {data.length > 0 ? (
-                data
-                  .sort((a, b) => {
-                    if (a.username === adminData.username) return -1;
-                    if (b.username === adminData.username) return 1;
-                    return new Date(a.createdAt) - new Date(b.createdAt);
-                  })
-                  .map((i, index) => (
-                    <tr key={i._id}>
-                      {/* <td>{index + 1}</td> */}
-                      <td>{i.username}</td>
-                      <td>{i.email}</td>
-                      <td
-                        className={
-                          i.isEmailVerified ? "verified" : "not-verified"
-                        }
-                      >
-                        {i.isEmailVerified ? (
-                          <div>
-                            <i
-                              className="bi bi-check-circle"
-                              style={{ color: "#42bd41", marginRight: "5px" }}
-                            ></i>
-                            ยืนยันแล้ว
-                          </div>
-                        ) : (
-                          <div>
-                            <i
-                              className="bi bi-x-circle"
-                              style={{ color: "#bdbdbd", marginRight: "5px" }}
-                            ></i>
-                            ยังไม่ยืนยัน
-                          </div>
-                        )}
-                      </td>
-                      {/* <td className="buttongroup-in-table"> */}
-                      <td className="buttongroup-in-table">
-                        {i.username !== adminData.username && (
-                          <button
-                            className="deleteimg"
-                            onClick={() => deleteAdmin(i._id, i.username)}
-                          >
-                           <i className="bi bi-trash"></i>
-                          </button>
-                        )}
-                      </td>
-                    </tr>
+<div className="content">
+  <div className="table-container">
+    <table className="admin-table table-all">
+      <thead>
+        <tr>
+          <th className="sticky-column">ชื่อผู้ใช้</th>
+          <th>อีเมล</th>
+          <th>สถานะ</th>
+          <th>จัดการ</th>
+        </tr>
+      </thead>
+      <tbody>
+        {data.length > 0 ? (
+          data
+            .sort((a, b) => {
+              if (a.username === adminData.username) return -1;
+              if (b.username === adminData.username) return 1;
+              return new Date(a.createdAt) - new Date(b.createdAt);
+            })
+            .map((i) => (
+              <tr key={i._id}>
+                <td className="sticky-column">{i.username}</td>
+                <td>{i.email}</td>
+                <td className={i.isEmailVerified ? "verified" : "not-verified"}>
+                  {i.isEmailVerified ? (
+                    <div>
+                      <i className="bi bi-check-circle" style={{ color: "#42bd41", marginRight: "5px" }}></i>
+                      ยืนยันแล้ว
+                    </div>
+                  ) : (
+                    <div>
+                      <i className="bi bi-x-circle" style={{ color: "#bdbdbd", marginRight: "5px" }}></i>
+                      ยังไม่ยืนยัน
+                    </div>
+                  )}
+                </td>
+                <td className="buttongroup-in-table">
+                  {i.username !== adminData.username && (
+                    <button className="deleteimg" onClick={() => deleteAdmin(i._id, i.username)}>
+                      <i className="bi bi-trash"></i>
+                    </button>
+                  )}
+                </td>
+              </tr>
+            ))
+        ) : (
+          <tr>
+            <td colSpan="4" style={{ textAlign: "center", padding: "10px" }}>ไม่พบข้อมูลที่คุณค้นหา</td>
+          </tr>
+        )}
+      </tbody>
+    </table>
+  </div>
+</div>
 
-                  ))
-                ) : (
-                  <tr>
-                    <td colSpan="4" style={{ textAlign: "center", padding: "10px" }}>
-                      ไม่พบข้อมูลที่คุณค้นหา
-                    </td>
-                  </tr>
-                  )
-                }
-              </tbody>
-            </table>
-     
-        </div>
       </div>
     </main>
   );

@@ -1,11 +1,11 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import "../css/sidebar.css";
-import "../css/alladmin.css"
+import "../css/alladmin.css";
+import "../css/form.css";
 import "bootstrap-icons/font/bootstrap-icons.css";
 import logow from "../img/logow.png";
 import { useNavigate } from "react-router-dom";
-import { ToastContainer, toast } from 'react-toastify';
-
+import { ToastContainer, toast } from "react-toastify";
 
 export default function AddAdmin() {
   const [username, setUsername] = useState("");
@@ -17,8 +17,7 @@ export default function AddAdmin() {
   const navigate = useNavigate();
   const [adminData, setAdminData] = useState("");
   const [isActive, setIsActive] = useState(false);
-  const [error, setError] = useState(""); 
-  const [token, setToken] = useState('');
+  const [token, setToken] = useState("");
   const [usernameError, setUsernameError] = useState("");
   const [nameError, setNameError] = useState("");
   const [surnameError, setSurnameError] = useState("");
@@ -27,12 +26,13 @@ export default function AddAdmin() {
   const [confirmPasswordError, setConfirmPasswordError] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const tokenExpiredAlertShown = useRef(false);
 
   const toggleShowPassword = (setter) => setter((prev) => !prev);
 
   useEffect(() => {
     const token = window.localStorage.getItem("token");
-    setToken(token); 
+    setToken(token);
     if (token) {
       fetch("http://localhost:5000/profile", {
         method: "POST",
@@ -48,30 +48,37 @@ export default function AddAdmin() {
       })
         .then((res) => res.json())
         .then((data) => {
-          console.log(data)
+          console.log(data);
           setAdminData(data.data);
+          if (
+            data.data === "token expired" &&
+            !tokenExpiredAlertShown.current
+          ) {
+            tokenExpiredAlertShown.current = true;
+            alert("Token expired login again");
+            window.localStorage.clear();
+            window.location.href = "./";
+          }
         });
     }
-  }, []); //ส่งไปครั้งเดียว
+  }, []);
 
-
-  
   const handleSubmit = (e) => {
     e.preventDefault();
     let hasError = false;
     const usernameErrorMessage = /^[a-zA-Z0-9._-]{3,20}$/.test(username)
-    ? "" // ไม่มีข้อผิดพลาด
-    : "ชื่อผู้ใช้ต้องประกอบด้วยตัวอักษร, ตัวเลข, จุด, ขีดล่าง, หรือ ขีดกลาง และต้องมีความยาวระหว่าง 3 ถึง 20 ตัวอักษร";
+      ? ""
+      : "ชื่อผู้ใช้ต้องประกอบด้วยตัวอักษร, ตัวเลข, จุด, ขีดล่าง, หรือ ขีดกลาง และต้องมีความยาวระหว่าง 3 ถึง 20 ตัวอักษร";
 
-  if (!username.trim()) {
-    setUsernameError("กรุณากรอกชื่อผู้ใช้");
-    hasError = true;
-  } else if (usernameErrorMessage) {
-    setUsernameError(usernameErrorMessage);
-    hasError = true;
-  } else {
-    setUsernameError(""); // ลบข้อผิดพลาดถ้ากรอกถูกต้อง
-  }
+    if (!username.trim()) {
+      setUsernameError("กรุณากรอกชื่อผู้ใช้");
+      hasError = true;
+    } else if (usernameErrorMessage) {
+      setUsernameError(usernameErrorMessage);
+      hasError = true;
+    } else {
+      setUsernameError("");
+    }
 
     if (!name.trim()) {
       setNameError("กรุณากรอกชื่อ");
@@ -79,7 +86,7 @@ export default function AddAdmin() {
     } else {
       setNameError("");
     }
-  
+
     if (!surname.trim()) {
       setSurnameError("กรุณากรอกนามสกุล");
       hasError = true;
@@ -101,7 +108,7 @@ export default function AddAdmin() {
     } else {
       setPasswordError("");
     }
-    
+
     if (!confirmPassword.trim()) {
       setConfirmPasswordError("กรุณากรอกยืนยันรหัสผ่าน");
       hasError = true;
@@ -111,7 +118,7 @@ export default function AddAdmin() {
     } else {
       setConfirmPasswordError("");
     }
-    
+
     if (hasError) return;
     fetch("http://localhost:5000/addadmin", {
       method: "POST",
@@ -119,7 +126,7 @@ export default function AddAdmin() {
         "Content-Type": "application/json",
         Accept: "application/json",
         "Access-Control-Allow-Origin": "*",
-        Authorization: `Bearer ${token}`
+        Authorization: `Bearer ${token}`,
       },
       body: JSON.stringify({
         username,
@@ -132,14 +139,13 @@ export default function AddAdmin() {
     })
       .then((res) => res.json())
       .then((data) => {
-        // console.log(data, "Addadmain");
         if (data.status === "ok") {
           toast.success("เพิ่มข้อมูลสำเร็จ");
           setTimeout(() => {
             navigate("/alladmin");
-          },1050); 
-        }else {
-          // setError(data.error); 
+          }, 1050);
+        } else {
+          // setError(data.error);
           toast.error(data.error);
         }
       });
@@ -156,57 +162,56 @@ export default function AddAdmin() {
   const handleInputUsernameChange = (e) => {
     let input = e.target.value;
     setUsername(input);
-  
+
     if (input.trim() === "") {
       setUsernameError("");
       return;
     }
-  
+
     const usernameErrorMessage = /^[a-zA-Z0-9._-]{3,20}$/.test(input)
-      ? "" 
+      ? ""
       : "ชื่อผู้ใช้ต้องเป็นตัวอักษร, ตัวเลข, จุด, ขีดล่าง, หรือ ขีดกลางและต้องมีความยาวระหว่าง 3 ถึง 20 ตัวอักษร";
-  
+
     setUsernameError(usernameErrorMessage);
   };
-  
 
   const handleInputNameChange = (e) => {
     const input = e.target.value;
-  
+
     if (/[^ก-๙a-zA-Z\s]/.test(input)) {
       setNameError("ชื่อควรเป็นตัวอักษรเท่านั้น");
     } else {
       setNameError("");
     }
-  
-    setName(input.replace(/[^ก-๙a-zA-Z\s]/g, "")); 
+
+    setName(input.replace(/[^ก-๙a-zA-Z\s]/g, ""));
   };
-  
 
   const handleInputSurnameChange = (e) => {
     const input = e.target.value;
 
- 
     if (/[^ก-๙a-zA-Z\s]/.test(input)) {
       setSurnameError("นามสกุลควรเป็นตัวอักษรเท่านั้น");
     } else {
       setSurnameError("");
     }
 
-    setSurname(input.replace(/[^ก-๙a-zA-Z\s]/g, "")); 
+    setSurname(input.replace(/[^ก-๙a-zA-Z\s]/g, ""));
   };
 
   const handleInputEmailChange = (e) => {
     const input = e.target.value;
-  
+
     if (!input.trim()) {
-      setEmailError(""); 
-    } else if (!/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(input)) {
+      setEmailError("");
+    } else if (
+      !/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(input)
+    ) {
       setEmailError("รูปแบบอีเมลไม่ถูกต้อง");
     } else {
-      setEmailError(""); 
+      setEmailError("");
     }
-  
+
     setEmail(input);
   };
   const validatePassword = (input) => {
@@ -218,7 +223,7 @@ export default function AddAdmin() {
       setPasswordError("");
     }
     setPassword(input);
-  
+
     // ตรวจสอบรหัสผ่านและยืนยันรหัสผ่านเมื่อรหัสผ่านเปลี่ยน
     if (confirmPassword && input !== confirmPassword) {
       setConfirmPasswordError("รหัสผ่านและยืนยันรหัสผ่านไม่ตรงกัน");
@@ -226,7 +231,7 @@ export default function AddAdmin() {
       setConfirmPasswordError("");
     }
   };
-  
+
   const validateConfirmPassword = (input) => {
     if (!input.trim()) {
       setConfirmPasswordError("กรุณากรอกยืนยันรหัสผ่าน");
@@ -237,204 +242,224 @@ export default function AddAdmin() {
     }
     setConfirmPassword(input);
   };
-  
-  
+
   return (
     <main className="body">
       <ToastContainer />
-      <div className={`sidebar ${isActive ? 'active' : ''}`}>
+      <div className={`sidebar ${isActive ? "active" : ""}`}>
         <div className="logo_content">
           <div className="logo">
-            <div className="logo_name" >
-              <img src={logow} className="logow" alt="logo" ></img>
+            <div className="logo_name">
+              <img src={logow} className="logow" alt="logo"></img>
             </div>
           </div>
-          <i className='bi bi-list' id="btn" onClick={handleToggleSidebar}></i>
+          <i className="bi bi-list" id="btn" onClick={handleToggleSidebar}></i>
         </div>
         <ul className="nav-list">
           <li>
             <a href="home">
               <i className="bi bi-book"></i>
-              <span className="links_name" >จัดการข้อมูลคู่มือการดูแลผู้ป่วย</span>
+              <span className="links_name">
+                จัดการข้อมูลคู่มือการดูแลผู้ป่วย
+              </span>
             </a>
           </li>
           <li>
             <a href="alluser">
               <i className="bi bi-person-plus"></i>
-              <span className="links_name" >จัดการข้อมูลผู้ป่วย</span>
+              <span className="links_name">จัดการข้อมูลผู้ป่วย</span>
             </a>
           </li>
           <li>
             <a href="allmpersonnel">
               <i className="bi bi-people"></i>
-              <span className="links_name" >จัดการข้อมูลบุคลากร</span>
+              <span className="links_name">จัดการข้อมูลบุคลากร</span>
             </a>
           </li>
           <li>
             <a href="allequip">
               <i className="bi bi-prescription2"></i>
-              <span className="links_name" >จัดการอุปกรณ์ทางการแพทย์</span>
+              <span className="links_name">จัดการอุปกรณ์ทางการแพทย์</span>
             </a>
           </li>
           <li>
             <a href="allsymptom" onClick={() => navigate("/allsymptom")}>
               <i className="bi bi-bandaid"></i>
-              <span className="links_name" >จัดการอาการผู้ป่วย</span>
+              <span className="links_name">จัดการอาการผู้ป่วย</span>
             </a>
           </li>
-          
+
           <li>
-            <a href="/alluserinsetting" >
-            <i className="bi bi-bell"></i>              
-            <span className="links_name" >ตั้งค่าการแจ้งเตือน</span>
+            <a href="/alluserinsetting">
+              <i className="bi bi-bell"></i>
+              <span className="links_name">ตั้งค่าการแจ้งเตือน</span>
             </a>
           </li>
           <li>
             <a href="alladmin" onClick={() => navigate("/alladmin")}>
               <i className="bi bi-person-gear"></i>
-              <span className="links_name" >จัดการแอดมิน</span>
-            </a>
-          </li>
-          <li>
-            <a href="recover-patients">
-              <i className="bi bi-trash"></i>
-              <span className="links_name">จัดการข้อมูลผู้ป่วยที่ถูกลบ</span>
+              <span className="links_name">จัดการแอดมิน</span>
             </a>
           </li>
           <div className="nav-logout">
             <li>
               <a href="./" onClick={logOut}>
-                <i className='bi bi-box-arrow-right' id="log_out" onClick={logOut}></i>
-                <span className="links_name" >ออกจากระบบ</span>
+                <i
+                  className="bi bi-box-arrow-right"
+                  id="log_out"
+                  onClick={logOut}
+                ></i>
+                <span className="links_name">ออกจากระบบ</span>
               </a>
             </li>
           </div>
         </ul>
       </div>
       <div className="home_content">
-      <div className="homeheader">
-        <div className="header">จัดการแอดมิน</div>
-        <div className="profile_details">
-        <ul className="nav-list">
-
-          <li>
-            <a href="profile" >
-              <i className="bi bi-person"></i>
-              <span className="links_name" >{adminData && adminData.username}</span>
-            </a>
-          </li>
-          </ul>
-        </div>
+        <div className="homeheader">
+          <div className="header">จัดการแอดมิน</div>
+          <div className="profile_details">
+            <ul className="nav-list">
+              <li>
+                <a href="profile">
+                  <i className="bi bi-person"></i>
+                  <span className="links_name">
+                    {adminData && adminData.username}
+                  </span>
+                </a>
+              </li>
+            </ul>
+          </div>
         </div>
         <div className="breadcrumbs">
           <ul>
             <li>
-            <a href="home">
+              <a href="home">
                 <i className="bi bi-house-fill"></i>
               </a>
             </li>
             <li className="arrow">
               <i className="bi bi-chevron-double-right"></i>
             </li>
-            <li><a href="alladmin">จัดการแอดมิน</a>
+            <li>
+              <a href="alladmin">จัดการแอดมิน</a>
             </li>
             <li className="arrow">
               <i className="bi bi-chevron-double-right"></i>
             </li>
-            <li><a>เพิ่มข้อมูลแอดมิน</a>
+            <li>
+              <a>เพิ่มข้อมูลแอดมิน</a>
             </li>
           </ul>
         </div>
-        <h3>เพิ่มข้อมูลแอดมิน</h3>
-        <div className="adminall card mb-3">
+       
+        <div className="adminall card">
+        <p className="title-header">เพิ่มข้อมูลแอดมิน</p>
           <form onSubmit={handleSubmit}>
             <div className="mb-1">
-              <label>ชื่อผู้ใช้<span className="required">*</span></label>
+              <label>
+                ชื่อผู้ใช้<span className="required">*</span>
+              </label>
               <input
                 type="text"
                 className={`form-control ${usernameError ? "input-error" : ""}`}
-                onChange={handleInputUsernameChange}              
-                />
-               {usernameError && <span className="error-text">{usernameError}</span>}
+                onChange={handleInputUsernameChange}
+              />
+              {usernameError && (
+                <span className="error-text">{usernameError}</span>
+              )}
             </div>
 
             <div className="mb-1">
-              <label>ชื่อ<span className="required">*</span></label>
+              <label>
+                ชื่อ<span className="required">*</span>
+              </label>
               <input
                 type="text"
                 className={`form-control ${nameError ? "input-error" : ""}`}
-                onChange={handleInputNameChange}              
-                />
+                onChange={handleInputNameChange}
+              />
               {nameError && <span className="error-text">{nameError}</span>}
             </div>
             <div className="mb-1">
-              <label>นามสกุล<span className="required">*</span></label>
+              <label>
+                นามสกุล<span className="required">*</span>
+              </label>
               <input
                 type="text"
                 className={`form-control ${surnameError ? "input-error" : ""}`}
                 onChange={handleInputSurnameChange}
               />
-              {surnameError && <span className="error-text">{surnameError}</span>}
+              {surnameError && (
+                <span className="error-text">{surnameError}</span>
+              )}
             </div>
 
             <div className="mb-1">
-              <label>อีเมล<span className="required">*</span></label>
+              <label>
+                อีเมล<span className="required">*</span>
+              </label>
               <input
                 type="email"
                 className={`form-control ${emailError ? "input-error" : ""}`}
                 onChange={handleInputEmailChange}
-                />
-             {emailError && <span className="error-text">{emailError}</span>}
+              />
+              {emailError && <span className="error-text">{emailError}</span>}
             </div>
 
             <div className="mb-1">
-              <label>รหัสผ่าน<span className="required">*</span></label>
+              <label>
+                รหัสผ่าน<span className="required">*</span>
+              </label>
               <div className="password-input">
-              <input
+                <input
                   type={showPassword ? "text" : "password"}
-                  className={`form-control ${passwordError ? "input-error" : ""}`}
-                onChange={(e) => validatePassword(e.target.value)}
+                  className={`form-control ${
+                    passwordError ? "input-error" : ""
+                  }`}
+                  onChange={(e) => validatePassword(e.target.value)}
                 />
                 <i
                   className={`bi ${showPassword ? "bi-eye-slash" : "bi-eye"}`}
                   onClick={() => toggleShowPassword(setShowPassword)}
                 ></i>
+              </div>
             </div>
-            </div>
-            {passwordError && <span className="error-text">{passwordError}</span>}
+            {passwordError && (
+              <span className="error-text">{passwordError}</span>
+            )}
 
             <div className="mb-1">
-              <label>ยืนยันรหัสผ่าน<span className="required">*</span></label>
+              <label>
+                ยืนยันรหัสผ่าน<span className="required">*</span>
+              </label>
               <div className="password-input">
-              <input
+                <input
                   type={showConfirmPassword ? "text" : "password"}
-                  className={`form-control ${confirmPasswordError ? "input-error" : ""}`}
-                onChange={(e) => validateConfirmPassword(e.target.value)}
+                  className={`form-control ${
+                    confirmPasswordError ? "input-error" : ""
+                  }`}
+                  onChange={(e) => validateConfirmPassword(e.target.value)}
                 />
- <i
+                <i
                   className={`bi ${
                     showConfirmPassword ? "bi-eye-slash" : "bi-eye"
                   }`}
                   onClick={() => toggleShowPassword(setShowConfirmPassword)}
                 ></i>
-                </div>
+              </div>
             </div>
-            {confirmPasswordError && <span className="error-text">{confirmPasswordError}</span>}
-
-                {/* <p id="errormessage" className="errormessage">{error}</p> */}
-                <div className="d-grid">
-              <button type="submit"className="btn btn-outline py-2">
+            {confirmPasswordError && (
+              <span className="error-text">{confirmPasswordError}</span>
+            )}
+            <div className="d-grid">
+              <button type="submit" className="btn btn-outline py-2">
                 บันทึก
               </button>
-         </div>
+            </div>
           </form>
         </div>
-        {/* <button onClick={All} className="btn btn-primary">
-          Back
-        </button>
-        <button onClick={home} className="btn btn-primary">
-          Home
-        </button> */}
+
       </div>
     </main>
   );

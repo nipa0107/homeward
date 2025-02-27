@@ -1,6 +1,7 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import "../css/sidebar.css";
 import "../css/alladmin.css";
+import "../css/form.css"
 import "bootstrap-icons/font/bootstrap-icons.css";
 import logow from "../img/logow.png";
 import { useNavigate } from "react-router-dom";
@@ -10,11 +11,11 @@ import "react-toastify/dist/ReactToastify.css";
 export default function AddSymptom() {
   const navigate = useNavigate();
   const [name, setName] = useState("");
-  const [validationMessage, setValidationMessage] = useState("");
   const [adminData, setAdminData] = useState("");
   const [isActive, setIsActive] = useState(false);
   const [token, setToken] = useState("");
   const [nameError, setNameError] = useState("");
+  const tokenExpiredAlertShown = useRef(false); 
 
   useEffect(() => {
     const token = window.localStorage.getItem("token");
@@ -36,6 +37,12 @@ export default function AddSymptom() {
         .then((data) => {
           console.log(data);
           setAdminData(data.data);
+          if (data.data === "token expired" && !tokenExpiredAlertShown.current) {
+            tokenExpiredAlertShown.current = true; 
+            alert("Token expired login again");
+            window.localStorage.clear();
+            window.location.href = "./";
+          }
         });
     }
   }, []); //ส่งไปครั้งเดียว
@@ -155,12 +162,6 @@ export default function AddSymptom() {
               <span className="links_name">จัดการแอดมิน</span>
             </a>
           </li>
-          <li>
-            <a href="recover-patients">
-              <i className="bi bi-trash"></i>
-              <span className="links_name">จัดการข้อมูลผู้ป่วยที่ถูกลบ</span>
-            </a>
-          </li>
           <div className="nav-logout">
             <li>
               <a href="./" onClick={logOut}>
@@ -177,7 +178,7 @@ export default function AddSymptom() {
       </div>
       <div className="home_content">
         <div className="homeheader">
-          <div className="header">จัดการอุปกรณ์ทางการแพทย์</div>
+          <div className="header">จัดการอาการผู้ป่วย</div>
           <div className="profile_details ">
             <ul className="nav-list">
               <li>
@@ -212,8 +213,9 @@ export default function AddSymptom() {
             </li>
           </ul>
         </div>
-        <h3>เพิ่มอาการผู้ป่วย</h3>
+        
         <div className="adminall card mb-1">
+        <p className="title-header">เพิ่มอาการผู้ป่วย</p>
           <form onSubmit={handleSubmit}>
             <div className="mb-1">
               <label>

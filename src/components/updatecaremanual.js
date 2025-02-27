@@ -1,7 +1,8 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { useLocation } from "react-router-dom";
 import "../css/sidebar.css";
 import "../css/alladmin.css";
+import "../css/form.css";
 import "bootstrap-icons/font/bootstrap-icons.css";
 import logow from "../img/logow.png";
 import { useNavigate } from "react-router-dom";
@@ -24,11 +25,12 @@ export default function UpdateCareManual() {
   const [selectedFileName, setSelectedFileName] = useState("");
   const [pdfURL, setPdfURL] = useState(null);
   const [token, setToken] = useState("");
-  const [caremanualNameError, setCaremanualNameError] = useState(""); 
+  const [caremanualNameError, setCaremanualNameError] = useState("");
   const [imageError, setImageError] = useState("");
   const [deletedImage, setDeletedImage] = useState(false); // สำหรับภาพ
   const [deletedFile, setDeletedFile] = useState(false); // สำหรับไฟล์
-  
+  const tokenExpiredAlertShown = useRef(false);
+
   const defaultImageURL = imgdefault;
   // const defaultImageURL =
   //   "https://gnetradio.com/wp-content/uploads/2019/10/no-image.jpg";
@@ -104,6 +106,15 @@ export default function UpdateCareManual() {
         .then((data) => {
           console.log(data);
           setAdminData(data.data);
+          if (
+            data.data === "token expired" &&
+            !tokenExpiredAlertShown.current
+          ) {
+            tokenExpiredAlertShown.current = true;
+            alert("Token expired login again");
+            window.localStorage.clear();
+            window.location.href = "./";
+          }
         });
     }
     fetchData();
@@ -158,16 +169,14 @@ export default function UpdateCareManual() {
     setImage(null); // ลบภาพออกจากหน้า
     setDeletedImage(true); // ระบุว่าภาพถูกลบ
   };
-  
+
   const removeFile = () => {
     setFile(null); // ลบไฟล์ออกจากหน้า
     setSelectedFileName(""); // รีเซ็ตชื่อไฟล์ที่เลือก
     setPdfURL(null); // ลบลิงก์ PDF
     setDeletedFile(true); // ระบุว่าไฟล์ถูกลบ
   };
-  
 
-  
   const UpdateCareManual = async () => {
     console.log(caremanual_name, image, file, detail);
     // if (!caremanual_name || !image) {
@@ -190,7 +199,7 @@ export default function UpdateCareManual() {
     if (!caremanual_name.trim() || !image) {
       return;
     }
-    if (hasError) return; 
+    if (hasError) return;
 
     // const isDuplicate = await checkDuplicateName(caremanual_name);
     // if (isDuplicate) {
@@ -232,7 +241,7 @@ export default function UpdateCareManual() {
             },
           });
         }
-  
+
         if (deletedFile) {
           await fetch(`http://localhost:5000/remove-file/${id}`, {
             method: "DELETE",
@@ -241,18 +250,18 @@ export default function UpdateCareManual() {
             },
           });
         }
-  
+
         setTimeout(() => {
           navigate("/home");
         }, 1100);
       } else {
         if (result.error) {
-                  toast.error(result.error); // แสดงข้อความจาก Backend
-                } else {
-                  toast.error("ไม่สามารถแก้ไขคู่มือได้");
-                }
-                console.error("แก้ไขไม่ได้:", result.error || response.statusText);
-              }
+          toast.error(result.error); // แสดงข้อความจาก Backend
+        } else {
+          toast.error("ไม่สามารถแก้ไขคู่มือได้");
+        }
+        console.error("แก้ไขไม่ได้:", result.error || response.statusText);
+      }
     } catch (error) {
       console.error("การแก้ไขมีปัญหา:", error);
     }
@@ -283,7 +292,9 @@ export default function UpdateCareManual() {
           <li>
             <a href="home">
               <i className="bi bi-book"></i>
-              <span className="links_name">จัดการข้อมูลคู่มือการดูแลผู้ป่วย</span>
+              <span className="links_name">
+                จัดการข้อมูลคู่มือการดูแลผู้ป่วย
+              </span>
             </a>
           </li>
           <li>
@@ -321,12 +332,6 @@ export default function UpdateCareManual() {
             <a href="alladmin" onClick={() => navigate("/alladmin")}>
               <i className="bi bi-person-gear"></i>
               <span className="links_name">จัดการแอดมิน</span>
-            </a>
-          </li>
-          <li>
-            <a href="recover-patients">
-              <i className="bi bi-trash"></i>
-              <span className="links_name">จัดการข้อมูลผู้ป่วยที่ถูกลบ</span>
             </a>
           </li>
           <div className="nav-logout">
@@ -380,21 +385,22 @@ export default function UpdateCareManual() {
             </li>
           </ul>
         </div>
-        <h3>แก้ไขคู่มือ</h3>
+
         <div className="adminall card mb-1">
+          <p className="title-header">แก้ไขคู่มือ</p>
           <div className="mb-1">
             <label>หัวข้อ</label>
             <input
               type="text"
               className={`form-control ${
                 caremanualNameError ? "input-error" : ""
-              }`} 
+              }`}
               value={caremanual_name}
               onChange={(e) => setCaremanualName(e.target.value)}
             />
             {caremanualNameError && (
-                <span className="error-text">{caremanualNameError}</span>
-              )}
+              <span className="error-text">{caremanualNameError}</span>
+            )}
           </div>
 
           <div className="mb-1">
@@ -416,20 +422,17 @@ export default function UpdateCareManual() {
                   src={defaultImageURL}
                   alt="Default Image"
                 />
-                
               )}
-                      {image && (
-              <button
-                type="button"
-                className="delete-button-image"
-                onClick={removeImage}
-              >
-                <i className="bi bi-x"></i> 
-              </button>
-        
-            )}
+              {image && (
+                <button
+                  type="button"
+                  className="delete-button-image"
+                  onClick={removeImage}
+                >
+                  <i className="bi bi-x"></i>
+                </button>
+              )}
             </div>
-    
             {!image && (
               <input
                 type="file"
@@ -438,8 +441,7 @@ export default function UpdateCareManual() {
                 onChange={handleImageChange}
               />
             )}
-             {imageError && <span className="error-text">{imageError}</span>} 
-
+            {imageError && <span className="error-text">{imageError}</span>}
           </div>
 
           <div className="mb-1">
@@ -447,7 +449,6 @@ export default function UpdateCareManual() {
             {file ? (
               <div className="filename">
                 {typeof file === "string" ? (
-                  // กรณีที่ไฟล์มาจากฐานข้อมูล (เป็น URL ของไฟล์)
                   <a href={file} target="_blank" rel="noopener noreferrer">
                     <i
                       className="bi bi-filetype-pdf"
@@ -456,7 +457,6 @@ export default function UpdateCareManual() {
                     {selectedFileName || fileName}
                   </a>
                 ) : (
-                  // กรณีที่ไฟล์เพิ่งถูกอัปโหลดใหม่
                   <a href={pdfURL} target="_blank" rel="noopener noreferrer">
                     <i
                       className="bi bi-filetype-pdf"

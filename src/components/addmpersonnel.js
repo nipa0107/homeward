@@ -1,6 +1,7 @@
-import React, { useEffect,useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import "../css/sidebar.css";
 import "../css/alladmin.css"
+import "../css/form.css"
 import "bootstrap-icons/font/bootstrap-icons.css";
 import logow from "../img/logow.png";
 import { useNavigate } from "react-router-dom";
@@ -19,7 +20,6 @@ export default function AddMpersonnel() {
   const [nametitle, setNameTitle] = useState("");
   const [isActive, setIsActive] = useState(false);
   const navigate = useNavigate();
-  const [error, setError] = useState(""); 
   const [adminData, setAdminData] = useState("");
   const [token, setToken] = useState('');
   const [usernameError, setUsernameError] = useState("");
@@ -28,6 +28,7 @@ export default function AddMpersonnel() {
   const [nametitleError, setNametitleError] = useState("");
   const [surnameError, setSurnameError] = useState("");
   const [emailError, setEmailError] = useState("");
+  const tokenExpiredAlertShown = useRef(false); 
 
   useEffect(() => {
     const token = window.localStorage.getItem("token");
@@ -49,6 +50,12 @@ export default function AddMpersonnel() {
         .then((data) => {
           console.log(data)
           setAdminData(data.data);
+          if (data.data === "token expired" && !tokenExpiredAlertShown.current) {
+            tokenExpiredAlertShown.current = true; 
+            alert("Token expired login again");
+            window.localStorage.clear();
+            window.location.href = "./";
+          }
         });
     } 
   }, []); //ส่งไปครั้งเดียว
@@ -275,12 +282,6 @@ export default function AddMpersonnel() {
               <span className="links_name" >จัดการแอดมิน</span>
             </a>
           </li>
-          <li>
-            <a href="recover-patients">
-              <i className="bi bi-trash"></i>
-              <span className="links_name">จัดการข้อมูลผู้ป่วยที่ถูกลบ</span>
-            </a>
-          </li>
           <div className="nav-logout">
             <li>
               <a href="./" onClick={logOut}>
@@ -324,8 +325,9 @@ export default function AddMpersonnel() {
             </li>
           </ul>
         </div>
-        <h3>เพิ่มบุคลากร</h3>
+        
         <div className="adminall card mb-1">
+        <p className="title-header">เพิ่มบุคลากร</p>
           <form onSubmit={handleSubmit}>
             <div className="mb-1">
               <label>เลขที่ใบประกอบวิชาชีพ<span className="required">*</span></label>
@@ -409,7 +411,6 @@ export default function AddMpersonnel() {
             </div>
 
             {/* แสดงข้อความ error */}
-            <p id="errormessage" className="errormessage">{error}</p>
             <div className="d-grid">
               <button type="submit"className="btn btn-outline py-2">
                 บันทึก

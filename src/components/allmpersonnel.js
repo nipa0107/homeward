@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import "../css/alladmin.css";
 import "../css/sidebar.css";
 import "../css/mpersonnel.css";
@@ -14,6 +14,7 @@ export default function AllMpersonnel() {
   const [searchKeyword, setSearchKeyword] = useState(""); //ค้นหา
   const [adminData, setAdminData] = useState("");
   const [token, setToken] = useState("");
+  const tokenExpiredAlertShown = useRef(false); 
 
   useEffect(() => {
     const token = window.localStorage.getItem("token");
@@ -35,6 +36,12 @@ export default function AllMpersonnel() {
         .then((data) => {
           console.log(data);
           setAdminData(data.data);
+          if (data.data === "token expired" && !tokenExpiredAlertShown.current) {
+            tokenExpiredAlertShown.current = true; 
+            alert("Token expired login again");
+            window.localStorage.clear();
+            window.location.href = "./";
+          }
         });
     }
     getAllMpersonnel();
@@ -182,12 +189,6 @@ export default function AllMpersonnel() {
               <span className="links_name">จัดการแอดมิน</span>
             </a>
           </li>
-          <li>
-            <a href="recover-patients">
-              <i className="bi bi-trash"></i>
-              <span className="links_name">จัดการข้อมูลผู้ป่วยที่ถูกลบ</span>
-            </a>
-          </li>
           <div className="nav-logout">
             <li>
               <a href="./" onClick={logOut}>
@@ -300,8 +301,8 @@ export default function AllMpersonnel() {
           )}
         </div> */}
         <div className="content">
-          
-            <table className="mpersonnel-table">
+        <div className="table-container">
+            <table className="mpersonnel-table table-all">
               <thead>
                 <tr>
                   <th>เลขใบประกอบวิชาชีพ</th>
@@ -354,7 +355,7 @@ export default function AllMpersonnel() {
               }
               </tbody>
             </table>
-        
+            </div>
         </div>
 
         {/* <div className="content">

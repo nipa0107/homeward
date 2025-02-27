@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import "../css/sidebar.css";
 import "../css/alladmin.css";
+import "../css/form.css"
 import "bootstrap-icons/font/bootstrap-icons.css";
 import logow from "../img/logow.png";
 
@@ -196,12 +197,7 @@ export default function UpdateOTP() {
               <span className="links_name">จัดการแอดมิน</span>
             </a>
           </li>
-          <li>
-            <a href="recover-patients">
-              <i className="bi bi-trash"></i>
-              <span className="links_name">จัดการข้อมูลผู้ป่วยที่ถูกลบ</span>
-            </a>
-          </li>
+
           <div className="nav-logout">
             <li>
               <a href="./" onClick={logOut}>
@@ -258,8 +254,9 @@ export default function UpdateOTP() {
           </ul>
         </div>
 
-        <h3>กรอกรหัสยืนยัน</h3>
+        
         <div className="formcontainerpf card mb-3">
+        <p className="title-header">กรอกรหัสยืนยัน</p>
           <div className="label-container">
             <p className="label-inline">คุณจะได้รับรหัสยืนยันตัวตนที่อีเมล</p>
             <p className="email-text">{email}</p>

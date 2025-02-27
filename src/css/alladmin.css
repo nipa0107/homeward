@@ -69,9 +69,7 @@
 
 
 
-.adminall form {
-  padding: 1.25rem;
-}
+
 
 
 .content {
@@ -83,14 +81,7 @@
 .content1 {
   margin-top: 100px;
 }
-.content-toolbar{
-  width: 80%;
-  margin: 0 auto;
-}
-.content-toolbar-symtom{
-  width: 75%;
-  margin: 0 auto;
-}
+
 .not-found-data {
   display: 'flex';
   text-align: center;
@@ -102,20 +93,26 @@
   align-items: center;
 }
 
-.btn {
-  background-color: #87CEFA;
-  color: #000000;
+/* .d-grid .btn {
+  background-color: #039be5;
+  color: #fff;
   text-align: center;
 }
+.d-grid .btn:hover {
+  background-color: #0277BD;
+  color: #fff;
+} */
 
-.card {
-  width: 60%;
-  margin-left: auto;
-  margin-right: auto;
-  box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.1);
-  /* line-height: 50px; */
-  padding: 20px;
+.btn {
+  background-color: #039be5;
+  color: #fff;
+  text-align: center;
 }
+.btn:hover {
+  background-color: #0288d1;
+  color: #fff;
+}
+
 
 .filename a {
   text-decoration: none;
@@ -133,10 +130,7 @@
 /* รูปที่แสดง */
 
 
-.centered-image #previewImage {
-  max-width: 30%;
 
-}
 
 
 
@@ -305,14 +299,7 @@
 .card-body{
   padding: 0;
 }
-.adminall .card-body {
-  display: flex; /* Use flexbox */
-  justify-content: space-between; /* Align items with space between */
-  align-items: center; /* Center vertically */
-  /* padding: 1rem; */
-  padding-left: 1rem;
-  padding-right: 1rem;
-}
+
 
 .both-info {
   clear: both;
@@ -355,16 +342,7 @@
   margin: 0 5px;
 } */
 
-.adminall {
-  width: 75%;
-  margin-left: auto;
-  margin-right: auto;
-  box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.1);
-  line-height: 2.5rem;
-  padding: 1rem;
-  border-radius: 10px;
-  min-height: 4rem;
-}
+
 
 /* .adminall {
   flex: 1 1 10%;
@@ -377,35 +355,9 @@
   padding: 20px;
 } */
 
-.adminall label {
-  font-weight: 500;
-}
 
-.adminall input[type="text"],
-.adminall input[type="file"] {
-  width: 100%;
-  /* padding: 10px; */
-  border: 1px solid #ccc;
-  border-radius: 5px;
-  /* margin-bottom: 10px; */
-}
 
-.adminall .centered-image {
-  text-align: center;
-}
 
-.adminall .filename {
-  /* margin-bottom: 10px; */
-}
-
-.adminall .pdf {
-  /* margin-top: 5px; */
-}
-
-.errormessage {
-  color: red;
-	font-size:1em;
-}
 
 .table100{
   box-sizing: border-box;
@@ -587,30 +539,6 @@ h5 {
   font-size: 1rem; 
 }
 
-/* ปุมลบไฟล์ */
-.delete-button-file {
-  background-color: transparent;
-  border: none;
-  color: #dc3545;
-  font-size: 20px; 
-  cursor: pointer; 
-  transition: color 0.3s; 
-}
-.delete-button-image {
-  background-color: transparent;
-  border: none;
-  color: #dc3545;
-  font-size: 20px; 
-  cursor: pointer; 
-  transition: color 0.3s; 
-}
-.delete-button-file:hover {
-  color: #c82333; 
-}
-
-.delete-button-file:focus {
-  outline: none;
-}
 .btn-danger {
   background-color: #ff4d4f;
   border-color: #ff4d4f;
@@ -623,21 +551,7 @@ h5 {
   border-color: #ff6666;
 }
 
-.centered-image {
-  display: flex;
-  justify-content: center;
-  margin-bottom: 10px;
-  align-items: center;
 
-}
-
-.centered-image img {
-  max-width: 100%;
-  max-height: 300px;
-  border-radius: 8px;
-  /* box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1); */
-  object-fit: cover;
-}
 
 .filename {
   /* margin-top: 10px; */
@@ -659,14 +573,6 @@ h5 {
   font-size: 20px; 
 }
 
-.info-alert {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background-color: #f9f9f9;
-  height: 2rem;
-  color: #6c757d;
-}
 
 .no-results {
   text-align: center;

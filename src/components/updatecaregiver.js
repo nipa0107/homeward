@@ -1,7 +1,8 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { useLocation } from "react-router-dom";
 import "../css/sidebar.css";
 import "../css/alladmin.css";
+import "../css/form.css"
 import "bootstrap-icons/font/bootstrap-icons.css";
 import logow from "../img/logow.png";
 import { useNavigate } from "react-router-dom";
@@ -37,9 +38,10 @@ export default function Updatecaregiver() {
   const [nameError, setNameError] = useState("");
   const [surnameError, setSurnameError] = useState("");
   const [otherError, setOtherError] = useState("");
+  const [RelationshiError, setRelationshipError] = useState("");
+  const tokenExpiredAlertShown = useRef(false); 
 
-  //ค่า Relationship ที่ดึงมาจาก caregiver ไม่ตรงกับค่าที่กำหนด
-  //แสดงเป็น "อื่นๆ" แล้วแสดงช่องกรอกข้อมูล
+
   useEffect(() => {
     if (formData.Relationship && !["พ่อ", "แม่", "ลูก", "ภรรยา", "สามี"].includes(formData.Relationship)) {
       setShowOtherInput(true);
@@ -76,6 +78,12 @@ export default function Updatecaregiver() {
           .then((data) => {
             console.log(data);
             setAdminData(data.data);
+            if (data.data === "token expired" && !tokenExpiredAlertShown.current) {
+              tokenExpiredAlertShown.current = true; 
+              alert("Token expired login again");
+              window.localStorage.clear();
+              window.location.href = "./";
+            }
           });
       }
     }, [id]);
@@ -122,15 +130,15 @@ export default function Updatecaregiver() {
 //     }
 //   };
 const handleRelationshipChange = (e) => {
-    const value = e.target.value;
-    if (value === "อื่นๆ") {
-      setShowOtherInput(true);
-      setFormData((prev) => ({ ...prev, Relationship: otherRelationship })); // กรณี "อื่นๆ" ใช้ค่า otherRelationship
-    } else {
-      setShowOtherInput(false);
-      setFormData((prev) => ({ ...prev, Relationship: value })); 
-    }
-  };
+  const value = e.target.value;
+  if (value === "อื่นๆ") {
+    setShowOtherInput(true);
+    setFormData((prev) => ({ ...prev, Relationship: otherRelationship })); // กรณี "อื่นๆ" ใช้ค่า otherRelationship
+  } else {
+    setShowOtherInput(false);
+    setFormData((prev) => ({ ...prev, Relationship: value })); // อัปเดต Relationship ตามที่เลือก
+  }
+};
   // const handleOtherRelationshipChange = (e) => {
   //   const value = e.target.value;
   //   setOtherRelationship(value);
@@ -138,15 +146,18 @@ const handleRelationshipChange = (e) => {
   // };
   const handleOtherRelationshipChange = (e) => {
     const value = e.target.value;
-  
-    if (/^[a-zA-Zก-ฮะ-ูไ-์\s]*$/.test(value)) {
-      setOtherRelationship(value); 
-      setFormData((prev) => ({ ...prev, Relationship: value })); 
-      setOtherError("");
+    setOtherRelationship(value);
+
+    // ตรวจสอบว่าเป็นตัวอักษรเท่านั้น
+    if (/[^ก-๙a-zA-Z\s]/.test(value)) {
+      setOtherError("กรุณากรอกเป็นตัวอักษรเท่านั้น");
     } else {
-      setOtherError("ความสัมพันธ์ต้องเป็นตัวอักษรเท่านั้น");
+      setOtherError(""); // ลบข้อความผิดพลาดเมื่อกรอกถูกต้อง
     }
+
+    setFormData((prev) => ({ ...prev, Relationship: value }));
   };
+
   
   
 //   const handleOtherRelationshipChange = (e) => {
@@ -183,10 +194,14 @@ const handleChange = (e) => {
 
   const validateForm = () => {
     let isValid = true;
-  
+    const textRegex = /^[ก-๙a-zA-Z\s]+$/;
+
     if (!formData.name.trim() ) {
       setNameError("กรุณากรอกชื่อ");
       isValid = false;
+    } else if (!textRegex.test(formData.name)) {
+      setNameError("ชื่อต้องเป็นตัวอักษรเท่านั้น");
+      isValid = false;    
     } else {
       setNameError("");
     }
@@ -194,27 +209,56 @@ const handleChange = (e) => {
     if (!formData.surname.trim()) {
       setSurnameError("กรุณากรอกนามสกุล");
       isValid = false;
+    } else if (!textRegex.test(formData.surname)) {
+      setSurnameError("นามสกุลต้องเป็นตัวอักษรเท่านั้น");
+      isValid = false;
     } else {
       setSurnameError("");
     }
+
     if (!formData.tel.trim()) {
       setTelError("กรุณากรอกเบอร์โทรศัพท์");
       isValid = false;
     } else if (formData.tel.length !== 10) {
       setTelError("เบอร์โทรศัพท์ต้องมี 10 หลัก");
       isValid = false;
+    } else if (!/^\d+$/.test(formData.tel)) {
+      setTelError("เบอร์โทรศัพท์ต้องเป็นตัวเลขเท่านั้น");
+      isValid = false;
     } else {
       setTelError("");
     }
+    
+    if (!showOtherInput && !formData.Relationship.trim()) {
+      setRelationshipError("กรุณาเลือกความสัมพันธ์");
+      isValid = false;
+    } else {
+      setRelationshipError("");
+    }
 
+    if (showOtherInput) { 
+      if (!otherRelationship.trim()) {
+        setOtherError("กรุณาระบุความสัมพันธ์");
+        isValid = false;
+      } else if (!textRegex.test(otherRelationship)) {
+        setOtherError("ความสัมพันธ์ต้องเป็นตัวอักษรเท่านั้น");
+        isValid = false;
+      } else {
+        setOtherError("");
+      }
+    } else {
+      setOtherError(""); // ล้าง error ถ้าไม่ได้เลือก "อื่นๆ"
+    }
     return isValid;
   };
 
   const handleSave = async (event) => {
     event.preventDefault();
     if (!validateForm()) {
+      console.log("Validation Failed", formData);
       return; 
     }
+    console.log("Submitting Data", formData);
     try {
       const response = await fetch("http://localhost:5000/updatecaregiver", {
         method: "POST",
@@ -293,12 +337,6 @@ const handleChange = (e) => {
               <span className="links_name" >จัดการแอดมิน</span>
             </a>
           </li>
-          <li>
-            <a href="recover-patients">
-              <i className="bi bi-trash"></i>
-              <span className="links_name">จัดการข้อมูลผู้ป่วยที่ถูกลบ</span>
-            </a>
-          </li>
           <div className="nav-logout">
             <li>
               <a href="./" onClick={logOut}>
@@ -350,8 +388,9 @@ const handleChange = (e) => {
             </li>
           </ul>
         </div>
-        <h3>แก้ไขข้อมูลผู้ดูแล</h3>
+        
         <div className="adminall card mb-3">
+        <p className="title-header">แก้ไขข้อมูลผู้ดูแล</p>
         <form>
         <div className="mb-3">
             <label>เลขประจําตัวประชาชน</label>
@@ -457,6 +496,11 @@ const handleChange = (e) => {
                 อื่นๆ
               </label>
               </div>
+             
+              </div>
+              {RelationshiError && (
+                    <span className="error-text">{RelationshiError}</span>
+                  )}
               </div>
               {showOtherInput && (
                 <div className="mt-2">
@@ -473,7 +517,8 @@ const handleChange = (e) => {
                 </div>
               )}
             </div>
-          </div>
+            
+         
           <div className="mb-3">
             <label>เบอร์โทรศัพท์</label>
             <input

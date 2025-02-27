@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import html2canvas from "html2canvas";
 import { ToastContainer, toast } from "react-toastify";
@@ -6,6 +6,7 @@ import "react-toastify/dist/ReactToastify.css";
 import logow from "../img/logow.png";
 import qrcode from "../img/QRcode.svg";
 import logo from "../img/logo.png";
+import "../css/form.css"
 
 export default function PhysicalTherapyUser() {
   const location = useLocation();
@@ -14,6 +15,7 @@ export default function PhysicalTherapyUser() {
   const [adminData, setAdminData] = useState("");
   const [isActive, setIsActive] = useState(false);
   const [token, setToken] = useState("");
+  const tokenExpiredAlertShown = useRef(false); 
 
   useEffect(() => {
     const token = window.localStorage.getItem("token");
@@ -35,6 +37,12 @@ export default function PhysicalTherapyUser() {
         .then((data) => {
           console.log(data);
           setAdminData(data.data);
+          if (data.data === "token expired" && !tokenExpiredAlertShown.current) {
+            tokenExpiredAlertShown.current = true; 
+            alert("Token expired login again");
+            window.localStorage.clear();
+            window.location.href = "./";
+          }
         });
     }
   }, []);
@@ -125,12 +133,6 @@ export default function PhysicalTherapyUser() {
             <a href="alladmin" onClick={() => navigate("/alladmin")}>
               <i className="bi bi-person-gear"></i>
               <span className="links_name">จัดการแอดมิน</span>
-            </a>
-          </li>
-          <li>
-            <a href="recover-patients">
-              <i className="bi bi-trash"></i>
-              <span className="links_name">จัดการข้อมูลผู้ป่วยที่ถูกลบ</span>
             </a>
           </li>
           <div className="nav-logout">

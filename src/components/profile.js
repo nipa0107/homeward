@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import "../css/profile.css";
 import "../css/sidebar.css";
@@ -16,6 +16,7 @@ export default function Profile() {
   const [surname, setSurName] = useState("");
   const [email, setEmail] = useState("");
   const [isEmailVerified, setIsEmailVerified] = useState(false);
+  const tokenExpiredAlertShown = useRef(false);
 
   useEffect(() => {
     const token = window.localStorage.getItem("token");
@@ -42,6 +43,15 @@ export default function Profile() {
           setUsername(data.data.username);
           setEmail(data.data.email);
           setIsEmailVerified(data.data.isEmailVerified);
+          if (
+            data.data === "token expired" &&
+            !tokenExpiredAlertShown.current
+          ) {
+            tokenExpiredAlertShown.current = true;
+            alert("Token expired login again");
+            window.localStorage.clear();
+            window.location.href = "./";
+          }
         });
     }
   }, []); //ส่งไปครั้งเดียว
@@ -59,7 +69,6 @@ export default function Profile() {
   const handleEditClick = () => {
     navigate("/emailverification", { state: { adminData } });
   };
-  
 
   const handleChangeEmailClick = () => {
     navigate("/updateemail", { state: { adminData } });
@@ -80,7 +89,9 @@ export default function Profile() {
           <li>
             <a href="home">
               <i className="bi bi-book"></i>
-              <span className="links_name">จัดการข้อมูลคู่มือการดูแลผู้ป่วย</span>
+              <span className="links_name">
+                จัดการข้อมูลคู่มือการดูแลผู้ป่วย
+              </span>
             </a>
           </li>
           <li>
@@ -119,12 +130,7 @@ export default function Profile() {
               <span className="links_name">จัดการแอดมิน</span>
             </a>
           </li>
-          <li>
-            <a href="recover-patients">
-              <i className="bi bi-trash"></i>
-              <span className="links_name">จัดการข้อมูลผู้ป่วยที่ถูกลบ</span>
-            </a>
-          </li>
+
           <div className="nav-logout">
             <li>
               <a href="./" onClick={logOut}>
@@ -189,46 +195,40 @@ export default function Profile() {
             </div>
           </div>
           <div className="mb-2">
-      <label>อีเมล</label>
-      <div className="form-control">
-        {email}
-        {isEmailVerified ? (
-          <a
-            className="verify"
-            onClick={handleChangeEmailClick}
-          >
-            เปลี่ยนอีเมล
-          </a>
-        ) : (
-          <a
-            className="verify"
-            onClick={handleEditClick}
-          >
-            ยืนยันอีเมล
-          </a>
-        )}
-      </div>
-    </div>
-    {adminData && (
-  <div className="button-group">
-    <button
-      className="custom-btn edit-btn"
-      onClick={() => navigate("/updatenameadmin", { state: adminData })}
-    >
-      แก้ไขโปรไฟล์
-    </button>
-    <button
-      className="custom-btn password-btn"
-      onClick={() => navigate("/updateadmin", { state: adminData })}
-    >
-      เปลี่ยนรหัสผ่าน
-    </button>
-  </div>
-)}
-
+            <label>อีเมล</label>
+            <div className="form-control email-container">
+              {email}
+              {isEmailVerified ? (
+                <a className="verify" onClick={handleChangeEmailClick}>
+                  เปลี่ยนอีเมล
+                </a>
+              ) : (
+                <a className="verify" onClick={handleEditClick}>
+                  ยืนยันอีเมล
+                </a>
+              )}
+            </div>
+          </div>
+          {adminData && (
+            <div className="button-group">
+              <button
+                className="custom-btn edit-btn"
+                onClick={() =>
+                  navigate("/updatenameadmin", { state: adminData })
+                }
+              >
+                แก้ไขโปรไฟล์
+              </button>
+              <button
+                className="custom-btn password-btn"
+                onClick={() => navigate("/updateadmin", { state: adminData })}
+              >
+                เปลี่ยนรหัสผ่าน
+              </button>
+            </div>
+          )}
         </div>
       </div>
-
     </main>
   );
 }

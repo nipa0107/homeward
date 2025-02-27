@@ -1,6 +1,7 @@
-import { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import "../css/sidebar.css";
 import "../css/alladmin.css";
+import "../css/form.css";
 import "bootstrap-icons/font/bootstrap-icons.css";
 import logow from "../img/logow.png";
 import imgdefault from "../img/image.png";
@@ -14,16 +15,16 @@ export default function AddCaremanual() {
   const [file, setFile] = useState(null);
   const [image, setImage] = useState(null);
   const [detail, setDetail] = useState("");
-  const [defaultImageURL, setDefaultImageURL] = useState(imgdefault); 
+  const [defaultImageURL, setDefaultImageURL] = useState(imgdefault);
   const navigate = useNavigate();
   const [adminData, setAdminData] = useState("");
   const [isActive, setIsActive] = useState(false);
   const [selectedFileName, setSelectedFileName] = useState("");
   const [pdfURL, setPdfURL] = useState(null);
   const [token, setToken] = useState("");
-  const [error, setError] = useState("");
-  const [caremanualNameError, setCaremanualNameError] = useState(""); 
+  const [caremanualNameError, setCaremanualNameError] = useState("");
   const [imageError, setImageError] = useState("");
+  const tokenExpiredAlertShown = useRef(false);
 
   useEffect(() => {
     // const preview = document.getElementById("previewImage");
@@ -51,7 +52,16 @@ export default function AddCaremanual() {
         .then((data) => {
           console.log(data);
           setAdminData(data.data);
-          setError();
+         
+          if (
+            data.data === "token expired" &&
+            !tokenExpiredAlertShown.current
+          ) {
+            tokenExpiredAlertShown.current = true;
+            alert("Token expired login again");
+            window.localStorage.clear();
+            window.location.href = "./";
+          }
         });
     }
   }, [defaultImageURL]);
@@ -103,7 +113,7 @@ export default function AddCaremanual() {
     if (!caremanual_name.trim() || !image) {
       return;
     }
-    if (hasError) return; 
+    if (hasError) return;
     const formData = new FormData();
     formData.append("caremanual_name", caremanual_name);
     formData.append("image", image);
@@ -126,8 +136,7 @@ export default function AddCaremanual() {
             navigate("/");
           }, 1050);
         } else {
-          // setError(data.error);
-           toast.error(data.error);
+          toast.error(data.error);
         }
       });
   };
@@ -197,12 +206,6 @@ export default function AddCaremanual() {
               <span className="links_name">จัดการแอดมิน</span>
             </a>
           </li>
-          <li>
-            <a href="recover-patients">
-              <i className="bi bi-trash"></i>
-              <span className="links_name">จัดการข้อมูลผู้ป่วยที่ถูกลบ</span>
-            </a>
-          </li>
           <div className="nav-logout">
             <li>
               <a href="./" onClick={logOut}>
@@ -254,8 +257,8 @@ export default function AddCaremanual() {
             </li>
           </ul>
         </div>
-        <h3>เพิ่มคู่มือ</h3>
         <div className="adminall card">
+          <p className="title-header">เพิ่มคู่มือ</p>
           <form onSubmit={handleSubmit} encType="multipart/form-data">
             <div className="mb-1">
               <label>
@@ -265,7 +268,7 @@ export default function AddCaremanual() {
                 type="text"
                 className={`form-control ${
                   caremanualNameError ? "input-error" : ""
-                }`} 
+                }`}
                 onChange={(e) => setCaremanualName(e.target.value)}
               />
               {caremanualNameError && (
@@ -291,7 +294,7 @@ export default function AddCaremanual() {
                     className="delete-button-image"
                     onClick={handleDeleteImage}
                   >
-                    <i className="bi bi-x"></i> {/* ไอคอน X สำหรับลบรูปภาพ */}
+                    <i className="bi bi-x"></i>
                   </button>
                 )}
               </div>
@@ -303,7 +306,7 @@ export default function AddCaremanual() {
                   onChange={onInputimgChange}
                 />
               )}
-                {imageError && <span className="error-text">{imageError}</span>} 
+              {imageError && <span className="error-text">{imageError}</span>}
             </div>
 
             <div className="mb-1">
@@ -323,7 +326,7 @@ export default function AddCaremanual() {
                       className="delete-button-file"
                       onClick={handleDeleteFile}
                     >
-                      <i className="bi bi-x"></i> {/* X icon */}
+                      <i className="bi bi-x"></i> 
                     </button>
                   </div>
                 </div>
@@ -343,10 +346,7 @@ export default function AddCaremanual() {
                 className="form-control"
                 onChange={(e) => setDetail(e.target.value)}
               />
-            </div>
-            <p id="errormessage" className="errormessage">
-              {error}
-            </p>
+            </div> 
             <div className="d-grid">
               <button type="submit" className="btn btn-outline py-2">
                 บันทึก

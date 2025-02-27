@@ -113,6 +113,7 @@
   justify-content: center;
   display: flex;
   gap: 15px;
+  margin-top: 20px;
 }
 
 .btn-manage-user,
@@ -129,14 +130,12 @@
   background-color: #fff;
   border: 2px solid #87CEFA;
   text-align: center;
-  margin-top: 20px;
 }
 
 .btn-save-image {
   background-color: #87CEFA;
   color: #fff;
   text-align: center;
-  margin-top: 20px;
   border: none;
 }
 
@@ -177,7 +176,7 @@
   }
 
   .btn-manage-user, .btn-save-image {
-    width: 100%;
+    width: 30%;
   }
   .logo-qr {
     margin-bottom: 0.2rem;
@@ -211,13 +210,13 @@
     max-width: 180px;
   }
 
-  /* .btn-manage-user, .btn-save-image {
-    width: 100%;
-    font-size: 14px;
-  } */
-
   .qrcode-container {
     gap: 0rem;
+  }
+  .button-container {
+    flex-direction: column; 
+    align-items: center; 
+    gap: 10px;
   }
   .btn-manage-user,
   .btn-save-image {
@@ -225,20 +224,7 @@
     font-size: 14px;
   }
 
-/* .btn-manage-user {
-  background-color: #fff;
-  border: 2px solid #87CEFA;
-  text-align: center;
-  margin-top: 20px;
-}
 
-.btn-save-image {
-  background-color: #87CEFA;
-  color: #fff;
-  text-align: center;
-  margin-top: 20px;
-  border: none;
-} */
 .label-scan {
   font-size: 12px;
 }

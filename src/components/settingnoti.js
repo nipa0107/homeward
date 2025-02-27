@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import "../css/alladmin.css";
 import "../css/sidebar.css";
 import "../css/setnoti.css";
@@ -32,8 +32,9 @@ export default function SettingNoti() {
     Respiration: "",
   });
   const [painscore, setPainscore] = useState("");
+  const tokenExpiredAlertShown = useRef(false);
 
-  const { id, name, surname,gender,birthday } = location.state || {};
+  const { id, name, surname, gender, birthday } = location.state || {};
   const [userAge, setUserAge] = useState(0);
   const [userAgeInMonths, setUserAgeInMonths] = useState(0);
   const currentDate = new Date();
@@ -72,6 +73,15 @@ export default function SettingNoti() {
         .then((data) => {
           console.log(data);
           setAdminData(data.data);
+          if (
+            data.data === "token expired" &&
+            !tokenExpiredAlertShown.current
+          ) {
+            tokenExpiredAlertShown.current = true;
+            alert("Token expired login again");
+            window.localStorage.clear();
+            window.location.href = "./";
+          }
         });
     }
   }, []);
@@ -84,7 +94,6 @@ export default function SettingNoti() {
   const handleToggleSidebar = () => {
     setIsActive(!isActive);
   };
-
 
   useEffect(() => {
     if (id) {
@@ -269,12 +278,6 @@ export default function SettingNoti() {
               <span className="links_name">จัดการแอดมิน</span>
             </a>
           </li>
-          <li>
-            <a href="recover-patients">
-              <i className="bi bi-trash"></i>
-              <span className="links_name">จัดการข้อมูลผู้ป่วยที่ถูกลบ</span>
-            </a>
-          </li>
           <div className="nav-logout">
             <li>
               <a href="./" onClick={logOut}>
@@ -326,27 +329,41 @@ export default function SettingNoti() {
             </li>
           </ul>
         </div>
-        <div className="user-details">
-  <p>ชื่อ-สกุล: <strong>{name} {surname}</strong></p>
-  {birthday ? (
-    <p className="textassesment">
-      อายุ: <strong>{userAge} ปี {userAgeInMonths} เดือน{" "}</strong>
-      เพศ: <strong>{gender}</strong>
-    </p>
-  ) : (
-    <p className="textassesment">
-      อายุ: <strong>0 ปี 0 เดือน </strong> เพศ: <strong>{gender}</strong>
-    </p>
-  )}
-  <p className="textassesment">
-    {/* <strong>HN:</strong> {medicalData && medicalData.HN ? medicalData.HN : "ไม่มีข้อมูล"}{" "}
-    <strong>AN:</strong> {medicalData && medicalData.AN ? medicalData.AN : "ไม่มีข้อมูล"}{" "} */}
-    ผู้ป่วยโรค:<strong>{medicalData && medicalData.Diagnosis ? medicalData.Diagnosis : "ไม่มีข้อมูล"}</strong> 
-  </p>
-</div>
 
-        <div className="formsetnoti">
-          
+        <div className="patient-card">
+          <p className="patient-name">
+            <label>ข้อมูลผู้ป่วย</label>
+          </p>
+          <div className="info-row">
+            <div className="info-item">
+              <label>ชื่อ-สกุล:</label>{" "}
+              <span>
+                {name} {surname}
+              </span>
+            </div>
+            <div className="info-item">
+              <label>อายุ:</label>{" "}
+              <span>
+                {birthday
+                  ? `${userAge} ปี ${userAgeInMonths} เดือน`
+                  : "0 ปี 0 เดือน"}
+              </span>
+            </div>
+            <div className="info-item">
+              <label> เพศ:</label> <span>{gender}</span>
+            </div>
+            <div className="info-item">
+              <label>ผู้ป่วยโรค:</label>{" "}
+              <span>
+                {medicalData && medicalData.Diagnosis
+                  ? medicalData.Diagnosis
+                  : "ไม่มีข้อมูล"}
+              </span>
+            </div>
+          </div>
+        </div>
+
+        {/* <div className="formsetnoti">
           <form onSubmit={handleSubmit}>
             <div className="input-group-header">
               <label className="titlenoti"></label>
@@ -354,143 +371,230 @@ export default function SettingNoti() {
               <label className="titlenoti-max">ค่าสูงสุด</label>
               <label className="unitnoti"></label>
             </div>
-            <div className="input-group">
-              <label className="titlenoti">ความดันตัวบน</label>
-              {/* <label>Min:</label> */}
-              <input
-                type="number"
-                value={min.SBP}
-                onChange={(e) => setMin({ ...min, SBP: e.target.value })}
-                required
-              />
-              {/* <label>Max:</label> */}
-              <input
-                type="number"
-                value={max.SBP}
-                onChange={(e) => setMax({ ...max, SBP: e.target.value })}
-                required
-              />
-              <label className="unitnoti">mmHg</label>
-            </div>
 
-            <div className="input-group">
-              <label className="titlenoti">ความดันตัวล่าง</label>
-              {/* <label>Min:</label> */}
-
-              <input
-                type="number"
-                value={min.DBP}
-                onChange={(e) => setMin({ ...min, DBP: e.target.value })}
-                required
-              />
-              {/* <label>Max:</label> */}
-
-              <input
-                type="number"
-                value={max.DBP}
-                onChange={(e) => setMax({ ...max, DBP: e.target.value })}
-                required
-              />
-              <label className="unitnoti">mmHg</label>
-            </div>
-
-            <div className="input-group">
-              <label className="titlenoti">ชีพจร</label>
-              {/* <label>Min:</label> */}
-              <input
-                type="number"
-                value={min.PulseRate}
-                onChange={(e) => setMin({ ...min, PulseRate: e.target.value })}
-                required
-              />
-              {/* <label>Max:</label> */}
-
-              <input
-                type="number"
-                value={max.PulseRate}
-                onChange={(e) => setMax({ ...max, PulseRate: e.target.value })}
-                required
-              />
-              <label className="unitnoti">ครั้ง/นาที</label>
-            </div>
-
-            <div className="input-group">
-              <label className="titlenoti">การหายใจ</label>
-              {/* <label>Min:</label> */}
-              <input
-                type="number"
-                value={min.Respiration}
-                onChange={(e) =>
-                  setMin({ ...min, Respiration: e.target.value })
-                }
-                required
-              />
-              {/* <label>Max:</label> */}
-              <input
-                type="number"
-                value={max.Respiration}
-                onChange={(e) =>
-                  setMax({ ...max, Respiration: e.target.value })
-                }
-                required
-              />
-              <label className="unitnoti">ครั้ง/นาที</label>
-            </div>
             <div className="input-group">
               <label className="titlenoti">อุณหภูมิ</label>
-              {/* <label>Min:</label> */}
-              <input
-                type="number"
-                value={min.Temperature}
-                onChange={(e) =>
-                  setMin({ ...min, Temperature: e.target.value })
-                }
-                required
-              />
-              {/* <label>Max:</label> */}
-              <input
-                type="number"
-                value={max.Temperature}
-                onChange={(e) =>
-                  setMax({ ...max, Temperature: e.target.value })
-                }
-                required
-              />
-              <label className="unitnoti">°C</label>
+              <div className="input-wrapper">
+                <label className="input-label">Min</label>
+                <input
+                  type="number"
+                  value={min.Temperature}
+                  onChange={(e) =>
+                    setMin({ ...min, Temperature: e.target.value })
+                  }
+                  required
+                />
+                <span className="unit-label">°C</span>
+              </div>
+              <div className="input-wrapper">
+                <label className="input-label">Max</label>
+                <input
+                  type="number"
+                  value={max.Temperature}
+                  onChange={(e) =>
+                    setMax({ ...max, Temperature: e.target.value })
+                  }
+                  required
+                />
+                <label className="unitnoti">°C</label>
+              </div>
             </div>
-
             <div className="input-group">
-              <label className="titlenoti">ระดับน้ำตาลในเลือด</label>
-              {/* <label>Min:</label> */}
-              <input
-                type="number"
-                value={min.DTX}
-                onChange={(e) => setMin({ ...min, DTX: e.target.value })}
-                required
-              />
-              {/* <label>Max:</label> */}
-              <input
-                type="number"
-                value={max.DTX}
-                onChange={(e) => setMax({ ...max, DTX: e.target.value })}
-                required
-              />
-              <label className="unitnoti">mg/dL</label>
+              <label className="titlenoti">ความดันตัวบน</label>
+              <div className="input-wrapper">
+                <label className="input-label">Min</label>
+                <input
+                  type="number"
+                  value={min.SBP}
+                  onChange={(e) => setMin({ ...min, SBP: e.target.value })}
+                  required
+                />
+                <label className="unitnoti">mmHg</label>
+              </div>
+              <div className="input-wrapper">
+                <label className="input-label">Max</label>
+                <input
+                  type="number"
+                  value={max.SBP}
+                  onChange={(e) => setMax({ ...max, SBP: e.target.value })}
+                  required
+                />
+                <label className="unitnoti">mmHg</label>
+              </div>
             </div>
+            <div className="input-group">
+              <label className="titlenoti">ความดันตัวล่าง</label>
+              <div className="input-wrapper">
+                <label className="input-label">Min</label>
+                <input
+                  type="number"
+                  value={min.DBP}
+                  onChange={(e) => setMin({ ...min, DBP: e.target.value })}
+                  required
+                />
+                <label className="unitnoti">mmHg</label>
+              </div>
 
+              <div className="input-wrapper">
+                <label className="input-label">Max</label>
+                <input
+                  type="number"
+                  value={max.DBP}
+                  onChange={(e) => setMax({ ...max, DBP: e.target.value })}
+                  required
+                />
+                <label className="unitnoti">mmHg</label>
+                <label className="unitnoti">mmHg</label>
+              </div>
+            </div>
+            <div className="input-group">
+              <label className="titlenoti">ชีพจร</label>
+              <div className="input-wrapper">
+                <label className="input-label">Min</label>
+                <input
+                  type="number"
+                  value={min.PulseRate}
+                  onChange={(e) =>
+                    setMin({ ...min, PulseRate: e.target.value })
+                  }
+                  required
+                />
+                <label className="unitnoti">ครั้ง/นาที</label>
+              </div>
+              <div className="input-wrapper">
+                <label className="input-label">Max</label>
+                <input
+                  type="number"
+                  value={max.PulseRate}
+                  onChange={(e) =>
+                    setMax({ ...max, PulseRate: e.target.value })
+                  }
+                  required
+                />
+                <label className="unitnoti">ครั้ง/นาที</label>
+              </div>
+            </div>
+            <div className="input-group">
+              <label className="titlenoti">การหายใจ</label>
+              <div className="input-wrapper">
+                <label className="input-label">Min</label>
+                <input
+                  type="number"
+                  value={min.Respiration}
+                  onChange={(e) =>
+                    setMin({ ...min, Respiration: e.target.value })
+                  }
+                  required
+                />
+                <label className="unitnoti">ครั้ง/นาที</label>
+              </div>
+              <div className="input-wrapper">
+                <label className="input-label">Max</label>
+                <input
+                  type="number"
+                  value={max.Respiration}
+                  onChange={(e) =>
+                    setMax({ ...max, Respiration: e.target.value })
+                  }
+                  required
+                />
+                <label className="unitnoti">ครั้ง/นาที</label>
+              </div>
+            </div>
             <div className="input-group">
               <label className="titlenoti">ระดับความเจ็บปวด</label>
-              {/* <label>Min:</label> */}
               <input
                 type="number"
                 value={painscore}
                 onChange={(e) => setPainscore(e.target.value)}
                 required
               />
+              <label className="unitnoti"></label>
             </div>
-
+            <div className="input-group">
+              <label className="titlenoti">ระดับน้ำตาลในเลือด</label>
+              <div className="input-wrapper">
+                <label className="input-label">Min</label>
+                <input
+                  type="number"
+                  value={min.DTX}
+                  onChange={(e) => setMin({ ...min, DTX: e.target.value })}
+                  required
+                />
+                <label className="unitnoti">mg/dL</label>
+              </div>
+              <div className="input-wrapper">
+                <label className="input-label">Max</label>
+                <input
+                  type="number"
+                  value={max.DTX}
+                  onChange={(e) => setMax({ ...max, DTX: e.target.value })}
+                  required
+                />
+                <label className="unitnoti">mg/dL</label>
+              </div>
+            </div>
             <div className="d-grid">
-              {/* <button type="button" className="btn btn-outline py-2" onClick={handleCancel}>ยกเลิก</button> */}
+              <button type="submit" className="btn btn-outline py-2">
+                บันทึก
+              </button>
+            </div>
+          </form>
+        </div> */}
+        <div className="formsetnoti">
+          <form onSubmit={handleSubmit}>
+            {[
+              { label: "อุณหภูมิ", key: "Temperature", unit: "(°C)" },
+              { label: "ความดันตัวบน", key: "SBP", unit: "(mmHg)" },
+              { label: "ความดันตัวล่าง", key: "DBP", unit: "(mmHg)" },
+              { label: "ชีพจร", key: "PulseRate", unit: "(ครั้ง/นาที)" },
+              { label: "การหายใจ", key: "Respiration", unit: "(ครั้ง/นาที)" },
+              { label: "ระดับน้ำตาลในเลือด", key: "DTX", unit: "(mg/dL)" },
+            ].map(({ label, key, unit }) => (
+              <div className="input-group" key={key}>
+                <label className="titlenoti">{label}&nbsp;<span className="unit-label">{unit}</span></label>
+                <div className="input-wrapper">
+                  <div className="input-box">
+                    <span className="input-prefix">Min</span>
+                    <input
+                      type="number"
+                      value={min[key]}
+                      onChange={(e) =>
+                        setMin({ ...min, [key]: e.target.value })
+                      }
+                      required
+                    />
+                  </div>
+                  <div className="input-box">
+                    <span className="input-prefix">Max</span>
+                    <input
+                      type="number"
+                      value={max[key]}
+                      onChange={(e) =>
+                        setMax({ ...max, [key]: e.target.value })
+                      }
+                      required
+                    />
+                  </div>
+                  
+                </div>
+              </div>
+            ))}
+            <div className="input-group">
+              <label className="titlenoti">ระดับความเจ็บปวด</label>
+              <div className="input-wrapper">
+                <div className="input-box">
+                  <span className="input-prefix">Med</span>
+                  <input
+                    type="number"
+                    value={painscore}
+                    onChange={(e) => setPainscore(e.target.value)}
+                    required
+                  />
+                </div>
+              </div>
+            </div>
+            <div className="d-grid">
               <button type="submit" className="btn btn-outline py-2">
                 บันทึก
               </button>

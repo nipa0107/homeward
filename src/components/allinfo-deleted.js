@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import "../css/alladmin.css";
 import "../css/sidebar.css";
 import "../css/styles.css";
@@ -44,6 +44,7 @@ export default function AllInfoDeleted() {
     tel: "",
     Relationship: "",
   });
+  const tokenExpiredAlertShown = useRef(false); 
 
   const formatIDCardNumber = (id) => {
     if (!id) return "";
@@ -70,6 +71,12 @@ export default function AllInfoDeleted() {
         .then((data) => {
           console.log(data);
           setAdminData(data.data);
+          if (data.data === "token expired" && !tokenExpiredAlertShown.current) {
+            tokenExpiredAlertShown.current = true; 
+            alert("Token expired login again");
+            window.localStorage.clear();
+            window.location.href = "./";
+          }
         });
     }
   }, []);
@@ -259,12 +266,6 @@ export default function AllInfoDeleted() {
               <span className="links_name">จัดการแอดมิน</span>
             </a>
           </li>
-          <li>
-            <a href="recover-patients">
-              <i className="bi bi-trash"></i>
-              <span className="links_name">จัดการข้อมูลผู้ป่วยที่ถูกลบ</span>
-            </a>
-          </li>
           <div className="nav-logout">
             <li>
               <a href="./" onClick={logOut}>
@@ -316,7 +317,7 @@ export default function AllInfoDeleted() {
             </li>
           </ul>
         </div>
-        <h3>ข้อมูลการดูแลผู้ป่วย</h3>
+        <p className="title-header">ข้อมูลการดูแลผู้ป่วย</p>
         <div className="info3 card mb-1">
           <div className="header">
             <b>ข้อมูลทั่วไป</b>
@@ -644,7 +645,7 @@ export default function AllInfoDeleted() {
                     <h4 className="mt-3">
                       <b>{type}</b>
                     </h4>
-                    <table className="equipment-table-recover mb-5">
+                    <table className="equipment-table-recover mb-5 table-all">
                       <thead>
                         <tr> 
                           <th>ลำดับ</th>

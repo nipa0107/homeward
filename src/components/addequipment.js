@@ -1,6 +1,7 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import "../css/sidebar.css";
 import "../css/alladmin.css"
+import "../css/form.css"
 import "bootstrap-icons/font/bootstrap-icons.css";
 import logow from "../img/logow.png";
 import { useNavigate } from "react-router-dom";
@@ -17,6 +18,7 @@ export default function AddEquip() {
   const [token, setToken] = useState('');
   const [nameError, setNameError] = useState("");
   const [typeError, setTypeError] = useState("");
+  const tokenExpiredAlertShown = useRef(false); 
 
   useEffect(() => {
     const token = window.localStorage.getItem("token");
@@ -38,6 +40,12 @@ export default function AddEquip() {
         .then((data) => {
           console.log(data)
           setAdminData(data.data);
+          if (data.data === "token expired" && !tokenExpiredAlertShown.current) {
+            tokenExpiredAlertShown.current = true; 
+            alert("Token expired login again");
+            window.localStorage.clear();
+            window.location.href = "./";
+          }
         });
     }
   }, []); //ส่งไปครั้งเดียว
@@ -186,12 +194,6 @@ export default function AddEquip() {
               <span className="links_name" >จัดการแอดมิน</span>
             </a>
           </li>
-          <li>
-            <a href="recover-patients">
-              <i className="bi bi-trash"></i>
-              <span className="links_name">จัดการข้อมูลผู้ป่วยที่ถูกลบ</span>
-            </a>
-          </li>
           <div className="nav-logout">
             <li>
               <a href="./" onClick={logOut}>
@@ -239,8 +241,9 @@ export default function AddEquip() {
             </li>
           </ul>
         </div>
-        <h3>เพิ่มอุปกรณ์</h3>
+        
         <div className="adminall card mb-1">
+        <p className="title-header">เพิ่มอุปกรณ์</p>
           <form onSubmit={handleSubmit}>
 
             <div className="mb-1">

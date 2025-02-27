@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 
 import "../css/alladmin.css";
 import "../css/sidebar.css";
@@ -13,6 +13,7 @@ export default function AllUser() {
   const [isActive, setIsActive] = useState(false);
   const [searchKeyword, setSearchKeyword] = useState(""); //ค้นหา
   const [token, setToken] = useState("");
+  const tokenExpiredAlertShown = useRef(false); 
 
   const formatIDCardNumber = (id) => {
     if (!id) return "";
@@ -39,6 +40,12 @@ export default function AllUser() {
         .then((data) => {
           console.log(data);
           setAdminData(data.data);
+          if (data.data === "token expired" && !tokenExpiredAlertShown.current) {
+            tokenExpiredAlertShown.current = true; 
+            alert("Token expired login again");
+            window.localStorage.clear();
+            window.location.href = "./";
+          }
         });
     }
     getAllUser();
@@ -155,12 +162,6 @@ export default function AllUser() {
               <span className="links_name">จัดการแอดมิน</span>
             </a>
           </li>
-          <li>
-            <a href="recover-patients">
-              <i className="bi bi-trash"></i>
-              <span className="links_name">จัดการข้อมูลผู้ป่วยที่ถูกลบ</span>
-            </a>
-          </li>
           <div className="nav-logout">
             <li>
               <a href="./" onClick={logOut}>
@@ -220,6 +221,13 @@ export default function AllUser() {
         </div>
         <div className="content-toolbar">
         <div className="toolbar">
+        <button
+      onClick={() => navigate("/recover-patients")}
+      className="btn btn-outline py-1 px-4 recover" 
+    >
+      <i class="bi bi-recycle" style={{ marginRight: "8px" }}></i>
+      กู้คืนข้อมูลผู้ป่วย
+    </button>
           <button
             onClick={() => navigate("/adduser")}
             className="btn btn-outline py-1 px-4"
@@ -234,8 +242,9 @@ export default function AllUser() {
         </div>
         </div>
         <div className="content">
+        <div className="table-container">
           {/* <div className="table100"> */}
-          <table className="user-table">
+          <table className="user-table table-all">
             <thead>
               <tr>
                 
@@ -314,6 +323,7 @@ export default function AllUser() {
               )}
             </tbody>
           </table>
+        </div>
         </div>
       </div>
       {/* </div> */}

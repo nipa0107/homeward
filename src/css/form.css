@@ -1,0 +1,78 @@
+.adminall.card , .save-img.card{
+    /* width: 60%; */
+    /* margin-left: auto;
+    margin-right: auto; */
+    margin: 1.5rem auto;
+    box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.1);
+    padding: 1rem 2rem;
+    border: 1px solid #87CEFA;
+}
+
+.save-img.card{
+  width: 60%;
+  margin-left: auto;
+  margin-right: auto;
+  box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.1);
+  padding: 20px;
+  border: 1px solid #87CEFA;
+}
+
+.adminall {
+    width: 75%;
+    margin-left: auto;
+    margin-right: auto;
+    box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.1);
+    line-height: 2.5rem;
+    padding: 1rem;
+    border-radius: 10px;
+    min-height: 4rem;
+  }
+  
+  /* .adminall form {
+    padding: 0rem 1.25rem;
+  } */
+  .adminall .card-body {
+    display: flex; /* Use flexbox */
+    justify-content: space-between; /* Align items with space between */
+    align-items: center; /* Center vertically */
+    /* padding: 1rem; */
+    padding-left: 1rem;
+    padding-right: 1rem;
+  }
+  
+  .adminall label {
+    font-weight: 500;
+  }
+  
+  .adminall input[type="text"],
+  .adminall input[type="file"] {
+    width: 100%;
+    /* padding: 10px; */
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    /* margin-bottom: 10px; */
+  }
+  
+  
+  .adminall .filename {
+    /* margin-bottom: 10px; */
+  }
+  
+  .adminall .pdf {
+    /* margin-top: 5px; */
+  }
+
+  
+@media (max-width: 992px) {
+  .adminall label {
+    font-size: 0.9rem;
+  }
+  .adminall input[type="text"],
+  .adminall input[type="file"] {
+    font-size: 0.9rem;
+  }
+}
+
+@media (max-width: 767px) {
+
+}

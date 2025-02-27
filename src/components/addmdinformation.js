@@ -1,6 +1,7 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import "../css/sidebar.css";
 import "../css/alladmin.css";
+import "../css/form.css"
 import "bootstrap-icons/font/bootstrap-icons.css";
 import logow from "../img/logow.png";
 import { useNavigate } from "react-router-dom";
@@ -40,6 +41,7 @@ export default function AddMedicalInformation() {
   const { state } = useLocation();
   const [searchTerm, setSearchTerm] = useState("");
   const [filteredPersonnel, setFilteredPersonnel] = useState([]);
+  const tokenExpiredAlertShown = useRef(false); 
 
   useEffect(() => {
     setFilteredPersonnel(data);
@@ -73,6 +75,12 @@ export default function AddMedicalInformation() {
         .then((data) => {
           console.log(data);
           setAdminData(data.data);
+          if (data.data === "token expired" && !tokenExpiredAlertShown.current) {
+            tokenExpiredAlertShown.current = true; 
+            alert("Token expired login again");
+            window.localStorage.clear();
+            window.location.href = "./";
+          }
         });
     }
     getAllMpersonnel();
@@ -228,12 +236,6 @@ export default function AddMedicalInformation() {
               <span className="links_name">จัดการแอดมิน</span>
             </a>
           </li>
-          <li>
-            <a href="recover-patients">
-              <i className="bi bi-trash"></i>
-              <span className="links_name">จัดการข้อมูลผู้ป่วยที่ถูกลบ</span>
-            </a>
-          </li>
           <div className="nav-logout">
             <li>
               <a href="./" onClick={logOut}>
@@ -296,8 +298,9 @@ export default function AddMedicalInformation() {
             </li>
           </ul>
         </div>
-        <h3>เพิ่มข้อมูลการเจ็บป่วย</h3>
+        
         <div className="adminall card mb-3">
+        <p className="title-header">เพิ่มข้อมูลการเจ็บป่วย</p>
           <form onSubmit={handleSubmit}>
             <div className="mb-2">
               <label>HN</label>

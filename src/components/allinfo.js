@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import deleteimg from "../img/delete.png";
 import editimg from "../img/edit.png";
 import "../css/alladmin.css";
@@ -51,6 +51,7 @@ export default function AllUser({}) {
     tel: "",
     Relationship: "",
   });
+  const tokenExpiredAlertShown = useRef(false); 
 
   const formatIDCardNumber = (id) => {
     if (!id) return "";
@@ -99,6 +100,12 @@ export default function AllUser({}) {
         .then((data) => {
           console.log(data);
           setAdminData(data.data);
+          if (data.data === "token expired" && !tokenExpiredAlertShown.current) {
+            tokenExpiredAlertShown.current = true; 
+            alert("Token expired login again");
+            window.localStorage.clear();
+            window.location.href = "./";
+          }
         });
     }
   }, []);
@@ -513,12 +520,6 @@ export default function AllUser({}) {
               <span className="links_name">จัดการแอดมิน</span>
             </a>
           </li>
-          <li>
-            <a href="recover-patients">
-              <i className="bi bi-trash"></i>
-              <span className="links_name">จัดการข้อมูลผู้ป่วยที่ถูกลบ</span>
-            </a>
-          </li>
           <div className="nav-logout">
             <li>
               <a href="./" onClick={logOut}>
@@ -570,7 +571,7 @@ export default function AllUser({}) {
             </li>
           </ul>
         </div>
-        <h3>ข้อมูลการดูแลผู้ป่วย</h3>
+        <p className="title-header">ข้อมูลการดูแลผู้ป่วย</p>
         <div className="info3 card mb-1">
           <div className="header">
             <b>ข้อมูลทั่วไป</b>
@@ -581,7 +582,7 @@ export default function AllUser({}) {
                 <span>ชื่อ-สกุล</span>
               </p>
               <p>
-                <span>เลขประจําตัวประชาชน</span>
+                <span>เลขบัตรประชาชน</span>
               </p>
               <p>
                 <span>อีเมล</span>
@@ -686,7 +687,7 @@ export default function AllUser({}) {
                             ผู้ดูแลคนที่ {index + 1}
                           </p>
                           <p className="caregiver-row">
-                            <span className="label">เลขประจําตัวประชาชน</span>{" "}
+                            <span className="label">เลขบัตรประชาชน</span>{" "}
                             <span className="caregiver-data">
                               {formatIDCardNumber(
                                 caregiver.ID_card_number || "-"
@@ -696,11 +697,11 @@ export default function AllUser({}) {
                           <p className="caregiver-row">
                             <span className="label">ชื่อ-สกุล</span>{" "}
                             <span className="caregiver-data">
-                              {caregiver.name || "-"}
+                              {caregiver.name || "-"}  {caregiver.surname || "-"}
                             </span>{" "}
-                            <span className="caregiver-data">
-                              {caregiver.surname || "-"}
-                            </span>
+                            {/* <span className="caregiver-data">
+                             
+                            </span> */}
                           </p>
                           <p className="caregiver-row">
                             <span className="label">

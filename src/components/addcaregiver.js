@@ -1,6 +1,7 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import "../css/sidebar.css";
 import "../css/alladmin.css";
+import "../css/form.css"
 import "bootstrap-icons/font/bootstrap-icons.css";
 import logow from "../img/logow.png";
 import { useNavigate, useLocation } from "react-router-dom";
@@ -34,7 +35,10 @@ export default function AddCaregiver() {
   const [telError, setTelError] = useState("");
   const [nameError, setNameError] = useState("");
   const [surnameError, setSurnameError] = useState("");
+  const [otherError, setOtherError] = useState("");
+  const [RelationshiError, setRelationshipError] = useState("");
   const [isDataFetched, setIsDataFetched] = useState(false); // เพิ่ม state เพื่อเก็บสถานะการดึงข้อมูล
+  const tokenExpiredAlertShown = useRef(false); 
 
   useEffect(() => {
     const token = window.localStorage.getItem("token");
@@ -56,6 +60,12 @@ export default function AddCaregiver() {
         .then((data) => {
           console.log(data);
           setAdminData(data.data);
+          if (data.data === "token expired" && !tokenExpiredAlertShown.current) {
+            tokenExpiredAlertShown.current = true; 
+            alert("Token expired login again");
+            window.localStorage.clear();
+            window.location.href = "./";
+          }
         });
     }
   }, []);
@@ -68,15 +78,18 @@ export default function AddCaregiver() {
   const handleSave = async (event) => {
     event.preventDefault();
     let hasError = false;
+
+    const textRegex = /^[ก-๙a-zA-Z\s]+$/;
+
     const cleanedUsername = formData.ID_card_number.replace(/-/g, ""); // ลบเครื่องหมาย "-" หากมี
     if (!cleanedUsername.trim()) {
-      setUsernameError("กรุณากรอกเลขประจำตัวบัตรประชาชน");
+      setUsernameError("กรุณากรอกเลขบัตรประชาชนประชาชน");
       hasError = true;
     } else if (
       cleanedUsername.length !== 13 ||
       !/^\d+$/.test(cleanedUsername)
     ) {
-      setUsernameError("เลขประจำตัวบัตรประชาชนต้องเป็นตัวเลข 13 หลัก");
+      setUsernameError("เลขบัตรประชาชนประชาชนต้องเป็นตัวเลข 13 หลัก");
       hasError = true;
     } else {
       setUsernameError("");
@@ -93,21 +106,54 @@ export default function AddCaregiver() {
     } else if (formData.tel.length !== 10) {
       setTelError("เบอร์โทรศัพท์ต้องมี 10 หลัก");
       hasError = true;
+    } else if (!/^\d+$/.test(formData.tel)) {
+      setTelError("เบอร์โทรศัพท์ต้องเป็นตัวเลขเท่านั้น");
+      hasError = true;
     } else {
       setTelError("");
     }
+
     if (!formData.name.trim()) {
       setNameError("กรุณากรอกชื่อ");
+      hasError = true;
+    } else if (!textRegex.test(formData.name)) {
+      setNameError("ชื่อต้องเป็นตัวอักษรเท่านั้น");
       hasError = true;
     } else {
       setNameError("");
     }
 
+    // ตรวจสอบนามสกุล
     if (!formData.surname.trim()) {
       setSurnameError("กรุณากรอกนามสกุล");
       hasError = true;
+    } else if (!textRegex.test(formData.surname)) {
+      setSurnameError("นามสกุลต้องเป็นตัวอักษรเท่านั้น");
+      hasError = true;
     } else {
       setSurnameError("");
+    }
+
+    if (!showOtherInput && !formData.Relationship.trim()) {
+      setRelationshipError("กรุณาเลือกความสัมพันธ์");
+      hasError = true;
+    } else {
+      setRelationshipError("");
+    }
+
+    if (showOtherInput) {
+      if (!otherRelationship.trim()) {
+        setOtherError("กรุณาระบุความสัมพันธ์");
+        hasError = true;
+      } else if (!textRegex.test(otherRelationship)) {
+        setOtherError("ความสัมพันธ์ต้องเป็นตัวอักษรเท่านั้น");
+        hasError = true;
+      } else {
+        setOtherError("");
+      }
+    } else {
+      // เมื่อไม่ได้เลือก "อื่นๆ" ไม่ต้องแสดง error สำหรับ otherRelationship
+      setOtherError("");
     }
 
     if (hasError) return;
@@ -158,10 +204,23 @@ export default function AddCaregiver() {
       setFormData((prev) => ({ ...prev, Relationship: value })); // อัปเดต Relationship ตามที่เลือก
     }
   };
+  // const handleOtherRelationshipChange = (e) => {
+  //   const value = e.target.value;
+  //   setOtherRelationship(value);
+  //   setFormData((prev) => ({ ...prev, Relationship: value }));
+  // };
   const handleOtherRelationshipChange = (e) => {
     const value = e.target.value;
     setOtherRelationship(value);
-    setFormData((prev) => ({ ...prev, Relationship: value })); // อัปเดต Relationship ด้วยค่าอื่นๆ
+
+    // ตรวจสอบว่าเป็นตัวอักษรเท่านั้น
+    if (/[^ก-๙a-zA-Z\s]/.test(value)) {
+      setOtherError("กรุณากรอกเป็นตัวอักษรเท่านั้น");
+    } else {
+      setOtherError(""); // ลบข้อความผิดพลาดเมื่อกรอกถูกต้อง
+    }
+
+    setFormData((prev) => ({ ...prev, Relationship: value }));
   };
 
   const handleChange = async (e) => {
@@ -169,7 +228,6 @@ export default function AddCaregiver() {
 
     setFormData((prev) => ({ ...prev, [name]: value }));
 
-    // หากลบเลขบัตรออก ให้เคลียร์ข้อมูลที่ดึงมา
     if (name === "ID_card_number" && value === "") {
       setFormData((prev) => ({
         ...prev,
@@ -177,7 +235,7 @@ export default function AddCaregiver() {
         surname: "",
         tel: "",
       }));
-      setIsDataFetched(false); // ไม่ให้ดึงข้อมูลใหม่จนกว่าจะกรอกเลขบัตร
+      setIsDataFetched(false);
     }
 
     if (name === "tel") {
@@ -210,9 +268,9 @@ export default function AddCaregiver() {
       // ตรวจสอบชื่อและนามสกุล
       if (/[^ก-๙a-zA-Z\s]/.test(value)) {
         if (name === "name") {
-          setNameError("ชื่อควรเป็นตัวอักษรเท่านั้น");
+          setNameError("ชื่อต้องเป็นตัวอักษรเท่านั้น");
         } else {
-          setSurnameError("นามสกุลควรเป็นตัวอักษรเท่านั้น");
+          setSurnameError("นามสกุลต้องเป็นตัวอักษรเท่านั้น");
         }
       } else {
         if (name === "name") setNameError("");
@@ -318,12 +376,6 @@ export default function AddCaregiver() {
               <span className="links_name">จัดการแอดมิน</span>
             </a>
           </li>
-          <li>
-            <a href="recover-patients">
-              <i className="bi bi-trash"></i>
-              <span className="links_name">จัดการข้อมูลผู้ป่วยที่ถูกลบ</span>
-            </a>
-          </li>
           <div className="nav-logout">
             <li>
               <a href="./" onClick={logOut}>
@@ -384,12 +436,12 @@ export default function AddCaregiver() {
             </li>
           </ul>
         </div>
-        <h3>เพิ่มข้อมูลผู้ดูแล</h3>
         <div className="adminall card mb-1">
+        <p className="title-header">เพิ่มข้อมูลผู้ดูแล</p>
           <form>
             <div className="mb-1">
               <label>
-                เลขประจําตัวประชาชน<span className="required"> *</span>
+                เลขบัตรประชาชน<span className="required"> *</span>
               </label>
               <input
                 type="text"
@@ -434,7 +486,9 @@ export default function AddCaregiver() {
               )}
             </div>
             <div className="mb-1">
-              <label>ความสัมพันธ์</label>
+              <label>
+                ความสัมพันธ์<span className="required"> *</span>
+              </label>
               <div class="relationship-container">
                 <div class="relationship-group">
                   <div>
@@ -503,18 +557,26 @@ export default function AddCaregiver() {
                       อื่นๆ
                     </label>
                   </div>
+                  {RelationshiError && (
+                    <span className="error-text">{RelationshiError}</span>
+                  )}
                 </div>
                 {showOtherInput && (
                   <div className="mt-2">
-                    <label>กรุณาระบุ:</label>
+                    <label>
+                      กรุณาระบุ<span className="required"> *</span>
+                    </label>
                     <input
                       type="text"
-                      className="form-control"
+                      className={`form-control ${
+                        otherError ? "input-error" : ""
+                      }`}
                       value={otherRelationship}
                       onChange={handleOtherRelationshipChange}
                     />
                   </div>
                 )}
+                {otherError && <span className="error-text">{otherError}</span>}
               </div>
             </div>
             <div className="mb-1">
@@ -532,9 +594,6 @@ export default function AddCaregiver() {
               />
               {telError && <span className="error-text">{telError}</span>}
             </div>
-            {/* <p id="errormessage" className="errormessage">
-              {error}
-            </p> */}
             <div className="d-grid">
               <button
                 type="submit"

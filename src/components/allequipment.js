@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import "../css/sidebar.css";
 import "../css/alladmin.css";
@@ -13,6 +13,7 @@ export default function AllEquip() {
   const [isActive, setIsActive] = useState(false);
   const [searchKeyword, setSearchKeyword] = useState(""); // ค้นหา
   const [token, setToken] = useState("");
+  const tokenExpiredAlertShown = useRef(false); 
 
   useEffect(() => {
     const token = window.localStorage.getItem("token");
@@ -34,16 +35,22 @@ export default function AllEquip() {
         .then((data) => {
           console.log(data);
           setAdminData(data.data);
+          if (data.data === "token expired" && !tokenExpiredAlertShown.current) {
+            tokenExpiredAlertShown.current = true; 
+            alert("Token expired login again");
+            window.localStorage.clear();
+            window.location.href = "./";
+          }
         });
     }
     getAllEquip();
-  }, []); // ส่งไปครั้งเดียว
+  }, []); 
 
   const getAllEquip = () => {
     fetch("http://localhost:5000/allequip", {
       method: "GET",
       headers: {
-        Authorization: `Bearer ${token}`, // เพิ่ม Authorization header เพื่อส่ง token ในการร้องขอ
+        Authorization: `Bearer ${token}`, 
       },
     })
       .then((res) => res.json())
@@ -178,12 +185,6 @@ export default function AllEquip() {
               <span className="links_name">จัดการแอดมิน</span>
             </a>
           </li>
-          <li>
-            <a href="recover-patients">
-              <i className="bi bi-trash"></i>
-              <span className="links_name">จัดการข้อมูลผู้ป่วยที่ถูกลบ</span>
-            </a>
-          </li>
           <div className="nav-logout">
             <li>
               <a href="./" onClick={logOut}>
@@ -255,7 +256,8 @@ export default function AllEquip() {
         </div>
         <div className="content">
           {/* <div className="cardall card mb-3"> */}
-          <table className="equipments-table">
+          <div className="table-container">
+          <table className="equipments-table table-all">
             <thead>
               <tr>
                 <th>ชื่ออุปกรณ์</th>
@@ -300,6 +302,7 @@ export default function AllEquip() {
               )}
             </tbody>
           </table>
+          </div>
           {/* </div> */}
         </div>
       </div>

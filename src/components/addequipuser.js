@@ -1,6 +1,7 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import "../css/sidebar.css";
 import "../css/alladmin.css";
+import "../css/form.css"
 import "bootstrap-icons/font/bootstrap-icons.css";
 import logow from "../img/logow.png";
 import { useNavigate } from "react-router-dom";
@@ -22,6 +23,7 @@ export default function AddEquipUser() {
   const [selectedEquipType3, setSelectedEquipType3] = useState("");
   const [equipValidationMessages, setEquipValidationMessages] = useState({});
   const [selectedEquipments, setSelectedEquipments] = useState([]);
+  const tokenExpiredAlertShown = useRef(false); 
 
   useEffect(() => {
     const token = window.localStorage.getItem("token");
@@ -40,6 +42,12 @@ export default function AddEquipUser() {
         .then((res) => res.json())
         .then((data) => {
           setAdminData(data.data);
+          if (data.data === "token expired" && !tokenExpiredAlertShown.current) {
+            tokenExpiredAlertShown.current = true; 
+            alert("Token expired login again");
+            window.localStorage.clear();
+            window.location.href = "./";
+          }
         });
     }
     getAllEquip();
@@ -246,12 +254,6 @@ const handleSubmit = (e) => {
               <span className="links_name">จัดการแอดมิน</span>
             </a>
           </li>
-          <li>
-            <a href="recover-patients">
-              <i className="bi bi-trash"></i>
-              <span className="links_name">จัดการข้อมูลผู้ป่วยที่ถูกลบ</span>
-            </a>
-          </li>
           <div className="nav-logout">
             <li>
               <a href="./" onClick={logOut}>
@@ -315,8 +317,9 @@ const handleSubmit = (e) => {
             </li>
           </ul>
         </div>
-        <h3>เพิ่มอุปกรณ์สำหรับผู้ป่วย</h3>
+       
         <div className="adminall card mb-1">
+        <p className="title-header">เพิ่มอุปกรณ์สำหรับผู้ป่วย</p>
           <form onSubmit={handleSubmit}>
             {["อุปกรณ์ติดตัว", "อุปกรณ์เสริม", "อุปกรณ์อื่นๆ"].map(
               (equipmentType) => {

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import deleteimg from "../img/delete.png";
 import editimg from "../img/edit.png";
 import "../css/alladmin.css";
@@ -15,6 +15,8 @@ export default function Recover() {
   const [searchKeyword, setSearchKeyword] = useState(""); //ค้นหา
   const [token, setToken] = useState("");
   const [sortOrder, setSortOrder] = useState("desc"); 
+  const tokenExpiredAlertShown = useRef(false); 
+
   const formatIDCardNumber = (id) => {
     if (!id) return "";
     return id.replace(/(\d{1})(\d{4})(\d{5})(\d{2})(\d{1})/, "$1-$2-$3-$4-$5");
@@ -40,6 +42,12 @@ export default function Recover() {
         .then((data) => {
           console.log(data);
           setAdminData(data.data);
+          if (data.data === "token expired" && !tokenExpiredAlertShown.current) {
+            tokenExpiredAlertShown.current = true; 
+            alert("Token expired login again");
+            window.localStorage.clear();
+            window.location.href = "./";
+          }
         });
     }
     getAllUser();
@@ -117,7 +125,8 @@ export default function Recover() {
   
       if (response.ok && result.success) {
         alert("กู้คืนข้อมูลสำเร็จ");
-        getAllUser(); // เรียกข้อมูลใหม่หลังจากกู้คืน
+        // getAllUser(); 
+        navigate("/alluser")
       } else {
         alert(
           "เกิดข้อผิดพลาด: " + (result.message || "ไม่สามารถกู้คืนข้อมูลได้")
@@ -225,12 +234,6 @@ const handleSort = () => {
               <span className="links_name">จัดการแอดมิน</span>
             </a>
           </li>
-          <li>
-            <a href="recover-patients">
-              <i className="bi bi-trash"></i>
-              <span className="links_name">จัดการข้อมูลผู้ป่วยที่ถูกลบ</span>
-            </a>
-          </li>
           <div className="nav-logout">
             <li>
               <a href="./" onClick={logOut}>
@@ -247,7 +250,7 @@ const handleSort = () => {
       </div>
       <div className="home_content">
         <div className="homeheader">
-          <div className="header">จัดการข้อมูลผู้ป่วยที่ถูกลบ</div>
+          <div className="header">จัดการข้อมูลผู้ป่วย</div>
           <div className="profile_details ">
             <ul className="nav-list">
               <li>
@@ -272,7 +275,13 @@ const handleSort = () => {
               <i className="bi bi-chevron-double-right"></i>
             </li>
             <li>
-              <a>จัดการข้อมูลผู้ป่วยที่ถูกลบ</a>
+              <a href="alluser">จัดการข้อมูลผู้ป่วย</a>
+            </li>
+            <li className="arrow">
+              <i className="bi bi-chevron-double-right"></i>
+            </li>
+            <li>
+              <a>ข้อมูลผู้ป่วยที่ถูกลบ</a>
             </li>
           </ul>
         </div>
@@ -297,14 +306,14 @@ const handleSort = () => {
         </div>
         </div>
         <div className="content">
-        {/* <div className="info-alert"> */}
-              <p className="info-alert">
-                ข้อมูลผู้ป่วยที่ถูกลบจะถูกเก็บไว้ในระบบ &nbsp;<strong> 30 วัน </strong>&nbsp;
-                หลังจากนั้นข้อมูลจะถูกลบถาวรจากฐานข้อมูล
-              </p>
-        {/* </div> */}
-          {/* <div className="table100"> */}
-          <table className="recover-table">
+        <div className="info-alert">
+  <p>ข้อมูลผู้ป่วยที่ถูกลบจะถูกเก็บไว้ในระบบ</p>
+  <p><strong>30 วัน</strong></p>
+  <p>หลังจากนั้นข้อมูลจะถูกลบถาวรจากฐานข้อมูล</p>
+</div>
+
+        <div className="table-container">         
+           <table className="recover-table table-all">
             <thead>
               <tr>
               {/* <th>ลำดับ</th> */}
@@ -349,7 +358,7 @@ const handleSort = () => {
                           className="btn-recover"
                           onClick={() => recoverUser(i._id, i.username)} // เรียกใช้ฟังก์ชัน recoverUser
                         >
-                          <i className="bi bi-arrow-counterclockwise"></i>{" "}
+                          <i class="bi bi-recycle"></i>{" "}
                         </button>
                       </td>
                     </tr>
@@ -364,8 +373,8 @@ const handleSort = () => {
             </tbody>
           </table>
           {/* <div className="content">
-         
-          </div> */}
+         */}
+          </div> 
         </div>
       </div>
       {/* </div> */}

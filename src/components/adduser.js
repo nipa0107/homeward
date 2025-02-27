@@ -1,5 +1,6 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import "../css/sidebar.css";
+import "../css/form.css"
 import "../css/alladmin.css";
 import "bootstrap-icons/font/bootstrap-icons.css";
 import logow from "../img/logow.png";
@@ -19,13 +20,13 @@ export default function AddUser() {
   const navigate = useNavigate();
   const [adminData, setAdminData] = useState("");
   const [isActive, setIsActive] = useState(false);
-  const [error, setError] = useState("");
   const [token, setToken] = useState("");
   const [physicalTherapy, setPhysicalTherapy] = useState(false);
   const [usernameError, setUsernameError] = useState("");
   const [telError, setTelError] = useState("");
   const [nameError, setNameError] = useState("");
   const [surnameError, setSurnameError] = useState("");
+  const tokenExpiredAlertShown = useRef(false); 
 
   useEffect(() => {
     const token = window.localStorage.getItem("token");
@@ -47,6 +48,12 @@ export default function AddUser() {
         .then((data) => {
           console.log(data);
           setAdminData(data.data);
+          if (data.data === "token expired" && !tokenExpiredAlertShown.current) {
+            tokenExpiredAlertShown.current = true; 
+            alert("Token expired login again");
+            window.localStorage.clear();
+            window.location.href = "./";
+          }
         });
     }
   }, []);
@@ -56,10 +63,10 @@ export default function AddUser() {
     let hasError = false;
     const cleanedUsername = username.replace(/-/g, ""); // ลบเครื่องหมาย "-" หากมี
     if (!cleanedUsername.trim()) {
-      setUsernameError("กรุณากรอกเลขประจำตัวประชาชน");
+      setUsernameError("กรุณากรอกเลขบัตรประชาชน");
       hasError = true;
     } else if (cleanedUsername.length !== 13 || !/^\d+$/.test(cleanedUsername)) {
-      setUsernameError("เลขประจำตัวประชาชนต้องเป็นตัวเลข 13 หลัก");
+      setUsernameError("เลขบัตรประชาชนต้องเป็นตัวเลข 13 หลัก");
       hasError = true;
     } else {
       setUsernameError("");
@@ -148,7 +155,7 @@ const handleInputChange = (e) => {
     let input = e.target.value;
 
     if (/[^0-9-]/.test(input)) {
-      setUsernameError("เลขประจำตัวประชาชนต้องเป็นตัวเลขเท่านั้น");
+      setUsernameError("เลขบัตรประชาชนต้องเป็นตัวเลขเท่านั้น");
       return;
     } else {
       setUsernameError(""); // Clear error if valid
@@ -264,12 +271,6 @@ const handleInputChange = (e) => {
               <span className="links_name">จัดการแอดมิน</span>
             </a>
           </li>
-          <li>
-            <a href="recover-patients">
-              <i className="bi bi-trash"></i>
-              <span className="links_name">จัดการข้อมูลผู้ป่วยที่ถูกลบ</span>
-            </a>
-          </li>
           <div className="nav-logout">
             <li>
               <a href="./" onClick={logOut}>
@@ -320,12 +321,13 @@ const handleInputChange = (e) => {
             </li>
           </ul>
         </div>
-        <h3>เพิ่มข้อมูลทั่วไปผู้ป่วย</h3>
+        
         <div className="adminall card mb-1">
+        <p className="title-header">เพิ่มข้อมูลทั่วไปผู้ป่วย</p>
           <form onSubmit={handleSubmit}>
             <div className="mb-1">
               <label>
-                เลขประจำตัวประชาชน<span className="required"> *</span>
+                เลขบัตรประชาชน<span className="required"> *</span>
               </label>
               <input
                 type="text"
@@ -399,9 +401,7 @@ const handleInputChange = (e) => {
                 </label>
             </div>
 
-            {error && <span id="errormessage" className="errormessage">
-              {error}
-            </span>}
+
             <div className="d-grid">
               <button type="submit" className="btn btn-outline py-2">
                 บันทึก
