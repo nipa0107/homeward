@@ -1,47 +1,37 @@
-
 .user-info-caregiver {
-    justify-content: center;
-    align-items: center;
-  }
-  /* .caregiver-section {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-  } */
-  .caregiver-card {
-    display: flex; 
-    justify-content: space-between; 
-    /* gap: 20px; */
-    line-height: normal;
-    /* max-width: 90%; */
-    width: 90%; 
-    margin: 10px auto ; 
-    padding: 1rem;
-    border: 1px solid #ddd;
-    border-radius: 8px;
-    /* background-color: #f9f9f9; */
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  }
-  
-  /* .caregiver-card {
-    flex: 1 1 calc(20% - 1rem);
-    box-sizing: border-box; 
-    width: 30em; 
-    border: 1px solid #ddd;
-    border-radius: 8px;
-    background-color: #f9f9f9;
-    padding: 10px;
-    margin: 10px 0;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  } */
-  
-  .caregiver-card p {
-    margin: 5px 0;
-  }
-  
-  /* .caregiver-card b {
-    color: #007bff;
-  } */
+  padding-left: 1%;
+}
+.inline-container-caregiver {
+  margin-left: 21px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  justify-content: flex-start;
+}
+.inline-container-caregiver b{
+  font-weight: bold;
+  color: #007BFF;
+}
+.caregiver-card {
+  display: flex;
+  /* จัดการ layout ให้เป็น flexbox */
+  justify-content: space-between;
+  /* align-items: flex-start;  */
+  gap: 20px;
+  line-height: normal;
+  max-width: 80%;
+  /* หรือค่าที่เหมาะสม */
+  width: 100%;
+  /* ให้ขยายเต็มเฉพาะ container */
+  margin: 5px;
+  /* จัดให้อยู่กึ่งกลาง */
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+}
+.caregiver-card p {
+  margin: 5px 0;
+}
   .caregiver-title{
     font-weight: 600;
     font-size: 1rem;

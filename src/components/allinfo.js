@@ -10,7 +10,7 @@ import { useNavigate } from "react-router-dom";
 import { useLocation } from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
 
-export default function AllUser({}) {
+export default function AllUser({ }) {
   const navigate = useNavigate();
   const [data, setData] = useState([]);
   const [adminData, setAdminData] = useState("");
@@ -37,7 +37,7 @@ export default function AllUser({}) {
   const [medicalInfo, setMedicalInfo] = useState(null); // เพิ่ม state สำหรับเก็บข้อมูลการดูแลผู้ป่วย
   const [mdata, setMData] = useState([]);
   const [docter, setDocter] = useState("");
-  const [medicalEquipment, setMedicalEquipment] = useState(null);
+  const [medicalEquipment, setMedicalEquipment] = useState([]);
   const [selectedEquipments, setSelectedEquipments] = useState([]);
   const [error, setError] = useState("");
   const [caregiverInfo, setCaregiverInfo] = useState(null);
@@ -456,6 +456,95 @@ export default function AllUser({}) {
       alert("เกิดข้อผิดพลาดในการบันทึกข้อมูล");
     }
   };
+  const formatDate = (dateTimeString) => {
+    const dateTime = new Date(dateTimeString);
+    const day = dateTime.getDate();
+    const month = dateTime.getMonth() + 1;
+    const year = dateTime.getFullYear();
+    const hours = dateTime.getHours();
+    const minutes = dateTime.getMinutes();
+
+    const thaiMonths = [
+      "มกราคม",
+      "กุมภาพันธ์",
+      "มีนาคม",
+      "เมษายน",
+      "พฤษภาคม",
+      "มิถุนายน",
+      "กรกฎาคม",
+      "สิงหาคม",
+      "กันยายน",
+      "ตุลาคม",
+      "พฤศจิกายน",
+      "ธันวาคม",
+    ];
+
+    return `${day < 10 ? "0" + day : day} ${thaiMonths[month - 1]} ${year + 543
+      } เวลา ${hours < 10 ? "0" + hours : hours}:${minutes < 10 ? "0" + minutes : minutes
+      } น.`;
+  };
+  const toggleAllCheckboxes = () => {
+    const allSelected = sortedEquipment.every(equipment =>
+      selectedEquipments.includes(equipment.equipmentname_forUser)
+    );
+
+    if (allSelected) {
+      setSelectedEquipments([]);
+    } else {
+      setSelectedEquipments(sortedEquipment.map(equipment => equipment.equipmentname_forUser));
+    }
+  };
+
+
+  const [sortConfig, setSortConfig] = useState({ key: "createdAt", direction: "asc" });
+
+  const requestSort = (key) => {
+    let direction = "asc";
+    if (sortConfig.key === key && sortConfig.direction === "asc") {
+      direction = "desc";
+    }
+    setSortConfig({ key, direction });
+  };
+
+  const sortedEquipment = [...medicalEquipment].sort((a, b) => {
+    if (sortConfig.key) {
+      let valueA = a[sortConfig.key];
+      let valueB = b[sortConfig.key];
+
+      // ถ้าเป็นวันที่ ต้องแปลงเป็น Date object
+      if (sortConfig.key === "createdAt") {
+        valueA = new Date(valueA);
+        valueB = new Date(valueB);
+      } else {
+        valueA = valueA.toString().toLowerCase();
+        valueB = valueB.toString().toLowerCase();
+      }
+
+      if (valueA < valueB) return sortConfig.direction === "asc" ? -1 : 1;
+      if (valueA > valueB) return sortConfig.direction === "asc" ? 1 : -1;
+      return 0;
+    }
+    return 0;
+  });
+
+  const getSortIcon = (key) => {
+    return (
+      <i
+        className={`bi ${sortConfig.key === key ?
+          (sortConfig.direction === "asc" ? "bi-caret-up-fill" : "bi-caret-down-fill")
+          : "bi-caret-down-fill" // ค่าเริ่มต้นเป็นลูกศรลง
+          }`}
+      ></i>
+    );
+  };
+
+  const handleRowClick = (equipmentName) => {
+    setSelectedEquipments((prevSelected) =>
+      prevSelected.includes(equipmentName)
+        ? prevSelected.filter((name) => name !== equipmentName)
+        : [...prevSelected, equipmentName]
+    );
+  };
   return (
     <main className="body">
       <ToastContainer />
@@ -571,103 +660,123 @@ export default function AllUser({}) {
           </ul>
         </div>
         <h3>ข้อมูลการดูแลผู้ป่วย</h3>
-        <div className="info3 card mb-1">
-          <div className="header">
-            <b>ข้อมูลทั่วไป</b>
-          </div>
-          <div className="user-info mt-3">
-            <div className="left-info">
-              <p>
-                <span>ชื่อ-สกุล</span>
-              </p>
-              <p>
-                <span>เลขประจําตัวประชาชน</span>
-              </p>
-              <p>
-                <span>อีเมล</span>
-              </p>
-              <p>
-                <span>อายุ</span>
-              </p>
-              <p>
-                <span>เพศ</span>
-              </p>
-              <p>
-                <span>สัญชาติ</span>
-              </p>
-              <p>
-                <span>ที่อยู่</span>
-              </p>
-              <p>
-                <span>เบอร์โทรศัพท์</span>
-              </p>
-              {/* <p>
-                <span>ผู้ดูแล</span>
-              </p>
-              <p>
-                <span>ความสัมพันธ์</span>
-              </p>
-              <p>
-                <span>เบอร์โทรศัพท์ผู้ดูแล</span>
-              </p> */}
-            </div>
-            <div className="right-info">
-              <p>
-                <b>{name || "-"}</b> <b>{surname || "-"}</b>
-              </p>
-              <p>
-                <b>{formatIDCardNumber(ID_card_number || "-")}</b>
-              </p>
-              <p>
-                <b>{email || "-"}</b>
-              </p>
-              <p>
-                <b>{userAge}</b>
-              </p>
-              <p>
-                <b>{gender || "-"}</b>
-              </p>
-              <p>
-                <b>{nationality || "-"}</b>
-              </p>
-              <p>
-                <b>{Address || "-"}</b>
-              </p>
-              <p>
-                <b>{tel || "-"}</b>
-              </p>
-              {/* <p>
+        <div className="forminfo mb-4">
+          <fieldset className="user-fieldset">
+            <legend><i className="bi bi-person-fill"></i> ข้อมูลทั่วไป</legend>
+            <div className="user-info mt-3">
+              <div className="row">
+                {[
+                  { label: "ชื่อ-สกุล", value: `${name || '-'} ${surname || '-'}` },
+                  { label: "เลขบัตรประชาชน", value: `${formatIDCardNumber(ID_card_number || '-')}` },
+                  { label: "อายุ", value: userAge },
+                  { label: "เพศ", value: gender || '-' },
+                  { label: "สัญชาติ", value: nationality || '-' },
+                  { label: "ที่อยู่", value: Address || '-' },
+                  { label: "เบอร์โทรศัพท์", value: tel || '-' }
+                ].map((item, index) => (
+                  <React.Fragment key={index}>
+                    <div className="col-sm-3" style={{ color: "#444" }}>
+                      <p><span>{item.label} :</span></p>
+                    </div>
+                    <div className="col-sm-9">
+                      <p><b>{item.value}</b></p>
+                    </div>
+                    <div className="w-100 d-none d-md-block"></div>
+                  </React.Fragment>
+                ))}
+              </div>
 
-                <b>{caregiverName || '-'}</b> <b>{caregiverSurname || '-'}</b>
-              </p>
-              <p>
-                <b>{Relationship || '-'}</b>
-              </p>
-              <p>
-                <b>{caregiverTel || '-'}</b>
-              </p> */}
             </div>
-          </div>
 
-          <div className="btn-group mb-4">
-            <div className="editimg1">
-              <button
-                onClick={() =>
-                  navigate("/updateuser", {
-                    state: { id },
-                  })
-                }
-              >
-                แก้ไข
-              </button>
+            <div className="btn-group mt-4 mb-4">
+              <div className="editimg1">
+                <button
+                  onClick={() =>
+                    navigate("/updateuser", {
+                      state: { id },
+                    })
+                  }
+                >
+                  <i className="bi bi-pencil-square"></i> แก้ไข
+                </button>
+              </div>
+              <div className="deleteimg1">
+                <button onClick={() => deleteUser()}><i className="bi bi-trash"></i> ลบ</button>
+              </div>
             </div>
-            <div className="deleteimg1">
-              <button onClick={() => deleteUser()}>ลบ</button>
-            </div>
-          </div>
+          </fieldset>
         </div>
-        <br></br>
-        <div className="info3 card mb-3">
+        <div className="forminfo mb-4">
+          <fieldset className="user-fieldset">
+            <legend><i class="bi bi-person-fill"></i> ข้อมูลผู้ดูแล</legend>
+            <div>
+              {caregiverInfo && caregiverInfo.length > 0 ? (
+                <div>
+                  <div className="user-info-caregiver">
+                    {caregiverInfo.map((caregiver, index) => (
+                      <div className="inline-container-caregiver" key={index}>
+                        <p>
+                          <span><b>ผู้ดูแลคนที่ {index + 1} :</b> </span>
+                          {/* <span class=""
+                                                        onClick={() => handleEdit(caregiver)}>
+                                                        <i class="bi bi-pencil-square"></i> แก้ไข
+                                                    </span> */}
+                        </p>
+                        <div className="caregiver-card mb-4">
+                          <div className="row">
+                            {[
+                              {
+                                label: "เลขประจําตัวประชาชน", value: `${formatIDCardNumber(
+                                  caregiver.ID_card_number || "-"
+                                )}`
+                              },
+                              { label: "ชื่อ-สกุล", value: `${caregiver.name || "-"} ${caregiver.surname || "-"}` },
+                              { label: "ความสัมพันธ์", value: caregiver.relationship || "ไม่ระบุ" }
+                            ].map((item, index) => (
+                              <React.Fragment key={index}>
+                                <div className="col-sm-4" style={{ color: "#444" }}><p><span>{item.label} :</span></p></div>
+                                <div className="col-sm-8 fw-bold text-dark"><p><span>{item.value}</span></p></div>
+                                <div className="w-100 d-none d-md-block"></div>
+                              </React.Fragment>
+                            ))}
+                            <div className="col-sm-4 " style={{ color: "#444" }}><p><span>เบอร์โทรศัพท์ :</span></p></div>
+                            <div className="col-sm-8 d-flex justify-content-between align-items-center fw-bold text-dark">
+                              <p><span>{caregiver.tel || "-"}</span></p>
+                              <button className="button-edit ms-auto p-1" onClick={() => handleEdit(caregiver)}>
+                                <i className="bi bi-pencil-square"></i> แก้ไข
+                              </button>
+                              <button
+                                class="button-delete ms-2 p-1"
+                                onClick={() => handleDelete(caregiver._id, id)}
+                              >
+                                <i className="bi bi-trash"></i>  ลบ
+                              </button>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                  <div className="btn-group mb-4">
+                    <div className="adddata">
+                      <button onClick={handleAddCaregiver}><i class="bi bi-plus-circle"></i> เพิ่มผู้ดูแล</button>
+                    </div>
+                  </div>
+                </div>
+              ) : (
+                <div>
+                  <p className="no-equipment">ไม่มีข้อมูลผู้ดูแล</p>
+                  <div className="btn-group mb-4">
+                    <div className="adddata">
+                      <button onClick={handleAddCaregiver}><i class="bi bi-plus-circle"></i> เพิ่มผู้ดูแล</button>
+                    </div>
+                  </div>
+                </div>
+              )}
+            </div>
+          </fieldset>
+        </div>
+        {/* <div className="info3 card mb-3">
           <div className="header">
             <b>ข้อมูลผู้ดูแล</b>
           </div>
@@ -677,9 +786,6 @@ export default function AllUser({}) {
                 <div className="user-info-caregiver">
                   {caregiverInfo.map((caregiver, index) => (
                     <div className="inline-container" key={index}>
-                      {/* <p>
-                        <span>ผู้ดูแลคนที่ {index + 1}:</span>
-                      </p> */}
                       <div className="caregiver-card">
                         <div className="caregiver-info">
                           <p className="caregiver-title">
@@ -708,11 +814,11 @@ export default function AllUser({}) {
                             </span>{" "}
                             <span className="caregiver-data">
                               {caregiver.userRelationships &&
-                              caregiver.userRelationships.length > 0
+                                caregiver.userRelationships.length > 0
                                 ? caregiver.userRelationships
-                                    .map((rel) => rel.relationship)
-                                    .filter((relationship) => relationship)
-                                    .join(", ") || "-"
+                                  .map((rel) => rel.relationship)
+                                  .filter((relationship) => relationship)
+                                  .join(", ") || "-"
                                 : "-"}
                             </span>
                           </p>
@@ -723,7 +829,7 @@ export default function AllUser({}) {
                             </span>
                           </p>
                         </div>
-                        
+
                         <div class="button-container-vertical">
                           <button
                             class="button-edit"
@@ -739,13 +845,6 @@ export default function AllUser({}) {
                           </button>
                         </div>
                       </div>
-
-                      {/* <button
-                                onClick={() =>
-                                  navigate("/updatecaregiver", { state: { caregiver  }}
-                                  )
-                                }>
-                                แก้ไข</button> */}
                     </div>
                   ))}
                 </div>
@@ -766,340 +865,250 @@ export default function AllUser({}) {
               </div>
             )}
           </div>
+        </div> */}
+        <div className="forminfo mb-4">
+          <fieldset className="user-fieldset">
+            <legend><i className="bi bi-journal-medical"></i> ข้อมูลการเจ็บป่วย</legend>
+            {medicalInfo ? (
+              <>
+                <div className="user-info mt-3">
+                  <div className="row">
+                    {[
+                      { label: "HN", value: medicalInfo.HN || "-" },
+                      { label: "AN", value: medicalInfo.AN || "-" },
+                      {
+                        label: "วันที่ Admit",
+                        value: medicalInfo.Date_Admit
+                          ? new Date(medicalInfo.Date_Admit).toLocaleDateString("th-TH", {
+                            day: "numeric",
+                            month: "long",
+                            year: "numeric",
+                          })
+                          : "-",
+                      },
+                      {
+                        label: "วันที่ D/C",
+                        value: medicalInfo.Date_DC
+                          ? new Date(medicalInfo.Date_DC).toLocaleDateString("th-TH", {
+                            day: "numeric",
+                            month: "long",
+                            year: "numeric",
+                          })
+                          : "-",
+                      },
+                      { label: "Diagnosis", value: medicalInfo.Diagnosis || "-" },
+                      {
+                        label: "แพทย์ผู้ดูแล",
+                        value: (mdata.nametitle || mdata.name || mdata.surname)
+                          ? `${mdata.nametitle || ""} ${mdata.name || ""} ${mdata.surname || ""}`.trim()
+                          : "-",
+                      },
+                      { label: "Chief complaint", value: medicalInfo.Chief_complaint || "-" },
+                      { label: "Present illness", value: medicalInfo.Present_illness || "-" },
+                      {
+                        label: (
+                          <>
+                            <i class="bi bi-file-earmark-pdf"></i> File Present illness
+                          </>
+                        ),
+                        value: medicalInfo.fileP ? (
+                          <a
+                            className="blue-500"
+                            href=""
+                            onClick={() => {
+                              // const filePath = medicalInfo.fileP.replace(/\\/g, "/");
+                              // const fileName = filePath.split("/").pop();
+                              // console.log("fileName:", fileName);
+                              window.open(`${medicalInfo.fileP}`, "_blank");
+                            }}
+                          >
+                            {medicalInfo.filePName}
+                          </a>
+                        ) : "-",
+                      },
+
+                      { label: "Management plan", value: medicalInfo.Management_plan || "-" },
+                      {
+                        label: (
+                          <>
+                            <i class="bi bi-file-earmark-pdf"></i> File Management plan
+                          </>
+                        ),
+                        value: medicalInfo.fileM ? (
+                          <a
+                            className="blue-500"
+                            href=""
+                            onClick={() => {
+                              // const filePath = medicalInfo.fileM.replace(/\\/g, "/");
+                              // const fileName = filePath.split("/").pop();
+                              // console.log("fileName:", fileName);
+                              window.open(`${medicalInfo.fileM}`, "_blank");
+                            }}
+                          >
+                            {medicalInfo.fileMName}
+                          </a>
+                        ) : "-",
+                      },
+                      { label: "Phychosocial assessment", value: medicalInfo.Phychosocial_assessment || "-" },
+                      {
+                        label: (
+                          <>
+                            <i class="bi bi-file-earmark-pdf"></i> File Phychosocial assessment
+                          </>
+                        ),
+                        value: medicalInfo.filePhy ? (
+                          <a
+                            className="blue-500"
+                            href=""
+                            onClick={() => {
+                              // const filePath = medicalInfo.filePhy.replace(/\\/g, "/");
+                              // const fileName = filePath.split("/").pop();
+                              // console.log("fileName:", fileName);
+                              window.open(`${medicalInfo.filePhy}`, "_blank");
+                            }}
+                          >
+                            {medicalInfo.filePhyName}
+                          </a>
+                        ) : "-",
+                      },
+                    ].map((item, index) => (
+                      <React.Fragment key={index}>
+                        <div className="col-sm-5" style={{ color: "#444" }}>
+                          <p><span>{item.label} :</span></p>
+                        </div>
+                        <div className="col-sm-7">
+                          <p><b>{item.value}</b></p>
+                        </div>
+                        <div className="w-100 d-none d-md-block"></div>
+                      </React.Fragment>
+                    ))}
+                  </div>
+                </div>
+                <div className="btn-group mt-4 mb-4">
+                  <div className="editimg1">
+                    <button onClick={() => navigate("/updatemedicalinformation", { state: { id } })}>
+                      <i className="bi bi-pencil-square"></i> แก้ไข
+                    </button>
+                  </div>
+                  <div className="deleteimg1">
+                    <button onClick={handleDeleteMedicalInfo}><i className="bi bi-trash"></i> ลบ</button>
+                  </div>
+                </div>
+
+
+              </>
+            ) : (
+              <div>
+                <p className="no-equipment">ไม่พบข้อมูลการเจ็บป่วย</p>
+                <div className="btn-group mb-4">
+                  <div className="adddata">
+                    <button
+                      onClick={() =>
+                        navigate("/addmdinformation", { state: { id } })
+                      }
+                    >
+                      <i class="bi bi-plus-circle"></i> เพิ่มข้อมูล
+                    </button>
+                  </div>
+                </div>
+              </div>
+            )}
+          </fieldset>
         </div>
 
-        <br></br>
-        <div className="info3 card mb-1">
-          <div className="header">
-            <b>ข้อมูลการเจ็บป่วย</b>
-          </div>
-          {medicalInfo ? (
-            <>
-              <div className="user-info mt-3">
-                <div className="left-info">
-                  <p>
-                    <span>HN</span>
-                  </p>
-                  <p>
-                    <span>AN</span>
-                  </p>
-                  <p>
-                    <span>วันที่ Admit</span>
-                  </p>
-                  <p>
-                    <span>วันที่ D/C</span>
-                  </p>
-                  <p>
-                    <span>Diagnosis</span>
-                  </p>
-                  <p>
-                    <span>แพทย์ผู้ดูแล</span>
-                  </p>
-                  <p>
-                    <span>Chief_complaint</span>
-                  </p>
-                  <p>
-                    <span>Present illness</span>
-                  </p>
-                  <p>
-                    <span>File Present illness</span>
-                  </p>
-                  <p>
-                    <span>Management plan</span>
-                  </p>
-                  <p>
-                    <span>File Management plan</span>
-                  </p>
-                  <p>
-                    <span>Phychosocial assessment</span>
-                  </p>
-                  <p>
-                    <span>File Phychosocial assessment</span>
-                  </p>
-                </div>
-                <div className="right-info">
-                  <p>
-                    <b>{medicalInfo.HN || "-"}</b>
-                  </p>
-                  <p>
-                    <b>{medicalInfo.AN || "-"}</b>
-                  </p>
-                  <p>
-                    <b>
-                      {medicalInfo.Date_Admit
-                        ? new Date(medicalInfo.Date_Admit).toLocaleDateString(
-                            "th-TH",
-                            { day: "numeric", month: "long", year: "numeric" }
-                          )
-                        : "-"}
-                    </b>
-                  </p>
-                  <p>
-                    <b>
-                      {medicalInfo.Date_DC
-                        ? new Date(medicalInfo.Date_DC).toLocaleDateString(
-                            "th-TH",
-                            { day: "numeric", month: "long", year: "numeric" }
-                          )
-                        : "-"}
-                    </b>
-                  </p>
-                  <p>
-                    <b>{medicalInfo.Diagnosis || "-"}</b>
-                  </p>
-                  <p>
-                    <b>
-                      {mdata.nametitle || mdata.name || mdata.surname
-                        ? `${mdata.nametitle || ""} ${mdata.name || ""} ${
-                            mdata.surname || ""
-                          }`.trim()
-                        : "-"}
-                    </b>
-                  </p>
-                  <p>
-                    <b>{medicalInfo.Chief_complaint || "-"}</b>
-                  </p>
-                  <p>
-                    <b>{medicalInfo.Present_illness || "-"}</b>
-                  </p>
-                  <p>
-                    <b>
-                      {medicalInfo.fileP ? (
-                        <a
-                          style={{ color: "grey" }}
-                          href=""
-                          onClick={() => {
-                            // const filePath = medicalInfo.fileP.replace(/\\/g, "/");
-                            // const fileName = filePath.split("/").pop();
-                            // console.log("fileName:", fileName);
-                            window.open(`${medicalInfo.fileP}`, "_blank");
-                          }}
+        <div className="forminfo mb-1">
+          <fieldset className="user-fieldset">
+            <legend>
+              <i className="bi bi-prescription2"></i> อุปกรณ์ทางการแพทย์
+            </legend>
+            {medicalEquipment && medicalEquipment.length > 0 ? (
+              <>
+                <div className="equipment-category">
+                  <table className="equipment-table">
+                    <thead>
+                      <tr>
+                        <th scope="col">
+                          <input
+                            style={{ transform: 'scale(1.4)'}}
+                            type="checkbox"
+                            onChange={toggleAllCheckboxes}
+                          />
+                        </th>
+                        <th scope="col">#</th>
+                        <th scope="col" onClick={() => requestSort("equipmentname_forUser")} style={{ cursor: "pointer" }}>
+                          ชื่ออุปกรณ์ {getSortIcon("equipmentname_forUser")}
+                        </th>
+                        <th scope="col" onClick={() => requestSort("equipmenttype_forUser")} style={{ cursor: "pointer" }}>
+                          ประเภทอุปกรณ์ {getSortIcon("equipmenttype_forUser")}
+                        </th>
+                        <th scope="col" onClick={() => requestSort("createdAt")} style={{ cursor: "pointer" }}>
+                          วันที่เพิ่ม {getSortIcon("createdAt")}
+                        </th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {sortedEquipment.map((equipment, index) => (
+                        <tr
+                          key={equipment._id}
+                          onClick={() => handleRowClick(equipment.equipmentname_forUser)}
+                          style={{ cursor: "pointer" }}
                         >
-                          {medicalInfo.filePName}
-                        </a>
-                      ) : (
-                        "-"
-                      )}
-                    </b>
-                  </p>
-                  <p>
-                    <b>{medicalInfo.Management_plan || "-"}</b>
-                  </p>
-                  <p>
-                    <b>
-                      {medicalInfo.fileM ? (
-                        <a
-                          style={{ color: "grey" }}
-                          href=""
-                          onClick={() => {
-                            // const filePath = medicalInfo.fileM.replace(/\\/g, "/");
-                            // const fileName = filePath.split("/").pop();
-                            // console.log("fileName:", fileName);
-                            window.open(`${medicalInfo.fileM}`, "_blank");
-                          }}
-                        >
-                          {medicalInfo.fileMName}
-                        </a>
-                      ) : (
-                        "-"
-                      )}
-                    </b>
-                  </p>
-                  <p>
-                    <b>{medicalInfo.Phychosocial_assessment || "-"}</b>
-                  </p>
-                  <p>
-                    <b>
-                      {medicalInfo.filePhy ? (
-                        <a
-                          style={{ color: "grey" }}
-                          href=""
-                          onClick={() => {
-                            // const filePath = medicalInfo.filePhy.replace(/\\/g, "/");
-                            // const fileName = filePath.split("/").pop();
-                            // console.log("fileName:", fileName);
-                            window.open(`${medicalInfo.filePhy}`, "_blank");
-                          }}
-                        >
-                          {medicalInfo.filePhyName}
-                        </a>
-                      ) : (
-                        "-"
-                      )}
-                    </b>
-                  </p>
-                </div>
-              </div>
-              <div className="btn-group mb-4">
-                <div className="editimg1">
-                  <button
-                    onClick={() =>
-                      navigate("/updatemedicalinformation", {
-                        state: { id },
-                      })
-                    }
-                  >
-                    แก้ไข
-                  </button>
-                </div>
-                <div className="deleteimg1">
-                  <button onClick={handleDeleteMedicalInfo}>ลบ</button>
-                </div>
-              </div>
-            </>
-          ) : (
-            <div>
-              <p className="no-equipment">ไม่พบข้อมูลการเจ็บป่วย</p>
-              <div className="btn-group mb-4">
-                <div className="adddata">
-                  <button
-                    onClick={() =>
-                      navigate("/addmdinformation", { state: { id } })
-                    }
-                  >
-                    เพิ่มข้อมูล
-                  </button>
-                </div>
-              </div>
-            </div>
-          )}
-        </div>
-        <br></br>
-        <div className="info3 card mb-1">
-          <div className="header">
-            <b>อุปกรณ์ทางการแพทย์</b>
-          </div>
-          {medicalEquipment && medicalEquipment.length > 0 ? (
-            <>
-              {Object.entries(
-                medicalEquipment.reduce((acc, equipment) => {
-                  if (!acc[equipment.equipmenttype_forUser]) {
-                    acc[equipment.equipmenttype_forUser] = [];
-                  }
-                  acc[equipment.equipmenttype_forUser].push(equipment);
-                  return acc;
-                }, {})
-              ).map(([type, equipments]) => {
-                // Determine if all items in this category are selected
-                const allSelected = equipments.every((equipment) =>
-                  selectedEquipments.includes(equipment.equipmentname_forUser)
-                );
-
-                return (
-                  <div key={type} className="equipment-category">
-                    <h4 className="mt-3">
-                      <b>{type}</b>
-                    </h4>
-                    <table className="equipment-table mb-5">
-                      <thead>
-                        <tr>
-                          <th>
+                          <td onClick={(e) => e.stopPropagation()}>
                             <input
+                              style={{ transform: 'scale(1.4)' }}
                               type="checkbox"
-                              checked={allSelected}
-                              onChange={() => {
-                                if (allSelected) {
-                                  // Unselect all items in this category
-                                  setSelectedEquipments((prevSelected) =>
-                                    prevSelected.filter(
-                                      (name) =>
-                                        !equipments.some(
-                                          (equipment) =>
-                                            equipment.equipmentname_forUser ===
-                                            name
-                                        )
-                                    )
-                                  );
-                                } else {
-                                  // Select all items in this category
-                                  setSelectedEquipments((prevSelected) => [
-                                    ...prevSelected,
-                                    ...equipments
-                                      .filter(
-                                        (equipment) =>
-                                          !prevSelected.includes(
-                                            equipment.equipmentname_forUser
-                                          )
-                                      )
-                                      .map(
-                                        (equipment) =>
-                                          equipment.equipmentname_forUser
-                                      ),
-                                  ]);
-                                }
+                              checked={selectedEquipments.includes(equipment.equipmentname_forUser)}
+                              onChange={(e) => {
+                                e.stopPropagation(); // ป้องกันไม่ให้ `tr` ทำงานซ้ำ
+                                handleRowClick(equipment.equipmentname_forUser);
                               }}
                             />
-                          </th>
-                          <th>ลำดับ</th>
-                          <th>ชื่ออุปกรณ์</th>
-                          <th>วันที่เพิ่ม</th>
+                          </td>
+                          <td>{index + 1}</td>
+                          <td>{equipment.equipmentname_forUser}</td>
+                          <td>{equipment.equipmenttype_forUser}</td>
+                          <td>{formatDate(equipment.createdAt)}</td>
                         </tr>
-                      </thead>
-                      <tbody>
-                        {equipments.map((equipment, index) => (
-                          <tr key={equipment._id}>
-                            <td>
-                              <input
-                                type="checkbox"
-                                className="mb-2"
-                                checked={selectedEquipments.includes(
-                                  equipment.equipmentname_forUser
-                                )}
-                                onChange={() =>
-                                  handleCheckboxChange(
-                                    equipment.equipmentname_forUser
-                                  )
-                                }
-                              />
-                            </td>
-                            <td>{index + 1}</td>
-                            <td>{equipment.equipmentname_forUser}</td>
-                            <td>
-                              {new Date(equipment.createdAt).toLocaleDateString(
-                                "th-TH",
-                                {
-                                  day: "numeric",
-                                  month: "long",
-                                  year: "numeric",
-                                }
-                              )}
-                            </td>
-                          </tr>
-                        ))}
-                      </tbody>
-                    </table>
+                      ))}
+                    </tbody>
+
+                  </table>
+                </div>
+
+                {/* ปุ่มควบคุม */}
+                <div className="btn-group mt-4 mb-3">
+                  <div className="adddata">
+                    <button
+                      onClick={() => navigate("/addequipuser", { state: { id } })}
+                    >
+                      <i className="bi bi-plus-circle"></i> เพิ่มอุปกรณ์
+                    </button>
                   </div>
-                );
-              })}
-              <div className="btn-group mb-4">
-                <div className="adddata">
-                  <button
-                    onClick={() => navigate("/addequipuser", { state: { id } })}
-                  >
-                    เพิ่มอุปกรณ์
-                  </button>
+                  <div className="deleteimg1 mt-2">
+                    <button onClick={handleDeleteSelected}>
+                      <i className="bi bi-trash"></i> ลบอุปกรณ์
+                    </button>
+                  </div>
                 </div>
-                <div className="deleteimg1 mt-2">
-                  <button onClick={handleDeleteSelected}>ลบอุปกรณ์</button>
+              </>
+            ) : (
+              <>
+                <div className="no-equipment text-center mt-3">ไม่พบข้อมูลอุปกรณ์ทางการแพทย์</div>
+                <div className="btn-group mb-4">
+                  <div className="adddata">
+                    <button
+                      onClick={() => navigate("/addequipuser", { state: { id } })}
+                    >
+                      <i className="bi bi-plus-circle"></i> เพิ่มอุปกรณ์
+                    </button>
+                  </div>
                 </div>
-              </div>
-            </>
-          ) : (
-            <>
-              <div className="no-equipment">ไม่พบข้อมูลอุปกรณ์ทางการแพทย์</div>
-              <div className="btn-group mb-4">
-                <div className="adddata">
-                  <button
-                    onClick={() => navigate("/addequipuser", { state: { id } })}
-                  >
-                    เพิ่มอุปกรณ์
-                  </button>
-                </div>
-              </div>
-            </>
-          )}
+              </>
+            )}
+          </fieldset>
         </div>
+
       </div>
-    </main>
+    </main >
   );
 }

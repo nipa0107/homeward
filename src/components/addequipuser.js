@@ -63,17 +63,17 @@ export default function AddEquipUser() {
     let updatedEquipments;
 
     if (isChecked) {
-        updatedEquipments = [
-            ...selectedEquipments,
-            {
-                equipmentname_forUser: equipmentName,
-                equipmenttype_forUser: equipmentType,
-            },
-        ];
+      updatedEquipments = [
+        ...selectedEquipments,
+        {
+          equipmentname_forUser: equipmentName,
+          equipmenttype_forUser: equipmentType,
+        },
+      ];
     } else {
-        updatedEquipments = selectedEquipments.filter(
-            (equip) => equip.equipmentname_forUser !== equipmentName
-        );
+      updatedEquipments = selectedEquipments.filter(
+        (equip) => equip.equipmentname_forUser !== equipmentName
+      );
     }
 
     setSelectedEquipments(updatedEquipments);
@@ -81,93 +81,93 @@ export default function AddEquipUser() {
     // Check for duplicates and update validation messages
     const validationMessages = {};
     updatedEquipments.forEach((equip, index) => {
-        const duplicates = updatedEquipments.filter(
-            (e) => e.equipmentname_forUser === equip.equipmentname_forUser
-        ).length;
+      const duplicates = updatedEquipments.filter(
+        (e) => e.equipmentname_forUser === equip.equipmentname_forUser
+      ).length;
 
-        if (duplicates > 1) {
-            validationMessages[equip.equipmentname_forUser] = "มีอุปกรณ์นี้อยู่แล้ว";
-        }
+      if (duplicates > 1) {
+        validationMessages[equip.equipmentname_forUser] = "มีอุปกรณ์นี้อยู่แล้ว";
+      }
     });
 
     setEquipValidationMessages(validationMessages);
     setValidationMessage(""); // Clear general validation message
-};
+  };
 
-const handleSelectAll = (equipmentType, isChecked) => {
+  const handleSelectAll = (equipmentType, isChecked) => {
     let updatedEquipments = [...selectedEquipments];
 
     data
-        .filter((equipment) => equipment.equipment_type === equipmentType)
-        .forEach((equipment) => {
-            if (isChecked) {
-                if (
-                    !updatedEquipments.some(
-                        (equip) => equip.equipmentname_forUser === equipment.equipment_name
-                    )
-                ) {
-                    updatedEquipments.push({
-                        equipmentname_forUser: equipment.equipment_name,
-                        equipmenttype_forUser: equipmentType,
-                    });
-                }
-            } else {
-                updatedEquipments = updatedEquipments.filter(
-                    (equip) => equip.equipmentname_forUser !== equipment.equipment_name
-                );
-            }
-        });
+      .filter((equipment) => equipment.equipment_type === equipmentType)
+      .forEach((equipment) => {
+        if (isChecked) {
+          if (
+            !updatedEquipments.some(
+              (equip) => equip.equipmentname_forUser === equipment.equipment_name
+            )
+          ) {
+            updatedEquipments.push({
+              equipmentname_forUser: equipment.equipment_name,
+              equipmenttype_forUser: equipmentType,
+            });
+          }
+        } else {
+          updatedEquipments = updatedEquipments.filter(
+            (equip) => equip.equipmentname_forUser !== equipment.equipment_name
+          );
+        }
+      });
 
     setSelectedEquipments(updatedEquipments);
-};
+  };
 
-const handleSubmit = (e) => {
+  const handleSubmit = (e) => {
     e.preventDefault();
 
     if (selectedEquipments.length === 0) {
-        setValidationMessage("โปรดเลือกอุปกรณ์อย่างน้อยหนึ่งรายการ");
-        return;
+      setValidationMessage("โปรดเลือกอุปกรณ์อย่างน้อยหนึ่งรายการ");
+      return;
     }
     if (!id) {
-        setValidationMessage("ไม่พบข้อมูลผู้ใช้");
-        return;
+      setValidationMessage("ไม่พบข้อมูลผู้ใช้");
+      return;
     }
 
     if (Object.keys(equipValidationMessages).length > 0) {
-        return;
+      return;
     }
 
     fetch("http://localhost:5000/addequipuser", {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json",
-            Accept: "application/json",
-            "Access-Control-Allow-Origin": "*",
-            Authorization: `Bearer ${token}`,
-        },
-        body: JSON.stringify({ equipments: selectedEquipments, userId: id }),
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Accept: "application/json",
+        "Access-Control-Allow-Origin": "*",
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify({ equipments: selectedEquipments, userId: id }),
     })
-        .then((res) => res.json())
-        .then((data) => {
-            if (data.status === "ok") {
-                toast.success("เพิ่มข้อมูลสำเร็จ");
-                setTimeout(() => {
-                    navigate("/allinfo", { state: { id } });
-                }, 1100);
-            } else if (
-                data.status === "error" &&
-                data.message === "มีอุปกรณ์นี้อยู่แล้ว"
-            ) {
-                setValidationMessage("มีอุปกรณ์นี้อยู่แล้ว");
-            } else {
-                toast.error("เกิดข้อผิดพลาดในการเพิ่มข้อมูล");
-            }
-        })
-        .catch((error) => {
-            console.error("Error adding equipment:", error);
-            toast.error("เกิดข้อผิดพลาดในการเพิ่มข้อมูล");
-        });
-};
+      .then((res) => res.json())
+      .then((data) => {
+        if (data.status === "ok") {
+          toast.success("เพิ่มข้อมูลสำเร็จ");
+          setTimeout(() => {
+            navigate("/allinfo", { state: { id } });
+          }, 1100);
+        } else if (
+          data.status === "error" &&
+          data.message === "มีอุปกรณ์นี้อยู่แล้ว"
+        ) {
+          setValidationMessage("มีอุปกรณ์นี้อยู่แล้ว");
+        } else {
+          toast.error("เกิดข้อผิดพลาดในการเพิ่มข้อมูล");
+        }
+      })
+      .catch((error) => {
+        console.error("Error adding equipment:", error);
+        toast.error("เกิดข้อผิดพลาดในการเพิ่มข้อมูล");
+      });
+  };
 
   const logOut = () => {
     window.localStorage.clear();
@@ -188,7 +188,29 @@ const handleSubmit = (e) => {
     setValidationMessage(""); // Clear general validation message
   };
 
-  
+  const toggleAllCheckboxes = (e) => {
+    const isChecked = e.target.checked;
+    let updatedEquipments = [];
+
+    if (isChecked) {
+      updatedEquipments = data.map((equipment) => ({
+        equipmentname_forUser: equipment.equipment_name,
+        equipmenttype_forUser: equipment.equipment_type,
+      }));
+    }
+
+    setSelectedEquipments(updatedEquipments);
+  };
+
+  const handleRowClick = (equipmentName, equipmentType) => {
+    setSelectedEquipments((prevSelected) =>
+      prevSelected.some((equip) => equip.equipmentname_forUser === equipmentName)
+        ? prevSelected.filter((equip) => equip.equipmentname_forUser !== equipmentName)
+        : [...prevSelected, { equipmentname_forUser: equipmentName, equipmenttype_forUser: equipmentType }]
+    );
+  };
+
+
   return (
     <main className="body">
       <ToastContainer />
@@ -316,94 +338,91 @@ const handleSubmit = (e) => {
           </ul>
         </div>
         <h3>เพิ่มอุปกรณ์สำหรับผู้ป่วย</h3>
-        <div className="adminall card mb-1">
+
+        <div className="table-responsive">
           <form onSubmit={handleSubmit}>
-            {["อุปกรณ์ติดตัว", "อุปกรณ์เสริม", "อุปกรณ์อื่นๆ"].map(
-              (equipmentType) => {
-                const isAllSelected = data
-                  .filter(
+            <table className="table table-hover" style={{ width: "60%" }}>
+              <thead>
+                <tr>
+                  <th style={{ width: "10%" }}>
+                    <input
+                      style={{ transform: 'scale(1.4)',marginLeft: "45px", cursor: "pointer" }}
+                      type="checkbox"
+                      onChange={toggleAllCheckboxes}
+                    />
+                  </th>
+                  <th style={{ width: "10%" }}>#</th>
+                  <th>ชื่ออุปกรณ์</th>
+                </tr>
+              </thead>
+              <tbody>
+                {["อุปกรณ์ติดตัว", "อุปกรณ์เสริม", "อุปกรณ์อื่นๆ"].map((equipmentType) => {
+                  const equipmentList = data.filter(
                     (equipment) => equipment.equipment_type === equipmentType
-                  )
-                  .every((equipment) =>
+                  );
+
+                  // กรณีไม่มีข้อมูลของประเภทอุปกรณ์นี้
+                  if (equipmentList.length === 0) {
+                    return (
+                      <tr key={equipmentType} className="table-light">
+                        <td colSpan="3" className="text-center">
+                          ไม่มีข้อมูล {equipmentType}
+                        </td>
+                      </tr>
+                    );
+                  }
+
+                  // ตรวจสอบว่าอุปกรณ์ทั้งหมดถูกเลือกหรือไม่
+                  const isAllSelected = equipmentList.every((equipment) =>
                     selectedEquipments.some(
-                      (equip) =>
-                        equip.equipmentname_forUser ===
-                        equipment.equipment_name
+                      (equip) => equip.equipmentname_forUser === equipment.equipment_name
                     )
                   );
 
-                return (
-                  <div key={equipmentType} className="mb-1">
-                    <h4 className="equipment-type-title">
-                      <b>{equipmentType}</b>
-                    </h4>
-                    <table className="equipment-table">
-                      <thead>
-                        <tr>
-                          <th>
+                  return (
+                    <React.Fragment key={equipmentType}>
+                      {/* หัวข้อประเภทอุปกรณ์ */}
+                      <tr >
+                        <td colSpan="3" className="fw-bold text-left"
+                          style={{ backgroundColor: "#e8f5fd", cursor: "default" }}>
+                          
+                          {equipmentType}
+                        </td>
+                      </tr>
+
+                      {/* รายการอุปกรณ์ */}
+                      {equipmentList.map((equipment, index) => (
+                        <tr key={equipment._id}
+                          onClick={() => handleRowClick(equipment.equipment_name, equipmentType)}
+                          style={{ cursor: "pointer" }}>
+                          <td style={{ width: "10%" }}>
                             <input
+                              style={{ transform: 'scale(1.4)', marginLeft: "45px", pointerEvents: "none" }} // ป้องกัน input รับคลิกตรงๆ
+                              
                               type="checkbox"
-                              checked={isAllSelected}
-                              onChange={(e) =>
-                                handleSelectAll(equipmentType, e.target.checked)
-                              }
+                              checked={selectedEquipments.some(
+                                (equip) => equip.equipmentname_forUser === equipment.equipment_name
+                              )}
+                              readOnly
                             />
-                          </th>
-                          <th>ลำดับ</th>
-                          <th>ชื่ออุปกรณ์</th>
+                          </td>
+                          <td style={{ width: "10%" }}>{index + 1}</td>
+                          <td>{equipment.equipment_name}</td>
                         </tr>
-                      </thead>
-                      <tbody>
-                        {Array.isArray(data) && data.length > 0 ? (
-                          data
-                            .filter(
-                              (equipment) =>
-                                equipment.equipment_type === equipmentType
-                            )
-                            .map((equipment, index) => (
-                              <tr key={equipment._id}>
-                                <td>
-                                  <input
-                                    type="checkbox"
-                                    value={equipment.equipment_name}
-                                    checked={selectedEquipments.some(
-                                      (equip) =>
-                                        equip.equipmentname_forUser ===
-                                        equipment.equipment_name
-                                    )}
-                                    onChange={(e) =>
-                                      handleCheckboxChange(
-                                        e,
-                                        equipment.equipment_name,
-                                        equipmentType
-                                      )
-                                    }
-                                  />
-                                </td>
-                                <td>{index + 1}</td>
-                                <td>{equipment.equipment_name}</td>
-                                {equipValidationMessages[equipment.equipment_name] && (
-                                  <td style={{ color: "red" }}>
-                                    {equipValidationMessages[equipment.equipment_name]}
-                                  </td>
-                                )}
-                              </tr>
-                            ))
-                        ) : (
-                          <tr>
-                            <td colSpan="3">ไม่มีข้อมูล{equipmentType}</td>
-                          </tr>
-                        )}
-                      </tbody>
-                    </table>
-                  </div>
-                );
-              }
-            )}
+                      ))}
+                    </React.Fragment>
+                  );
+                })}
+              </tbody>
+            </table>
+
+            {/* ข้อความแจ้งเตือนกรณีมีข้อผิดพลาด */}
             {validationMessage && (
-              <div style={{ color: "red" }}>{validationMessage}</div>
+              <div style={{ color: "red", textAlign: "center" }}>{validationMessage}</div>
             )}
-            <div className="btn-group">
+
+            {/* ปุ่มบันทึก */}
+            <div className="btn-group mt-3">
               <div className="btn-next">
                 <button type="submit" className="btn btn-outline py-2">
                   บันทึก
@@ -412,6 +431,7 @@ const handleSubmit = (e) => {
             </div>
           </form>
         </div>
+
         <div className="btn-group">
           <div className="btn-pre"></div>
         </div>
