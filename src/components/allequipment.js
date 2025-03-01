@@ -13,7 +13,7 @@ export default function AllEquip() {
   const [isActive, setIsActive] = useState(false);
   const [searchKeyword, setSearchKeyword] = useState(""); // ค้นหา
   const [token, setToken] = useState("");
-  const tokenExpiredAlertShown = useRef(false); 
+  const tokenExpiredAlertShown = useRef(false);
 
   useEffect(() => {
     const token = window.localStorage.getItem("token");
@@ -35,8 +35,11 @@ export default function AllEquip() {
         .then((data) => {
           console.log(data);
           setAdminData(data.data);
-          if (data.data === "token expired" && !tokenExpiredAlertShown.current) {
-            tokenExpiredAlertShown.current = true; 
+          if (
+            data.data === "token expired" &&
+            !tokenExpiredAlertShown.current
+          ) {
+            tokenExpiredAlertShown.current = true;
             alert("Token expired login again");
             window.localStorage.clear();
             window.location.href = "./";
@@ -44,13 +47,13 @@ export default function AllEquip() {
         });
     }
     getAllEquip();
-  }, []); 
+  }, []);
 
   const getAllEquip = () => {
     fetch("http://localhost:5000/allequip", {
       method: "GET",
       headers: {
-        Authorization: `Bearer ${token}`, 
+        Authorization: `Bearer ${token}`,
       },
     })
       .then((res) => res.json())
@@ -230,78 +233,84 @@ export default function AllEquip() {
             </li>
           </ul>
         </div>
-        {/* <h3>จัดการอุปกรณ์ทางการแพทย์</h3> */}
 
-        {/* ค้นหา */}
-        <div className="search-bar">
-          <input
-            className="search-text"
-            type="text"
-            placeholder="ค้นหา"
-            value={searchKeyword}
-            onChange={(e) => setSearchKeyword(e.target.value)}
-          />
-        </div>
         <div className="content-toolbar">
-        <div className="toolbar">
-          <button
-            className="btn btn-outline py-1 px-4"
-            onClick={() => navigate("/addequip", { state: adminData })}
-          >
-            <i className="bi bi-plus-circle" style={{ marginRight: "8px" }}></i>
-            เพิ่มอุปกรณ์
-          </button>
-          <p className="countadmin">จำนวนอุปกรณ์ทั้งหมด : {data.length} ชิ้น</p>
+          <div className="toolbar-container">
+            <div className="search-bar">
+              <i className="bi bi-search search-icon"></i>
+              <input
+                className="search-text"
+                type="text"
+                placeholder="ค้นหา"
+                value={searchKeyword}
+                onChange={(e) => setSearchKeyword(e.target.value)}
+              />
+            </div>
+            <div className="toolbar">
+              <button
+                className="btn btn-outline py-1 px-4"
+                onClick={() => navigate("/addequip", { state: adminData })}
+              >
+                <i
+                  className="bi bi-plus-circle"
+                  style={{ marginRight: "8px" }}
+                ></i>
+                เพิ่มอุปกรณ์
+              </button>
+            </div>
           </div>
+          <p className="countadmin">จำนวนอุปกรณ์ทั้งหมด : {data.length} ชิ้น</p>
         </div>
         <div className="content">
           {/* <div className="cardall card mb-3"> */}
           <div className="table-container">
-          <table className="equipments-table table-all">
-            <thead>
-              <tr>
-                <th>ชื่ออุปกรณ์</th>
-                <th>ประเภทอุปกรณ์</th>
-                <th>จัดการ</th>
-              </tr>
-            </thead>
-            <tbody>
-              {data.length > 0 ? (
-                data.map((i, index) => (
-                  <tr key={index}>
-                    <td data-title="">{i.equipment_name}</td>
-                    <td>{i.equipment_type}</td>
-                    <td className="buttongroup-in-table">
-                      <button
-                        className="editimg2"
-                        onClick={() =>
-                          navigate("/updateequip", {
-                            state: { id: i._id, equip: i },
-                          })
-                        }
-                      >
-                        <i className="bi bi-pencil-square"></i>
-                      </button>
-                      <button
-                        className="deleteimg2"
-                        alt="deleteimg"
-                        onClick={() => deleteEquipment(i._id, i.equipment_name)}
-                      >
-                        {" "}
-                        <i className="bi bi-trash"></i>
-                      </button>
+            <table className="equipments-table table-all">
+              <thead>
+                <tr>
+                  <th>ชื่ออุปกรณ์</th>
+                  <th>ประเภทอุปกรณ์</th>
+                  <th>จัดการ</th>
+                </tr>
+              </thead>
+              <tbody>
+                {data.length > 0 ? (
+                  data.map((i, index) => (
+                    <tr key={index}>
+                      <td data-title="">{i.equipment_name}</td>
+                      <td>{i.equipment_type}</td>
+                      <td className="buttongroup-in-table">
+                        <button
+                          className="editimg2"
+                          onClick={() =>
+                            navigate("/updateequip", {
+                              state: { id: i._id, equip: i },
+                            })
+                          }
+                        >
+                          <i className="bi bi-pencil-square"></i>
+                        </button>
+                        <button
+                          className="deleteimg2"
+                          alt="deleteimg"
+                          onClick={() =>
+                            deleteEquipment(i._id, i.equipment_name)
+                          }
+                        >
+                          {" "}
+                          <i className="bi bi-trash"></i>
+                        </button>
+                      </td>
+                    </tr>
+                  ))
+                ) : (
+                  <tr>
+                    <td colSpan="3" className="text-center">
+                      ไม่พบข้อมูลที่คุณค้นหา
                     </td>
                   </tr>
-                ))
-              ) : (
-                <tr>
-                  <td colSpan="3" className="text-center">
-                    ไม่พบข้อมูลที่คุณค้นหา
-                  </td>
-                </tr>
-              )}
-            </tbody>
-          </table>
+                )}
+              </tbody>
+            </table>
           </div>
           {/* </div> */}
         </div>

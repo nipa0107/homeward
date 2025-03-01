@@ -182,7 +182,6 @@ export default function Home() {
     return <i class="bi bi-caret-down-fill"></i>;
   };
 
-  
   return (
     <main className="body">
       <div className={`sidebar ${isActive ? "active" : ""}`}>
@@ -239,18 +238,18 @@ export default function Home() {
               <span className="links_name">จัดการแอดมิน</span>
             </a>
           </li>
-          {/* เชื่อมลิงกไปอีเว็บอยู่ที่ testlink */}
           <li>
-  {adminData?._id && (
-    <a href={`http://localhost:5173/auth?userId=${adminData._id}`}
-      target="_blank" 
-      rel="noopener noreferrer"
-    >
-      <i className="bi bi-window"></i>
-      <span className="links_name">PTAH</span>
-    </a>
-  )}
-</li>
+            {adminData?._id && (
+              <a
+                href={`http://localhost:5173/auth?userId=${adminData._id}`}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <i className="bi bi-window-dock"></i>
+                <span className="links_name">PTAH</span>
+              </a>
+            )}
+          </li>
 
           {/* <li>
           <a       onClick={() => {
@@ -273,9 +272,7 @@ export default function Home() {
                 ></i>
                 <span className="links_name">ออกจากระบบ</span>
               </a>
-              
             </li>
-            
           </div>
         </ul>
       </div>
@@ -311,34 +308,34 @@ export default function Home() {
             </li>
           </ul>
         </div>
-        {/* <h3>จัดการข้อมูลคู่มือการดูแลผู้ป่วย</h3> */}
-
-        {/* ค้นหา */}
-        <div className="search-bar">
-          <input
-            className="search-text"
-            type="text"
-            placeholder="ค้นหา"
-            value={searchKeyword}
-            onChange={(e) => setSearchKeyword(e.target.value)}
-          />
-        </div>
         <div className="content-toolbar">
-          <div className="toolbar">
-            <button
-              className="btn btn-outline py-1 px-4"
-              onClick={() => navigate("/addcaremanual", { state: adminData })}
-            >
-              <i
-                className="bi bi-plus-circle"
-                style={{ marginRight: "8px" }}
-              ></i>
-              เพิ่มคู่มือ
-            </button>
-            <p className="countadmin">
-              จำนวนคู่มือทั้งหมด : {data.length} คู่มือ
-            </p>
+          <div className="toolbar-container">
+            <div className="search-bar">
+              <i className="bi bi-search search-icon"></i>
+              <input
+                className="search-text"
+                type="text"
+                placeholder="ค้นหา"
+                value={searchKeyword}
+                onChange={(e) => setSearchKeyword(e.target.value)}
+              />
+            </div>
+            <div className="toolbar">
+              <button
+                className="btn btn-outline py-1 px-4"
+                onClick={() => navigate("/addcaremanual", { state: adminData })}
+              >
+                <i
+                  className="bi bi-plus-circle"
+                  style={{ marginRight: "8px" }}
+                ></i>
+                เพิ่มคู่มือ
+              </button>
+            </div>
           </div>
+          <p className="countadmin">
+            จำนวนคู่มือทั้งหมด : {data.length} คู่มือ
+          </p>
         </div>
 
         <div className="content">

@@ -88,6 +88,24 @@ export default function AddMedicalInformation() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+      // ตรวจสอบว่ามีการกรอกค่าหรือไม่
+  if (!HN.trim()) {
+    toast.error("กรุณากรอก HN");
+    return;
+  }
+  if (!AN.trim()) {
+    toast.error("กรุณากรอก AN");
+    return;
+  }
+  if (!Diagnosis.trim()) {
+    toast.error("กรุณากรอก Diagnosis");
+    return;
+  }
+  if (!selectedPersonnel) {
+    toast.error("กรุณาเลือกแพทย์ผู้ดูแล");
+    return;
+  }
+
     const formData = new FormData();
     formData.append("HN", HN);
     formData.append("AN", AN);

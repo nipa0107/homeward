@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import deleteimg from "../img/delete.png";
 import editimg from "../img/edit.png";
 import "../css/alladmin.css";
@@ -44,6 +44,7 @@ export default function AllUser({ }) {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedCaregiver, setSelectedCaregiver] = useState(null);
+  const tokenExpiredAlertShown = useRef(false); 
   const [formData, setFormData] = useState({
     user: "",
     name: "",
@@ -99,6 +100,12 @@ export default function AllUser({ }) {
         .then((data) => {
           console.log(data);
           setAdminData(data.data);
+          if (data.data === "token expired" && !tokenExpiredAlertShown.current) {
+            tokenExpiredAlertShown.current = true; 
+            alert("Token expired login again");
+            window.localStorage.clear();
+            window.location.href = "./";
+          }
         });
     }
   }, []);
@@ -653,7 +660,7 @@ export default function AllUser({ }) {
             </li>
           </ul>
         </div>
-        <h3>ข้อมูลการดูแลผู้ป่วย</h3>
+        <p className="title-header-user">ข้อมูลการดูแลผู้ป่วย</p>
         <div className="forminfo mb-4">
           <fieldset className="user-fieldset">
             <legend><i className="bi bi-person-fill"></i> ข้อมูลทั่วไป</legend>

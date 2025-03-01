@@ -11,7 +11,7 @@ export default function Allsymptom() {
   const [isActive, setIsActive] = useState(false);
   const [searchKeyword, setSearchKeyword] = useState(""); //ค้นหา
   const [token, setToken] = useState("");
-  const tokenExpiredAlertShown = useRef(false); 
+  const tokenExpiredAlertShown = useRef(false);
 
   useEffect(() => {
     const token = window.localStorage.getItem("token");
@@ -33,8 +33,11 @@ export default function Allsymptom() {
         .then((data) => {
           console.log(data);
           setAdminData(data.data);
-          if (data.data === "token expired" && !tokenExpiredAlertShown.current) {
-            tokenExpiredAlertShown.current = true; 
+          if (
+            data.data === "token expired" &&
+            !tokenExpiredAlertShown.current
+          ) {
+            tokenExpiredAlertShown.current = true;
             alert("Token expired login again");
             window.localStorage.clear();
             window.location.href = "./";
@@ -143,7 +146,9 @@ export default function Allsymptom() {
           <li>
             <a href="home">
               <i className="bi bi-book"></i>
-              <span className="links_name">จัดการข้อมูลคู่มือการดูแลผู้ป่วย</span>
+              <span className="links_name">
+                จัดการข้อมูลคู่มือการดูแลผู้ป่วย
+              </span>
             </a>
           </li>
           <li>
@@ -228,62 +233,63 @@ export default function Allsymptom() {
           </ul>
         </div>
 
-        {/*ค้นหา */}
-        {/* <h3>จัดการแอดมิน</h3> */}
-
-        <div className="search-bar">
-          <input
-            className="search-text"
-            type="text"
-            placeholder="ค้นหา"
-            value={searchKeyword}
-            onChange={(e) => setSearchKeyword(e.target.value)}
-          />
-        </div>
-
         <div className="content-toolbar-symtom">
-        <div className="toolbar">
-          <button onClick={add} className="btn btn-outline py-1 px-4">
-            <i className="bi bi-plus-circle" style={{ marginRight: "8px" }}></i>
-            เพิ่มอาการ
-          </button>
+          <div className="toolbar-container">
+            <div className="search-bar">
+              <i className="bi bi-search search-icon"></i>
+              <input
+                className="search-text"
+                type="text"
+                placeholder="ค้นหา"
+                value={searchKeyword}
+                onChange={(e) => setSearchKeyword(e.target.value)}
+              />
+            </div>
+            <div className="toolbar">
+              <button onClick={add} className="btn btn-outline py-1 px-4">
+                <i
+                  className="bi bi-plus-circle"
+                  style={{ marginRight: "8px" }}
+                ></i>
+                เพิ่มอาการ
+              </button>
+            </div>
+          </div>
           <p className="countadmin">จำนวนอาการทั้งหมด : {data.length} อาการ</p>
         </div>
-        </div>
         <div className="content">
-        {data.length > 0 ? (
-          data.map((i) => (
-            <div key={i._id} className="adminall card mb-3 ">
-              <div className="card-body">
-                <p className="card-title">{i.name}</p>
-                <div className="buttongroup">
-                  <button
-                    className="editimg"
-                    onClick={() =>
-                      navigate("/updatesymptom", {
-                        state: { id: i._id, caremanual: i },
-                      })
-                    }
-                  >
-                    <i className="bi bi-pencil-square"></i>
-                  </button>
-                  <button
-                    className="deleteimg"
-                    alt="deleteimg"
-                    onClick={() => deleteSymptom(i._id, i.name)}
-                  >
-                                               <i className="bi bi-trash"></i>
-
-                  </button>
+          {data.length > 0 ? (
+            data.map((i) => (
+              <div key={i._id} className="adminall card mb-3 ">
+                <div className="card-body">
+                  <p className="card-title">{i.name}</p>
+                  <div className="buttongroup">
+                    <button
+                      className="editimg"
+                      onClick={() =>
+                        navigate("/updatesymptom", {
+                          state: { id: i._id, caremanual: i },
+                        })
+                      }
+                    >
+                      <i className="bi bi-pencil-square"></i>
+                    </button>
+                    <button
+                      className="deleteimg"
+                      alt="deleteimg"
+                      onClick={() => deleteSymptom(i._id, i.name)}
+                    >
+                      <i className="bi bi-trash"></i>
+                    </button>
+                  </div>
                 </div>
               </div>
-            </div>
-            )) 
+            ))
           ) : (
-              <div className="no-results">
-                <p>ไม่พบข้อมูลที่อาการ</p>
-              </div>
-            )}
+            <div className="no-results">
+              <p>ไม่พบข้อมูลที่อาการ</p>
+            </div>
+          )}
         </div>
       </div>
     </main>

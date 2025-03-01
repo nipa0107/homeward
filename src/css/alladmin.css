@@ -52,21 +52,6 @@
   border: none;
 }
 
-
-/* .detail {
-  border-radius: 5px;
-  width: 15vh;
-  float: right;
-  margin: auto auto;
-  background-color: #007bff;
-  color: white;
-  border: none;
-} */
-
-/* .adminall .card-body .deleteimg {
-  float: right;
-} */
-
 .forminfo {
   background-color: white;
   position: relative;
@@ -338,12 +323,13 @@
 .adddata button{
   border-radius: 5px;
   width: 7rem;
-  background-color: #87CEFA;
-  color: black;
+  background-color: #039be5;
+  color: white;
   border: none;
 }
 .adddata button:hover {
-  background-color: #5cb3fd; /* Darker blue on hover */
+  background-color: #0288d1;
+  color: #fff;
 }
 .delete-btn {
   color: rgb(255, 255, 255);
@@ -365,9 +351,6 @@
   align-items: center;
 }
 
-/* .adminall .card-body .deleteimg1 {
-  float: none;
-} */
 .card-body{
   padding: 0;
 }
@@ -384,52 +367,6 @@
 .countadmin {
   /* margin-right: 20px; */
 }
-
-/* .profile_details {
-  margin-bottom: 20px;
-} */
-
-/* .breadcrumbs {
-  margin-bottom: 20px;
-}
-
-.breadcrumbs ul {
-  list-style: none;
-  padding: 0;
-  margin: 0;
-}
-
-.breadcrumbs ul li {
-  display: inline-block;
-  font-size: 14px;
-  margin-right: 5px;
-  color: #666;
-}
-
-.breadcrumbs ul li i {
-  margin-right: 5px;
-}
-
-.breadcrumbs ul li.arrow {
-  margin: 0 5px;
-} */
-
-
-
-/* .adminall {
-  flex: 1 1 10%;
-  min-height: 120px;
-  display: flex; 
-  margin-left: auto;
-  margin-right: auto;
-  box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.1);
-  line-height: 50px;
-  padding: 20px;
-} */
-
-
-
-
 
 .table100{
   box-sizing: border-box;

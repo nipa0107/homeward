@@ -61,7 +61,7 @@
 
 .table-all .buttongroup-in-table button {
     margin: 0 3px;
-    padding: 5px 8px;
+    padding: 1px;
 }
 
 .table-all th i.bi-caret-up-fill,
@@ -96,7 +96,7 @@
         padding: 6px;
     }
 
-    .table-all .buttongroup-in-table button {
+    /* .table-all .buttongroup-in-table button {
         padding: 4px 6px;
-    }
+    } */
 }

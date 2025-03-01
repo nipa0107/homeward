@@ -291,9 +291,12 @@ export default function Recover() {
           </ul>
         </div>
 
-        {/*ค้นหา */}
-        {/* <h3>จัดการข้อมูลผู้ป่วย</h3> */}
+
+
+        <div className="content-toolbar">
+        <div className="toolbar-container">
         <div className="search-bar">
+        <i className="bi bi-search search-icon"></i>
           <input
             className="search-text"
             type="text"
@@ -302,14 +305,15 @@ export default function Recover() {
             onChange={(e) => setSearchKeyword(e.target.value)}
           />
         </div>
-        <div className="content-toolbar">
           <div className="toolbar">
-            <p className="countadmin">
+          </div>
+        </div>
+        <p className="countadmin">
               จำนวนผู้ป่วยที่ถูกลบทั้งหมด :{" "}
               {data.filter((user) => user.deletedAt !== null).length} คน
             </p>
-          </div>
         </div>
+
         <div className="content">
           <div className="info-alert">
             <p>ข้อมูลผู้ป่วยที่ถูกลบจะถูกเก็บไว้ในระบบ</p>

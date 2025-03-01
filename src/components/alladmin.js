@@ -12,7 +12,7 @@ export default function Alladmin() {
   const [isActive, setIsActive] = useState(false);
   const [searchKeyword, setSearchKeyword] = useState(""); //ค้นหา
   const [token, setToken] = useState("");
-  const tokenExpiredAlertShown = useRef(false); 
+  const tokenExpiredAlertShown = useRef(false);
 
   useEffect(() => {
     const token = window.localStorage.getItem("token");
@@ -34,8 +34,11 @@ export default function Alladmin() {
         .then((data) => {
           console.log(data);
           setAdminData(data.data);
-          if (data.data === "token expired" && !tokenExpiredAlertShown.current) {
-            tokenExpiredAlertShown.current = true; 
+          if (
+            data.data === "token expired" &&
+            !tokenExpiredAlertShown.current
+          ) {
+            tokenExpiredAlertShown.current = true;
             alert("Token expired login again");
             window.localStorage.clear();
             window.location.href = "./";
@@ -236,7 +239,11 @@ export default function Alladmin() {
         {/*ค้นหา */}
         {/* <h3>จัดการแอดมิน</h3> */}
 
+
+        <div className="content-toolbar">
+        <div className="toolbar-container">
         <div className="search-bar">
+        <i className="bi bi-search search-icon"></i>
           <input
             className="search-text"
             type="text"
@@ -245,102 +252,91 @@ export default function Alladmin() {
             onChange={(e) => setSearchKeyword(e.target.value)}
           />
         </div>
-        <div className="content-toolbar">
-        <div className="toolbar">
-          <button onClick={add} className="btn btn-outline py-1 px-4">
-            <i className="bi bi-plus-circle" style={{ marginRight: "8px" }}></i>
-            เพิ่มแอดมิน
-          </button>
-          <p className="countadmin">จำนวนแอดมินทั้งหมด : {data.length} คน</p>
+          <div className="toolbar">
+            <button onClick={add} className="btn btn-outline py-1 px-4">
+              <i
+                className="bi bi-plus-circle"
+                style={{ marginRight: "8px" }}
+              ></i>
+              เพิ่มแอดมิน
+            </button>
+            </div>
+            </div>
+            <p className="countadmin">จำนวนแอดมินทั้งหมด : {data.length} คน</p>
         </div>
-        </div>
-        {/* <div className="content">
-          {data.length > 0 ? (
-           data.sort((a, b) => {
-            if (a.username === adminData.username) return -1; 
-            if (b.username === adminData.username) return 1;
-            return new Date(a.createdAt) - new Date(b.createdAt);
-          })
-          .map((i) => (
-            <div key={i._id} className="adminall card mb-3 ">
-              <div className="card-body">
-                <h5 className="card-title">{i.username}</h5>
 
-                {i.username !== adminData.username && (
-                  <div className="buttongroup">
-                  <button
-                    className="deleteimg"
-                    alt="deleteimg"
-                    onClick={() => deleteAdmin(i._id, i.username)}
-                  >
-                    ลบ
-                  </button>
-                  </div>
+        <div className="content">
+          <div className="table-container">
+            <table className="admin-table table-all">
+              <thead>
+                <tr>
+                  <th className="sticky-column">ชื่อผู้ใช้</th>
+                  <th>อีเมล</th>
+                  <th>สถานะ</th>
+                  <th>จัดการ</th>
+                </tr>
+              </thead>
+              <tbody>
+                {data.length > 0 ? (
+                  data
+                    .sort((a, b) => {
+                      if (a.username === adminData.username) return -1;
+                      if (b.username === adminData.username) return 1;
+                      return new Date(a.createdAt) - new Date(b.createdAt);
+                    })
+                    .map((i) => (
+                      <tr key={i._id}>
+                        <td className="sticky-column">{i.username}</td>
+                        <td>{i.email}</td>
+                        <td
+                          className={
+                            i.isEmailVerified ? "verified" : "not-verified"
+                          }
+                        >
+                          {i.isEmailVerified ? (
+                            <div>
+                              <i
+                                className="bi bi-check-circle"
+                                style={{ color: "#42bd41", marginRight: "5px" }}
+                              ></i>
+                              ยืนยันแล้ว
+                            </div>
+                          ) : (
+                            <div>
+                              <i
+                                className="bi bi-x-circle"
+                                style={{ color: "#bdbdbd", marginRight: "5px" }}
+                              ></i>
+                              ยังไม่ยืนยัน
+                            </div>
+                          )}
+                        </td>
+                        <td className="buttongroup-in-table">
+                          {i.username !== adminData.username && (
+                            <button
+                              className="deleteimg"
+                              onClick={() => deleteAdmin(i._id, i.username)}
+                            >
+                              <i className="bi bi-trash"></i>
+                            </button>
+                          )}
+                        </td>
+                      </tr>
+                    ))
+                ) : (
+                  <tr>
+                    <td
+                      colSpan="4"
+                      style={{ textAlign: "center", padding: "10px" }}
+                    >
+                      ไม่พบข้อมูลที่คุณค้นหา
+                    </td>
+                  </tr>
                 )}
-              </div>
-            </div>
-          )) 
-        ) : (
-            <div className="no-results">
-              <p>ไม่พบข้อมูลที่คุณค้นหา</p>
-            </div>
-          )}
-        </div> */}
-<div className="content">
-  <div className="table-container">
-    <table className="admin-table table-all">
-      <thead>
-        <tr>
-          <th className="sticky-column">ชื่อผู้ใช้</th>
-          <th>อีเมล</th>
-          <th>สถานะ</th>
-          <th>จัดการ</th>
-        </tr>
-      </thead>
-      <tbody>
-        {data.length > 0 ? (
-          data
-            .sort((a, b) => {
-              if (a.username === adminData.username) return -1;
-              if (b.username === adminData.username) return 1;
-              return new Date(a.createdAt) - new Date(b.createdAt);
-            })
-            .map((i) => (
-              <tr key={i._id}>
-                <td className="sticky-column">{i.username}</td>
-                <td>{i.email}</td>
-                <td className={i.isEmailVerified ? "verified" : "not-verified"}>
-                  {i.isEmailVerified ? (
-                    <div>
-                      <i className="bi bi-check-circle" style={{ color: "#42bd41", marginRight: "5px" }}></i>
-                      ยืนยันแล้ว
-                    </div>
-                  ) : (
-                    <div>
-                      <i className="bi bi-x-circle" style={{ color: "#bdbdbd", marginRight: "5px" }}></i>
-                      ยังไม่ยืนยัน
-                    </div>
-                  )}
-                </td>
-                <td className="buttongroup-in-table">
-                  {i.username !== adminData.username && (
-                    <button className="deleteimg" onClick={() => deleteAdmin(i._id, i.username)}>
-                      <i className="bi bi-trash"></i>
-                    </button>
-                  )}
-                </td>
-              </tr>
-            ))
-        ) : (
-          <tr>
-            <td colSpan="4" style={{ textAlign: "center", padding: "10px" }}>ไม่พบข้อมูลที่คุณค้นหา</td>
-          </tr>
-        )}
-      </tbody>
-    </table>
-  </div>
-</div>
-
+              </tbody>
+            </table>
+          </div>
+        </div>
       </div>
     </main>
   );

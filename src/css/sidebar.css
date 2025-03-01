@@ -130,28 +130,7 @@
     pointer-events: none;
 }
 
-/* ค้นหา */
-/* .sidebar ul li{ 
-} */
-.search-bar {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    /* margin-top: 20px;  */
-}
 
-.search-text {
-    border-radius: 5px;
-    margin-top: 1rem;
-    padding: .3rem;
-    padding-left: .5rem;
-    width: 16rem;
-    border: 1.4px solid rgb(187, 186, 186);
-}
-
-/* .search-bar input {
-    margin-left: 10px; 
-} */
 
 .sidebar ul li a {
     color: rgb(0, 0, 0);
@@ -328,38 +307,16 @@
     text-align: center;
 }
 
-
 /* หน้าลืมรหัสผ่าน */
-
 
 .sidebar.active~.home_content {
     width: calc(100% - 78px);
     left: 78px;
 }
 
-
-.home_content .toolbar {
-    /* float: right; */
-    /* margin-right: 10%; */
-    line-height: 40px;
-}
-
-.toolbar {
-    align-self: end;
-    text-align: end;
-    margin: 1rem auto 0 auto;
-
-}
-.toolbar .btn {
-   margin: 3px;
-}
-.content-toolbar {
-    /* width: 80%; */
-}
-
 .content-toolbar-symtom {
     width: 75%;
-    margin: 0 auto;
+    margin: 1.5rem auto;
 }
 
 .home_content .toolbar .countadmin1 {
@@ -367,9 +324,52 @@
     text-align: center;
 }
 
-.bi-plus-circle {
-    /* margin-right: 8px; */
+/* ส่วนค้นหา + ปุ่ม */
+.toolbar-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    margin-top: 1rem;
+    gap: 1rem;
 }
+
+.search-bar {
+    position: relative;
+    display: flex;
+    align-items: center;
+    flex-grow: 1;
+}
+.search-icon {
+    position: absolute;
+    left: 10px;
+    font-size: 1rem;
+    color: gray;
+}
+.search-text {
+    border-radius: 5px;
+    padding: 0.3rem 0.5rem 0.3rem 2rem;
+    width: 20rem;
+    max-width: 100%;
+    border: 1.4px solid rgb(187, 186, 186);
+}
+
+.toolbar {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+/* .toolbar .btn {
+    margin: 3px;
+ }
+  */
+
+.countadmin{
+    text-align: right;
+    margin: 0.5rem auto;
+}
+/* -------------------- */
 
 hr {
     margin: 2rem 2rem;
@@ -395,7 +395,13 @@ hr {
     margin: 0;
     color: #1565c0;
 }
-
+.title-header-user {
+    text-align: center;
+    font-size: 1.3rem;
+    font-weight: 600;
+    margin: 1.5rem;
+    color: #1565c0;
+}
 .home_content .breadcrumbs {
     margin-top: 21px;
     margin-left: 28px;
@@ -444,7 +450,7 @@ hr {
 .content-toolbar, .table-container {
     width: 100%;
     max-width: 80%;
-    margin: 0 auto;
+    margin:1.5rem auto;
 }
 
 @media (max-width: 992px) {
@@ -452,18 +458,28 @@ hr {
     width: 90%;
 
     }
-    .search-text{
+    .search-text,.content-toolbar,
+    .info-alert,.toolbar .btn,.btn{
         font-size: 0.9rem;
     }
-    .content-toolbar,
-    .info-alert{
-        font-size: 0.9rem;
-    }
-    .toolbar .btn,.btn{
-        font-size: 0.9rem;
-    }
-    .title-header {
+
+    .title-header,.title-header-user {
         font-size: 1rem;
+    }
+    .search-text {
+        width: 14rem;
+    }
+    
+    .toolbar-container {
+        gap: 0.5rem;
+    }
+
+    .toolbar {
+        flex-wrap: wrap;
+    }
+
+    .toolbar .btn {
+        flex: 1; 
     }
  
 }
@@ -481,5 +497,32 @@ hr {
         text-align: center;
         align-items: center;
     }
+    .toolbar-container {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 0.5rem;
+    }
+
+    .search-bar {
+        width: 100%;
+    }
+
+    .search-text {
+        width: 100%;
+    }
+
+    .toolbar {
+        width: 100%;
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+
+    .toolbar .btn {
+        width: 100%;
+    }
+    .countadmin {
+        text-align: center;
+    }
 
 }
+

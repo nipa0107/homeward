@@ -139,7 +139,7 @@ function App() {
               />
             }
           />
-            <Route
+          <Route
             path="/addcaregiver"
             element={
               <PrivateRoute
@@ -206,10 +206,13 @@ function App() {
               <PrivateRoute element={<AllUser />} isLoggedIn={isLoggedIn} />
             }
           />
-             <Route
+          <Route
             path="/updatecaregiver"
             element={
-              <PrivateRoute element={<UpdateCaregiver />} isLoggedIn={isLoggedIn} />
+              <PrivateRoute
+                element={<UpdateCaregiver />}
+                isLoggedIn={isLoggedIn}
+              />
             }
           />
           <Route
@@ -352,10 +355,13 @@ function App() {
               <PrivateRoute element={<Recover />} isLoggedIn={isLoggedIn} />
             }
           />
-              <Route
+          <Route
             path="/allinfodeleted"
             element={
-              <PrivateRoute element={<AllInfoDeleted />} isLoggedIn={isLoggedIn} />
+              <PrivateRoute
+                element={<AllInfoDeleted />}
+                isLoggedIn={isLoggedIn}
+              />
             }
           />
         </Routes>

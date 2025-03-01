@@ -13,7 +13,7 @@ export default function AllUser() {
   const [isActive, setIsActive] = useState(false);
   const [searchKeyword, setSearchKeyword] = useState(""); //ค้นหา
   const [token, setToken] = useState("");
-  const tokenExpiredAlertShown = useRef(false); 
+  const tokenExpiredAlertShown = useRef(false);
 
   const formatIDCardNumber = (id) => {
     if (!id) return "";
@@ -40,8 +40,11 @@ export default function AllUser() {
         .then((data) => {
           console.log(data);
           setAdminData(data.data);
-          if (data.data === "token expired" && !tokenExpiredAlertShown.current) {
-            tokenExpiredAlertShown.current = true; 
+          if (
+            data.data === "token expired" &&
+            !tokenExpiredAlertShown.current
+          ) {
+            tokenExpiredAlertShown.current = true;
             alert("Token expired login again");
             window.localStorage.clear();
             window.location.href = "./";
@@ -208,9 +211,12 @@ export default function AllUser() {
           </ul>
         </div>
 
-        {/*ค้นหา */}
-        {/* <h3>จัดการข้อมูลผู้ป่วย</h3> */}
+
+
+        <div className="content-toolbar">
+        <div className="toolbar-container">
         <div className="search-bar">
+        <i className="bi bi-search search-icon"></i>
           <input
             className="search-text"
             type="text"
@@ -219,63 +225,77 @@ export default function AllUser() {
             onChange={(e) => setSearchKeyword(e.target.value)}
           />
         </div>
-        <div className="content-toolbar">
-        <div className="toolbar">
-        <button
-      onClick={() => navigate("/recover-patients")}
-      className="btn btn-outline py-1 px-4 recover" 
-    >
-      <i class="bi bi-recycle" style={{ marginRight: "8px" }}></i>
-      กู้คืนข้อมูลผู้ป่วย
-    </button>
-          <button
-            onClick={() => navigate("/adduser")}
-            className="btn btn-outline py-1 px-4"
-          >
-            <i className="bi bi-plus-circle" style={{ marginRight: "8px" }}></i>
-            เพิ่มข้อมูลผู้ป่วย
-          </button>
+          <div className="toolbar">
+            <button
+              onClick={() => navigate("/recover-patients")}
+              className="btn btn-outline py-1 px-4 recover"
+            >
+              <i class="bi bi-recycle" style={{ marginRight: "8px" }}></i>
+              กู้คืนข้อมูลผู้ป่วย
+            </button>
+            <button
+              onClick={() => navigate("/adduser")}
+              className="btn btn-outline py-1 px-4"
+            >
+              <i
+                className="bi bi-plus-circle"
+                style={{ marginRight: "8px" }}
+              ></i>
+              เพิ่มข้อมูลผู้ป่วย
+            </button>
+            </div>
+          </div>
           <p className="countadmin">
-            จำนวนผู้ป่วยทั้งหมด :{" "}
-            {data.filter((user) => user.deletedAt === null || user.deletedAt === undefined).length} คน
-          </p>
-        </div>
+              จำนวนผู้ป่วยทั้งหมด :{" "}
+              {
+                data.filter(
+                  (user) =>
+                    user.deletedAt === null || user.deletedAt === undefined
+                ).length
+              }{" "}
+              คน
+            </p>
         </div>
         <div className="content">
-        <div className="table-container">
-          {/* <div className="table100"> */}
-          <table className="user-table table-all">
-            <thead>
-              <tr>
-                
-                <th>เลขประจำตัวประชาชน</th>
-                <th>ชื่อ-นามสกุล</th>
-                <th>รายละเอียด</th>
-                <th>ข้อมูลใช้เข้าสู่ระบบ</th>
-              </tr>
-            </thead>
-            <tbody>
-            {data.filter((user) => user.deletedAt === null || user.deletedAt === undefined).length > 0 ? (
-                data
-                .filter((user) => user.deletedAt === null || user.deletedAt === undefined)
-                .map((i, index) => (
-                    <tr key={index}>
-                      <td>{formatIDCardNumber(i.username)}</td>
-                      <td>
-                        {i.name} {i.surname}
-                      </td>
-                      <td>
-                        <a
-                          className="info"
-                          onClick={() =>
-                            navigate("/allinfo", { state: { id: i._id } })
-                          }
-                        >
-                          รายละเอียด
-                        </a>
-                      </td>
-                      <td className="buttongroup-in-table">
-                        {/* {i.AdddataFirst ? (
+          <div className="table-container">
+            {/* <div className="table100"> */}
+            <table className="user-table table-all">
+              <thead>
+                <tr>
+                  <th>เลขประจำตัวประชาชน</th>
+                  <th>ชื่อ-นามสกุล</th>
+                  <th>รายละเอียด</th>
+                  <th>ข้อมูลใช้เข้าสู่ระบบ</th>
+                </tr>
+              </thead>
+              <tbody>
+                {data.filter(
+                  (user) =>
+                    user.deletedAt === null || user.deletedAt === undefined
+                ).length > 0 ? (
+                  data
+                    .filter(
+                      (user) =>
+                        user.deletedAt === null || user.deletedAt === undefined
+                    )
+                    .map((i, index) => (
+                      <tr key={index}>
+                        <td>{formatIDCardNumber(i.username)}</td>
+                        <td>
+                          {i.name} {i.surname}
+                        </td>
+                        <td>
+                          <a
+                            className="info"
+                            onClick={() =>
+                              navigate("/allinfo", { state: { id: i._id } })
+                            }
+                          >
+                            รายละเอียด
+                          </a>
+                        </td>
+                        <td className="buttongroup-in-table">
+                          {/* {i.AdddataFirst ? (
                           <span>-</span>
                         ) : (
                           <button
@@ -295,35 +315,35 @@ export default function AllUser() {
                             <i className="bi bi-download"></i>
                           </button>
                         )} */}
-                        <button
-                          className="save"
-                          onClick={() => {
-                            if (i.physicalTherapy) {
-                              navigate("/physicalTherapyUser", {
-                                state: { userData: i },
-                              });
-                            } else {
-                              navigate("/displayUser", {
-                                state: { userData: i },
-                              });
-                            }
-                          }}
-                        >
-                          <i className="bi bi-download"></i>
-                        </button>
-                      </td>
-                    </tr>
-                  ))
-              ) : (
-                <tr>
-                  <td colSpan="4" className="text-center">
-                    ไม่พบข้อมูลที่คุณค้นหา
-                  </td>
-                </tr>
-              )}
-            </tbody>
-          </table>
-        </div>
+                          <button
+                            className="save"
+                            onClick={() => {
+                              if (i.physicalTherapy) {
+                                navigate("/physicalTherapyUser", {
+                                  state: { userData: i },
+                                });
+                              } else {
+                                navigate("/displayUser", {
+                                  state: { userData: i },
+                                });
+                              }
+                            }}
+                          >
+                            <i className="bi bi-download"></i>
+                          </button>
+                        </td>
+                      </tr>
+                    ))
+                ) : (
+                  <tr>
+                    <td colSpan="4" className="text-center">
+                      ไม่พบข้อมูลที่คุณค้นหา
+                    </td>
+                  </tr>
+                )}
+              </tbody>
+            </table>
+          </div>
         </div>
       </div>
       {/* </div> */}

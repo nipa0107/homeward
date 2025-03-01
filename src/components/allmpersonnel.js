@@ -234,10 +234,12 @@ export default function AllMpersonnel() {
             </li>
           </ul>
         </div>
-        {/* <h3>จัดการข้อมูลบุคลากร</h3> */}
 
-        {/*ค้นหา */}
+
+        <div className="content-toolbar">
+        <div className="toolbar-container">
         <div className="search-bar">
+        <i className="bi bi-search search-icon"></i>
           <input
             className="search-text"
             type="text"
@@ -246,7 +248,6 @@ export default function AllMpersonnel() {
             onChange={(e) => setSearchKeyword(e.target.value)}
           />
         </div>
-        <div className="content-toolbar">
           <div className="toolbar">
             <button onClick={add} className="btn btn-outline py-1 px-4">
               <i
@@ -255,51 +256,11 @@ export default function AllMpersonnel() {
               ></i>
               เพิ่มบุคลากร
             </button>
-            <p className="countadmin">จำนวนบุคลากรทั้งหมด : {data.length} คน</p>
+            </div>
           </div>
+          <p className="countadmin">จำนวนบุคลากรทั้งหมด : {data.length} คน</p>
         </div>
-        {/* <div className="content">
-        {data.length > 0 ? (
-          data.map((i) => (
-            <div key={i._id} className="adminall card mb-3 ">
-              <div className="card-body">
-                <h5 className="card-title">
-                  {i.nametitle}
-                  {"  "}
-                  {i.name}
-                  {"  "}
-                  {i.surname}
-                </h5>
-                <div className="buttongroup">
-                  <button
-                    className="editimg"
-                    onClick={() =>
-                      navigate("/updatempersonnel", {
-                        state: { id: i._id, caremanual: i },
-                      })
-                    }
-                  >
-                    <i className="bi bi-pencil-square"></i>
-                  </button>
 
-                  <button
-                    className="deleteimg"
-                    alt="deleteimg"
-                    onClick={() => deleteMPersonnel(i._id, i.nametitle, i.name)}
-                  >
-                                               <i className="bi bi-trash"></i>
-
-                  </button>
-                </div>
-              </div>
-            </div>
-         )) 
-        ) : (
-            <div className="no-results">
-              <p>ไม่พบข้อมูลที่คุณค้นหา</p>
-            </div>
-          )}
-        </div> */}
         <div className="content">
         <div className="table-container">
             <table className="mpersonnel-table table-all">
@@ -357,37 +318,6 @@ export default function AllMpersonnel() {
             </table>
             </div>
         </div>
-
-        {/* <div className="content">
-          <table className="table">
-            <thead>
-              <tr>
-                <th>คำนำหน้าชื่อ</th>
-                <th>ชื่อ-สกุล</th>
-                <th></th>
-              </tr>
-            </thead>
-            <tbody>
-              {data.map((i, index) => (
-                <tr key={index}>
-                  <td>{i.nametitle}</td>
-                  <td>{i.name}</td>
-                  <td>
-                    <button
-                      className="deleteimg"
-                      alt="deleteimg"
-                      onClick={() =>
-                        deleteMPersonnel(i._id, i.nametitle, i.name)
-                      }
-                    >
-                      ลบ
-                    </button>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div> */}
       </div>
     </main>
   );

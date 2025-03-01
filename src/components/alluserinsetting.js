@@ -251,9 +251,10 @@ export default function AlluserInSetting() {
           </ul>
         </div>
 
-        {/*ค้นหา */}
-        {/* <h3>จัดการข้อมูลผู้ป่วย</h3> */}
+        <div className="content-toolbar">
+        <div className="toolbar-container">
         <div className="search-bar">
+        <i className="bi bi-search search-icon"></i>
           <input
             className="search-text"
             type="text"
@@ -262,8 +263,6 @@ export default function AlluserInSetting() {
             onChange={(e) => setSearchKeyword(e.target.value)}
           />
         </div>
-
-        <div className="content-toolbar">
           <div className="toolbar">
             <button
               onClick={() => navigate("/updatedefault")}
@@ -272,12 +271,14 @@ export default function AlluserInSetting() {
               <i className="bi bi-pencil" style={{ marginRight: "8px" }}></i>
               ตั้งค่าการแจ้งเตือนเริ่มต้น
             </button>
-            <p className="countadmin">
+          </div>
+        </div>
+        <p className="countadmin">
               จำนวนผู้ป่วยทั้งหมด :{" "}
               {data.filter((user) => user.deletedAt === null).length} คน
             </p>
-          </div>
         </div>
+
         <div className="content">
         <div className="table-container">         
            <table className="setting-table table-all">
