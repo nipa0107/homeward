@@ -18,7 +18,7 @@ export default function Updatecaregiver() {
   const [gender, setGender] = useState("");
   const [Relationship, setRelationship] = useState('');
   const [adminData, setAdminData] = useState("");
-  const [isActive, setIsActive] = useState(false);
+  const [isActive, setIsActive] = useState(window.innerWidth > 967);  
   const [error, setError] = useState("");
   const [token, setToken] = useState("");
   const [otherGender, setOtherGender] = useState("");
@@ -95,8 +95,22 @@ export default function Updatecaregiver() {
   };
 
   const handleToggleSidebar = () => {
-    setIsActive(!isActive);
+    setIsActive((prevState) => !prevState);
   };
+  useEffect(() => {
+    const handleResize = () => {
+      if (window.innerWidth <= 992) {
+        setIsActive(false); // ซ่อน Sidebar เมื่อจอเล็ก
+      } else {
+        setIsActive(true); // แสดง Sidebar เมื่อจอใหญ่
+      }
+    };
+
+    handleResize(); // เช็กขนาดจอครั้งแรก
+    window.addEventListener("resize", handleResize);
+
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
 
   const handleBreadcrumbClick = () => {
     navigate("/allinfo", { state: { id: id, user: user } });
@@ -371,16 +385,31 @@ const handleChange = (e) => {
             <li className="arrow">
               <i className="bi bi-chevron-double-right"></i>
             </li>
-            <li><a href="alluser">จัดการข้อมูลผู้ป่วย</a>
+            <li className="middle">
+              <a href="alluser">จัดการข้อมูลผู้ป่วย</a>
             </li>
-            <li className="arrow">
+            <li className="arrow middle">
               <i className="bi bi-chevron-double-right"></i>
             </li>
-            <li>
-              <a onClick={handleBreadcrumbClick} className="info">ข้อมูลการดูแลผู้ป่วย</a>
-              {/* <a href="allinfo">ข้อมูลการดูแลผู้ป่วย</a> */}
+            <li className="ellipsis">
+              <a href="alluser">...</a>
             </li>
-            <li className="arrow">
+            <li className="arrow ellipsis">
+              <i className="bi bi-chevron-double-right"></i>
+            </li>
+
+            <li className="middle">
+              <a onClick={handleBreadcrumbClick} className="info">
+                ข้อมูลการดูแลผู้ป่วย
+              </a>
+            </li>
+            <li className="arrow middle">
+              <i className="bi bi-chevron-double-right"></i>
+            </li>
+            <li className="ellipsis">
+              <a onClick={handleBreadcrumbClick} className="info">...</a>
+            </li>
+            <li className="arrow ellipsis">
               <i className="bi bi-chevron-double-right"></i>
             </li>
             <li>
@@ -504,7 +533,7 @@ const handleChange = (e) => {
               </div>
               {showOtherInput && (
                 <div className="mt-2">
-                  <label>กรุณาระบุความสัมพันธ์:</label>
+                  <label>ระบุความสัมพันธ์อื่นๆ</label>
                   <input
                     type="text"
                     name="other"

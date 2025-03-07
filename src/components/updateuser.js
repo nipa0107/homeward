@@ -30,7 +30,7 @@ export default function UpdateUser() {
   const [caregiverTel, setCaregiverTel] = useState("");
   const navigate = useNavigate();
   const [adminData, setAdminData] = useState("");
-  const [isActive, setIsActive] = useState(false);
+  const [isActive, setIsActive] = useState(window.innerWidth > 967);  
   const [error, setError] = useState("");
   const [token, setToken] = useState("");
   const [otherGender, setOtherGender] = useState("");
@@ -223,8 +223,22 @@ export default function UpdateUser() {
   };
 
   const handleToggleSidebar = () => {
-    setIsActive(!isActive);
+    setIsActive((prevState) => !prevState);
   };
+  useEffect(() => {
+    const handleResize = () => {
+      if (window.innerWidth <= 992) {
+        setIsActive(false); // ซ่อน Sidebar เมื่อจอเล็ก
+      } else {
+        setIsActive(true); // แสดง Sidebar เมื่อจอใหญ่
+      }
+    };
+
+    handleResize(); // เช็กขนาดจอครั้งแรก
+    window.addEventListener("resize", handleResize);
+
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
 
   const handleBreadcrumbClick = () => {
     navigate("/allinfo", { state: { id: id, user: user } });
@@ -426,19 +440,32 @@ export default function UpdateUser() {
             <li className="arrow">
               <i className="bi bi-chevron-double-right"></i>
             </li>
-            <li>
+            <li className="middle">
               <a href="alluser">จัดการข้อมูลผู้ป่วย</a>
             </li>
-            <li className="arrow">
+            <li className="arrow middle">
               <i className="bi bi-chevron-double-right"></i>
             </li>
-            <li>
-              <a onClick={handleBreadcrumbClick} className="info">
+            <li className="ellipsis">
+              <a href="alluser">...</a>
+            </li>
+            <li className="arrow ellipsis">
+              <i className="bi bi-chevron-double-right"></i>
+            </li>
+            <li className="middle">
+              <a
+                onClick={() => navigate("/allinfo", { state: { id } })}
+              >
                 ข้อมูลการดูแลผู้ป่วย
               </a>
-              {/* <a href="allinfo">ข้อมูลการดูแลผู้ป่วย</a> */}
             </li>
-            <li className="arrow">
+            <li className="arrow middle">
+              <i className="bi bi-chevron-double-right"></i>
+            </li>
+            <li className="ellipsis">
+              <a className="info"  onClick={() => navigate("/allinfo", { state: { id } })}>...</a>
+            </li>
+            <li className="arrow ellipsis">
               <i className="bi bi-chevron-double-right"></i>
             </li>
             <li>
@@ -504,7 +531,7 @@ export default function UpdateUser() {
             />
             {surnameError && <span className="error-text">{surnameError}</span>}
           </div>
-
+{/* 
           <div className="mb-3">
             <label>เพศ</label>
             <div class="relationship-container">
@@ -568,8 +595,17 @@ export default function UpdateUser() {
                 </div>
               )}
             </div>
+          </div> */}
+          <div className="mb-3">
+            <label>เพศ</label>
+            <input
+              type="text"
+              value={gender}
+              readOnly
+              className="form-control gray-background"
+              onChange={(e) => setGender(e.target.value)}
+            />
           </div>
-
           <div className="mb-3">
             <label>วันเกิด</label>
             <input

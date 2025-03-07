@@ -13,7 +13,7 @@ export default function SettingNoti() {
   const navigate = useNavigate();
   const location = useLocation();
   const [adminData, setAdminData] = useState("");
-  const [isActive, setIsActive] = useState(false);
+  const [isActive, setIsActive] = useState(window.innerWidth > 967);  
   const [medicalData, setMedicalData] = useState([]);
   const [min, setMin] = useState({
     SBP: "",
@@ -92,8 +92,22 @@ export default function SettingNoti() {
   };
 
   const handleToggleSidebar = () => {
-    setIsActive(!isActive);
+    setIsActive((prevState) => !prevState);
   };
+  useEffect(() => {
+    const handleResize = () => {
+      if (window.innerWidth <= 992) {
+        setIsActive(false); // ซ่อน Sidebar เมื่อจอเล็ก
+      } else {
+        setIsActive(true); // แสดง Sidebar เมื่อจอใหญ่
+      }
+    };
+
+    handleResize(); // เช็กขนาดจอครั้งแรก
+    window.addEventListener("resize", handleResize);
+
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
 
   useEffect(() => {
     if (id) {
@@ -318,10 +332,16 @@ export default function SettingNoti() {
             <li className="arrow">
               <i className="bi bi-chevron-double-right"></i>
             </li>
-            <li>
+            <li className="middle">
               <a href="alluserinsetting">รายชื่อผู้ป่วย</a>
             </li>
-            <li className="arrow">
+            <li className="arrow middle">
+              <i className="bi bi-chevron-double-right"></i>
+            </li>
+            <li className="ellipsis">
+              <a href="alluserinsetting">...</a>
+            </li>
+            <li className="arrow ellipsis">
               <i className="bi bi-chevron-double-right"></i>
             </li>
             <li>

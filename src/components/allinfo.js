@@ -14,7 +14,7 @@ export default function AllUser({ }) {
   const navigate = useNavigate();
   const [data, setData] = useState([]);
   const [adminData, setAdminData] = useState("");
-  const [isActive, setIsActive] = useState(false);
+  const [isActive, setIsActive] = useState(window.innerWidth > 967);  
   const [searchKeyword, setSearchKeyword] = useState(""); //ค้นหา
   const [token, setToken] = useState("");
   const location = useLocation();
@@ -243,7 +243,7 @@ export default function AllUser({ }) {
       return;
     }
 
-    if (window.confirm(`คุณต้องการลบ ${username} หรือไม่ ?`)) {
+    // if (window.confirm(`คุณต้องการลบ ${username} หรือไม่ ?`)) {
       try {
         const response = await fetch(`http://localhost:5000/deleteUser/${id}`, {
           method: "DELETE",
@@ -275,7 +275,7 @@ export default function AllUser({ }) {
       } catch (error) {
         console.error("Error during fetch:", error);
       }
-    }
+    // }
   };
 
   const handleDeleteEquipment = async (equipmentName) => {
@@ -346,8 +346,23 @@ export default function AllUser({ }) {
   };
   // bi-list
   const handleToggleSidebar = () => {
-    setIsActive(!isActive);
+    setIsActive((prevState) => !prevState);
   };
+  useEffect(() => {
+    const handleResize = () => {
+      if (window.innerWidth <= 992) {
+        setIsActive(false); // ซ่อน Sidebar เมื่อจอเล็ก
+      } else {
+        setIsActive(true); // แสดง Sidebar เมื่อจอใหญ่
+      }
+    };
+
+    handleResize(); // เช็กขนาดจอครั้งแรก
+    window.addEventListener("resize", handleResize);
+
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
   const currentDate = new Date();
   let userAge = "0 ปี 0 เดือน"; // เริ่มต้นให้แสดง "0 ปี 0 เดือน"
 
@@ -649,10 +664,16 @@ export default function AllUser({ }) {
             <li className="arrow">
               <i className="bi bi-chevron-double-right"></i>
             </li>
-            <li>
+            <li className="middle">
               <a href="alluser">จัดการข้อมูลผู้ป่วย</a>
             </li>
-            <li className="arrow">
+            <li className="arrow middle">
+              <i className="bi bi-chevron-double-right"></i>
+            </li>
+            <li className="ellipsis">
+              <a href="alluser">...</a>
+            </li>
+            <li className="arrow ellipsis">
               <i className="bi bi-chevron-double-right"></i>
             </li>
             <li>
@@ -732,7 +753,7 @@ export default function AllUser({ }) {
                                 )}`
                               },
                               { label: "ชื่อ-สกุล", value: `${caregiver.name || "-"} ${caregiver.surname || "-"}` },
-                              { label: "ความสัมพันธ์", value: caregiver.relationship || "ไม่ระบุ" }
+                              { label: "ความสัมพันธ์", value: caregiver.userRelationships?.[0]?.relationship || "ไม่ระบุ" }
                             ].map((item, index) => (
                               <React.Fragment key={index}>
                                 <div className="col-sm-4" style={{ color: "#444" }}><p><span>{item.label} :</span></p></div>

@@ -18,7 +18,7 @@ export default function AddCaregiver() {
   const { id } = location.state || {};
   const userId = location.state?.userId;
   const [adminData, setAdminData] = useState("");
-  const [isActive, setIsActive] = useState(false);
+  const [isActive, setIsActive] = useState(window.innerWidth > 967);  
   const [error, setError] = useState("");
   const [token, setToken] = useState("");
   const [showOtherInput, setShowOtherInput] = useState(false);
@@ -189,8 +189,23 @@ export default function AddCaregiver() {
   };
   // bi-list
   const handleToggleSidebar = () => {
-    setIsActive(!isActive);
+    setIsActive((prevState) => !prevState);
   };
+  useEffect(() => {
+    const handleResize = () => {
+      if (window.innerWidth <= 992) {
+        setIsActive(false); // ซ่อน Sidebar เมื่อจอเล็ก
+      } else {
+        setIsActive(true); // แสดง Sidebar เมื่อจอใหญ่
+      }
+    };
+
+    handleResize(); // เช็กขนาดจอครั้งแรก
+    window.addEventListener("resize", handleResize);
+
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
   const handleBreadcrumbClick = () => {
     navigate("/allinfo", { state: { id: id } });
   };
@@ -416,19 +431,31 @@ export default function AddCaregiver() {
             <li className="arrow">
               <i className="bi bi-chevron-double-right"></i>
             </li>
-            <li>
+            <li className="middle">
               <a href="alluser">จัดการข้อมูลผู้ป่วย</a>
             </li>
-            <li className="arrow">
+            <li className="arrow middle">
               <i className="bi bi-chevron-double-right"></i>
             </li>
-            <li>
+            <li className="ellipsis">
+              <a href="alluser">...</a>
+            </li>
+            <li className="arrow ellipsis">
+              <i className="bi bi-chevron-double-right"></i>
+            </li>
+
+            <li className="middle">
               <a onClick={handleBreadcrumbClick} className="info">
                 ข้อมูลการดูแลผู้ป่วย
               </a>
-              {/* <a href="allinfo">ข้อมูลการดูแลผู้ป่วย</a> */}
             </li>
-            <li className="arrow">
+            <li className="arrow middle">
+              <i className="bi bi-chevron-double-right"></i>
+            </li>
+            <li className="ellipsis">
+              <a onClick={handleBreadcrumbClick} className="info">...</a>
+            </li>
+            <li className="arrow ellipsis">
               <i className="bi bi-chevron-double-right"></i>
             </li>
             <li>
@@ -564,7 +591,7 @@ export default function AddCaregiver() {
                 {showOtherInput && (
                   <div className="mt-2">
                     <label>
-                      กรุณาระบุ<span className="required"> *</span>
+                    ระบุความสัมพันธ์อื่นๆ<span className="required"> *</span>
                     </label>
                     <input
                       type="text"

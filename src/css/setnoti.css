@@ -190,10 +190,9 @@
 	.info-row span {
 		font-size: 0.9rem;
 	}
-    /* .formsetnoti {
-        width: 80%;
-        padding: 1.5rem;
-    } */
+    .formsetnoti {
+        padding: 1rem 1.5rem;
+    }
 
     .formsetnoti form .input-group {
         flex-direction: column; 
@@ -203,6 +202,7 @@
     .formsetnoti .titlenoti {
         flex: 0 0 auto;
         margin-bottom: 8px;
+        font-size: 0.9rem;
     }
 
     .input-wrapper {
@@ -217,6 +217,10 @@
 
     .unit-label {
         text-align: left;
+        font-size: 0.9rem;
+    }
+    .input-box input{
+        font-size: 0.9rem;
     }
 }
 

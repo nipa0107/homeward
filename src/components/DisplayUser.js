@@ -15,7 +15,7 @@ export default function DisplayUser() {
   const navigate = useNavigate();
   const userData = location.state?.userData;
   const [adminData, setAdminData] = useState("");
-  const [isActive, setIsActive] = useState(false);
+  const [isActive, setIsActive] = useState(window.innerWidth > 967);  
   const [token, setToken] = useState("");
   const tokenExpiredAlertShown = useRef(false); 
 
@@ -49,6 +49,25 @@ export default function DisplayUser() {
     }
   }, []);
 
+  const handleToggleSidebar = () => {
+    setIsActive((prevState) => !prevState);
+  };
+  
+  useEffect(() => {
+    const handleResize = () => {
+      if (window.innerWidth <= 992) {
+        setIsActive(false); // ซ่อน Sidebar เมื่อจอเล็ก
+      } else {
+        setIsActive(true); // แสดง Sidebar เมื่อจอใหญ่
+      }
+    };
+
+    handleResize(); // เช็กขนาดจอครั้งแรก
+    window.addEventListener("resize", handleResize);
+
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+  
   const handleSaveAsImage = () => {
     const element = document.getElementById("user-data");
     html2canvas(element).then((canvas) => {
@@ -75,14 +94,14 @@ export default function DisplayUser() {
       </main>
     );
   }
+
+
   const logOut = () => {
     window.localStorage.clear();
     window.location.href = "./";
   };
   // bi-list
-  const handleToggleSidebar = () => {
-    setIsActive(!isActive);
-  };
+
   return (
     <main className="body">
       <div className={`sidebar ${isActive ? "active" : ""}`}>
@@ -175,14 +194,20 @@ export default function DisplayUser() {
             <li className="arrow">
               <i className="bi bi-chevron-double-right"></i>
             </li>
-            <li>
+            <li className="middle">
               <a href="alluser">จัดการข้อมูลผู้ป่วย</a>
             </li>
-            <li className="arrow">
+            <li className="arrow middle">
+              <i className="bi bi-chevron-double-right"></i>
+            </li>
+            <li className="ellipsis">
+              <a href="alluser">...</a>
+            </li>
+            <li className="arrow ellipsis">
               <i className="bi bi-chevron-double-right"></i>
             </li>
             <li>
-              <a>เพิ่มข้อมูลผู้ป่วยทั่วไป</a>
+              <a>ข้อมูลสำหรับใช้ในการเข้าสู่ระบบ</a>
             </li>
           </ul>
         </div>

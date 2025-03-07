@@ -19,7 +19,7 @@ export default function Updatemedicalinformation() {
   const location = useLocation();
   const { id, user } = location.state;
   //   const { idmd: medicalInfoId } = location.state;
-  const [isActive, setIsActive] = useState(false);
+  const [isActive, setIsActive] = useState(window.innerWidth > 967);  
   const [HN, setHN] = useState("");
   const [AN, setAN] = useState("");
   const [Diagnosis, setDiagnosis] = useState("");
@@ -195,8 +195,22 @@ export default function Updatemedicalinformation() {
   };
   // bi-list
   const handleToggleSidebar = () => {
-    setIsActive(!isActive);
+    setIsActive((prevState) => !prevState);
   };
+  useEffect(() => {
+    const handleResize = () => {
+      if (window.innerWidth <= 992) {
+        setIsActive(false); // ซ่อน Sidebar เมื่อจอเล็ก
+      } else {
+        setIsActive(true); // แสดง Sidebar เมื่อจอใหญ่
+      }
+    };
+
+    handleResize(); // เช็กขนาดจอครั้งแรก
+    window.addEventListener("resize", handleResize);
+
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
 
   const handleBreadcrumbClick = () => {
     navigate("/allinfo", { state: { id: id, user: user } });
@@ -380,19 +394,32 @@ export default function Updatemedicalinformation() {
             <li className="arrow">
               <i className="bi bi-chevron-double-right"></i>
             </li>
-            <li>
+            <li className="middle">
               <a href="alluser">จัดการข้อมูลผู้ป่วย</a>
             </li>
-            <li className="arrow">
+            <li className="arrow middle">
               <i className="bi bi-chevron-double-right"></i>
             </li>
-            <li>
-              <a onClick={handleBreadcrumbClick} className="info">
+            <li className="ellipsis">
+              <a href="alluser">...</a>
+            </li>
+            <li className="arrow ellipsis">
+              <i className="bi bi-chevron-double-right"></i>
+            </li>
+            <li className="middle">
+              <a className="info"
+                onClick={() => navigate("/allinfo", { state: { id } })}
+              >
                 ข้อมูลการดูแลผู้ป่วย
               </a>
-              {/* <a href="allinfo">ข้อมูลการดูแลผู้ป่วย</a> */}
             </li>
-            <li className="arrow">
+            <li className="arrow middle">
+              <i className="bi bi-chevron-double-right"></i>
+            </li>
+            <li className="ellipsis">
+              <a onClick={() => navigate("/allinfo", { state: { id } })} className="info">...</a>
+            </li>
+            <li className="arrow ellipsis">
               <i className="bi bi-chevron-double-right"></i>
             </li>
             <li>

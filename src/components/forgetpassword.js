@@ -53,12 +53,13 @@ export default class Reset extends Component {
               <div className="logoreset">
           <img src={logo} className="logoreset" alt="logo"></img>
         </div>
-        <div className="header1">ลืมรหัสผ่าน</div>
+        {/* <div className="header1">ลืมรหัสผ่าน</div> */}
         <div className="formcontainerpf card mb-3">
       
 
         <form onSubmit={this.hanleSubmit}>
-        <div className="header2">รีเซ็ทรหัสผ่านโดยใช้อีเมล</div>
+        <div className="header1">ลืมรหัสผ่าน</div>
+        <div className="header2">กรุณากรอกอีเมลรับลิงก์เปลี่ยนรหัสผ่าน</div>
           <div className="mb-3">
             {/* <label>กรอกอีเมลของคุณเพื่อเปลี่ยนรหัสผ่าน</label> */}
             <input

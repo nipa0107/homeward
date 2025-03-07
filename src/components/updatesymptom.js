@@ -16,7 +16,7 @@ export default function UpdateSymptom() {
   const [token, setToken] = useState("");
   const [adminData, setAdminData] = useState("");
   const { id } = location.state;
-  const [isActive, setIsActive] = useState(false);
+  const [isActive, setIsActive] = useState(window.innerWidth > 967);  
   const [name, setName] = useState("");
   const [nameError, setNameError] = useState("");
   const tokenExpiredAlertShown = useRef(false); 
@@ -118,8 +118,22 @@ export default function UpdateSymptom() {
   };
   // bi-list
   const handleToggleSidebar = () => {
-    setIsActive(!isActive);
+    setIsActive((prevState) => !prevState);
   };
+  useEffect(() => {
+    const handleResize = () => {
+      if (window.innerWidth <= 992) {
+        setIsActive(false); // ซ่อน Sidebar เมื่อจอเล็ก
+      } else {
+        setIsActive(true); // แสดง Sidebar เมื่อจอใหญ่
+      }
+    };
+
+    handleResize(); // เช็กขนาดจอครั้งแรก
+    window.addEventListener("resize", handleResize);
+
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
 
   const handleBreadcrumbClick = () => {
     navigate("/allsymptom");
@@ -232,10 +246,18 @@ export default function UpdateSymptom() {
             <li className="arrow">
               <i className="bi bi-chevron-double-right"></i>
             </li>
-            <li>
-              <a href="allsymptom">จัดการอาการผู้ป่วย</a>
+            <li className="middle">
+              <a href="allequip">
+                จัดการอุปกรณ์ทางการแพทย์
+              </a>
             </li>
-            <li className="arrow">
+            <li className="arrow middle">
+              <i className="bi bi-chevron-double-right"></i>
+            </li>
+            <li className="ellipsis">
+              <a href="allequip">...</a>
+            </li>
+            <li className="arrow ellipsis">
               <i className="bi bi-chevron-double-right"></i>
             </li>
             <li>

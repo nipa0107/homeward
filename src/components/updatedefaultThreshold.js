@@ -11,7 +11,7 @@ function UpdateDefault() {
   const navigate = useNavigate(); 
   const [defaultThreshold, setDefaultThreshold] = useState(null);
   const [adminData, setAdminData] = useState("");
-  const [isActive, setIsActive] = useState(false);
+  const [isActive, setIsActive] = useState(window.innerWidth > 967);  
   const [min, setMin] = useState({
     SBP: "",
     DBP: "",
@@ -59,6 +59,24 @@ function UpdateDefault() {
     }
   }, []);
 
+  const handleToggleSidebar = () => {
+    setIsActive((prevState) => !prevState);
+  };
+  useEffect(() => {
+    const handleResize = () => {
+      if (window.innerWidth <= 992) {
+        setIsActive(false); // ซ่อน Sidebar เมื่อจอเล็ก
+      } else {
+        setIsActive(true); // แสดง Sidebar เมื่อจอใหญ่
+      }
+    };
+
+    handleResize(); // เช็กขนาดจอครั้งแรก
+    window.addEventListener("resize", handleResize);
+
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+  
   useEffect(() => {
     fetch('http://localhost:5000/get-default-threshold')
       .then((response) => response.json())
@@ -146,9 +164,7 @@ function UpdateDefault() {
     window.location.href = "./";
   };
 
-  const handleToggleSidebar = () => {
-    setIsActive(!isActive);
-  };
+
 
   return (
    
@@ -244,12 +260,18 @@ function UpdateDefault() {
           <li className="arrow">
             <i className="bi bi-chevron-double-right"></i>
           </li>
-          <li>
+          <li className="middle">
             <a href="alluserinsetting">รายชื่อผู้ป่วย</a>
           </li>
-          <li className="arrow">
-            <i className="bi bi-chevron-double-right"></i>
-          </li>
+          <li className="arrow middle">
+              <i className="bi bi-chevron-double-right"></i>
+            </li>
+            <li className="ellipsis">
+              <a href="alluserinsetting">...</a>
+            </li>
+            <li className="arrow ellipsis">
+              <i className="bi bi-chevron-double-right"></i>
+            </li>
           <li>
             <a>ตั้งค่าการแจ้งเตือนสัญญาณชีพเริ่มต้น</a>
           </li>

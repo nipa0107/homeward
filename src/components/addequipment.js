@@ -14,7 +14,7 @@ export default function AddEquip() {
   const [equipment_type, setEquipType] = useState("");
   const [validationMessage, setValidationMessage] = useState("");
   const [adminData, setAdminData] = useState("");
-  const [isActive, setIsActive] = useState(false);
+  const [isActive, setIsActive] = useState(window.innerWidth > 967);  
   const [token, setToken] = useState('');
   const [nameError, setNameError] = useState("");
   const [typeError, setTypeError] = useState("");
@@ -117,8 +117,23 @@ export default function AddEquip() {
   };
   // bi-list
   const handleToggleSidebar = () => {
-    setIsActive(!isActive);
+    setIsActive((prevState) => !prevState);
   };
+  useEffect(() => {
+    const handleResize = () => {
+      if (window.innerWidth <= 992) {
+        setIsActive(false); // ซ่อน Sidebar เมื่อจอเล็ก
+      } else {
+        setIsActive(true); // แสดง Sidebar เมื่อจอใหญ่
+      }
+    };
+
+    handleResize(); // เช็กขนาดจอครั้งแรก
+    window.addEventListener("resize", handleResize);
+
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
 
   const handleInputNameChange = (e) => {
     const input = e.target.value;
@@ -228,12 +243,18 @@ export default function AddEquip() {
             <li className="arrow">
               <i className="bi bi-chevron-double-right"></i>
             </li>
-            <li>
+            <li className="middle">
               <a href="allequip">
                 จัดการอุปกรณ์ทางการแพทย์
               </a>
             </li>
-            <li className="arrow">
+            <li className="arrow middle">
+              <i className="bi bi-chevron-double-right"></i>
+            </li>
+            <li className="ellipsis">
+              <a href="allequip">...</a>
+            </li>
+            <li className="arrow ellipsis">
               <i className="bi bi-chevron-double-right"></i>
             </li>
             <li>

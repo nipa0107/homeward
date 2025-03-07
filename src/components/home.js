@@ -10,7 +10,7 @@ export default function Home() {
   const [data, setData] = useState([]);
   const navigate = useNavigate();
   const [adminData, setAdminData] = useState("");
-  const [isActive, setIsActive] = useState(false);
+  const [isActive, setIsActive] = useState(window.innerWidth > 967);  
   const [searchKeyword, setSearchKeyword] = useState(""); // ค้นหา
   const [token, setToken] = useState("");
   const [sortBy, setSortBy] = useState("createdAt");
@@ -108,8 +108,22 @@ export default function Home() {
 
   // bi-list
   const handleToggleSidebar = () => {
-    setIsActive(!isActive);
+    setIsActive((prevState) => !prevState);
   };
+  useEffect(() => {
+    const handleResize = () => {
+      if (window.innerWidth <= 992) {
+        setIsActive(false); // ซ่อน Sidebar เมื่อจอเล็ก
+      } else {
+        setIsActive(true); // แสดง Sidebar เมื่อจอใหญ่
+      }
+    };
+
+    handleResize(); // เช็กขนาดจอครั้งแรก
+    window.addEventListener("resize", handleResize);
+
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
 
   useEffect(() => {
     const searchCaremanual = async () => {
@@ -174,12 +188,12 @@ export default function Home() {
   const getSortIcon = (column) => {
     if (sortBy === column) {
       return sortOrder === "asc" ? (
-        <i class="bi bi-caret-up-fill"></i>
+        <i className="bi bi-caret-up-fill"></i>
       ) : (
-        <i class="bi bi-caret-down-fill"></i>
+        <i className="bi bi-caret-down-fill"></i>
       );
     }
-    return <i class="bi bi-caret-down-fill"></i>;
+    return <i className="bi bi-caret-down-fill"></i>;
   };
 
   return (

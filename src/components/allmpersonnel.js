@@ -9,7 +9,7 @@ import { useNavigate } from "react-router-dom";
 
 export default function AllMpersonnel() {
   const [data, setData] = useState([]);
-  const [isActive, setIsActive] = useState(false);
+  const [isActive, setIsActive] = useState(window.innerWidth > 967);  
   const navigate = useNavigate();
   const [searchKeyword, setSearchKeyword] = useState(""); //ค้นหา
   const [adminData, setAdminData] = useState("");
@@ -101,8 +101,23 @@ export default function AllMpersonnel() {
 
   // bi-list
   const handleToggleSidebar = () => {
-    setIsActive(!isActive);
+    setIsActive((prevState) => !prevState);
   };
+  useEffect(() => {
+    const handleResize = () => {
+      if (window.innerWidth <= 992) {
+        setIsActive(false); // ซ่อน Sidebar เมื่อจอเล็ก
+      } else {
+        setIsActive(true); // แสดง Sidebar เมื่อจอใหญ่
+      }
+    };
+
+    handleResize(); // เช็กขนาดจอครั้งแรก
+    window.addEventListener("resize", handleResize);
+
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
   useEffect(() => {
     const searchMPersonnel = async () => {
       try {

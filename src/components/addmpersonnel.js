@@ -18,7 +18,7 @@ export default function AddMpersonnel() {
   const [name, setName] = useState("");
   const [surname, setSurname] = useState("");
   const [nametitle, setNameTitle] = useState("");
-  const [isActive, setIsActive] = useState(false);
+  const [isActive, setIsActive] = useState(window.innerWidth > 967);  
   const navigate = useNavigate();
   const [adminData, setAdminData] = useState("");
   const [token, setToken] = useState('');
@@ -150,8 +150,23 @@ export default function AddMpersonnel() {
 
   // bi-list
   const handleToggleSidebar = () => {
-    setIsActive(!isActive);
+    setIsActive((prevState) => !prevState);
   };
+  useEffect(() => {
+    const handleResize = () => {
+      if (window.innerWidth <= 992) {
+        setIsActive(false); // ซ่อน Sidebar เมื่อจอเล็ก
+      } else {
+        setIsActive(true); // แสดง Sidebar เมื่อจอใหญ่
+      }
+    };
+
+    handleResize(); // เช็กขนาดจอครั้งแรก
+    window.addEventListener("resize", handleResize);
+
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
 
   const handleInputChange = (e) => {
     const input = e.target.value;
@@ -166,12 +181,12 @@ export default function AddMpersonnel() {
     const handleInputUsernameChange = (e) => {
       let input = e.target.value;
   
-      if (/[^0-9-]/.test(input)) {
-        setUsernameError("เลขที่ใบประกอบวิชาชีพต้องเป็นตัวเลขเท่านั้น");
-        return;
-      } else {
-        setUsernameError("");
-      }
+      // if (/[^0-9-]/.test(input)) {
+      //   setUsernameError("เลขที่ใบประกอบวิชาชีพต้องเป็นตัวเลขเท่านั้น");
+      //   return;
+      // } else {
+      //   setUsernameError("");
+      // }
   
       setUsername(input.replace(/\D/g, "")); 
     };
@@ -316,9 +331,16 @@ export default function AddMpersonnel() {
             <li className="arrow">
               <i className="bi bi-chevron-double-right"></i>
             </li>
-            <li><a href="allmpersonnel">จัดการข้อมูลบุคลากร</a>
+            <li className="middle">
+              <a href="allmpersonnel">จัดการข้อมูลบุคลากร</a>
             </li>
-            <li className="arrow">
+            <li className="arrow middle">
+              <i className="bi bi-chevron-double-right"></i>
+            </li>
+            <li className="ellipsis">
+              <a href="allmpersonnel">...</a>
+            </li>
+            <li className="arrow ellipsis">
               <i className="bi bi-chevron-double-right"></i>
             </li>
             <li><a>เพิ่มบุคลากร</a>

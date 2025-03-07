@@ -15,7 +15,7 @@ export default function VerifyOtp() {
   const navigate = useNavigate();
   const location = useLocation();
   const { username, email } = location.state || {};
-  const [isActive, setIsActive] = useState(false);
+  const [isActive, setIsActive] = useState(window.innerWidth > 967);  
   const [timer, setTimer] = useState(300); // นับถอยหลัง 5 นาที (300 วินาที)
   const [isOtpExpired, setIsOtpExpired] = useState(false);
   const adminData = location.state?.adminData;
@@ -96,8 +96,22 @@ export default function VerifyOtp() {
     navigate("/");
   };
   const handleToggleSidebar = () => {
-    setIsActive(!isActive);
+    setIsActive((prevState) => !prevState);
   };
+  useEffect(() => {
+    const handleResize = () => {
+      if (window.innerWidth <= 992) {
+        setIsActive(false); // ซ่อน Sidebar เมื่อจอเล็ก
+      } else {
+        setIsActive(true); // แสดง Sidebar เมื่อจอใหญ่
+      }
+    };
+
+    handleResize(); // เช็กขนาดจอครั้งแรก
+    window.addEventListener("resize", handleResize);
+
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
   const handleBreadcrumbClick = () => {
     navigate("/emailverification", { state: { adminData } });
   };
@@ -228,16 +242,28 @@ export default function VerifyOtp() {
             <li className="arrow">
               <i className="bi bi-chevron-double-right"></i>
             </li>
-            <li>
+            <li className="middle">
               <a href="profile">โปรไฟล์</a>
             </li>
-            <li className="arrow">
+            <li className="arrow middle">
               <i className="bi bi-chevron-double-right"></i>
             </li>
-            <li>
+            <li className="ellipsis">
+              <a href="profile">...</a>
+            </li>
+            <li className="arrow ellipsis">
+              <i className="bi bi-chevron-double-right"></i>
+            </li>
+            <li className="middle">
               <a className="info" onClick={handleBreadcrumbClick}>ยืนยันอีเมล</a>
             </li>
-            <li className="arrow">
+            <li className="arrow middle">
+              <i className="bi bi-chevron-double-right"></i>
+            </li>
+            <li className="ellipsis">
+              <a className="info" onClick={handleBreadcrumbClick}>...</a>
+            </li>
+            <li className="arrow ellipsis">
               <i className="bi bi-chevron-double-right"></i>
             </li>
             <li>

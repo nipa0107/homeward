@@ -515,14 +515,9 @@ td {
 .email-text {
   font-weight: bold; /* เพิ่มความชัดเจน */
   color: #333; /* ใช้สีที่เหมาะสม */
+  word-break: break-word; 
 }
-/* 
-.label-inline {
-  margin-right: 10px;
-}
-h5 {
-  margin: 0;
-} */
+
 .message-container {
   display: flex;
   align-items: center;
@@ -700,8 +695,10 @@ input[type="radio"] {
 .otp-inputs {
   display: flex;
   justify-content: center;
+  flex-wrap: wrap; 
   gap: 10px; /* ระยะห่างระหว่างช่อง */
   margin: 10px 0;
+  overflow: hidden;
 }
 
 .otp-input {
@@ -870,4 +867,39 @@ input[type="password"]::-webkit-reveal-button {
 
 .custom-select .custom__option--is-selected {
   color: #fff;
+}
+
+@media (max-width: 767px) {
+  .otp-inputs {
+    gap: 5px; /* ลดระยะห่างระหว่างช่อง */
+  }
+
+  .otp-input {
+    width: 35px; /* ลดขนาดกล่อง OTP */
+    height: 35px;
+    font-size: 16px;
+  }
+
+  .title-header {
+    font-size: 18px;
+  }
+
+  .label-container {
+    flex-direction: column; 
+    text-align: center;
+  }
+
+  .email-text {
+    font-size: 14px;
+  }
+
+  .message-container {
+    flex-direction: column; 
+    text-align: center;
+  }
+
+  .btn {
+    font-size: 16px;
+    padding: 10px; 
+  }
 }

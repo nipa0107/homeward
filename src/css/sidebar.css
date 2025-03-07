@@ -38,8 +38,7 @@
     left: 0;
     top: 0;
     height: 100%;
-    width: 320px;
-    /* background: #11101D; */
+    width: 82px;
     background: #87CEFA;
     padding: 6px 10px;
     z-index: 99;
@@ -47,7 +46,7 @@
 }
 
 .sidebar.active {
-    width: 82px;
+    width: 320px;
 }
 
 .sidebar .logo_content .logo {
@@ -55,19 +54,19 @@
     width: 100%;
     height: 50px;
     align-items: center;
-    opacity: 1;
+    opacity: 0;
     pointer-events: none;
     transition: all 0.5s ease;
 }
 
 .sidebar.active .logo_content .logo {
-    opacity: 0;
+    opacity: 1;
 }
 
 .sidebar #btn {
     position: absolute;
     color: rgb(0, 0, 0);
-    left: 90%;
+    left: 50%;
     top: 10px;
     font-size: 23px;
     width: 50px;
@@ -78,7 +77,7 @@
 }
 
 .sidebar.active #btn {
-    left: 50%;
+    left: 90%;
 }
 
 .sidebar ul {
@@ -98,13 +97,13 @@
 }
 
 .sidebar.active .links_name {
-    opacity: 0;
+    opacity: 1;
     pointer-events: none;
     transition: all 0.5s ease;
 }
 
 .sidebar .links_name {
-    opacity: 1;
+    opacity: 0;
     pointer-events: auto;
     transition: all 0.5s ease;
 }
@@ -130,11 +129,8 @@
     pointer-events: none;
 }
 
-
-
 .sidebar ul li a {
     color: rgb(0, 0, 0);
-    /* color: black; */
     display: flex;
     align-items: center;
     text-decoration: none;
@@ -164,7 +160,7 @@
     font-size: 1rem;
     display: flex;
     align-items: center;
-    margin-right: 30px;
+    margin-right: 2.5rem;
 }
 
 .profile_details li a {
@@ -241,10 +237,8 @@
     justify-content: flex-start;
     position: relative;
     height: 100%;
-    width: calc(100% - 320px);
-    /* 320px คือความกว้างของ sidebar */
-    left: 320px;
-    /* ตำแหน่งเริ่มต้นของ home_content */
+    width: calc(100% - 78px);
+    left: 78px;
     transition: all 0.5s ease;
     margin-bottom: 2%;
 }
@@ -294,24 +288,24 @@
 }
 
 .homereset_content .header1 {
-    font-size: 25px;
+    font-size: 20px;
     font-weight: 600;
-    margin: 20px;
+    /* margin: 20px; */
     text-align: center;
 }
 
 .homereset_content .header2 {
-    font-size: 20px;
-    font-weight: 600;
+    font-size: 16px;
+    /* font-weight: 600; */
     margin: 20px;
     text-align: center;
 }
 
 /* หน้าลืมรหัสผ่าน */
 
-.sidebar.active~.home_content {
-    width: calc(100% - 78px);
-    left: 78px;
+.sidebar.active ~ .home_content{
+    width: calc(100% - 300px);
+    left: 320px;
 }
 
 .content-toolbar-symtom {
@@ -445,17 +439,93 @@ hr {
     font-weight: bold;
 }
 
-
+.breadcrumbs ul li.ellipsis {
+    display: none;
+}
 
 .content-toolbar, .table-container {
     width: 100%;
     max-width: 80%;
-    margin:1.5rem auto;
+    margin:1rem auto;
 }
 
+@media screen and (max-width: 1024px) {
+    .sidebar {
+        width: 82px;
+        overflow: hidden; /* ป้องกัน UI เพี้ยน */
+        transition: width 0.3s ease;
+    }
+    .sidebar .links_name, .sidebar .logo_name {
+        display: none; /* ซ่อนชื่อเมนู */
+    }
+    .sidebar ul li a {
+        justify-content: center;
+    }
+    .sidebar #btn {
+        left: 50%;
+    }
+    .home_content {
+        width: calc(100% - 82px);
+        left: 82px;
+    }
+    
+    /* ✅ เมนูเปิดแล้วให้แสดงตัวหนังสือ */
+    .sidebar.active {
+        width: 320px;
+    }
+    .sidebar.active .links_name, 
+    .sidebar.active .logo_name {
+        display: inline-block !important; /* แสดงตัวหนังสือเมื่อ Sidebar เปิด */
+    }
+    .sidebar.active ul li a {
+        justify-content: flex-start;
+    }
+}
+
+
 @media (max-width: 992px) {
+    .sidebar.active{
+        width: 100%;
+    }
+    .sidebar.active ~ .home_content{
+       width: 100%;
+       left: 0;
+    }
+    .sidebar.active #btn{
+        left: 95%;
+    }
+    .sidebar ul li a{
+        justify-content: flex-start;
+    }
+    .home_content .header{
+        font-size: 1rem;
+    }
+    .profile_details .links_name{
+        display: none;
+    }
+    .profile_details .bi{
+        margin-right: 0;
+    }
+    .home_content .breadcrumbs{
+        font-size: 0.9rem;
+        margin-top: 10px;
+    }
+    /* .home_content .breadcrumbs {
+        margin-top: 21px;
+        margin-left: 28px;
+    }
+    
+    .breadcrumbs {
+        padding: 10px;
+        box-shadow: 0 4px 30px -10px rgba(0, 0, 0, 0.2);
+        border-radius: 15px;
+        width: fit-content;
+        margin-top: 5px;
+    } */
+    
     .content-toolbar, .table-container {
-    width: 90%;
+    width: 100%;
+    max-width: 90%;
 
     }
     .search-text,.content-toolbar,
@@ -486,11 +556,13 @@ hr {
 
 /* Responsive สำหรับมือถือ */
 @media (max-width: 767px) {
-    .content-toolbar {
+    /* .content-toolbar {
         margin-top: 1rem;
-    }
+    } */
     .content-toolbar-symtom{
         margin-top: 1rem;
+        width: 100%;
+        max-width: 90%;
     }
     .home_content .toolbar {
         margin-top: auto;
@@ -523,6 +595,24 @@ hr {
     .countadmin {
         text-align: center;
     }
+    .breadcrumbs ul li.middle {
+        display: none;
+    }
 
+    /* แสดง "..." ที่กดได้แทน */
+    .breadcrumbs ul li.ellipsis {
+        display: inline-block;
+    }
+
+    .breadcrumbs ul li.ellipsis a {
+        font-weight: bold;
+        text-decoration: none;
+        color: black;
+    }
+
+    .breadcrumbs ul li.ellipsis a:hover {
+        color: #87CEFA;
+    }
 }
+
 

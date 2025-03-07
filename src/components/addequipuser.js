@@ -16,7 +16,7 @@ export default function AddEquipUser() {
   const [data, setData] = useState([]);
   const [validationMessage, setValidationMessage] = useState("");
   const [adminData, setAdminData] = useState({});
-  const [isActive, setIsActive] = useState(false);
+  const [isActive, setIsActive] = useState(window.innerWidth > 967);  
   const [token, setToken] = useState("");
   const [selectedEquipType1, setSelectedEquipType1] = useState("");
   const [selectedEquipType2, setSelectedEquipType2] = useState("");
@@ -183,8 +183,23 @@ export default function AddEquipUser() {
   };
 
   const handleToggleSidebar = () => {
-    setIsActive(!isActive);
+    setIsActive((prevState) => !prevState);
   };
+  useEffect(() => {
+    const handleResize = () => {
+      if (window.innerWidth <= 992) {
+        setIsActive(false); // ซ่อน Sidebar เมื่อจอเล็ก
+      } else {
+        setIsActive(true); // แสดง Sidebar เมื่อจอใหญ่
+      }
+    };
+
+    handleResize(); // เช็กขนาดจอครั้งแรก
+    window.addEventListener("resize", handleResize);
+
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
 
   const handleChange = (e, equipTypeSetter, equipType) => {
     equipTypeSetter(e.target.value);
@@ -317,21 +332,35 @@ export default function AddEquipUser() {
             <li className="arrow">
               <i className="bi bi-chevron-double-right"></i>
             </li>
-            <li>
+            <li className="middle">
               <a href="alluser">จัดการข้อมูลผู้ป่วย</a>
             </li>
-            <li className="arrow">
+            <li className="arrow middle">
               <i className="bi bi-chevron-double-right"></i>
             </li>
-            <li>
+            <li className="ellipsis">
+              <a href="alluser">...</a>
+            </li>
+            <li className="arrow ellipsis">
+              <i className="bi bi-chevron-double-right"></i>
+            </li>
+            <li className="middle">
               <a
-                href="allinfo"
+                className="info"
                 onClick={() => navigate("/allinfo", { state: { id } })}
               >
                 ข้อมูลการดูแลผู้ป่วย
               </a>
             </li>
-            <li className="arrow">
+            <li className="arrow middle">
+              <i className="bi bi-chevron-double-right"></i>
+            </li>
+            <li className="ellipsis">
+              <a onClick={() => navigate("/allinfo", { state: { id } })}
+              className="info"
+              >...</a>
+            </li>
+            <li className="arrow ellipsis">
               <i className="bi bi-chevron-double-right"></i>
             </li>
             <li>
@@ -339,10 +368,8 @@ export default function AddEquipUser() {
             </li>
           </ul>
         </div>
-       
-
+        <p className="title-header-user">เพิ่มอุปกรณ์สำหรับผู้ป่วย</p>
         <div className="table-responsive">
-        <p className="title-header">เพิ่มอุปกรณ์สำหรับผู้ป่วย</p>
           <form onSubmit={handleSubmit}>
             <table className="table table-hover" style={{ width: "60%" }}>
               <thead>

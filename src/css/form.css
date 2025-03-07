@@ -64,6 +64,19 @@
 
   
 @media (max-width: 992px) {
+  .adminall.card {
+    width: 100%;
+    max-width: 90%; 
+  }
+  .save-img.card{
+    width: 100%;
+    max-width: 75%; 
+  }
+  .adminall.card , .save-img.card{
+    padding: 0.5rem 1rem;
+    /* width: 100%;
+    max-width: 90%; */
+  }
   .adminall label {
     font-size: 0.9rem;
   }
