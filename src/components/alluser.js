@@ -24,7 +24,7 @@ export default function AllUser() {
     const token = window.localStorage.getItem("token");
     setToken(token);
     if (token) {
-      fetch("http://localhost:5000/profile", {
+      fetch("https://backend-deploy-render-mxok.onrender.com/profile", {
         method: "POST",
         crossDomain: true,
         headers: {
@@ -55,7 +55,7 @@ export default function AllUser() {
   }, []);
 
   const getAllUser = () => {
-    fetch("http://localhost:5000/alluser", {
+    fetch("https://backend-deploy-render-mxok.onrender.com/alluser", {
       method: "GET",
       headers: {
         Authorization: `Bearer ${token}`,
@@ -95,7 +95,7 @@ export default function AllUser() {
     const searchUser = async () => {
       try {
         const response = await fetch(
-          `http://localhost:5000/searchuser?keyword=${encodeURIComponent(
+          `https://backend-deploy-render-mxok.onrender.com/searchuser?keyword=${encodeURIComponent(
             searchKeyword
           )}`,
           {

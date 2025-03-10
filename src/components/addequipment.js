@@ -24,7 +24,7 @@ export default function AddEquip() {
     const token = window.localStorage.getItem("token");
     setToken(token);
     if (token) {
-      fetch("http://localhost:5000/profile", {
+      fetch("https://backend-deploy-render-mxok.onrender.com/profile", {
         method: "POST",
         crossDomain: true,
         headers: {
@@ -71,7 +71,7 @@ export default function AddEquip() {
       setTypeError("");
     }
     if (hasError) return; 
-    fetch("http://localhost:5000/addequip", {
+    fetch("https://backend-deploy-render-mxok.onrender.com/addequip", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

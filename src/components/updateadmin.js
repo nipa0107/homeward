@@ -33,7 +33,7 @@ function Updateadmin() {
     const token = window.localStorage.getItem("token");
     setToken(token);
     if (token) {
-      fetch("http://localhost:5000/profile", {
+      fetch("https://backend-deploy-render-mxok.onrender.com/profile", {
         method: "POST",
         crossDomain: true,
         headers: {
@@ -93,7 +93,7 @@ function Updateadmin() {
     }
 
     if (hasError) return;
-    fetch(`http://localhost:5000/updateadmin/${location.state._id}`, {
+    fetch(`https://backend-deploy-render-mxok.onrender.com/updateadmin/${location.state._id}`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

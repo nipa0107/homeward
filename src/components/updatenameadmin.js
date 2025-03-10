@@ -29,7 +29,7 @@ export default function UpdateName() {
         // const fetchData = async () => {
         //     try {
         //       const response = await fetch(
-        //         `http://localhost:5000/getadmin/${id}`
+        //         `https://backend-deploy-render-mxok.onrender.com/getadmin/${id}`
         //       );
         //       const data = await response.json();    
         //       setName(data.name); 
@@ -41,7 +41,7 @@ export default function UpdateName() {
         const token = window.localStorage.getItem("token");
         setToken(token); 
         if (token) {
-          fetch("http://localhost:5000/profile", {
+          fetch("https://backend-deploy-render-mxok.onrender.com/profile", {
             method: "POST",
             crossDomain: true,
             headers: {
@@ -97,7 +97,7 @@ export default function UpdateName() {
       { name,
         surname
       };
-      const response = await fetch(`http://localhost:5000/updatenameadmin/${location.state._id}`, {
+      const response = await fetch(`https://backend-deploy-render-mxok.onrender.com/updatenameadmin/${location.state._id}`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

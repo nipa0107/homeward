@@ -69,7 +69,7 @@ export default function UpdateOTP() {
     const otpValue = otp.join("");
     console.log("Submitted OTP:", otpValue);
 
-    fetch("http://localhost:5000/verify-otp1", {
+    fetch("https://backend-deploy-render-mxok.onrender.com/verify-otp1", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -121,7 +121,7 @@ export default function UpdateOTP() {
     setIsOtpExpired(false);
     setErrorMessage("");
     setSuccessMessage("");
-    fetch("http://localhost:5000/send-otp1", {
+    fetch("https://backend-deploy-render-mxok.onrender.com/send-otp1", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

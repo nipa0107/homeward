@@ -44,7 +44,7 @@ export default function AddCaregiver() {
     const token = window.localStorage.getItem("token");
     setToken(token);
     if (token) {
-      fetch("http://localhost:5000/profile", {
+      fetch("https://backend-deploy-render-mxok.onrender.com/profile", {
         method: "POST",
         crossDomain: true,
         headers: {
@@ -160,7 +160,7 @@ export default function AddCaregiver() {
     const updatedFormData = { ...formData, ID_card_number: cleanedUsername };
 
     try {
-      const response = await fetch("http://localhost:5000/addcaregiver", {
+      const response = await fetch("https://backend-deploy-render-mxok.onrender.com/addcaregiver", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(updatedFormData), // ส่ง formData ที่อัปเดตแล้ว
@@ -300,7 +300,7 @@ export default function AddCaregiver() {
       try {
         const cleanedId = value.replace(/-/g, "");
         const response = await fetch(
-          `http://localhost:5000/getCaregiverById/${cleanedId}`,
+          `https://backend-deploy-render-mxok.onrender.com/getCaregiverById/${cleanedId}`,
           {
             method: "GET",
             headers: { "Content-Type": "application/json" },

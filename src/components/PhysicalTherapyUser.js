@@ -21,7 +21,7 @@ export default function PhysicalTherapyUser() {
     const token = window.localStorage.getItem("token");
     setToken(token);
     if (token) {
-      fetch("http://localhost:5000/profile", {
+      fetch("https://backend-deploy-render-mxok.onrender.com/profile", {
         method: "POST",
         crossDomain: true,
         headers: {

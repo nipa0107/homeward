@@ -30,7 +30,7 @@ export default function EmailVerification() {
       return;
     }
 
-    fetch("http://localhost:5000/send-otp1", {
+    fetch("https://backend-deploy-render-mxok.onrender.com/send-otp1", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

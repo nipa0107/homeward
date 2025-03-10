@@ -21,7 +21,7 @@ export default function AddSymptom() {
     const token = window.localStorage.getItem("token");
     setToken(token);
     if (token) {
-      fetch("http://localhost:5000/profile", {
+      fetch("https://backend-deploy-render-mxok.onrender.com/profile", {
         method: "POST",
         crossDomain: true,
         headers: {
@@ -60,7 +60,7 @@ export default function AddSymptom() {
 
     if (hasError) return;
 
-    fetch("http://localhost:5000/addsymptom", {
+    fetch("https://backend-deploy-render-mxok.onrender.com/addsymptom", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

@@ -58,7 +58,7 @@ export default function SettingNoti() {
   useEffect(() => {
     const token = window.localStorage.getItem("token");
     if (token) {
-      fetch("http://localhost:5000/profile", {
+      fetch("https://backend-deploy-render-mxok.onrender.com/profile", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -114,7 +114,7 @@ export default function SettingNoti() {
       const fetchMedicalInfo = async () => {
         try {
           const response = await fetch(
-            `http://localhost:5000/medicalInformation/${id}`
+            `https://backend-deploy-render-mxok.onrender.com/medicalInformation/${id}`
           );
           const data = await response.json();
           console.log("Medical Information:", data);
@@ -131,7 +131,7 @@ export default function SettingNoti() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    fetch("http://localhost:5000/update-threshold", {
+    fetch("https://backend-deploy-render-mxok.onrender.com/update-threshold", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -171,7 +171,7 @@ export default function SettingNoti() {
       try {
         const token = window.localStorage.getItem("token");
         if (token) {
-          const response = await fetch("http://localhost:5000/get-threshold", {
+          const response = await fetch("https://backend-deploy-render-mxok.onrender.com/get-threshold", {
             method: "POST",
             headers: {
               "Content-Type": "application/json",

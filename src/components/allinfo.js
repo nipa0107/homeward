@@ -84,7 +84,7 @@ export default function AllUser({ }) {
     const token = window.localStorage.getItem("token");
     setToken(token);
     if (token) {
-      fetch("http://localhost:5000/profile", {
+      fetch("https://backend-deploy-render-mxok.onrender.com/profile", {
         method: "POST",
         crossDomain: true,
         headers: {
@@ -113,7 +113,7 @@ export default function AllUser({ }) {
   useEffect(() => {
     const fetchUserId = async () => {
       try {
-        const response = await fetch(`http://localhost:5000/user/${id}`);
+        const response = await fetch(`https://backend-deploy-render-mxok.onrender.com/user/${id}`);
         const userdata = await response.json();
         setData([data.data]);
         setUsername(userdata.data.username);
@@ -134,7 +134,7 @@ export default function AllUser({ }) {
     const fetchCaregiverData = async () => {
       try {
         const response = await fetch(
-          `http://localhost:5000/getcaregiver/${id}`
+          `https://backend-deploy-render-mxok.onrender.com/getcaregiver/${id}`
         );
         const caregiverData = await response.json();
         if (caregiverData.status === "ok") {
@@ -161,7 +161,7 @@ export default function AllUser({ }) {
     const fetchMedicalInformation = async () => {
       try {
         const response = await fetch(
-          `http://localhost:5000/medicalInformation/${id}`
+          `https://backend-deploy-render-mxok.onrender.com/medicalInformation/${id}`
         );
         const medicalData = await response.json();
 
@@ -181,7 +181,7 @@ export default function AllUser({ }) {
   useEffect(() => {
     const fetchEquipmentData = async () => {
       try {
-        const response = await fetch(`http://localhost:5000/equipment/${id}`);
+        const response = await fetch(`https://backend-deploy-render-mxok.onrender.com/equipment/${id}`);
         const equipmentData = await response.json();
         setMedicalEquipment(equipmentData);
         console.log("EquipmentUser Data:", equipmentData);
@@ -197,7 +197,7 @@ export default function AllUser({ }) {
       try {
         if (medicalInfo && medicalInfo.selectedPersonnel) {
           const response = await fetch(
-            `http://localhost:5000/getmpersonnel/${medicalInfo.selectedPersonnel}`
+            `https://backend-deploy-render-mxok.onrender.com/getmpersonnel/${medicalInfo.selectedPersonnel}`
           );
           const mdata = await response.json();
           setMData(mdata);
@@ -213,7 +213,7 @@ export default function AllUser({ }) {
   // const deleteUser = async () => {
   //   if (window.confirm(`คุณต้องการลบ ${username} หรือไม่ ?`)) {
   //     try {
-  //       const response = await fetch(`http://localhost:5000/deleteUser/${id}`, {
+  //       const response = await fetch(`https://backend-deploy-render-mxok.onrender.com/deleteUser/${id}`, {
   //         method: "DELETE",
   //         headers: {
   //           "Content-Type": "application/json",
@@ -245,7 +245,7 @@ export default function AllUser({ }) {
 
     // if (window.confirm(`คุณต้องการลบ ${username} หรือไม่ ?`)) {
       try {
-        const response = await fetch(`http://localhost:5000/deleteUser/${id}`, {
+        const response = await fetch(`https://backend-deploy-render-mxok.onrender.com/deleteUser/${id}`, {
           method: "DELETE",
           headers: {
             "Content-Type": "application/json",
@@ -282,7 +282,7 @@ export default function AllUser({ }) {
     if (window.confirm(`คุณต้องการลบอุปกรณ์ ${equipmentName} หรือไม่?`)) {
       try {
         const response = await fetch(
-          `http://localhost:5000/deleteEquipuser/${id}`,
+          `https://backend-deploy-render-mxok.onrender.com/deleteEquipuser/${id}`,
           {
             method: "DELETE",
             headers: {
@@ -313,7 +313,7 @@ export default function AllUser({ }) {
     if (window.confirm("คุณต้องการลบข้อมูลการเจ็บป่วยหรือไม่?")) {
       try {
         const response = await fetch(
-          `http://localhost:5000/deletemedicalInformation/${id}`,
+          `https://backend-deploy-render-mxok.onrender.com/deletemedicalInformation/${id}`,
           {
             method: "DELETE",
             headers: {
@@ -400,7 +400,7 @@ export default function AllUser({ }) {
     if (window.confirm(`คุณต้องการลบอุปกรณ์ที่เลือกหรือไม่?`)) {
       try {
         const response = await fetch(
-          `http://localhost:5000/deleteEquipuser/${id}`,
+          `https://backend-deploy-render-mxok.onrender.com/deleteEquipuser/${id}`,
           {
             method: "DELETE",
             headers: {
@@ -433,7 +433,7 @@ export default function AllUser({ }) {
   const handleDelete = async (caregiverId, id) => {
     if (window.confirm("คุณต้องการลบข้อมูลผู้ดูแลนี้หรือไม่?")) {
       try {
-        const response = await fetch(`http://localhost:5000/deletecaregiver`, {
+        const response = await fetch(`https://backend-deploy-render-mxok.onrender.com/deletecaregiver`, {
           method: "POST", // ใช้ POST หรือ DELETE ตาม API ของคุณ
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ _id: caregiverId, userId: id }), // ส่ง `_id` ของผู้ดูแลไป
@@ -460,7 +460,7 @@ export default function AllUser({ }) {
     console.log("Selected Caregiver:", selectedCaregiver.user); // Debugging
     console.log("FormData:", formData);
     try {
-      const response = await fetch("http://localhost:5000/updatecaregiver", {
+      const response = await fetch("https://backend-deploy-render-mxok.onrender.com/updatecaregiver", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ user: selectedCaregiver.user, ...formData }),

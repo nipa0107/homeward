@@ -19,7 +19,7 @@ export default function AlluserInSetting() {
     const token = window.localStorage.getItem("token");
     setToken(token);
     if (token) {
-      fetch("http://localhost:5000/profile", {
+      fetch("https://backend-deploy-render-mxok.onrender.com/profile", {
         method: "POST",
         crossDomain: true,
         headers: {
@@ -48,7 +48,7 @@ export default function AlluserInSetting() {
   }, []);
 
   const getAllUser = () => {
-    fetch("http://localhost:5000/alluser", {
+    fetch("https://backend-deploy-render-mxok.onrender.com/alluser", {
       method: "GET",
       headers: {
         Authorization: `Bearer ${token}`, // เพิ่ม Authorization header เพื่อส่ง token ในการร้องขอ
@@ -71,7 +71,7 @@ export default function AlluserInSetting() {
       if (userIds.length === 0) return;
   
       try {
-        const response = await fetch("http://localhost:5000/medicalInformation/batch", {
+        const response = await fetch("https://backend-deploy-render-mxok.onrender.com/medicalInformation/batch", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -95,7 +95,7 @@ export default function AlluserInSetting() {
 
 
   const getAllUserWithThreshold = () => {
-    fetch("http://localhost:5000/alluserwiththreshold", {
+    fetch("https://backend-deploy-render-mxok.onrender.com/alluserwiththreshold", {
       method: "GET",
       headers: {
         Authorization: `Bearer ${token}`,
@@ -135,7 +135,7 @@ export default function AlluserInSetting() {
     const searchUser = async () => {
       try {
         const response = await fetch(
-          `http://localhost:5000/searchuser?keyword=${encodeURIComponent(
+          `https://backend-deploy-render-mxok.onrender.com/searchuser?keyword=${encodeURIComponent(
             searchKeyword
           )}`,
           {

@@ -34,7 +34,7 @@ export default function AddAdmin() {
     const token = window.localStorage.getItem("token");
     setToken(token);
     if (token) {
-      fetch("http://localhost:5000/profile", {
+      fetch("https://backend-deploy-render-mxok.onrender.com/profile", {
         method: "POST",
         crossDomain: true,
         headers: {
@@ -120,7 +120,7 @@ export default function AddAdmin() {
     }
 
     if (hasError) return;
-    fetch("http://localhost:5000/addadmin", {
+    fetch("https://backend-deploy-render-mxok.onrender.com/addadmin", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

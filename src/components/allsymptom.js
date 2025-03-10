@@ -17,7 +17,7 @@ export default function Allsymptom() {
     const token = window.localStorage.getItem("token");
     setToken(token);
     if (token) {
-      fetch("http://localhost:5000/profile", {
+      fetch("https://backend-deploy-render-mxok.onrender.com/profile", {
         method: "POST",
         crossDomain: true,
         headers: {
@@ -48,7 +48,7 @@ export default function Allsymptom() {
   }, []);
 
   const getSymptom = () => {
-    fetch("http://localhost:5000/allSymptom", {
+    fetch("https://backend-deploy-render-mxok.onrender.com/allSymptom", {
       method: "GET",
       headers: {
         Authorization: `Bearer ${token}`, // เพิ่ม Authorization header เพื่อส่ง token ในการร้องขอ
@@ -64,7 +64,7 @@ export default function Allsymptom() {
     if (window.confirm(`คุณต้องการลบ ${username} หรือไม่ ?`)) {
       try {
         const response = await fetch(
-          `http://localhost:5000/deleteSymptom/${id}`,
+          `https://backend-deploy-render-mxok.onrender.com/deleteSymptom/${id}`,
           {
             method: "DELETE",
             headers: {
@@ -119,7 +119,7 @@ export default function Allsymptom() {
     const searchAdmins = async () => {
       try {
         const response = await fetch(
-          `http://localhost:5000/searchsymptom?keyword=${encodeURIComponent(
+          `https://backend-deploy-render-mxok.onrender.com/searchsymptom?keyword=${encodeURIComponent(
             searchKeyword
           )}`,
           {

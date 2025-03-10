@@ -18,7 +18,7 @@ export default function Alladmin() {
     const token = window.localStorage.getItem("token");
     setToken(token);
     if (token) {
-      fetch("http://localhost:5000/profile", {
+      fetch("https://backend-deploy-render-mxok.onrender.com/profile", {
         method: "POST",
         crossDomain: true,
         headers: {
@@ -49,7 +49,7 @@ export default function Alladmin() {
   }, []);
 
   const getAllAdmin = () => {
-    fetch("http://localhost:5000/alladmin", {
+    fetch("https://backend-deploy-render-mxok.onrender.com/alladmin", {
       method: "GET",
       headers: {
         Authorization: `Bearer ${token}`, // เพิ่ม Authorization header เพื่อส่ง token ในการร้องขอ
@@ -66,7 +66,7 @@ export default function Alladmin() {
     if (window.confirm(`คุณต้องการลบ ${username} หรือไม่ ?`)) {
       try {
         const response = await fetch(
-          `http://localhost:5000/deleteAdmin/${id}`,
+          `https://backend-deploy-render-mxok.onrender.com/deleteAdmin/${id}`,
           {
             method: "DELETE",
             headers: {
@@ -122,7 +122,7 @@ export default function Alladmin() {
     const searchAdmins = async () => {
       try {
         const response = await fetch(
-          `http://localhost:5000/searchadmin?keyword=${encodeURIComponent(
+          `https://backend-deploy-render-mxok.onrender.com/searchadmin?keyword=${encodeURIComponent(
             searchKeyword
           )}`,
           {

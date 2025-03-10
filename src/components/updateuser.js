@@ -60,7 +60,7 @@ export default function UpdateUser() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await fetch(`http://localhost:5000/getuser/${id}`);
+        const response = await fetch(`https://backend-deploy-render-mxok.onrender.com/getuser/${id}`);
         const data = await response.json();
         setUsername(data.username);
         setName(data.name);
@@ -81,7 +81,7 @@ export default function UpdateUser() {
     const fetchCaregiverData = async () => {
       try {
         const response = await fetch(
-          `http://localhost:5000/getcaregiver/${id}`
+          `https://backend-deploy-render-mxok.onrender.com/getcaregiver/${id}`
         );
         const caregiverData = await response.json();
         if (caregiverData.status === "ok") {
@@ -98,7 +98,7 @@ export default function UpdateUser() {
     const token = window.localStorage.getItem("token");
     setToken(token);
     if (token) {
-      fetch("http://localhost:5000/profile", {
+      fetch("https://backend-deploy-render-mxok.onrender.com/profile", {
         method: "POST",
         crossDomain: true,
         headers: {
@@ -193,7 +193,7 @@ export default function UpdateUser() {
         // Relationship
       };
 
-      const response = await fetch(`http://localhost:5000/updateuserapp`, {
+      const response = await fetch(`https://backend-deploy-render-mxok.onrender.com/updateuserapp`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

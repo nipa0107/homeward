@@ -24,7 +24,7 @@ export default function UpdateSymptom() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await fetch(`http://localhost:5000/getsymptom/${id}`);
+        const response = await fetch(`https://backend-deploy-render-mxok.onrender.com/getsymptom/${id}`);
         const data = await response.json();
         setName(data.name);
       } catch (error) {
@@ -35,7 +35,7 @@ export default function UpdateSymptom() {
     const token = window.localStorage.getItem("token");
     setToken(token);
     if (token) {
-      fetch("http://localhost:5000/profile", {
+      fetch("https://backend-deploy-render-mxok.onrender.com/profile", {
         method: "POST",
         crossDomain: true,
         headers: {
@@ -79,7 +79,7 @@ export default function UpdateSymptom() {
         name,
       };
       const response = await fetch(
-        `http://localhost:5000/updatesymptom/${id}`,
+        `https://backend-deploy-render-mxok.onrender.com/updatesymptom/${id}`,
         {
           method: "POST",
           headers: {

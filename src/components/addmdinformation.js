@@ -61,7 +61,7 @@ export default function AddMedicalInformation() {
     const token = window.localStorage.getItem("token");
     setToken(token);
     if (token) {
-      fetch("http://localhost:5000/profile", {
+      fetch("https://backend-deploy-render-mxok.onrender.com/profile", {
         method: "POST",
         crossDomain: true,
         headers: {
@@ -129,7 +129,7 @@ export default function AddMedicalInformation() {
       return;
     }
 
-    fetch("http://localhost:5000/addmedicalinformation", {
+    fetch("https://backend-deploy-render-mxok.onrender.com/addmedicalinformation", {
       method: "POST",
       headers: {
         Authorization: `Bearer ${token}`,
@@ -177,7 +177,7 @@ export default function AddMedicalInformation() {
 
 
   const getAllMpersonnel = () => {
-    fetch("http://localhost:5000/allMpersonnel", {
+    fetch("https://backend-deploy-render-mxok.onrender.com/allMpersonnel", {
       method: "GET",
       headers: {
         Authorization: `Bearer ${token}`, // Add Authorization header

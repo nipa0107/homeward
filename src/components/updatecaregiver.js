@@ -64,7 +64,7 @@ export default function Updatecaregiver() {
      const token = window.localStorage.getItem("token");
       setToken(token);
       if (token) {
-        fetch("http://localhost:5000/profile", {
+        fetch("https://backend-deploy-render-mxok.onrender.com/profile", {
           method: "POST",
           crossDomain: true,
           headers: {
@@ -274,7 +274,7 @@ const handleChange = (e) => {
     }
     console.log("Submitting Data", formData);
     try {
-      const response = await fetch("http://localhost:5000/updatecaregiver", {
+      const response = await fetch("https://backend-deploy-render-mxok.onrender.com/updatecaregiver", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ _id: caregiver._id, ...formData }),

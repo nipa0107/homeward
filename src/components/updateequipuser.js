@@ -27,7 +27,7 @@ export default function UpdateEquipUser() {
     const token = window.localStorage.getItem("token");
     setToken(token);
     if (token) {
-      fetch("http://localhost:5000/profile", {
+      fetch("https://backend-deploy-render-mxok.onrender.com/profile", {
         method: "POST",
         crossDomain: true,
         headers: {
@@ -56,7 +56,7 @@ export default function UpdateEquipUser() {
   }, [token]);
 
   const getAllEquip = () => {
-    fetch("http://localhost:5000/allequip", {
+    fetch("https://backend-deploy-render-mxok.onrender.com/allequip", {
       method: "GET",
       headers: {
         Authorization: `Bearer ${token}`,
@@ -102,7 +102,7 @@ export default function UpdateEquipUser() {
       return;
     }
 
-    fetch(`http://localhost:5000/updateequipuser/${id}`, {
+    fetch(`https://backend-deploy-render-mxok.onrender.com/updateequipuser/${id}`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

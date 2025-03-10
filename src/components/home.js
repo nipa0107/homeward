@@ -21,7 +21,7 @@ export default function Home() {
     const token = window.localStorage.getItem("token");
     setToken(token);
     if (token) {
-      fetch("http://localhost:5000/profile", {
+      fetch("https://backend-deploy-render-mxok.onrender.com/profile", {
         method: "POST",
         crossDomain: true,
         headers: {
@@ -59,7 +59,7 @@ export default function Home() {
   }, []); // ส่งไปครั้งเดียว
 
   const getAllCaremanual = () => {
-    fetch("http://localhost:5000/allcaremanual", {
+    fetch("https://backend-deploy-render-mxok.onrender.com/allcaremanual", {
       method: "GET",
       headers: {
         Authorization: `Bearer ${token}`, // เพิ่ม Authorization header เพื่อส่ง token ในการร้องขอ
@@ -81,7 +81,7 @@ export default function Home() {
     if (window.confirm(`คุณต้องการลบ ${caremanual_name} หรือไม่ ?`)) {
       try {
         const response = await fetch(
-          `http://localhost:5000/deleteCaremanual/${id}`,
+          `https://backend-deploy-render-mxok.onrender.com/deleteCaremanual/${id}`,
           {
             method: "DELETE",
             headers: {
@@ -129,7 +129,7 @@ export default function Home() {
     const searchCaremanual = async () => {
       try {
         const response = await fetch(
-          `http://localhost:5000/searchcaremanual?keyword=${encodeURIComponent(
+          `https://backend-deploy-render-mxok.onrender.com/searchcaremanual?keyword=${encodeURIComponent(
             searchKeyword
           )}`,
           {

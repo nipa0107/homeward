@@ -74,7 +74,7 @@ export default function UpdateCareManual() {
     const fetchData = async () => {
       try {
         const response = await fetch(
-          `http://localhost:5000/getcaremanual/${id}`
+          `https://backend-deploy-render-mxok.onrender.com/getcaremanual/${id}`
         );
         const data = await response.json();
         setCaremanualName(data.caremanual_name);
@@ -90,7 +90,7 @@ export default function UpdateCareManual() {
     const token = window.localStorage.getItem("token");
     setToken(token);
     if (token) {
-      fetch("http://localhost:5000/profile", {
+      fetch("https://backend-deploy-render-mxok.onrender.com/profile", {
         method: "POST",
         crossDomain: true,
         headers: {
@@ -122,7 +122,7 @@ export default function UpdateCareManual() {
 
   // const removeImage = async () => {
   //   try {
-  //     const response = await fetch(`http://localhost:5000/remove-image/${id}`, {
+  //     const response = await fetch(`https://backend-deploy-render-mxok.onrender.com/remove-image/${id}`, {
   //       method: "DELETE",
   //       headers: {
   //         Authorization: `Bearer ${token}`,
@@ -146,7 +146,7 @@ export default function UpdateCareManual() {
 
   // const removeFile = async () => {
   //   try {
-  //     const response = await fetch(`http://localhost:5000/remove-file/${id}`, {
+  //     const response = await fetch(`https://backend-deploy-render-mxok.onrender.com/remove-file/${id}`, {
   //       method: "DELETE",
   //       headers: {
   //         Authorization: `Bearer ${token}`,
@@ -220,7 +220,7 @@ export default function UpdateCareManual() {
       }
 
       const response = await fetch(
-        `http://localhost:5000/updatecaremanual/${id}`,
+        `https://backend-deploy-render-mxok.onrender.com/updatecaremanual/${id}`,
         {
           method: "POST",
           body: formData,
@@ -234,7 +234,7 @@ export default function UpdateCareManual() {
         console.log("แก้ไขคู่มือแล้ว:", result);
         toast.success("แก้ไขข้อมูลสำเร็จ");
         if (deletedImage) {
-          await fetch(`http://localhost:5000/remove-image/${id}`, {
+          await fetch(`https://backend-deploy-render-mxok.onrender.com/remove-image/${id}`, {
             method: "DELETE",
             headers: {
               Authorization: `Bearer ${token}`,
@@ -243,7 +243,7 @@ export default function UpdateCareManual() {
         }
 
         if (deletedFile) {
-          await fetch(`http://localhost:5000/remove-file/${id}`, {
+          await fetch(`https://backend-deploy-render-mxok.onrender.com/remove-file/${id}`, {
             method: "DELETE",
             headers: {
               Authorization: `Bearer ${token}`,

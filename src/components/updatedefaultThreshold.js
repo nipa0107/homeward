@@ -34,7 +34,7 @@ function UpdateDefault() {
   useEffect(() => {
     const token = window.localStorage.getItem("token");
     if (token) {
-      fetch("http://localhost:5000/profile", {
+      fetch("https://backend-deploy-render-mxok.onrender.com/profile", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -78,7 +78,7 @@ function UpdateDefault() {
   }, []);
   
   useEffect(() => {
-    fetch('http://localhost:5000/get-default-threshold')
+    fetch('https://backend-deploy-render-mxok.onrender.com/get-default-threshold')
       .then((response) => response.json())
       .then((data) => {
         if (data.status === 'success') {
@@ -126,7 +126,7 @@ function UpdateDefault() {
     return; 
   }
     try {
-      const response = await fetch('http://localhost:5000/update-default-threshold', {
+      const response = await fetch('https://backend-deploy-render-mxok.onrender.com/update-default-threshold', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

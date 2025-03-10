@@ -109,7 +109,7 @@ export default function Updatemedicalinformation() {
     const token = window.localStorage.getItem("token");
     setToken(token);
     if (token) {
-      fetch("http://localhost:5000/profile", {
+      fetch("https://backend-deploy-render-mxok.onrender.com/profile", {
         method: "POST",
 
         crossDomain: true,
@@ -141,7 +141,7 @@ export default function Updatemedicalinformation() {
     const fetchMedicalInformation = async () => {
       try {
         const response = await fetch(
-          `http://localhost:5000/medicalInformation/${id}`
+          `https://backend-deploy-render-mxok.onrender.com/medicalInformation/${id}`
         );
         const medicalData = await response.json();
 
@@ -217,7 +217,7 @@ export default function Updatemedicalinformation() {
   };
 
   const getAllMpersonnel = () => {
-    fetch("http://localhost:5000/allMpersonnel", {
+    fetch("https://backend-deploy-render-mxok.onrender.com/allMpersonnel", {
       method: "GET",
       headers: {
         Authorization: `Bearer ${token}`, // เพิ่ม Authorization header เพื่อส่ง token ในการร้องขอ
@@ -270,7 +270,7 @@ export default function Updatemedicalinformation() {
 
       console.log("info:", id);
       const response = await fetch(
-        `http://localhost:5000/updatemedicalinformation/${medicalInfo._id}`,
+        `https://backend-deploy-render-mxok.onrender.com/updatemedicalinformation/${medicalInfo._id}`,
         {
           method: "POST",
           body: formData,

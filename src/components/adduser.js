@@ -32,7 +32,7 @@ export default function AddUser() {
     const token = window.localStorage.getItem("token");
     setToken(token);
     if (token) {
-      fetch("http://localhost:5000/profile", {
+      fetch("https://backend-deploy-render-mxok.onrender.com/profile", {
         method: "POST",
         crossDomain: true,
         headers: {
@@ -99,7 +99,7 @@ export default function AddUser() {
     if (hasError) return; 
     // const cleanedUsername = username.replace(/-/g, '');
 
-    fetch("http://localhost:5000/adduser", {
+    fetch("https://backend-deploy-render-mxok.onrender.com/adduser", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

@@ -19,7 +19,7 @@ export default function AllEquip() {
     const token = window.localStorage.getItem("token");
     setToken(token);
     if (token) {
-      fetch("http://localhost:5000/profile", {
+      fetch("https://backend-deploy-render-mxok.onrender.com/profile", {
         method: "POST",
         crossDomain: true,
         headers: {
@@ -50,7 +50,7 @@ export default function AllEquip() {
   }, []);
 
   const getAllEquip = () => {
-    fetch("http://localhost:5000/allequip", {
+    fetch("https://backend-deploy-render-mxok.onrender.com/allequip", {
       method: "GET",
       headers: {
         Authorization: `Bearer ${token}`,
@@ -67,7 +67,7 @@ export default function AllEquip() {
     if (window.confirm(`คุณต้องการลบ ${equipment_name} หรือไม่ ?`)) {
       try {
         const response = await fetch(
-          `http://localhost:5000/deleteEquipment/${id}`,
+          `https://backend-deploy-render-mxok.onrender.com/deleteEquipment/${id}`,
           {
             method: "DELETE",
             headers: {
@@ -121,7 +121,7 @@ export default function AllEquip() {
     const searchEquipment = async () => {
       try {
         const response = await fetch(
-          `http://localhost:5000/searchequipment?keyword=${encodeURIComponent(
+          `https://backend-deploy-render-mxok.onrender.com/searchequipment?keyword=${encodeURIComponent(
             searchKeyword
           )}`,
           {

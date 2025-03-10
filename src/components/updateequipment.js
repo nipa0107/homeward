@@ -27,7 +27,7 @@ export default function UpdateEquipment() {
     const fetchData = async () => {
       try {
         const response = await fetch(
-          `http://localhost:5000/getequip/${id}`
+          `https://backend-deploy-render-mxok.onrender.com/getequip/${id}`
         );
         const data = await response.json();
         setEquipName(data.equipment_name);
@@ -40,7 +40,7 @@ export default function UpdateEquipment() {
     const token = window.localStorage.getItem("token");
     setToken(token);
     if (token) {
-      fetch("http://localhost:5000/profile", {
+      fetch("https://backend-deploy-render-mxok.onrender.com/profile", {
         method: "POST",
         crossDomain: true,
         headers: {
@@ -70,7 +70,7 @@ export default function UpdateEquipment() {
   // const checkDuplicateName = async (equipment_name) => {
   //   try {
   //     const response = await fetch(
-  //       `http://localhost:5000/check-equip-name?equipment_name=${equipment_name}`
+  //       `https://backend-deploy-render-mxok.onrender.com/check-equip-name?equipment_name=${equipment_name}`
   //     );
   //     const data = await response.json();
   //     return data.exists; // ถ้าชื่อซ้ำจะ return true
@@ -107,7 +107,7 @@ export default function UpdateEquipment() {
       };
 
       const response = await fetch(
-        `http://localhost:5000/updateequip/${id}`,
+        `https://backend-deploy-render-mxok.onrender.com/updateequip/${id}`,
         {
           method: "POST",
           headers: {

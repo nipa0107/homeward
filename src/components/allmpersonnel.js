@@ -20,7 +20,7 @@ export default function AllMpersonnel() {
     const token = window.localStorage.getItem("token");
     setToken(token);
     if (token) {
-      fetch("http://localhost:5000/profile", {
+      fetch("https://backend-deploy-render-mxok.onrender.com/profile", {
         method: "POST",
         crossDomain: true,
         headers: {
@@ -48,7 +48,7 @@ export default function AllMpersonnel() {
   }, []);
 
   const getAllMpersonnel = () => {
-    fetch("http://localhost:5000/allMpersonnel", {
+    fetch("https://backend-deploy-render-mxok.onrender.com/allMpersonnel", {
       method: "GET",
       headers: {
         Authorization: `Bearer ${token}`, // เพิ่ม Authorization header เพื่อส่ง token ในการร้องขอ
@@ -69,7 +69,7 @@ export default function AllMpersonnel() {
     if (window.confirm(`คุณต้องการลบ ${nametitle} ${name} หรือไม่ ?`)) {
       try {
         const response = await fetch(
-          `http://localhost:5000/deleteMPersonnel/${id} `,
+          `https://backend-deploy-render-mxok.onrender.com/deleteMPersonnel/${id} `,
           {
             method: "DELETE",
             headers: {
@@ -122,7 +122,7 @@ export default function AllMpersonnel() {
     const searchMPersonnel = async () => {
       try {
         const response = await fetch(
-          `http://localhost:5000/searchmpersonnel?keyword=${encodeURIComponent(
+          `https://backend-deploy-render-mxok.onrender.com/searchmpersonnel?keyword=${encodeURIComponent(
             searchKeyword
           )}`,
           {

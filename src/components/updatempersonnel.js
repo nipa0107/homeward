@@ -36,7 +36,7 @@ export default function UpdateMPersonnel() {
     const fetchData = async () => {
       try {
         const response = await fetch(
-          `http://localhost:5000/getmpersonnel/${id}`
+          `https://backend-deploy-render-mxok.onrender.com/getmpersonnel/${id}`
         );
         const data = await response.json();
         setUsername(data.username);
@@ -55,7 +55,7 @@ export default function UpdateMPersonnel() {
     const token = window.localStorage.getItem("token");
     setToken(token);
     if (token) {
-      fetch("http://localhost:5000/profile", {
+      fetch("https://backend-deploy-render-mxok.onrender.com/profile", {
         method: "POST",
         crossDomain: true,
         headers: {
@@ -125,7 +125,7 @@ export default function UpdateMPersonnel() {
         surname,
         nametitle,
       };
-      const response = await fetch(`http://localhost:5000/updatemp/${id}`, {
+      const response = await fetch(`https://backend-deploy-render-mxok.onrender.com/updatemp/${id}`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
