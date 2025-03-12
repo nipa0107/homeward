@@ -129,24 +129,24 @@
 .btn-manage-user {
   background-color: #fff;
   color: #000;
-  border: 2px solid #87CEFA;
+  border: 2px solid #039be5;
   text-align: center;
 }
 
 .btn-save-image {
-  background-color: #87CEFA;
+  background-color: #039be5;
   color: #fff;
   text-align: center;
   border: none;
 }
 
 .btn-manage-user:hover {
-  background-color: #87CEFA;
+  background-color: #0288d1;
   color: #fff;
 }
 
 .btn-save-image:hover {
-  background-color: #00BFFF;
+  background-color: #0288d1;
 }
 
 /* Responsive Design */

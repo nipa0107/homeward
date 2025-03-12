@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useRef } from "react";
 import "../css/sidebar.css";
 import "../css/alladmin.css";
-import "../css/form.css"
+import "../css/form.css";
 import "bootstrap-icons/font/bootstrap-icons.css";
 import logow from "../img/logow.png";
 import { useNavigate } from "react-router-dom";
@@ -9,7 +9,7 @@ import { useLocation } from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import Select from "react-select";
-
+import Sidebar from "./sidebar";
 export default function AddMedicalInformation() {
   const [data, setData] = useState([]);
   const location = useLocation();
@@ -25,8 +25,6 @@ export default function AddMedicalInformation() {
   const [date_DC, setDate_DC] = useState("");
   const navigate = useNavigate();
   const [adminData, setAdminData] = useState("");
-  const [isActive, setIsActive] = useState(window.innerWidth > 967);  
-  // const [error, setError] = useState("");
   const [token, setToken] = useState("");
   const [fileM, setFileM] = useState(null);
   const [fileP, setFileP] = useState(null);
@@ -41,7 +39,8 @@ export default function AddMedicalInformation() {
   const { state } = useLocation();
   const [searchTerm, setSearchTerm] = useState("");
   const [filteredPersonnel, setFilteredPersonnel] = useState([]);
-  const tokenExpiredAlertShown = useRef(false); 
+  const tokenExpiredAlertShown = useRef(false);
+  const [errors, setErrors] = useState({});
 
   useEffect(() => {
     setFilteredPersonnel(data);
@@ -75,8 +74,11 @@ export default function AddMedicalInformation() {
         .then((data) => {
           console.log(data);
           setAdminData(data.data);
-          if (data.data === "token expired" && !tokenExpiredAlertShown.current) {
-            tokenExpiredAlertShown.current = true; 
+          if (
+            data.data === "token expired" &&
+            !tokenExpiredAlertShown.current
+          ) {
+            tokenExpiredAlertShown.current = true;
             alert("Token expired login again");
             window.localStorage.clear();
             window.location.href = "./";
@@ -86,25 +88,39 @@ export default function AddMedicalInformation() {
     getAllMpersonnel();
   }, [token]);
 
+  const validateForm = () => {
+    if (!HN.trim() || !AN.trim() || !Diagnosis.trim() || !selectedPersonnel) {
+      toast.error("กรุณากรอกข้อมูลให้ครบถ้วน");
+      return false;
+    }
+    return true;
+  };
+
+  
   const handleSubmit = async (e) => {
     e.preventDefault();
-      // ตรวจสอบว่ามีการกรอกค่าหรือไม่
-  if (!HN.trim()) {
-    toast.error("กรุณากรอก HN");
-    return;
-  }
-  if (!AN.trim()) {
-    toast.error("กรุณากรอก AN");
-    return;
-  }
-  if (!Diagnosis.trim()) {
-    toast.error("กรุณากรอก Diagnosis");
-    return;
-  }
-  if (!selectedPersonnel) {
-    toast.error("กรุณาเลือกแพทย์ผู้ดูแล");
-    return;
-  }
+    // ตรวจสอบว่ามีการกรอกค่าหรือไม่
+    // if (!HN.trim() ||!AN.trim() ||!Diagnosis.trim() || !selectedPersonnel) {
+    //   toast.error("กรุณากรอกข้อมูลให้ครบถ้วน");
+    //   return;
+    // }
+
+    let newErrors = {};
+
+    if (!HN.trim()) newErrors.HN = "กรุณากรอก HN";
+    if (!AN.trim()) newErrors.AN = "กรุณากรอก AN";
+    if (!Diagnosis.trim()) newErrors.Diagnosis = "กรุณากรอก Diagnosis";
+    if (!selectedPersonnel)
+      newErrors.selectedPersonnel = "กรุณาเลือกแพทย์ผู้ดูแล";
+
+    // ถ้ามี error ให้อัปเดต state และไม่ส่งฟอร์ม
+    if (Object.keys(newErrors).length > 0) {
+      setErrors(newErrors);
+      return;
+    }
+
+    // ล้าง error เมื่อข้อมูลถูกต้อง
+    setErrors({});
 
     const formData = new FormData();
     formData.append("HN", HN);
@@ -129,13 +145,16 @@ export default function AddMedicalInformation() {
       return;
     }
 
-    fetch("https://backend-deploy-render-mxok.onrender.com/addmedicalinformation", {
-      method: "POST",
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-      body: formData, // Directly send FormData
-    })
+    fetch(
+      "https://backend-deploy-render-mxok.onrender.com/addmedicalinformation",
+      {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+        body: formData, // Directly send FormData
+      }
+    )
       .then((res) => res.json())
       .then((data) => {
         console.log(data, "Addmdinformation");
@@ -151,30 +170,6 @@ export default function AddMedicalInformation() {
         toast.error("เกิดข้อผิดพลาดขณะเพิ่มข้อมูล");
       });
   };
-
-  const logOut = () => {
-    window.localStorage.clear();
-    window.location.href = "./";
-  };
-
-  const handleToggleSidebar = () => {
-    setIsActive((prevState) => !prevState);
-  };
-  useEffect(() => {
-    const handleResize = () => {
-      if (window.innerWidth <= 992) {
-        setIsActive(false); // ซ่อน Sidebar เมื่อจอเล็ก
-      } else {
-        setIsActive(true); // แสดง Sidebar เมื่อจอใหญ่
-      }
-    };
-
-    handleResize(); // เช็กขนาดจอครั้งแรก
-    window.addEventListener("resize", handleResize);
-
-    return () => window.removeEventListener("resize", handleResize);
-  }, []);
-
 
   const getAllMpersonnel = () => {
     fetch("https://backend-deploy-render-mxok.onrender.com/allMpersonnel", {
@@ -197,12 +192,22 @@ export default function AddMedicalInformation() {
     const pdfURL1 = URL.createObjectURL(e.target.files[0]);
     setPdfURL1(pdfURL1);
   };
+  const removeFile1 = () => {
+    setFileP(null);
+    setSelectedFileName1("");
+    setPdfURL1("");
+  };
   const onInputfileChange2 = (e) => {
     console.log(e.target.files[0]);
     setFileM(e.target.files[0]);
     setSelectedFileName2(e.target.files[0].name);
     const pdfURL2 = URL.createObjectURL(e.target.files[0]);
     setPdfURL2(pdfURL2);
+  };
+  const removeFile2 = () => {
+    setFileM(null);
+    setSelectedFileName2("");
+    setPdfURL2("");
   };
   const onInputfileChange3 = (e) => {
     console.log(e.target.files[0]);
@@ -211,78 +216,15 @@ export default function AddMedicalInformation() {
     const pdfURL3 = URL.createObjectURL(e.target.files[0]);
     setPdfURL3(pdfURL3);
   };
-
+  const removeFile3 = () => {
+    setFilePhy(null);
+    setSelectedFileName3("");
+    setPdfURL3("");
+  };
   return (
     <main className="body">
       <ToastContainer />
-      <div className={`sidebar ${isActive ? "active" : ""}`}>
-        <div className="logo_content">
-          <div className="logo">
-            <div className="logo_name">
-              <img src={logow} className="logow" alt="logo"></img>
-            </div>
-          </div>
-          <i className="bi bi-list" id="btn" onClick={handleToggleSidebar}></i>
-        </div>
-        <ul className="nav-list">
-          <li>
-            <a href="home">
-              <i className="bi bi-book"></i>
-              <span className="links_name">
-                จัดการข้อมูลคู่มือการดูแลผู้ป่วย
-              </span>
-            </a>
-          </li>
-          <li>
-            <a href="alluser">
-              <i className="bi bi-person-plus"></i>
-              <span className="links_name">จัดการข้อมูลผู้ป่วย</span>
-            </a>
-          </li>
-          <li>
-            <a href="allmpersonnel">
-              <i className="bi bi-people"></i>
-              <span className="links_name">จัดการข้อมูลบุคลากร</span>
-            </a>
-          </li>
-          <li>
-            <a href="allequip">
-              <i className="bi bi-prescription2"></i>
-              <span className="links_name">จัดการอุปกรณ์ทางการแพทย์</span>
-            </a>
-          </li>
-          <li>
-            <a href="allsymptom" onClick={() => navigate("/allsymptom")}>
-              <i className="bi bi-bandaid"></i>
-              <span className="links_name">จัดการอาการผู้ป่วย</span>
-            </a>
-          </li>
-          <li>
-            <a href="/alluserinsetting">
-              <i className="bi bi-bell"></i>
-              <span className="links_name">ตั้งค่าการแจ้งเตือน</span>
-            </a>
-          </li>
-          <li>
-            <a href="alladmin" onClick={() => navigate("/alladmin")}>
-              <i className="bi bi-person-gear"></i>
-              <span className="links_name">จัดการแอดมิน</span>
-            </a>
-          </li>
-          <div className="nav-logout">
-            <li>
-              <a href="./" onClick={logOut}>
-                <i
-                  className="bi bi-box-arrow-right"
-                  id="log_out"
-                  onClick={logOut}
-                ></i>
-                <span className="links_name">ออกจากระบบ</span>
-              </a>
-            </li>
-          </div>
-        </ul>
-      </div>
+      <Sidebar />
       <div className="home_content">
         <div className="homeheader">
           <div className="header">จัดการข้อมูลผู้ป่วย</div>
@@ -333,7 +275,12 @@ export default function AddMedicalInformation() {
               <i className="bi bi-chevron-double-right"></i>
             </li>
             <li className="ellipsis">
-              <a onClick={() => navigate("/allinfo", { state: { id } })} className="info">...</a>
+              <a
+                onClick={() => navigate("/allinfo", { state: { id } })}
+                className="info"
+              >
+                ...
+              </a>
             </li>
             <li className="arrow ellipsis">
               <i className="bi bi-chevron-double-right"></i>
@@ -343,25 +290,33 @@ export default function AddMedicalInformation() {
             </li>
           </ul>
         </div>
-        
+
         <div className="adminall card mb-3">
-        <p className="title-header">เพิ่มข้อมูลการเจ็บป่วย</p>
+          <p className="title-header">เพิ่มข้อมูลการเจ็บป่วย</p>
           <form onSubmit={handleSubmit}>
             <div className="mb-2">
-              <label>HN</label>
+              <label>HN<span className="required">*</span></label>
               <input
                 type="text"
-                className="form-control"
-                onChange={(e) => setHN(e.target.value)}
+                className={`form-control ${errors.HN ? "input-error" : ""}`}
+                onChange={(e) => {
+                  setHN(e.target.value);
+                  setErrors((prev) => ({ ...prev, HN: "" }));
+                }}
               />
+              {errors.HN && <span className="error-text">{errors.HN}</span>}
             </div>
             <div className="mb-2">
-              <label>AN</label>
+              <label>AN<span className="required">*</span></label>
               <input
                 type="text"
-                className="form-control"
-                onChange={(e) => setAN(e.target.value)}
+                className={`form-control ${errors.AN ? "input-error" : ""}`}
+                onChange={(e) => {
+                  setAN(e.target.value);
+                  setErrors((prev) => ({ ...prev, AN: "" }));
+                }}
               />
+              {errors.AN && <span className="error-text">{errors.AN}</span>}
             </div>
 
             <div className="mb-2">
@@ -402,7 +357,7 @@ export default function AddMedicalInformation() {
               </select>
             </div> */}
             <div className="mb-2">
-              <label>แพทย์ผู้ดูแล</label>
+              <label>แพทย์ผู้ดูแล<span className="required">*</span></label>
               <Select
                 options={filteredPersonnel.map((personnel) => ({
                   value: personnel._id,
@@ -413,28 +368,42 @@ export default function AddMedicalInformation() {
                   setSelectedPersonnel(
                     selectedOption ? selectedOption.value : null
                   );
+                  setErrors((prev) => ({ ...prev, selectedPersonnel: "" }));
                   setSearchTerm("");
                 }}
                 placeholder="ค้นหาแพทย์..."
                 isSearchable
                 isClearable
-                className="custom-select"
+                className={`custom-select ${
+                  errors.selectedPersonnel ? "input-error" : ""
+                }`}
                 classNamePrefix="custom"
                 noOptionsMessage={() => "ไม่มีข้อมูลแพทย์"}
               />
               {filteredPersonnel.length === 0 && searchTerm && (
                 <div className="no-results">ไม่มีข้อมูลแพทย์</div>
               )}
+              {errors.selectedPersonnel && (
+                <span className="error-text">{errors.selectedPersonnel}</span>
+              )}
             </div>
 
             <div className="mb-2">
-              <label>Diagnosis</label>
+              <label>Diagnosis<span className="required">*</span></label>
               <textarea
-                className="form-control"
+                className={`form-control ${
+                  errors.Diagnosis ? "input-error" : ""
+                }`}
                 rows="2" // กำหนดจำนวนแถวเริ่มต้น
                 style={{ resize: "vertical" }} // ให้ textarea สามารถปรับขนาดได้ในทิศทางดิสพล์เมนต์
-                onChange={(e) => setDiagnosis(e.target.value)}
+                onChange={(e) => {
+                  setDiagnosis(e.target.value)
+                  setErrors((prev) => ({ ...prev, Diagnosis: "" }));
+                }}
               />
+              {errors.Diagnosis && (
+                <span className="error-text">{errors.Diagnosis}</span>
+              )}
             </div>
 
             <div className="mb-2">
@@ -449,15 +418,17 @@ export default function AddMedicalInformation() {
 
             <div className="mb-2">
               <label>Present illness</label>
-              <input
-                type="file"
-                className="form-control"
-                accept="application/pdf"
-                onChange={onInputfileChange1}
-              />
+              {!fileP && (
+                <input
+                  type="file"
+                  className="form-control"
+                  accept="application/pdf"
+                  onChange={onInputfileChange1}
+                />
+              )}
               <div className="filename ">
                 {selectedFileName1 && (
-                  <div className="mb-3 pdf">
+                  <div className="mb-2 pdf">
                     <a href={pdfURL1} target="_blank" rel="noopener noreferrer">
                       <i
                         className="bi bi-filetype-pdf"
@@ -465,10 +436,17 @@ export default function AddMedicalInformation() {
                       ></i>{" "}
                       {selectedFileName1}
                     </a>
+                    <button
+                      type="button"
+                      className="delete-button-file"
+                      onClick={removeFile1}
+                    >
+                      <i className="bi bi-x"></i>
+                    </button>
                   </div>
                 )}
               </div>
-
+             
               <textarea
                 className="form-control"
                 rows="2" // กำหนดจำนวนแถวเริ่มต้น
@@ -479,18 +457,31 @@ export default function AddMedicalInformation() {
 
             <div className="mb-2">
               <label>Management plan</label>
+              {!fileM && (
               <input
                 type="file"
                 className="form-control"
                 accept="application/pdf"
                 onChange={onInputfileChange2}
               />
+            )}
               <div className="filename ">
                 {selectedFileName2 && (
-                  <div className="mb-3 pdf">
+                  <div className="mb-2 pdf">
                     <a href={pdfURL2} target="_blank" rel="noopener noreferrer">
+                      <i
+                        className="bi bi-filetype-pdf"
+                        style={{ color: "red" }}
+                      ></i>{" "}
                       {selectedFileName2}
                     </a>
+                    <button
+                      type="button"
+                      className="delete-button-file"
+                      onClick={removeFile2}
+                    >
+                      <i className="bi bi-x"></i>
+                    </button>
                   </div>
                 )}
               </div>
@@ -504,19 +495,31 @@ export default function AddMedicalInformation() {
 
             <div className="mb-2">
               <label>Psychosocial assessment</label>
-
+              {!filePhy && (
               <input
                 type="file"
                 className="form-control"
                 accept="application/pdf"
                 onChange={onInputfileChange3}
               />
+            )}
               <div className="filename ">
                 {selectedFileName3 && (
-                  <div className="mb-3 pdf">
+                  <div className="mb-2 pdf">
                     <a href={pdfURL3} target="_blank" rel="noopener noreferrer">
+                      <i
+                        className="bi bi-filetype-pdf"
+                        style={{ color: "red" }}
+                      ></i>{" "}
                       {selectedFileName3}
                     </a>
+                    <button
+                      type="button"
+                      className="delete-button-file"
+                      onClick={removeFile3}
+                    >
+                      <i className="bi bi-x"></i>
+                    </button>
                   </div>
                 )}
               </div>

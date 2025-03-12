@@ -4,12 +4,11 @@ import "../css/sidebar.css";
 import "../css/alladmin.css";
 import "../css/form.css";
 import "bootstrap-icons/font/bootstrap-icons.css";
-import logow from "../img/logow.png";
 import { useNavigate } from "react-router-dom";
 import imgdefault from "../img/image.png";
-
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import Sidebar from "./sidebar"; 
 
 export default function UpdateCareManual() {
   const location = useLocation();
@@ -21,7 +20,6 @@ export default function UpdateCareManual() {
   const [detail, setDetail] = useState("");
   const navigate = useNavigate();
   const [adminData, setAdminData] = useState("");
-  const [isActive, setIsActive] = useState(window.innerWidth > 967);  
   const [selectedFileName, setSelectedFileName] = useState("");
   const [pdfURL, setPdfURL] = useState(null);
   const [token, setToken] = useState("");
@@ -179,10 +177,6 @@ export default function UpdateCareManual() {
 
   const UpdateCareManual = async () => {
     console.log(caremanual_name, image, file, detail);
-    // if (!caremanual_name || !image) {
-    //   toast.error("กรุณากรอกชื่อคู่มือและเลือกภาพก่อนทำการบันทึก");
-    //   return; // หยุดการดำเนินการถ้าเงื่อนไขไม่ตรง
-    // }
     let hasError = false;
     if (!caremanual_name.trim()) {
       setCaremanualNameError("กรุณากรอกชื่อคู่มือ");
@@ -200,12 +194,6 @@ export default function UpdateCareManual() {
       return;
     }
     if (hasError) return;
-
-    // const isDuplicate = await checkDuplicateName(caremanual_name);
-    // if (isDuplicate) {
-    //   toast.error("ชื่อคู่มือซ้ำในระบบ กรุณาเปลี่ยนชื่อ");
-    //   return; // หยุดการดำเนินการถ้าชื่อซ้ำ
-    // }
     try {
       const formData = new FormData();
       formData.append("caremanual_name", caremanual_name);
@@ -267,100 +255,10 @@ export default function UpdateCareManual() {
     }
   };
 
-  const logOut = () => {
-    window.localStorage.clear();
-    window.location.href = "./";
-  };
-  // bi-list
-  const handleToggleSidebar = () => {
-    setIsActive((prevState) => !prevState);
-  };
-  useEffect(() => {
-    const handleResize = () => {
-      if (window.innerWidth <= 992) {
-        setIsActive(false); // ซ่อน Sidebar เมื่อจอเล็ก
-      } else {
-        setIsActive(true); // แสดง Sidebar เมื่อจอใหญ่
-      }
-    };
-
-    handleResize(); // เช็กขนาดจอครั้งแรก
-    window.addEventListener("resize", handleResize);
-
-    return () => window.removeEventListener("resize", handleResize);
-  }, []);
   return (
     <main className="body">
       <ToastContainer />
-      <div className={`sidebar ${isActive ? "active" : ""}`}>
-        <div className="logo_content">
-          <div className="logo">
-            <div className="logo_name">
-              <img src={logow} className="logow" alt="logo"></img>
-            </div>
-          </div>
-          <i className="bi bi-list" id="btn" onClick={handleToggleSidebar}></i>
-        </div>
-        <ul className="nav-list">
-          <li>
-            <a href="home">
-              <i className="bi bi-book"></i>
-              <span className="links_name">
-                จัดการข้อมูลคู่มือการดูแลผู้ป่วย
-              </span>
-            </a>
-          </li>
-          <li>
-            <a href="alluser">
-              <i className="bi bi-person-plus"></i>
-              <span className="links_name">จัดการข้อมูลผู้ป่วย</span>
-            </a>
-          </li>
-          <li>
-            <a href="allmpersonnel">
-              <i className="bi bi-people"></i>
-              <span className="links_name">จัดการข้อมูลบุคลากร</span>
-            </a>
-          </li>
-
-          <li>
-            <a href="allequip">
-              <i className="bi bi-prescription2"></i>
-              <span className="links_name">จัดการอุปกรณ์ทางการแพทย์</span>
-            </a>
-          </li>
-          <li>
-            <a href="allsymptom">
-              <i className="bi bi-bandaid"></i>
-              <span className="links_name">จัดการอาการผู้ป่วย</span>
-            </a>
-          </li>
-          <li>
-            <a href="/alluserinsetting">
-              <i className="bi bi-bell"></i>
-              <span className="links_name">ตั้งค่าการแจ้งเตือน</span>
-            </a>
-          </li>
-          <li>
-            <a href="alladmin" onClick={() => navigate("/alladmin")}>
-              <i className="bi bi-person-gear"></i>
-              <span className="links_name">จัดการแอดมิน</span>
-            </a>
-          </li>
-          <div className="nav-logout">
-            <li>
-              <a href="./" onClick={logOut}>
-                <i
-                  className="bi bi-box-arrow-right"
-                  id="log_out"
-                  onClick={logOut}
-                ></i>
-                <span className="links_name">ออกจากระบบ</span>
-              </a>
-            </li>
-          </div>
-        </ul>
-      </div>
+      <Sidebar /> 
       <div className="home_content">
         <div className="homeheader">
           <div className="header">จัดการข้อมูลคู่มือการดูแลผู้ป่วย</div>

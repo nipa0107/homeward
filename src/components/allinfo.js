@@ -1,21 +1,17 @@
 import React, { useEffect, useState, useRef } from "react";
-import deleteimg from "../img/delete.png";
-import editimg from "../img/edit.png";
 import "../css/alladmin.css";
 import "../css/sidebar.css";
 import "../css/styles.css";
 import "../css/caregiver.css";
-import logow from "../img/logow.png";
 import { useNavigate } from "react-router-dom";
 import { useLocation } from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
+import Sidebar from "./sidebar";
 
 export default function AllUser({ }) {
   const navigate = useNavigate();
   const [data, setData] = useState([]);
   const [adminData, setAdminData] = useState("");
-  const [isActive, setIsActive] = useState(window.innerWidth > 967);  
-  const [searchKeyword, setSearchKeyword] = useState(""); //ค้นหา
   const [token, setToken] = useState("");
   const location = useLocation();
   const { id } = location.state;
@@ -336,33 +332,6 @@ export default function AllUser({ }) {
     }
   };
 
-  const handleViewPDF = () => {
-    // ทำการเรียกดูไฟล์ PDF ที่เกี่ยวข้อง
-  };
-
-  const logOut = () => {
-    window.localStorage.clear();
-    window.location.href = "./";
-  };
-  // bi-list
-  const handleToggleSidebar = () => {
-    setIsActive((prevState) => !prevState);
-  };
-  useEffect(() => {
-    const handleResize = () => {
-      if (window.innerWidth <= 992) {
-        setIsActive(false); // ซ่อน Sidebar เมื่อจอเล็ก
-      } else {
-        setIsActive(true); // แสดง Sidebar เมื่อจอใหญ่
-      }
-    };
-
-    handleResize(); // เช็กขนาดจอครั้งแรก
-    window.addEventListener("resize", handleResize);
-
-    return () => window.removeEventListener("resize", handleResize);
-  }, []);
-
   const currentDate = new Date();
   let userAge = "0 ปี 0 เดือน"; // เริ่มต้นให้แสดง "0 ปี 0 เดือน"
 
@@ -381,7 +350,7 @@ export default function AllUser({ }) {
     }
   }
 
-  console.log(userAge); // แสดงผลอายุผู้ใช้
+
 
   const handleCheckboxChange = (equipmentName) => {
     setSelectedEquipments((prevSelected) =>
@@ -570,74 +539,7 @@ export default function AllUser({ }) {
   return (
     <main className="body">
       <ToastContainer />
-      <div className={`sidebar ${isActive ? "active" : ""}`}>
-        <div className="logo_content">
-          <div className="logo">
-            <div className="logo_name">
-              <img src={logow} className="logow" alt="logo"></img>
-            </div>
-          </div>
-          <i className="bi bi-list" id="btn" onClick={handleToggleSidebar}></i>
-        </div>
-        <ul className="nav-list">
-          <li>
-            <a href="home">
-              <i className="bi bi-book"></i>
-              <span className="links_name">
-                จัดการข้อมูลคู่มือการดูแลผู้ป่วย
-              </span>
-            </a>
-          </li>
-          <li>
-            <a href="alluser">
-              <i className="bi bi-person-plus"></i>
-              <span className="links_name">จัดการข้อมูลผู้ป่วย</span>
-            </a>
-          </li>
-          <li>
-            <a href="allmpersonnel">
-              <i className="bi bi-people"></i>
-              <span className="links_name">จัดการข้อมูลบุคลากร</span>
-            </a>
-          </li>
-          <li>
-            <a href="allequip">
-              <i className="bi bi-prescription2"></i>
-              <span className="links_name">จัดการอุปกรณ์ทางการแพทย์</span>
-            </a>
-          </li>
-          <li>
-            <a href="allsymptom" onClick={() => navigate("/allsymptom")}>
-              <i className="bi bi-bandaid"></i>
-              <span className="links_name">จัดการอาการผู้ป่วย</span>
-            </a>
-          </li>
-          <li>
-            <a href="/alluserinsetting">
-              <i className="bi bi-bell"></i>
-              <span className="links_name">ตั้งค่าการแจ้งเตือน</span>
-            </a>
-          </li>
-          <li>
-            <a href="alladmin" onClick={() => navigate("/alladmin")}>
-              <i className="bi bi-person-gear"></i>
-              <span className="links_name">จัดการแอดมิน</span>
-            </a>
-          </li>
-          <div className="nav-logout">
-            <li>
-              <a href="./" onClick={logOut}>
-                <i
-                  className="bi bi-box-arrow-right"
-                  id="log_out"
-                  onClick={logOut}
-                ></i>
-                <span className="links_name">ออกจากระบบ</span>
-              </a>
-            </li>
-          </div>
-        </ul>
-      </div>
+      <Sidebar />
       <div className="home_content">
         <div className="homeheader">
           <div className="header">จัดการข้อมูลผู้ป่วย</div>

@@ -2,15 +2,16 @@ import React, { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import "../css/sidebar.css";
 import "../css/alladmin.css";
-import "../css/form.css"
+import "../css/form.css";
 import "bootstrap-icons/font/bootstrap-icons.css";
 import logow from "../img/logow.png";
+import Sidebar from "./sidebar";
 
 export default function UpdateOTP() {
   const [otp, setOtp] = useState(new Array(6).fill(""));
   const [errorMessage, setErrorMessage] = useState("");
   const [successMessage, setSuccessMessage] = useState("");
-  const [isActive, setIsActive] = useState(window.innerWidth > 967);  
+  const [isActive, setIsActive] = useState(window.innerWidth > 967);
   const navigate = useNavigate();
   const location = useLocation();
   const { username, email, oldEmail } = location.state || {};
@@ -31,7 +32,7 @@ export default function UpdateOTP() {
       const newOtp = [...otp];
       newOtp[index] = element.value;
       setOtp(newOtp);
-      setErrorMessage('');
+      setErrorMessage("");
       // เลื่อนไปยังช่องถัดไปอัตโนมัติ
       if (element.nextSibling && element.value) {
         element.nextSibling.focus();
@@ -95,28 +96,6 @@ export default function UpdateOTP() {
       });
   };
 
-  const logOut = () => {
-    window.localStorage.clear();
-    navigate("/");
-  };
-  const handleToggleSidebar = () => {
-    setIsActive((prevState) => !prevState);
-  };
-  useEffect(() => {
-    const handleResize = () => {
-      if (window.innerWidth <= 992) {
-        setIsActive(false); // ซ่อน Sidebar เมื่อจอเล็ก
-      } else {
-        setIsActive(true); // แสดง Sidebar เมื่อจอใหญ่
-      }
-    };
-
-    handleResize(); // เช็กขนาดจอครั้งแรก
-    window.addEventListener("resize", handleResize);
-
-    return () => window.removeEventListener("resize", handleResize);
-  }, []);
-
   const handleRequestNewOtp = () => {
     setIsOtpExpired(false);
     setErrorMessage("");
@@ -157,75 +136,7 @@ export default function UpdateOTP() {
 
   return (
     <main className="body">
-      <div className={`sidebar ${isActive ? "active" : ""}`}>
-        <div className="logo_content">
-          <div className="logo">
-            <div className="logo_name">
-              <img src={logow} className="logow" alt="logo"></img>
-            </div>
-          </div>
-          <i className="bi bi-list" id="btn" onClick={handleToggleSidebar}></i>
-        </div>
-        <ul className="nav-list">
-          <li>
-            <a href="home">
-              <i className="bi bi-book"></i>
-              <span className="links_name">
-                จัดการข้อมูลคู่มือการดูแลผู้ป่วย
-              </span>
-            </a>
-          </li>
-          <li>
-            <a href="alluser">
-              <i className="bi bi-person-plus"></i>
-              <span className="links_name">จัดการข้อมูลผู้ป่วย</span>
-            </a>
-          </li>
-          <li>
-            <a href="allmpersonnel">
-              <i className="bi bi-people"></i>
-              <span className="links_name">จัดการข้อมูลบุคลากร</span>
-            </a>
-          </li>
-          <li>
-            <a href="allequip">
-              <i className="bi bi-prescription2"></i>
-              <span className="links_name">จัดการอุปกรณ์ทางการแพทย์</span>
-            </a>
-          </li>
-          <li>
-            <a href="allsymptom">
-              <i className="bi bi-bandaid"></i>
-              <span className="links_name">จัดการอาการผู้ป่วย</span>
-            </a>
-          </li>
-          <li>
-            <a href="/alluserinsetting">
-              <i className="bi bi-bell"></i>
-              <span className="links_name">ตั้งค่าการแจ้งเตือน</span>
-            </a>
-          </li>
-          <li>
-            <a href="alladmin" onClick={() => navigate("/alladmin")}>
-              <i className="bi bi-person-gear"></i>
-              <span className="links_name">จัดการแอดมิน</span>
-            </a>
-          </li>
-
-          <div className="nav-logout">
-            <li>
-              <a href="./" onClick={logOut}>
-                <i
-                  className="bi bi-box-arrow-right"
-                  id="log_out"
-                  onClick={logOut}
-                ></i>
-                <span className="links_name">ออกจากระบบ</span>
-              </a>
-            </li>
-          </div>
-        </ul>
-      </div>
+      <Sidebar />
       <div className="home_content">
         <div className="homeheader">
           <div className="header">โปรไฟล์</div>
@@ -263,13 +174,17 @@ export default function UpdateOTP() {
               <i className="bi bi-chevron-double-right"></i>
             </li>
             <li className="middle">
-              <a className="info" onClick={handleBreadcrumbClick}>เปลี่ยนอีเมล</a>
+              <a className="info" onClick={handleBreadcrumbClick}>
+                เปลี่ยนอีเมล
+              </a>
             </li>
             <li className="arrow middle">
               <i className="bi bi-chevron-double-right"></i>
             </li>
             <li className="ellipsis">
-              <a className="info" onClick={handleBreadcrumbClick}>...</a>
+              <a className="info" onClick={handleBreadcrumbClick}>
+                ...
+              </a>
             </li>
             <li className="arrow ellipsis">
               <i className="bi bi-chevron-double-right"></i>
@@ -280,9 +195,8 @@ export default function UpdateOTP() {
           </ul>
         </div>
 
-        
         <div className="formcontainerpf card mb-3">
-        <p className="title-header">กรอกรหัสยืนยัน</p>
+          <p className="title-header">กรอกรหัสยืนยัน</p>
           <div className="label-container">
             <p className="label-inline">คุณจะได้รับรหัสยืนยันตัวตนที่อีเมล</p>
             <p className="email-text">{email}</p>
@@ -309,18 +223,6 @@ export default function UpdateOTP() {
               กรุณากรอก OTP ภายในเวลา {formatTime(timer)}
             </p>
           )}
-          {/* {isOtpExpired && (
-            <div className="message-container">
-              <p className="error-messageotp">{errorMessage}</p>
-              <a className="resend-link" onClick={handleRequestNewOtp}>
-                ขอ OTP ใหม่
-              </a>
-            </div>
-          )}
-<div className="message-container">
-  {errorMessage && <p className="error-messageotp">{errorMessage}</p>}
-  {successMessage && <p className="success-message">{successMessage}</p>}
-</div> */}
 
           {isOtpExpired ? (
             <div className="message-container">
@@ -351,9 +253,6 @@ export default function UpdateOTP() {
           </div>
         </div>
       </div>
-      {/* <button onClick={logOut} className="btn btn-primary">
-        Log Out
-      </button> */}
     </main>
   );
 }

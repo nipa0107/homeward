@@ -6,9 +6,9 @@ import "../css/form.css"
 import "bootstrap-icons/font/bootstrap-icons.css";
 import logow from "../img/logow.png";
 import { useNavigate } from "react-router-dom";
-
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import Sidebar from "./sidebar";
 
 export default function UpdateUser() {
   const location = useLocation();
@@ -30,7 +30,6 @@ export default function UpdateUser() {
   const [caregiverTel, setCaregiverTel] = useState("");
   const navigate = useNavigate();
   const [adminData, setAdminData] = useState("");
-  const [isActive, setIsActive] = useState(window.innerWidth > 967);  
   const [error, setError] = useState("");
   const [token, setToken] = useState("");
   const [otherGender, setOtherGender] = useState("");
@@ -217,33 +216,6 @@ export default function UpdateUser() {
     }
   };
 
-  const logOut = () => {
-    window.localStorage.clear();
-    window.location.href = "./";
-  };
-
-  const handleToggleSidebar = () => {
-    setIsActive((prevState) => !prevState);
-  };
-  useEffect(() => {
-    const handleResize = () => {
-      if (window.innerWidth <= 992) {
-        setIsActive(false); // ซ่อน Sidebar เมื่อจอเล็ก
-      } else {
-        setIsActive(true); // แสดง Sidebar เมื่อจอใหญ่
-      }
-    };
-
-    handleResize(); // เช็กขนาดจอครั้งแรก
-    window.addEventListener("resize", handleResize);
-
-    return () => window.removeEventListener("resize", handleResize);
-  }, []);
-
-  const handleBreadcrumbClick = () => {
-    navigate("/allinfo", { state: { id: id, user: user } });
-  };
-
   const handleGenderChange = (e) => {
     const value = e.target.value;
     setGender(value);
@@ -288,35 +260,6 @@ export default function UpdateUser() {
     setTel(input.replace(/\D/g, ""));
   };
 
-  const handleInputUsernameChange = (e) => {
-    let input = e.target.value;
-
-    if (/[^0-9-]/.test(input)) {
-      setUsernameError("เลขประจําตัวประชาชนต้องเป็นตัวเลขเท่านั้น");
-      return;
-    } else {
-      setUsernameError(""); // Clear error if valid
-    }
-
-    // เอาเฉพาะตัวเลขและจัดรูปแบบ
-    input = input.replace(/\D/g, ""); // เอาเฉพาะตัวเลข
-    if (input.length > 13) input = input.slice(0, 13); // จำกัดความยาวไม่เกิน 13 หลัก
-
-    const formatted = input.replace(
-      /^(\d{1})(\d{0,4})(\d{0,5})(\d{0,2})(\d{0,1})$/,
-      (match, g1, g2, g3, g4, g5) => {
-        let result = g1;
-        if (g2) result += `-${g2}`;
-        if (g3) result += `-${g3}`;
-        if (g4) result += `-${g4}`;
-        if (g5) result += `-${g5}`;
-        return result;
-      }
-    );
-
-    setIDCardNumber(formatted); // อัปเดตฟิลด์ข้อมูล
-  };
-
   const handleInputNameChange = (e) => {
     const input = e.target.value;
 
@@ -345,75 +288,7 @@ export default function UpdateUser() {
   return (
     <main className="body">
       <ToastContainer />
-      <div className={`sidebar ${isActive ? "active" : ""}`}>
-        <div className="logo_content">
-          <div className="logo">
-            <div className="logo_name">
-              <img src={logow} className="logow" alt="logo"></img>
-            </div>
-          </div>
-          <i className="bi bi-list" id="btn" onClick={handleToggleSidebar}></i>
-        </div>
-        <ul className="nav-list">
-          <li>
-            <a href="home">
-              <i className="bi bi-book"></i>
-              <span className="links_name">
-                จัดการข้อมูลคู่มือการดูแลผู้ป่วย
-              </span>
-            </a>
-          </li>
-          <li>
-            <a href="alluser">
-              <i className="bi bi-person-plus"></i>
-              <span className="links_name">จัดการข้อมูลผู้ป่วย</span>
-            </a>
-          </li>
-          <li>
-            <a href="allmpersonnel">
-              <i className="bi bi-people"></i>
-              <span className="links_name">จัดการข้อมูลบุคลากร</span>
-            </a>
-          </li>
-          <li>
-            <a href="allequip">
-              <i className="bi bi-prescription2"></i>
-              <span className="links_name">จัดการอุปกรณ์ทางการแพทย์</span>
-            </a>
-          </li>
-          <li>
-            <a href="allsymptom" onClick={() => navigate("/allsymptom")}>
-              <i className="bi bi-bandaid"></i>
-              <span className="links_name">จัดการอาการผู้ป่วย</span>
-            </a>
-          </li>
-          <li>
-            <a href="/alluserinsetting">
-              <i className="bi bi-bell"></i>
-              <span className="links_name">ตั้งค่าการแจ้งเตือน</span>
-            </a>
-          </li>
-          <li>
-            <a href="alladmin" onClick={() => navigate("/alladmin")}>
-              <i className="bi bi-person-gear"></i>
-              <span className="links_name">จัดการแอดมิน</span>
-            </a>
-          </li>
-
-          <div className="nav-logout">
-            <li>
-              <a href="./" onClick={logOut}>
-                <i
-                  className="bi bi-box-arrow-right"
-                  id="log_out"
-                  onClick={logOut}
-                ></i>
-                <span className="links_name">ออกจากระบบ</span>
-              </a>
-            </li>
-          </div>
-        </ul>
-      </div>
+      <Sidebar />
       <div className="home_content">
         <div className="homeheader">
           <div className="header">จัดการข้อมูลผู้ป่วย</div>
@@ -452,9 +327,9 @@ export default function UpdateUser() {
             <li className="arrow ellipsis">
               <i className="bi bi-chevron-double-right"></i>
             </li>
-            <li className="middle">
+            <li className="middle" >
               <a
-                onClick={() => navigate("/allinfo", { state: { id } })}
+                onClick={() => navigate("/allinfo", { state: { id } })} className="info" 
               >
                 ข้อมูลการดูแลผู้ป่วย
               </a>
@@ -474,9 +349,9 @@ export default function UpdateUser() {
           </ul>
         </div>
         
-        <div className="adminall card mb-3">
+        <div className="adminall card mb-2">
         <p className="title-header">แก้ไขข้อมูลผู้ป่วย</p>
-          <div className="mb-3">
+          <div className="mb-2">
             <label>ชื่อผู้ใช้</label>
             <input
               type="text"
@@ -487,7 +362,7 @@ export default function UpdateUser() {
             />
           </div>
 
-          <div className="mb-3">
+          <div className="mb-2">
             <label>อีเมล</label>
             <input
               type="text"
@@ -497,7 +372,7 @@ export default function UpdateUser() {
               onChange={(e) => setEmail(e.target.value)}
             />
           </div>
-          <div className="mb-3">
+          <div className="mb-2">
             <label>เลขประจําตัวประชาชน</label>
             <input
               value={formatIDCardNumber(ID_card_number)}
@@ -508,7 +383,7 @@ export default function UpdateUser() {
             />
           </div>
 
-          <div className="mb-3">
+          <div className="mb-2">
             <label>ชื่อ</label>
             <input
               value={name}
@@ -520,7 +395,7 @@ export default function UpdateUser() {
             />
             {nameError && <span className="error-text">{nameError}</span>}
           </div>
-          <div className="mb-3">
+          <div className="mb-2">
             <label>นามสกุล</label>
             <input
               type="text"
@@ -532,7 +407,7 @@ export default function UpdateUser() {
             {surnameError && <span className="error-text">{surnameError}</span>}
           </div>
 {/* 
-          <div className="mb-3">
+          <div className="mb-2">
             <label>เพศ</label>
             <div class="relationship-container">
               <div class="relationship-group">
@@ -596,7 +471,7 @@ export default function UpdateUser() {
               )}
             </div>
           </div> */}
-          <div className="mb-3">
+          <div className="mb-2">
             <label>เพศ</label>
             <input
               type="text"
@@ -606,7 +481,7 @@ export default function UpdateUser() {
               onChange={(e) => setGender(e.target.value)}
             />
           </div>
-          <div className="mb-3">
+          <div className="mb-2">
             <label>วันเกิด</label>
             <input
               value={formatDate(birthday)}
@@ -616,7 +491,7 @@ export default function UpdateUser() {
             />
           </div>
 
-          <div className="mb-3">
+          <div className="mb-2">
             <label>สัญชาติ</label>
             <input
               value={nationality}
@@ -626,7 +501,7 @@ export default function UpdateUser() {
             />
           </div>
 
-          <div className="mb-3">
+          <div className="mb-2">
             <label>ที่อยู่</label>
             <input
               value={Address}
@@ -635,7 +510,7 @@ export default function UpdateUser() {
               onChange={(e) => setAddress(e.target.value)}
             />
           </div>
-          <div className="mb-3">
+          <div className="mb-2">
             <label>เบอร์โทรศัพท์</label>
             <input
               type="text"
@@ -656,11 +531,10 @@ export default function UpdateUser() {
             >
               บันทึก
             </button>
-            <br />
           </div>
         </div>
       </div>
-      <div></div>
+      
     </main>
   );
 }

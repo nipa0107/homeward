@@ -2,15 +2,14 @@ import React, { useEffect, useState, useRef } from "react";
 import "../css/alladmin.css";
 import "../css/sidebar.css";
 import "../css/styles.css";
-import logow from "../img/logow.png";
 import { useNavigate } from "react-router-dom";
 import { useLocation } from "react-router-dom";
+import Sidebar from "./sidebar";
 
 export default function AllInfoDeleted() {
   const navigate = useNavigate();
   const [data, setData] = useState([]);
   const [adminData, setAdminData] = useState("");
-  const [isActive, setIsActive] = useState(window.innerWidth > 967);  
   const [token, setToken] = useState("");
   const location = useLocation();
   const { id } = location.state;
@@ -46,7 +45,7 @@ export default function AllInfoDeleted() {
     const token = window.localStorage.getItem("token");
     setToken(token);
     if (token) {
-      fetch("https://backend-deploy-render-mxok.onrender.com/profile", {
+      fetch("http://localhost:5000/profile", {
         method: "POST",
         crossDomain: true,
         headers: {
@@ -75,7 +74,7 @@ export default function AllInfoDeleted() {
   useEffect(() => {
     const fetchUserId = async () => {
       try {
-        const response = await fetch(`https://backend-deploy-render-mxok.onrender.com/user/${id}`);
+        const response = await fetch(`http://localhost:5000/user/${id}`);
         const userdata = await response.json();
         setData([data.data]);
         setUsername(userdata.data.username);
@@ -96,7 +95,7 @@ export default function AllInfoDeleted() {
     const fetchCaregiverData = async () => {
       try {
         const response = await fetch(
-          `https://backend-deploy-render-mxok.onrender.com/getcaregiver/${id}`
+          `http://localhost:5000/getcaregiver/${id}`
         );
         const caregiverData = await response.json();
         if (caregiverData.status === "ok") {
@@ -123,7 +122,7 @@ export default function AllInfoDeleted() {
     const fetchMedicalInformation = async () => {
       try {
         const response = await fetch(
-          `https://backend-deploy-render-mxok.onrender.com/medicalInformation/${id}`
+          `http://localhost:5000/medicalInformation/${id}`
         );
         const medicalData = await response.json();
 
@@ -143,7 +142,7 @@ export default function AllInfoDeleted() {
   useEffect(() => {
     const fetchEquipmentData = async () => {
       try {
-        const response = await fetch(`https://backend-deploy-render-mxok.onrender.com/equipment/${id}`);
+        const response = await fetch(`http://localhost:5000/equipment/${id}`);
         const equipmentData = await response.json();
         setMedicalEquipment(equipmentData);
         console.log("EquipmentUser Data:", equipmentData);
@@ -159,7 +158,7 @@ export default function AllInfoDeleted() {
       try {
         if (medicalInfo && medicalInfo.selectedPersonnel) {
           const response = await fetch(
-            `https://backend-deploy-render-mxok.onrender.com/getmpersonnel/${medicalInfo.selectedPersonnel}`
+            `http://localhost:5000/getmpersonnel/${medicalInfo.selectedPersonnel}`
           );
           const mdata = await response.json();
           setMData(mdata);
@@ -171,30 +170,6 @@ export default function AllInfoDeleted() {
     };
     fetchData();
   }, [medicalInfo]);
-
-
-  const logOut = () => {
-    window.localStorage.clear();
-    window.location.href = "./";
-  };
-  // bi-list
-  const handleToggleSidebar = () => {
-    setIsActive((prevState) => !prevState);
-  };
-  useEffect(() => {
-    const handleResize = () => {
-      if (window.innerWidth <= 992) {
-        setIsActive(false); // ซ่อน Sidebar เมื่อจอเล็ก
-      } else {
-        setIsActive(true); // แสดง Sidebar เมื่อจอใหญ่
-      }
-    };
-
-    handleResize(); // เช็กขนาดจอครั้งแรก
-    window.addEventListener("resize", handleResize);
-
-    return () => window.removeEventListener("resize", handleResize);
-  }, []);
 
   const currentDate = new Date();
   let userAge = "0 ปี 0 เดือน"; // เริ่มต้นให้แสดง "0 ปี 0 เดือน"
@@ -295,74 +270,7 @@ export default function AllInfoDeleted() {
 
   return (
     <main className="body">
-      <div className={`sidebar ${isActive ? "active" : ""}`}>
-        <div className="logo_content">
-          <div className="logo">
-            <div className="logo_name">
-              <img src={logow} className="logow" alt="logo"></img>
-            </div>
-          </div>
-          <i className="bi bi-list" id="btn" onClick={handleToggleSidebar}></i>
-        </div>
-        <ul className="nav-list">
-          <li>
-            <a href="home">
-              <i className="bi bi-book"></i>
-              <span className="links_name">
-                จัดการข้อมูลคู่มือการดูแลผู้ป่วย
-              </span>
-            </a>
-          </li>
-          <li>
-            <a href="alluser">
-              <i className="bi bi-person-plus"></i>
-              <span className="links_name">จัดการข้อมูลผู้ป่วย</span>
-            </a>
-          </li>
-          <li>
-            <a href="allmpersonnel">
-              <i className="bi bi-people"></i>
-              <span className="links_name">จัดการข้อมูลบุคลากร</span>
-            </a>
-          </li>
-          <li>
-            <a href="allequip">
-              <i className="bi bi-prescription2"></i>
-              <span className="links_name">จัดการอุปกรณ์ทางการแพทย์</span>
-            </a>
-          </li>
-          <li>
-            <a href="allsymptom" onClick={() => navigate("/allsymptom")}>
-              <i className="bi bi-bandaid"></i>
-              <span className="links_name">จัดการอาการผู้ป่วย</span>
-            </a>
-          </li>
-          <li>
-            <a href="/alluserinsetting">
-              <i className="bi bi-bell"></i>
-              <span className="links_name">ตั้งค่าการแจ้งเตือน</span>
-            </a>
-          </li>
-          <li>
-            <a href="alladmin" onClick={() => navigate("/alladmin")}>
-              <i className="bi bi-person-gear"></i>
-              <span className="links_name">จัดการแอดมิน</span>
-            </a>
-          </li>
-          <div className="nav-logout">
-            <li>
-              <a href="./" onClick={logOut}>
-                <i
-                  className="bi bi-box-arrow-right"
-                  id="log_out"
-                  onClick={logOut}
-                ></i>
-                <span className="links_name">ออกจากระบบ</span>
-              </a>
-            </li>
-          </div>
-        </ul>
-      </div>
+      <Sidebar />
       <div className="home_content">
         <div className="homeheader">
           <div className="header">จัดการข้อมูลผู้ป่วย</div>

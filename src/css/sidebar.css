@@ -93,7 +93,7 @@
     list-style-type: none;
     line-height: 50px;
     font-size: 1rem;
-    font-weight: bold;
+    /* font-weight: bold; */
 }
 
 .sidebar.active .links_name {
@@ -309,8 +309,9 @@
 }
 
 .content-toolbar-symtom {
-    width: 75%;
-    margin: 1.5rem auto;
+    width: 100%;
+    max-width: 80%;
+    margin: 1rem auto;
 }
 
 .home_content .toolbar .countadmin1 {
@@ -354,11 +355,20 @@
     gap: 1rem;
 }
 
-/* .toolbar .btn {
-    margin: 3px;
+.toolbar .btn {
+    min-width: 190px; /* กำหนดขนาดขั้นต่ำให้ปุ่ม */
+    display: flex;
+    align-items: center;
+    justify-content: center;
  }
-  */
-
+ 
+ .toolbar button {
+    flex-grow: 1; /* ให้ปุ่มขยายเท่ากัน */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    white-space: nowrap; /* ป้องกันข้อความขึ้นบรรทัดใหม่ */
+}
 .countadmin{
     text-align: right;
     margin: 0.5rem auto;
@@ -550,6 +560,11 @@ hr {
 
     .toolbar .btn {
         flex: 1; 
+    }
+    .content-toolbar-symtom {
+        width: 100%;
+        max-width: 90%;
+       
     }
  
 }

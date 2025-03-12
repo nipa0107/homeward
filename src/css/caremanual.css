@@ -104,7 +104,9 @@
 .delete-button-image:hover {
   background-color: rgba(220, 53, 69, 0.9);
 }
-
+.delete-button-file:hover{
+  background-color: rgba(220, 53, 69, 0.9);
+}
 .delete-button-file:focus {
   outline: none;
 }

@@ -60,7 +60,7 @@ export default class Reset extends Component {
         <form onSubmit={this.hanleSubmit}>
         <div className="header1">ลืมรหัสผ่าน</div>
         <div className="header2">กรุณากรอกอีเมลรับลิงก์เปลี่ยนรหัสผ่าน</div>
-          <div className="mb-3">
+          <div className="mb-2">
             {/* <label>กรอกอีเมลของคุณเพื่อเปลี่ยนรหัสผ่าน</label> */}
             <input
               type="email"

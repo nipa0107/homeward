@@ -2,14 +2,13 @@ import React, { useEffect, useState, useRef } from "react";
 import "../css/alladmin.css";
 import "../css/sidebar.css";
 import "../css/styles.css";
-import "../css/form.css"
-import logow from "../img/logow.png";
+import "../css/form.css";
 import { useNavigate } from "react-router-dom";
 import { useLocation } from "react-router-dom";
 import Select from "react-select";
-
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import Sidebar from "./sidebar";
 
 export default function Updatemedicalinformation() {
   const navigate = useNavigate();
@@ -19,7 +18,6 @@ export default function Updatemedicalinformation() {
   const location = useLocation();
   const { id, user } = location.state;
   //   const { idmd: medicalInfoId } = location.state;
-  const [isActive, setIsActive] = useState(window.innerWidth > 967);  
   const [HN, setHN] = useState("");
   const [AN, setAN] = useState("");
   const [Diagnosis, setDiagnosis] = useState("");
@@ -45,32 +43,28 @@ export default function Updatemedicalinformation() {
   const [data, setData] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [filteredPersonnel, setFilteredPersonnel] = useState([]);
-  const tokenExpiredAlertShown = useRef(false); 
+  const tokenExpiredAlertShown = useRef(false);
+  const [errors, setErrors] = useState({});
 
-    useEffect(() => {
-      setFilteredPersonnel(data);
-    }, [data]);
-  
-    const handleSearchChange = (inputValue) => {
-      setSearchTerm(inputValue);
-      const filtered = data.filter((personnel) =>
-        `${personnel.nametitle} ${personnel.name} ${personnel.surname}`
-          .toLowerCase()
-          .includes(inputValue.toLowerCase())
-      );
-      setFilteredPersonnel(filtered);
-    };
-  
+  useEffect(() => {
+    setFilteredPersonnel(data);
+  }, [data]);
+
+  const handleSearchChange = (inputValue) => {
+    setSearchTerm(inputValue);
+    const filtered = data.filter((personnel) =>
+      `${personnel.nametitle} ${personnel.name} ${personnel.surname}`
+        .toLowerCase()
+        .includes(inputValue.toLowerCase())
+    );
+    setFilteredPersonnel(filtered);
+  };
 
   const initialSelectedPersonnel = medicalInfo
     ? medicalInfo.selectedPersonnel
     : "";
 
-  const [selectedPersonnel, setSelectedPersonnel] = useState(
-    ""
-  );
-
-
+  const [selectedPersonnel, setSelectedPersonnel] = useState("");
 
   const handleFileChangeP = (e) => {
     setFileP(e.target.files[0]); // อัปเดต state ของไฟล์ Present illness
@@ -92,7 +86,23 @@ export default function Updatemedicalinformation() {
     const pdfURLPhy = URL.createObjectURL(e.target.files[0]);
     setPdfURLPhy(pdfURLPhy);
   };
+  const handleRemoveFileP = () => {
+    setFileP(null);
+    setPdfURLP(null);
+    setSelectedFileNameP(""); // ลบชื่อไฟล์ที่แสดง
+  };
 
+  const handleRemoveFileM = () => {
+    setFileM(null);
+    setPdfURLM(null);
+    setSelectedFileNameM("");
+  };
+
+  const handleRemoveFilePhy = () => {
+    setFilePhy(null);
+    setPdfURLPhy(null);
+    setSelectedFileNamePhy("");
+  };
 
   const formatDate = (date) => {
     if (!date) {
@@ -126,8 +136,11 @@ export default function Updatemedicalinformation() {
         .then((data) => {
           console.log(data);
           setAdminData(data.data);
-          if (data.data === "token expired" && !tokenExpiredAlertShown.current) {
-            tokenExpiredAlertShown.current = true; 
+          if (
+            data.data === "token expired" &&
+            !tokenExpiredAlertShown.current
+          ) {
+            tokenExpiredAlertShown.current = true;
             alert("Token expired login again");
             window.localStorage.clear();
             window.location.href = "./";
@@ -156,7 +169,7 @@ export default function Updatemedicalinformation() {
           setPhychosocial_assessment(medicalData.data.Phychosocial_assessment);
           setManagement_plan(medicalData.data.Management_plan);
           setDate_Admit(formatDate(medicalData.data.Date_Admit));
-          setSelectedPersonnel(medicalData.data.selectedPersonnel   || "");
+          setSelectedPersonnel(medicalData.data.selectedPersonnel || "");
           setDate_DC(formatDate(medicalData.data.Date_DC));
           setFileP(medicalData.data.fileP);
           setFileM(medicalData.data.fileM);
@@ -175,7 +188,6 @@ export default function Updatemedicalinformation() {
           // const filePathPhy = medicalData.data.filePhy.replace(/\\/g, "/");
           // const fileNamePhy = filePathPhy.split("/").pop();
           // setFilePhy(fileNamePhy);
-
         } else {
           console.error("Medical information not found for this user");
         }
@@ -185,36 +197,6 @@ export default function Updatemedicalinformation() {
     };
     fetchMedicalInformation();
   }, [id]);
-
-
-
-
-  const logOut = () => {
-    window.localStorage.clear();
-    window.location.href = "./";
-  };
-  // bi-list
-  const handleToggleSidebar = () => {
-    setIsActive((prevState) => !prevState);
-  };
-  useEffect(() => {
-    const handleResize = () => {
-      if (window.innerWidth <= 992) {
-        setIsActive(false); // ซ่อน Sidebar เมื่อจอเล็ก
-      } else {
-        setIsActive(true); // แสดง Sidebar เมื่อจอใหญ่
-      }
-    };
-
-    handleResize(); // เช็กขนาดจอครั้งแรก
-    window.addEventListener("resize", handleResize);
-
-    return () => window.removeEventListener("resize", handleResize);
-  }, []);
-
-  const handleBreadcrumbClick = () => {
-    navigate("/allinfo", { state: { id: id, user: user } });
-  };
 
   const getAllMpersonnel = () => {
     fetch("https://backend-deploy-render-mxok.onrender.com/allMpersonnel", {
@@ -231,18 +213,39 @@ export default function Updatemedicalinformation() {
       });
   };
 
-  const UpdateMedical = async () => {
-    console.log(HN, AN,);
-    // const selectedPersonnelValue =
-    //   document.getElementById("selectedPersonnel").value;
+  const UpdateMedical = async (e) => {
+    e.preventDefault();
 
+    // if (!HN.trim() ||!AN.trim() ||!Diagnosis.trim() || !selectedPersonnel) {
+    //   toast.error("กรุณากรอกข้อมูลให้ครบถ้วน");
+    //   return;
+    // }
+
+    let newErrors = {};
+
+    if (!HN.trim()) newErrors.HN = "กรุณากรอก HN";
+    if (!AN.trim()) newErrors.AN = "กรุณากรอก AN";
+    if (!Diagnosis.trim()) newErrors.Diagnosis = "กรุณากรอก Diagnosis";
+    if (!selectedPersonnel)
+      newErrors.selectedPersonnel = "กรุณาเลือกแพทย์ผู้ดูแล";
+
+    // ถ้ามี error ให้อัปเดต state และไม่ส่งฟอร์ม
+    if (Object.keys(newErrors).length > 0) {
+      setErrors(newErrors);
+      return;
+    }
+
+    // ล้าง error เมื่อข้อมูลถูกต้อง
+    setErrors({});
     try {
       if (!medicalInfo) {
         console.error("ไม่พบข้อมูลการแพทย์");
         return;
       }
 
-      const updatedSelectedPersonnel = selectedPersonnel ? selectedPersonnel : medicalInfo.selectedPersonnel;
+      const updatedSelectedPersonnel = selectedPersonnel
+        ? selectedPersonnel
+        : medicalInfo.selectedPersonnel;
 
       const formData = new FormData();
       formData.append("HN", HN);
@@ -258,14 +261,20 @@ export default function Updatemedicalinformation() {
 
       if (fileP) {
         formData.append("fileP", fileP);
+      } else {
+        formData.append("deleteFileP", "true");
       }
 
       if (fileM) {
         formData.append("fileM", fileM);
+      }else {
+        formData.append("deleteFileM", "true");
       }
 
       if (filePhy) {
         formData.append("filePhy", filePhy);
+      }else {
+        formData.append("deleteFilePhy", "true");
       }
 
       console.log("info:", id);
@@ -301,74 +310,7 @@ export default function Updatemedicalinformation() {
   return (
     <main className="body">
       <ToastContainer />
-
-      <div className={`sidebar ${isActive ? "active" : ""}`}>
-        <div className="logo_content">
-          <div className="logo">
-            <div className="logo_name">
-              <img src={logow} className="logow" alt="logo"></img>
-            </div>
-          </div>
-          <i className="bi bi-list" id="btn" onClick={handleToggleSidebar}></i>
-        </div>
-        <ul className="nav-list">
-          <li>
-            <a href="home">
-              <i className="bi bi-book"></i>
-              <span className="links_name">จัดการข้อมูลคู่มือการดูแลผู้ป่วย</span>
-            </a>
-          </li>
-          <li>
-            <a href="alluser">
-              <i className="bi bi-person-plus"></i>
-              <span className="links_name">จัดการข้อมูลผู้ป่วย</span>
-            </a>
-          </li>
-          <li>
-            <a href="allmpersonnel">
-              <i className="bi bi-people"></i>
-              <span className="links_name">จัดการข้อมูลบุคลากร</span>
-            </a>
-          </li>
-          <li>
-            <a href="allequip">
-              <i className="bi bi-prescription2"></i>
-              <span className="links_name">จัดการอุปกรณ์ทางการแพทย์</span>
-            </a>
-          </li>
-          <li>
-            <a href="allsymptom" onClick={() => navigate("/allsymptom")}>
-              <i className="bi bi-bandaid"></i>
-              <span className="links_name" >จัดการอาการผู้ป่วย</span>
-            </a>
-          </li>
-          <li>
-            <a href="/alluserinsetting" >
-              <i className="bi bi-bell"></i>
-              <span className="links_name" >ตั้งค่าการแจ้งเตือน</span>
-            </a>
-          </li>
-          <li>
-            <a href="alladmin" onClick={() => navigate("/alladmin")}>
-              <i className="bi bi-person-gear"></i>
-              <span className="links_name">จัดการแอดมิน</span>
-            </a>
-          </li>
-
-          <div className="nav-logout">
-            <li>
-              <a href="./" onClick={logOut}>
-                <i
-                  className="bi bi-box-arrow-right"
-                  id="log_out"
-                  onClick={logOut}
-                ></i>
-                <span className="links_name">ออกจากระบบ</span>
-              </a>
-            </li>
-          </div>
-        </ul>
-      </div>
+      <Sidebar />
       <div className="home_content">
         <div className="homeheader">
           <div className="header">จัดการข้อมูลผู้ป่วย</div>
@@ -377,7 +319,9 @@ export default function Updatemedicalinformation() {
               <li>
                 <a href="profile">
                   <i className="bi bi-person"></i>
-                  <span className="links_name">{adminData && adminData.username}</span>
+                  <span className="links_name">
+                    {adminData && adminData.username}
+                  </span>
                 </a>
               </li>
             </ul>
@@ -407,7 +351,8 @@ export default function Updatemedicalinformation() {
               <i className="bi bi-chevron-double-right"></i>
             </li>
             <li className="middle">
-              <a className="info"
+              <a
+                className="info"
                 onClick={() => navigate("/allinfo", { state: { id } })}
               >
                 ข้อมูลการดูแลผู้ป่วย
@@ -417,7 +362,12 @@ export default function Updatemedicalinformation() {
               <i className="bi bi-chevron-double-right"></i>
             </li>
             <li className="ellipsis">
-              <a onClick={() => navigate("/allinfo", { state: { id } })} className="info">...</a>
+              <a
+                onClick={() => navigate("/allinfo", { state: { id } })}
+                className="info"
+              >
+                ...
+              </a>
             </li>
             <li className="arrow ellipsis">
               <i className="bi bi-chevron-double-right"></i>
@@ -427,27 +377,35 @@ export default function Updatemedicalinformation() {
             </li>
           </ul>
         </div>
-       
+
         {medicalInfo && (
           <div className="adminall card mb-3">
-             <p className="title-header">แก้ไขข้อมูลการเจ็บป่วย</p>
-            <div className="mb-3">
+            <p className="title-header">แก้ไขข้อมูลการเจ็บป่วย</p>
+            <div className="mb-2">
               <label>HN</label>
               <input
                 type="text"
-                className="form-control"
+                className={`form-control ${errors.HN ? "input-error" : ""}`}
                 value={HN}
-                onChange={(e) => setHN(e.target.value)}
+                onChange={(e) => {
+                  setHN(e.target.value);
+                  setErrors((prev) => ({ ...prev, HN: "" }));
+                }}
               />
+              {errors.HN && <span className="error-text">{errors.HN}</span>}
             </div>
-            <div className="mb-3">
+            <div className="mb-2">
               <label>AN</label>
               <input
                 type="text"
                 value={AN}
-                className="form-control"
-                onChange={(e) => setAN(e.target.value)}
+                className={`form-control ${errors.AN ? "input-error" : ""}`}
+                onChange={(e) => {
+                  setAN(e.target.value);
+                  setErrors((prev) => ({ ...prev, AN: "" }));
+                }}
               />
+              {errors.AN && <span className="error-text">{errors.AN}</span>}
             </div>
 
             <div className="mb-2">
@@ -488,10 +446,9 @@ export default function Updatemedicalinformation() {
                 )}
               </select>
             </div> */}
-              <div className="mb-2">
+            <div className="mb-2">
               <label>แพทย์ผู้ดูแล</label>
               <Select
-  
                 options={filteredPersonnel.map((personnel) => ({
                   value: personnel._id,
                   label: `${personnel.nametitle} ${personnel.name} ${personnel.surname}`,
@@ -500,7 +457,19 @@ export default function Updatemedicalinformation() {
                   selectedPersonnel
                     ? {
                         value: selectedPersonnel,
-                        label: `${filteredPersonnel.find((personnel) => personnel._id === selectedPersonnel)?.nametitle} ${filteredPersonnel.find((personnel) => personnel._id === selectedPersonnel)?.name} ${filteredPersonnel.find((personnel) => personnel._id === selectedPersonnel)?.surname}`,
+                        label: `${
+                          filteredPersonnel.find(
+                            (personnel) => personnel._id === selectedPersonnel
+                          )?.nametitle
+                        } ${
+                          filteredPersonnel.find(
+                            (personnel) => personnel._id === selectedPersonnel
+                          )?.name
+                        } ${
+                          filteredPersonnel.find(
+                            (personnel) => personnel._id === selectedPersonnel
+                          )?.surname
+                        }`,
                       }
                     : null
                 }
@@ -509,29 +478,40 @@ export default function Updatemedicalinformation() {
                   setSelectedPersonnel(
                     selectedOption ? selectedOption.value : null
                   );
+                  setErrors((prev) => ({ ...prev, selectedPersonnel: "" }));
                   setSearchTerm("");
                 }}
                 placeholder="ค้นหาแพทย์..."
                 isSearchable
                 isClearable
-                className="custom-select"
+                className={`custom-select ${
+                  errors.selectedPersonnel ? "input-error" : ""
+                }`}
                 classNamePrefix="custom"
                 noOptionsMessage={() => "ไม่มีข้อมูลแพทย์"}
               />
               {filteredPersonnel.length === 0 && searchTerm && (
                 <div className="no-results">ไม่มีข้อมูลแพทย์</div>
               )}
+              {errors.selectedPersonnel && (
+                <span className="error-text">{errors.selectedPersonnel}</span>
+              )}
             </div>
 
             <div className="mb-2">
               <label>Diagnosis</label>
               <textarea
-                className="form-control"
+                className={`form-control ${
+                  errors.Diagnosis ? "input-error" : ""
+                }`}
                 value={Diagnosis}
                 rows="2" // กำหนดจำนวนแถวเริ่มต้น
                 style={{ resize: "vertical" }} // ให้ textarea สามารถปรับขนาดได้ในทิศทางดิสพล์เมนต์
                 onChange={(e) => setDiagnosis(e.target.value)}
               />
+              {errors.Diagnosis && (
+                <span className="error-text">{errors.Diagnosis}</span>
+              )}
             </div>
             <div className="mb-2">
               <label>Chief complaint</label>
@@ -545,32 +525,52 @@ export default function Updatemedicalinformation() {
             </div>
             <div className="mb-2">
               <label>Present illness</label>
+              {!pdfURLP && !fileP && (
               <input
                 type="file"
                 className="form-control"
                 accept="application/pdf"
                 onChange={handleFileChangeP}
               />
+              )}
               <div className="filename">
                 {pdfURLP ? (
-                  <a href={pdfURLP} target="_blank" rel="noopener noreferrer">
-                    {selectedFileNameP}
-                  </a>
+                  <div className="mb-2 pdf">
+                    <a href={pdfURLP} target="_blank" rel="noopener noreferrer">
+                      <i
+                        className="bi bi-filetype-pdf"
+                        style={{ color: "red" }}
+                      ></i>{" "}
+                      {selectedFileNameP}
+                    </a>
+                    <button
+                      onClick={handleRemoveFileP}
+                      className="delete-button-file"
+                    >
+                      <i className="bi bi-x"></i>
+                    </button>
+                  </div>
                 ) : (
                   fileP && (
-                    <a
-                      onClick={() => {
-                        window.open(
-                          `${fileP}`,
-                          "_blank"
-                        );
-                      }}
-                    >
-                      {filePName}
-                    </a>
+                    <div className="mb-2 pdf">
+                      <a onClick={() => window.open(`${fileP}`, "_blank")}>
+                        <i
+                          className="bi bi-filetype-pdf"
+                          style={{ color: "red" }}
+                        ></i>{" "}
+                        {filePName}
+                      </a>
+                      <button
+                        onClick={handleRemoveFileP}
+                        className="delete-button-file"
+                      >
+                      <i className="bi bi-x"></i>
+                      </button>
+                    </div>
                   )
                 )}
               </div>
+
               <textarea
                 className="form-control"
                 value={Present_illness} // Set the value attribute
@@ -578,34 +578,56 @@ export default function Updatemedicalinformation() {
                 style={{ resize: "vertical" }}
                 onChange={(e) => setPresent_illness(e.target.value)}
               />
-
             </div>
 
             <div className="mb-2">
               <label>Management plan</label>
+              {!pdfURLM && !fileM && (
               <input
                 type="file"
                 className="form-control"
                 accept="application/pdf"
                 onChange={handleFileChangeM}
               />
+              )}
               <div className="filename">
                 {pdfURLM ? (
-                  <a href={pdfURLM} target="_blank" rel="noopener noreferrer">
-                    {selectedFileNameM}
-                  </a>
+                  <div className="mb-2 pdf">
+                    <a href={pdfURLM} target="_blank" rel="noopener noreferrer">
+                      <i
+                        className="bi bi-filetype-pdf"
+                        style={{ color: "red" }}
+                      ></i>{" "}
+                      {selectedFileNameM}
+                    </a>
+                    <button
+                        onClick={handleRemoveFileM}
+                        className="delete-button-file"
+                      >
+                      <i className="bi bi-x"></i>
+                      </button>
+                  </div>
                 ) : (
                   fileM && (
-                    <a
-                      onClick={() => {
-                        window.open(
-                          `${fileM}`,
-                          "_blank"
-                        );
-                      }}
-                    >
-                      {fileMName}
-                    </a>
+                    <div className="mb-2 pdf">
+                      <a
+                        onClick={() => {
+                          window.open(`${fileM}`, "_blank");
+                        }}
+                      >
+                        <i
+                          className="bi bi-filetype-pdf"
+                          style={{ color: "red" }}
+                        ></i>{" "}
+                        {fileMName}
+                      </a>
+                      <button
+                        onClick={handleRemoveFileM}
+                        className="delete-button-file"
+                      >
+                      <i className="bi bi-x"></i>
+                      </button>
+                    </div>
                   )
                 )}
               </div>
@@ -620,31 +642,56 @@ export default function Updatemedicalinformation() {
 
             <div className="mb-2">
               <label>Psychosocial assessment</label>
-
+              {!pdfURLPhy && !filePhy && (
               <input
                 type="file"
                 className="form-control"
                 accept="application/pdf"
                 onChange={handleFileChangePhy}
               />
-
+            )}
               <div className="filename">
                 {pdfURLPhy ? (
-                  <a href={pdfURLPhy} target="_blank" rel="noopener noreferrer">
-                    {selectedFileNamePhy}
-                  </a>
+                  <div className="mb-2 pdf">
+                    <a
+                      href={pdfURLPhy}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      <i
+                        className="bi bi-filetype-pdf"
+                        style={{ color: "red" }}
+                      ></i>{" "}
+                      {selectedFileNamePhy}
+                    </a>
+                    <button
+                        onClick={handleRemoveFilePhy}
+                        className="delete-button-file"
+                      >
+                      <i className="bi bi-x"></i>
+                      </button>
+                  </div>
                 ) : (
                   filePhy && (
-                    <a
-                      onClick={() => {
-                        window.open(
-                          `${filePhy}`,
-                          "_blank"
-                        );
-                      }}
-                    >
-                      {filePhyName}
-                    </a>
+                    <div className="mb-2 pdf">
+                      <a
+                        onClick={() => {
+                          window.open(`${filePhy}`, "_blank");
+                        }}
+                      >
+                        <i
+                          className="bi bi-filetype-pdf"
+                          style={{ color: "red" }}
+                        ></i>{" "}
+                        {filePhyName}
+                      </a>
+                      <button
+                        onClick={handleRemoveFilePhy}
+                        className="delete-button-file"
+                      >
+                      <i className="bi bi-x"></i>
+                      </button>
+                    </div>
                   )
                 )}
               </div>

@@ -29,20 +29,23 @@
     padding: 5px 8px;
   } */
 .recover {
-  background-color: #42bd41; /* สีพื้นฐานของปุ่ม */
+  /* background-color: #42bd41;  */
+  background-color: #f0ad4e;
   color: white; /* สีข้อความ */
-  border: none;
+  /* border: none; */
   border-radius: 5px;
   padding: 10px 20px;
   cursor: pointer;
   transition: background-color 0.3s ease, color 0.3s ease; /* ให้มีการเปลี่ยนแปลงค่อยๆ */
 }
 
+/* .recover:hover {
+  background-color: #28a745; 
+  color: white;
+} */
 .recover:hover {
-  background-color: #28a745; /* สีพื้นหลังเมื่อ hover */
-  color: white; /* สีข้อความเมื่อ hover */
+  background-color: #ec971f; 
 }
-
   .save{
     border-radius: 5px;
     width: 2.5rem;
