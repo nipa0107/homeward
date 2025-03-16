@@ -282,7 +282,7 @@ export default function UpdateEquipUser() {
               <button type="submit" className="btn btn-outline py-2">
                 บันทึก
               </button>
-              <br />
+             
             </div>
           </form>
         </div>

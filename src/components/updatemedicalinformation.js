@@ -708,7 +708,7 @@ export default function Updatemedicalinformation() {
               <button onClick={UpdateMedical} className="btn btn-outline py-2">
                 บันทึก
               </button>
-              <br />
+              
             </div>
           </div>
         )}

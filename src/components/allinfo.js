@@ -48,7 +48,7 @@ export default function AllUser({ }) {
     tel: "",
     Relationship: "",
   });
-
+  
   const formatIDCardNumber = (id) => {
     if (!id) return "";
     return id.replace(/(\d{1})(\d{4})(\d{5})(\d{2})(\d{1})/, "$1-$2-$3-$4-$5");
@@ -69,11 +69,6 @@ export default function AllUser({ }) {
       tel: caregiver.tel || "",
       Relationship: caregiver.Relationship || "",
     });
-  };
-
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
   useEffect(() => {

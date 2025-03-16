@@ -223,7 +223,6 @@ export default function UpdateName() {
               className="btn btn-outline py-2">
               บันทึก
             </button>
-            <br />
           </div>
         </div>
        

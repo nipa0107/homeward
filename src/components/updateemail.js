@@ -138,8 +138,7 @@ export default function UpdateEmail() {
               <button type="submit" className="btn">
                 ส่ง OTP
               </button>
-              <br />
-            </div>
+             </div>
           </form>
         </div>
       </div>

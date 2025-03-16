@@ -50,6 +50,7 @@ import Recover from "./components/recover";
 import UpdateCaregiver from "./components/updatecaregiver";
 import AddCaregiver from "./components/addcaregiver";
 import AllInfoDeleted from "./components/allinfo-deleted";
+import ScrollToTop from "../src/components/ScrollToTop";
 
 const PrivateRoute = ({ element, isLoggedIn }) => {
   return isLoggedIn === "true" ? (
@@ -63,6 +64,7 @@ function App() {
   const isLoggedIn = window.localStorage.getItem("loggedIn");
   return (
     <Router>
+      <ScrollToTop /> 
       <div className="App">
         <Routes>
           <Route
