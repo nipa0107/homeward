@@ -40,7 +40,7 @@ export default function AllUser({ }) {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedCaregiver, setSelectedCaregiver] = useState(null);
-  const tokenExpiredAlertShown = useRef(false); 
+  const tokenExpiredAlertShown = useRef(false);
   const [formData, setFormData] = useState({
     user: "",
     name: "",
@@ -48,7 +48,7 @@ export default function AllUser({ }) {
     tel: "",
     Relationship: "",
   });
-  
+
   const formatIDCardNumber = (id) => {
     if (!id) return "";
     return id.replace(/(\d{1})(\d{4})(\d{5})(\d{2})(\d{1})/, "$1-$2-$3-$4-$5");
@@ -92,7 +92,7 @@ export default function AllUser({ }) {
           console.log(data);
           setAdminData(data.data);
           if (data.data === "token expired" && !tokenExpiredAlertShown.current) {
-            tokenExpiredAlertShown.current = true; 
+            tokenExpiredAlertShown.current = true;
             alert("Token expired login again");
             window.localStorage.clear();
             window.location.href = "./";
@@ -235,37 +235,37 @@ export default function AllUser({ }) {
     }
 
     // if (window.confirm(`คุณต้องการลบ ${username} หรือไม่ ?`)) {
-      try {
-        const response = await fetch(`https://backend-deploy-render-mxok.onrender.com/deleteUser/${id}`, {
-          method: "DELETE",
-          headers: {
-            "Content-Type": "application/json",
-            Accept: "application/json",
-            Authorization: `Bearer ${token}`, // ใช้ token ของ Admin
-          },
-          body: JSON.stringify({
-            adminPassword,
-            adminId: adminData._id, // ส่ง ID ของ Admin ที่เข้าสู่ระบบ
-          }),
-        });
+    try {
+      const response = await fetch(`https://backend-deploy-render-mxok.onrender.com/deleteUser/${id}`, {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "application/json",
+          Authorization: `Bearer ${token}`, // ใช้ token ของ Admin
+        },
+        body: JSON.stringify({
+          adminPassword,
+          adminId: adminData._id, // ส่ง ID ของ Admin ที่เข้าสู่ระบบ
+        }),
+      });
 
-        const data = await response.json();
+      const data = await response.json();
 
-        if (response.ok) {
-          // alert(data.data);
-          toast.success("ลบข้อมูลผู้ป่วยสำเร็จ");
-          setTimeout(() => {
-            navigate("/alluser");
-          }, 1050);
-        } else {
-          // setError(data.error);
+      if (response.ok) {
+        // alert(data.data);
+        toast.success("ลบข้อมูลผู้ป่วยสำเร็จ");
+        setTimeout(() => {
+          navigate("/alluser");
+        }, 1050);
+      } else {
+        // setError(data.error);
 
-          alert(data.data);
-          console.error("Error during deletion:", data.data);
-        }
-      } catch (error) {
-        console.error("Error during fetch:", error);
+        alert(data.data);
+        console.error("Error during deletion:", data.data);
       }
+    } catch (error) {
+      console.error("Error during fetch:", error);
+    }
     // }
   };
 
@@ -661,7 +661,7 @@ export default function AllUser({ }) {
                             <div className="col-sm-4 " style={{ color: "#444" }}><p><span>เบอร์โทรศัพท์ :</span></p></div>
                             <div className="col-sm-8 d-flex justify-content-between align-items-center fw-bold text-dark">
                               <p><span>{caregiver.tel || "-"}</span></p>
-                              <button className="button-edit ms-auto p-1" onClick={() => handleEdit(caregiver)}>
+                              {/* <button className="button-edit ms-auto p-1" onClick={() => handleEdit(caregiver)}>
                                 <i className="bi bi-pencil-square"></i> แก้ไข
                               </button>
                               <button
@@ -669,6 +669,14 @@ export default function AllUser({ }) {
                                 onClick={() => handleDelete(caregiver._id, id)}
                               >
                                 <i className="bi bi-trash"></i>  ลบ
+                              </button> */}
+                            </div>
+                            <div className="mt-3 mb-3 d-flex justify-content-center">
+                              <button className="button-edit p-1" onClick={() => handleEdit(caregiver)}>
+                                <i className="bi bi-pencil-square"></i> แก้ไข
+                              </button>
+                              <button className="button-delete ms-2 p-1" onClick={() => handleDelete(caregiver._id, id)}>
+                                <i className="bi bi-trash"></i> ลบ
                               </button>
                             </div>
                           </div>
@@ -822,74 +830,6 @@ export default function AllUser({ }) {
                           ? `${mdata.nametitle || ""} ${mdata.name || ""} ${mdata.surname || ""}`.trim()
                           : "-",
                       },
-                      { label: "Chief complaint", value: medicalInfo.Chief_complaint || "-" },
-                      { label: "Present illness", value: medicalInfo.Present_illness || "-" },
-                      {
-                        label: (
-                          <>
-                            <i class="bi bi-file-earmark-pdf"></i> File Present illness
-                          </>
-                        ),
-                        value: medicalInfo.fileP ? (
-                          <a
-                            className="blue-500"
-                            href=""
-                            onClick={() => {
-                              // const filePath = medicalInfo.fileP.replace(/\\/g, "/");
-                              // const fileName = filePath.split("/").pop();
-                              // console.log("fileName:", fileName);
-                              window.open(`${medicalInfo.fileP}`, "_blank");
-                            }}
-                          >
-                            {medicalInfo.filePName}
-                          </a>
-                        ) : "-",
-                      },
-
-                      { label: "Management plan", value: medicalInfo.Management_plan || "-" },
-                      {
-                        label: (
-                          <>
-                            <i class="bi bi-file-earmark-pdf"></i> File Management plan
-                          </>
-                        ),
-                        value: medicalInfo.fileM ? (
-                          <a
-                            className="blue-500"
-                            href=""
-                            onClick={() => {
-                              // const filePath = medicalInfo.fileM.replace(/\\/g, "/");
-                              // const fileName = filePath.split("/").pop();
-                              // console.log("fileName:", fileName);
-                              window.open(`${medicalInfo.fileM}`, "_blank");
-                            }}
-                          >
-                            {medicalInfo.fileMName}
-                          </a>
-                        ) : "-",
-                      },
-                      { label: "Phychosocial assessment", value: medicalInfo.Phychosocial_assessment || "-" },
-                      {
-                        label: (
-                          <>
-                            <i class="bi bi-file-earmark-pdf"></i> File Phychosocial assessment
-                          </>
-                        ),
-                        value: medicalInfo.filePhy ? (
-                          <a
-                            className="blue-500"
-                            href=""
-                            onClick={() => {
-                              // const filePath = medicalInfo.filePhy.replace(/\\/g, "/");
-                              // const fileName = filePath.split("/").pop();
-                              // console.log("fileName:", fileName);
-                              window.open(`${medicalInfo.filePhy}`, "_blank");
-                            }}
-                          >
-                            {medicalInfo.filePhyName}
-                          </a>
-                        ) : "-",
-                      },
                     ].map((item, index) => (
                       <React.Fragment key={index}>
                         <div className="col-sm-5" style={{ color: "#444" }}>
@@ -903,6 +843,93 @@ export default function AllUser({ }) {
                     ))}
                   </div>
                 </div>
+
+                <div className="medical-info-section">
+                  <div className="row">
+                    {[
+                      { label: "Chief complaint", value: medicalInfo.Chief_complaint || "-" },
+                      { label: "Present illness", value: medicalInfo.Present_illness || "-" },
+                      {
+                        label: (
+                          <>
+                            <i className="bi bi-file-earmark-pdf"></i> File Present illness
+                          </>
+                        ),
+                        value: medicalInfo.fileP ? (
+                          <a
+                            className="blue-500"
+                            href=""
+                            onClick={() => {
+                              window.open(`${medicalInfo.fileP}`, "_blank");
+                            }}
+                          >
+                            <b>{medicalInfo.filePName}</b>
+                          </a>
+                        ) : "-",
+                        isFile: true,
+                      },
+                      { label: "Management plan", value: medicalInfo.Management_plan || "-" },
+                      {
+                        label: (
+                          <>
+                            <i className="bi bi-file-earmark-pdf"></i> File Management plan
+                          </>
+                        ),
+                        value: medicalInfo.fileM ? (
+                          <a
+                            className="blue-500"
+                            href=""
+                            onClick={() => {
+                              window.open(`${medicalInfo.fileM}`, "_blank");
+                            }}
+                          >
+                            <b>{medicalInfo.fileMName}</b>
+                          </a>
+                        ) : "-",
+                        isFile: true,
+                      },
+                      { label: "Phychosocial assessment", value: medicalInfo.Phychosocial_assessment || "-" },
+                      {
+                        label: (
+                          <>
+                            <i className="bi bi-file-earmark-pdf"></i> File Phychosocial assessment
+                          </>
+                        ),
+                        value: medicalInfo.filePhy ? (
+                          <a
+                            className="blue-500"
+                            href=""
+                            onClick={() => {
+                              window.open(`${medicalInfo.filePhy}`, "_blank");
+                            }}
+                          >
+                            <b>{medicalInfo.fileMName}</b>
+                          </a>
+                        ) : "-",
+                        isFile: true,
+                      },
+                    ].map((item, index) => {
+                      const isLongText = typeof item.value === "string" && item.value.length > 50;
+                      return (
+                        <React.Fragment key={index}>
+                          <div className={`col-sm-5 ${item.isFile ? "file-label" : ""}`} style={{ color: "#444" }}>
+                            <p><span>{item.label} :</span></p>
+                          </div>
+                          <div className={`col-sm-7 ${isLongText ? "long-text" : "short-text"}`}>
+                            {typeof item.value === "string" ? (
+                              <p><b>{item.value}</b></p>
+                            ) : (
+                              item.value
+                            )}
+                          </div>
+                          <div className="w-100 d-none d-md-block"></div>
+                        </React.Fragment>
+                      );
+                    })}
+                  </div>
+                </div>
+
+
                 <div className="btn-group mt-4 mb-4">
                   <div className="editimg1">
                     <button onClick={() => navigate("/updatemedicalinformation", { state: { id } })}>
@@ -913,8 +940,6 @@ export default function AllUser({ }) {
                     <button onClick={handleDeleteMedicalInfo}><i className="bi bi-trash"></i> ลบ</button>
                   </div>
                 </div>
-
-
               </>
             ) : (
               <div>
@@ -926,7 +951,7 @@ export default function AllUser({ }) {
                         navigate("/addmdinformation", { state: { id } })
                       }
                     >
-                      <i class="bi bi-plus-circle"></i> เพิ่มข้อมูล
+                      <i className="bi bi-plus-circle"></i> เพิ่มข้อมูล
                     </button>
                   </div>
                 </div>
@@ -934,6 +959,8 @@ export default function AllUser({ }) {
             )}
           </fieldset>
         </div>
+
+
 
         <div className="forminfo mb-1">
           <fieldset className="user-fieldset">
@@ -948,19 +975,18 @@ export default function AllUser({ }) {
                       <tr>
                         <th scope="col">
                           <input
-                            style={{ transform: 'scale(1.4)'}}
                             type="checkbox"
                             onChange={toggleAllCheckboxes}
                           />
                         </th>
                         <th scope="col">#</th>
-                        <th scope="col" onClick={() => requestSort("equipmentname_forUser")} style={{ cursor: "pointer" }}>
+                        <th scope="col" onClick={() => requestSort("equipmentname_forUser")}>
                           ชื่ออุปกรณ์ {getSortIcon("equipmentname_forUser")}
                         </th>
-                        <th scope="col" onClick={() => requestSort("equipmenttype_forUser")} style={{ cursor: "pointer" }}>
+                        <th scope="col" onClick={() => requestSort("equipmenttype_forUser")}>
                           ประเภทอุปกรณ์ {getSortIcon("equipmenttype_forUser")}
                         </th>
-                        <th scope="col" onClick={() => requestSort("createdAt")} style={{ cursor: "pointer" }}>
+                        <th scope="col" onClick={() => requestSort("createdAt")}>
                           วันที่เพิ่ม {getSortIcon("createdAt")}
                         </th>
                       </tr>
@@ -970,15 +996,13 @@ export default function AllUser({ }) {
                         <tr
                           key={equipment._id}
                           onClick={() => handleRowClick(equipment.equipmentname_forUser)}
-                          style={{ cursor: "pointer" }}
                         >
                           <td onClick={(e) => e.stopPropagation()}>
                             <input
-                              style={{ transform: 'scale(1.4)' }}
                               type="checkbox"
                               checked={selectedEquipments.includes(equipment.equipmentname_forUser)}
                               onChange={(e) => {
-                                e.stopPropagation(); // ป้องกันไม่ให้ `tr` ทำงานซ้ำ
+                                e.stopPropagation();
                                 handleRowClick(equipment.equipmentname_forUser);
                               }}
                             />
@@ -990,16 +1014,13 @@ export default function AllUser({ }) {
                         </tr>
                       ))}
                     </tbody>
-
                   </table>
                 </div>
 
                 {/* ปุ่มควบคุม */}
                 <div className="btn-group mt-4 mb-3">
                   <div className="adddata">
-                    <button
-                      onClick={() => navigate("/addequipuser", { state: { id } })}
-                    >
+                    <button onClick={() => navigate("/addequipuser", { state: { id } })}>
                       <i className="bi bi-plus-circle"></i> เพิ่มอุปกรณ์
                     </button>
                   </div>
@@ -1015,9 +1036,7 @@ export default function AllUser({ }) {
                 <div className="no-equipment text-center mt-3">ไม่พบข้อมูลอุปกรณ์ทางการแพทย์</div>
                 <div className="btn-group mb-4">
                   <div className="adddata">
-                    <button
-                      onClick={() => navigate("/addequipuser", { state: { id } })}
-                    >
+                    <button onClick={() => navigate("/addequipuser", { state: { id } })}>
                       <i className="bi bi-plus-circle"></i> เพิ่มอุปกรณ์
                     </button>
                   </div>
@@ -1026,6 +1045,7 @@ export default function AllUser({ }) {
             )}
           </fieldset>
         </div>
+
 
       </div>
     </main >

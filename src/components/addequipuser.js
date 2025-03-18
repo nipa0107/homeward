@@ -23,6 +23,7 @@ export default function AddEquipUser() {
   const [equipValidationMessages, setEquipValidationMessages] = useState({});
   const [selectedEquipments, setSelectedEquipments] = useState([]);
   const tokenExpiredAlertShown = useRef(false); 
+  const [equipmentCounts, setEquipmentCounts] = useState({});
 
   useEffect(() => {
     const token = window.localStorage.getItem("token");
@@ -62,6 +63,14 @@ export default function AddEquipUser() {
       .then((res) => res.json())
       .then((data) => {
         setData(data.data);
+
+        // นับจำนวนอุปกรณ์แต่ละประเภท
+        const counts = data.data.reduce((acc, item) => {
+          acc[item.equipment_type] = (acc[item.equipment_type] || 0) + 1;
+          return acc;
+        }, {});
+
+        setEquipmentCounts(counts);
       });
   };
 
@@ -279,7 +288,7 @@ export default function AddEquipUser() {
         <p className="title-header-user">เพิ่มอุปกรณ์สำหรับผู้ป่วย</p>
         <div className="table-responsive">
           <form onSubmit={handleSubmit}>
-            <table className="table table-hover" style={{ width: "60%" }}>
+            <table className="table table-hover">
               <thead>
                 <tr>
                   <th style={{ width: "10%" }}>
@@ -300,15 +309,15 @@ export default function AddEquipUser() {
                   );
 
                   // กรณีไม่มีข้อมูลของประเภทอุปกรณ์นี้
-                  if (equipmentList.length === 0) {
-                    return (
-                      <tr key={equipmentType} className="table-light">
-                        <td colSpan="3" className="text-center">
-                          ไม่มีข้อมูล {equipmentType}
-                        </td>
-                      </tr>
-                    );
-                  }
+                  // if (equipmentList.length === 0) {
+                  //   return (
+                  //     <tr key={equipmentType} className="table-light">
+                  //       <td colSpan="3" className="text-center">
+                  //         ไม่พบข้อมูล {equipmentType}
+                  //       </td>
+                  //     </tr>
+                  //   );
+                  // }
 
                   // ตรวจสอบว่าอุปกรณ์ทั้งหมดถูกเลือกหรือไม่
                   const isAllSelected = equipmentList.every((equipment) =>
@@ -324,7 +333,7 @@ export default function AddEquipUser() {
                         <td colSpan="3" className="fw-bold text-left"
                           style={{ backgroundColor: "#e8f5fd", cursor: "default" }}>
                           
-                          {equipmentType}
+                          {equipmentType} (จำนวน {equipmentCounts[equipmentType] || 0} รายการ)
                         </td>
                       </tr>
 
