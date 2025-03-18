@@ -3,7 +3,7 @@
 }
 .inline-container-caregiver {
   margin-left: 21px;
-  display: flex;
+  /* display: flex; */
   flex-wrap: wrap;
   gap: 1rem;
   justify-content: flex-start;
@@ -19,7 +19,7 @@
   /* align-items: flex-start;  */
   gap: 20px;
   line-height: normal;
-  max-width: 80%;
+  max-width: 94%;
   /* หรือค่าที่เหมาะสม */
   width: 100%;
   /* ให้ขยายเต็มเฉพาะ container */
@@ -72,6 +72,9 @@
     justify-content: center;
     padding-left: 10px;
   
+  }
+  .medical-info-section{
+    padding-left: 6%;
   }
   
   @media (max-width: 768px) {
