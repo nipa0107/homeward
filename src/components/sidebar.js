@@ -149,10 +149,11 @@ export default function Sidebar() {
         <li>
           {adminData?.username && adminData?.password && (
             <a
-              href={`http://localhost:5173/auth?username=${encodeURIComponent(
-                adminData.username
-              )}&password=${encodeURIComponent(adminData.password)}`}
-              target="_blank"
+              // href={`https://ptah-admin.com/auth?username=${encodeURIComponent(
+              //   adminData.username
+              // )}&password=${encodeURIComponent(adminData.password)}`}
+              href={`https://ptah-admin.com/dashboard`}
+              // target="_blank"
               rel="noopener noreferrer"
             >
               <i className="bi bi-window-dock"></i>
