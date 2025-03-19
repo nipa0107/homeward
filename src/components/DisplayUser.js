@@ -4,6 +4,7 @@ import html2canvas from "html2canvas";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import qrcode from "../img/QRcode.svg";
+import qrcodehomeward from "../img/Homeward_qrcode.svg"
 import "../css/form.css"
 import "../css/saveimage.css";
 import Sidebar from "./sidebar";
@@ -146,7 +147,7 @@ export default function DisplayUser() {
               <div className="qrcode-container">
               <div className="qrcode-item">
 
-                <img src={qrcode} className="qrcode" alt="QR Code" />
+                <img src={qrcodehomeward} className="qrcode" alt="QR Code" />
                 <div className="image-description">
                   แอปพลิเคชัน HOMEWARD
                   </div>

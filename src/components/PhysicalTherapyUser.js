@@ -4,7 +4,9 @@ import html2canvas from "html2canvas";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import logow from "../img/logow.png";
-import qrcode from "../img/QRcode.svg";
+import qrcode from "../img/PTAH_qrcode.svg";
+import qrcodehomeward from "../img/Homeward_qrcode.svg"
+
 import logo from "../img/logo.png";
 import "../css/form.css"
 import Sidebar from "./sidebar";
@@ -143,7 +145,7 @@ export default function PhysicalTherapyUser() {
               </div>
               <div className="qrcode-container">
                 <div className="qrcode-item">
-                  <img src={qrcode} className="qrcode" alt="QR Code 1" />
+                  <img src={qrcodehomeward} className="qrcode" alt="QR Code 1" />
                   <div className="image-description">
                   แอปพลิเคชัน HOMEWARD
                   </div>

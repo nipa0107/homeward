@@ -223,8 +223,8 @@ export default function Updatemedicalinformation() {
 
     let newErrors = {};
 
-    if (!HN.trim()) newErrors.HN = "กรุณากรอก HN";
-    if (!AN.trim()) newErrors.AN = "กรุณากรอก AN";
+    // if (!HN.trim()) newErrors.HN = "กรุณากรอก HN";
+    // if (!AN.trim()) newErrors.AN = "กรุณากรอก AN";
     if (!Diagnosis.trim()) newErrors.Diagnosis = "กรุณากรอก Diagnosis";
     if (!selectedPersonnel)
       newErrors.selectedPersonnel = "กรุณาเลือกแพทย์ผู้ดูแล";

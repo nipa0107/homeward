@@ -147,9 +147,9 @@ export default function Sidebar() {
           )}
         </li> */}
         <li>
-          {adminData?.username && adminData?.password && (
+          {/* {adminData?.username && adminData?.password && (
             <a
-              href={`https://ptah-admin.com/auth?username=${encodeURIComponent(
+              href={`http://localhost:5173/auth?username=${encodeURIComponent(
                 adminData.username
               )}&password=${encodeURIComponent(adminData.password)}`}
               target="_blank"
@@ -158,9 +158,14 @@ export default function Sidebar() {
               <i className="bi bi-window-dock"></i>
               <span className="links_name">PTAH จัดการกายภาพ</span>
             </a>
-          )}
+          )} */}
+           <a
+            href={`https://ptah-admin.com/dashboard`}>
+              <i className="bi bi-window-dock"></i>
+              <span className="links_name">PTAH จัดการกายภาพ</span>
+            </a>
         </li>
-
+        {/* */}
         <div className="nav-logout">
           <li>
             <a href="./" onClick={logOut}>
