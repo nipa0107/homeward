@@ -2,9 +2,19 @@ import React, { useEffect, useState, useRef } from "react";
 import "../css/sidebar.css";
 import "../css/alladmin.css";
 import "../css/caremanual.css";
+import "../css/couttopcaremanual.css";
 import "bootstrap-icons/font/bootstrap-icons.css";
 import { useNavigate } from "react-router-dom";
-import Sidebar from "./sidebar"; 
+import Sidebar from "./sidebar";
+import {
+  BarChart,
+  Bar,
+  XAxis,
+  YAxis,
+  Tooltip,
+  CartesianGrid,
+  ResponsiveContainer,
+} from "recharts";
 
 export default function Home() {
   const [data, setData] = useState([]);
@@ -100,7 +110,6 @@ export default function Home() {
     }
   };
 
- 
   useEffect(() => {
     const searchCaremanual = async () => {
       try {
@@ -172,9 +181,51 @@ export default function Home() {
     return <i className="bi bi-caret-down-fill"></i>;
   };
 
+  const [topCaremanuals, setTopCaremanuals] = useState([]);
+
+  useEffect(() => {
+    const fetchTopCaremanuals = async () => {
+      try {
+        const response = await fetch(
+          "https://backend-deploy-render-mxok.onrender.com/getcaremanuals/top5"
+        );
+        if (!response.ok) {
+          throw new Error("Network response was not ok");
+        }
+        const data = await response.json();
+        setTopCaremanuals(data);
+      } catch (error) {
+        console.error("Error fetching top caremanuals:", error);
+      }
+    };
+
+    fetchTopCaremanuals();
+  }, []);
+
+  const customTooltip = ({ active, payload }) => {
+    if (active && payload && payload.length) {
+      return (
+        <div
+          style={{
+            background: "white",
+            padding: "10px",
+            border: "1px solid #ccc",
+            borderRadius: "5px",
+          }}
+        >
+          <p>
+            <strong>{payload[0].payload.caremanual_name}</strong>
+          </p>
+          <p>ยอดการดู: {payload[0].value}</p> {/* เปลี่ยนเป็น "ยอดการดู" */}
+        </div>
+      );
+    }
+    return null;
+  };
+
   return (
     <main className="body">
-      <Sidebar /> 
+      <Sidebar />
       <div className="home_content">
         <div className="homeheader">
           <div className="header">จัดการข้อมูลคู่มือการดูแลผู้ป่วย</div>
@@ -206,6 +257,41 @@ export default function Home() {
             </li>
           </ul>
         </div>
+         {/* (Views: {manual.views}) */}
+         <div className="count-topCaremanuals">
+          <h5>5 อันดับยอดเข้าชมคู่มือ</h5>
+          <div className="count-topCaremanuals-content">
+
+         
+          <ul className="count-topCaremanuals-list">
+          {topCaremanuals.map((manual, index) => (
+            <li key={manual._id}>
+              <span>{index + 1}.</span> {manual.caremanual_name}
+            </li>
+          ))}
+        </ul>
+          <div className="chart-container">
+            <div className="chart-box">
+              <ResponsiveContainer width="100%" height="100%">
+                <BarChart
+                  data={topCaremanuals}
+                  margin={{ top: 10, right: 20, left: 20, bottom: 80 }}
+                >
+                  <CartesianGrid strokeDasharray="3 3" />
+                  <XAxis
+                    dataKey="caremanual_name"
+                    angle={-15}
+                    textAnchor="end"
+                  />
+                  <YAxis />
+                  <Tooltip content={customTooltip} />
+                  <Bar dataKey="views" className="bar-style"radius={[5, 5, 0, 0]} />
+                </BarChart>
+              </ResponsiveContainer>
+            </div>
+          </div>
+        </div>
+        </div>
         <div className="content-toolbar">
           <div className="toolbar-container">
             <div className="search-bar">
@@ -235,6 +321,7 @@ export default function Home() {
             จำนวนคู่มือทั้งหมด : {data.length} คู่มือ
           </p>
         </div>
+       
 
         <div className="content">
           <div className="table-container">
