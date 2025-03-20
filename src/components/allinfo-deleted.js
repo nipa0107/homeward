@@ -45,7 +45,7 @@ export default function AllInfoDeleted() {
     const token = window.localStorage.getItem("token");
     setToken(token);
     if (token) {
-      fetch("http://localhost:5000/profile", {
+      fetch("https://backend-deploy-render-mxok.onrender.com/profile", {
         method: "POST",
         crossDomain: true,
         headers: {
@@ -74,7 +74,7 @@ export default function AllInfoDeleted() {
   useEffect(() => {
     const fetchUserId = async () => {
       try {
-        const response = await fetch(`http://localhost:5000/user/${id}`);
+        const response = await fetch(`https://backend-deploy-render-mxok.onrender.com/user/${id}`);
         const userdata = await response.json();
         setData([data.data]);
         setUsername(userdata.data.username);
@@ -95,7 +95,7 @@ export default function AllInfoDeleted() {
     const fetchCaregiverData = async () => {
       try {
         const response = await fetch(
-          `http://localhost:5000/getcaregiver/${id}`
+          `https://backend-deploy-render-mxok.onrender.com/getcaregiver/${id}`
         );
         const caregiverData = await response.json();
         if (caregiverData.status === "ok") {
@@ -122,7 +122,7 @@ export default function AllInfoDeleted() {
     const fetchMedicalInformation = async () => {
       try {
         const response = await fetch(
-          `http://localhost:5000/medicalInformation/${id}`
+          `https://backend-deploy-render-mxok.onrender.com/medicalInformation/${id}`
         );
         const medicalData = await response.json();
 
@@ -142,7 +142,7 @@ export default function AllInfoDeleted() {
   useEffect(() => {
     const fetchEquipmentData = async () => {
       try {
-        const response = await fetch(`http://localhost:5000/equipment/${id}`);
+        const response = await fetch(`https://backend-deploy-render-mxok.onrender.com/equipment/${id}`);
         const equipmentData = await response.json();
         setMedicalEquipment(equipmentData);
         console.log("EquipmentUser Data:", equipmentData);
@@ -158,7 +158,7 @@ export default function AllInfoDeleted() {
       try {
         if (medicalInfo && medicalInfo.selectedPersonnel) {
           const response = await fetch(
-            `http://localhost:5000/getmpersonnel/${medicalInfo.selectedPersonnel}`
+            `https://backend-deploy-render-mxok.onrender.com/getmpersonnel/${medicalInfo.selectedPersonnel}`
           );
           const mdata = await response.json();
           setMData(mdata);
