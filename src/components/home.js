@@ -182,12 +182,13 @@ export default function Home() {
   };
 
   const [topCaremanuals, setTopCaremanuals] = useState([]);
+  const [allCaremanuals, setallCaremanuals] = useState([]);
 
   useEffect(() => {
     const fetchTopCaremanuals = async () => {
       try {
         const response = await fetch(
-          "https://backend-deploy-render-mxok.onrender.com/getcaremanuals/top5"
+          "http://localhost:5000/getcaremanuals/top5"
         );
         if (!response.ok) {
           throw new Error("Network response was not ok");
@@ -200,6 +201,25 @@ export default function Home() {
     };
 
     fetchTopCaremanuals();
+  }, []);
+
+  useEffect(() => {
+    const fetchallCaremanuals = async () => {
+      try {
+        const response = await fetch(
+          "http://localhost:5000/getcaremanuals/all"
+        );
+        if (!response.ok) {
+          throw new Error("Network response was not ok");
+        }
+        const data = await response.json();
+        setallCaremanuals(data);
+      } catch (error) {
+        console.error("Error fetching top caremanuals:", error);
+      }
+    };
+
+    fetchallCaremanuals();
   }, []);
 
   const customTooltip = ({ active, payload }) => {
@@ -257,9 +277,9 @@ export default function Home() {
             </li>
           </ul>
         </div>
-         {/* (Views: {manual.views}) */}
-         <div className="count-topCaremanuals">
-          <h5>5 อันดับยอดเข้าชมคู่มือ</h5>
+         {/*  */}
+         {/* <div className="count-topCaremanuals">
+          <h5>5 อันดับยอดเข้าชมคู่มือมากที่สุด</h5>
           <div className="count-topCaremanuals-content">
 
          
@@ -267,6 +287,7 @@ export default function Home() {
           {topCaremanuals.map((manual, index) => (
             <li key={manual._id}>
               <span>{index + 1}.</span> {manual.caremanual_name}
+              (ยอดการเข้าชม: {manual.views})
             </li>
           ))}
         </ul>
@@ -274,7 +295,7 @@ export default function Home() {
             <div className="chart-box">
               <ResponsiveContainer width="100%" height="100%">
                 <BarChart
-                  data={topCaremanuals}
+                  data={allCaremanuals}
                   margin={{ top: 10, right: 20, left: 20, bottom: 80 }}
                 >
                   <CartesianGrid strokeDasharray="3 3" />
@@ -291,7 +312,7 @@ export default function Home() {
             </div>
           </div>
         </div>
-        </div>
+        </div> */}
         <div className="content-toolbar">
           <div className="toolbar-container">
             <div className="search-bar">
