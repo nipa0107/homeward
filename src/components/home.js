@@ -188,7 +188,7 @@ export default function Home() {
     const fetchTopCaremanuals = async () => {
       try {
         const response = await fetch(
-          "http://localhost:5000/getcaremanuals/top5"
+          "https://backend-deploy-render-mxok.onrender.com/getcaremanuals/top5"
         );
         if (!response.ok) {
           throw new Error("Network response was not ok");
@@ -278,7 +278,7 @@ export default function Home() {
           </ul>
         </div>
          {/*  */}
-         {/* <div className="count-topCaremanuals">
+         <div className="count-topCaremanuals">
           <h5>5 อันดับยอดเข้าชมคู่มือมากที่สุด</h5>
           <div className="count-topCaremanuals-content">
 
@@ -286,24 +286,26 @@ export default function Home() {
           <ul className="count-topCaremanuals-list">
           {topCaremanuals.map((manual, index) => (
             <li key={manual._id}>
-              <span>{index + 1}.</span> {manual.caremanual_name}
+              <span>{index + 1}.</span> {manual.caremanual_name} {" "}
               (ยอดการเข้าชม: {manual.views})
             </li>
           ))}
         </ul>
-          <div className="chart-container">
+        <div className="chart-container">
             <div className="chart-box">
               <ResponsiveContainer width="100%" height="100%">
                 <BarChart
-                  data={allCaremanuals}
+                  data={topCaremanuals}
                   margin={{ top: 10, right: 20, left: 20, bottom: 80 }}
                 >
                   <CartesianGrid strokeDasharray="3 3" />
                   <XAxis
-                    dataKey="caremanual_name"
-                    angle={-15}
-                    textAnchor="end"
-                  />
+  dataKey="caremanual_name"
+  angle={-20}
+  textAnchor="end"
+  interval={0}
+/>
+
                   <YAxis />
                   <Tooltip content={customTooltip} />
                   <Bar dataKey="views" className="bar-style"radius={[5, 5, 0, 0]} />
@@ -312,7 +314,8 @@ export default function Home() {
             </div>
           </div>
         </div>
-        </div> */}
+       
+        </div>
         <div className="content-toolbar">
           <div className="toolbar-container">
             <div className="search-bar">
