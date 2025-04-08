@@ -39,7 +39,7 @@ export default function UpdateUser() {
   const [telError, setTelError] = useState("");
   const [nameError, setNameError] = useState("");
   const [surnameError, setSurnameError] = useState("");
-  const tokenExpiredAlertShown = useRef(false); 
+  const tokenExpiredAlertShown = useRef(false);
   const [otherGenderError, setOtherGenderError] = useState("");
 
   const formatIDCardNumber = (id) => {
@@ -112,7 +112,7 @@ export default function UpdateUser() {
           console.log(data);
           setAdminData(data.data);
           if (data.data === "token expired" && !tokenExpiredAlertShown.current) {
-            tokenExpiredAlertShown.current = true; 
+            tokenExpiredAlertShown.current = true;
             alert("Token expired login again");
             window.localStorage.clear();
             window.location.href = "./";
@@ -148,7 +148,7 @@ export default function UpdateUser() {
     } else {
       setTelError("");
     }
-    
+
 
     if (!name.trim()) {
       setNameError("กรุณากรอกชื่อ");
@@ -329,7 +329,7 @@ export default function UpdateUser() {
             </li>
             <li className="middle" >
               <a
-                onClick={() => navigate("/allinfo", { state: { id } })} className="info" 
+                onClick={() => navigate("/allinfo", { state: { id } })} className="info"
               >
                 ข้อมูลการดูแลผู้ป่วย
               </a>
@@ -338,7 +338,7 @@ export default function UpdateUser() {
               <i className="bi bi-chevron-double-right"></i>
             </li>
             <li className="ellipsis">
-              <a className="info"  onClick={() => navigate("/allinfo", { state: { id } })}>...</a>
+              <a className="info" onClick={() => navigate("/allinfo", { state: { id } })}>...</a>
             </li>
             <li className="arrow ellipsis">
               <i className="bi bi-chevron-double-right"></i>
@@ -348,9 +348,9 @@ export default function UpdateUser() {
             </li>
           </ul>
         </div>
-        
+
         <div className="adminall card mb-2">
-        <p className="title-header">แก้ไขข้อมูลผู้ป่วย</p>
+          <p className="title-header">แก้ไขข้อมูลผู้ป่วย</p>
           <div className="mb-2">
             <label>ชื่อผู้ใช้</label>
             <input
@@ -402,11 +402,11 @@ export default function UpdateUser() {
               onChange={handleInputSurnameChange}
               className={`form-control ${surnameError ? "input-error" : ""}`}
               value={surname}
-              // onChange={(e) => setSurname(e.target.value)}
+            // onChange={(e) => setSurname(e.target.value)}
             />
             {surnameError && <span className="error-text">{surnameError}</span>}
           </div>
-{/* 
+          {/* 
           <div className="mb-2">
             <label>เพศ</label>
             <div class="relationship-container">
@@ -518,7 +518,7 @@ export default function UpdateUser() {
               value={tel}
               className={`form-control ${telError ? "input-error" : ""}`}
               onChange={handleInputChange}
-              // onChange={(e) => setTel(e.target.value)}
+            // onChange={(e) => setTel(e.target.value)}
             />
             {telError && <span className="error-text">{telError}</span>}
           </div>
@@ -534,7 +534,7 @@ export default function UpdateUser() {
           </div>
         </div>
       </div>
-      
+
     </main>
   );
 }

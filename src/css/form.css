@@ -70,7 +70,15 @@
 .medical-info-section .col-sm-5.file-label {
   margin-bottom: -10px;
 }
-
+/* .mb-3 {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+} */
+input.form-equip{
+  border: 1px solid #ccc;
+  
+}
 @media (max-width: 992px) {
   .adminall.card {
     width: 100%;

@@ -22,8 +22,9 @@ export default function AddEquipUser() {
   const [selectedEquipType3, setSelectedEquipType3] = useState("");
   const [equipValidationMessages, setEquipValidationMessages] = useState({});
   const [selectedEquipments, setSelectedEquipments] = useState([]);
-  const tokenExpiredAlertShown = useRef(false); 
+  const tokenExpiredAlertShown = useRef(false);
   const [equipmentCounts, setEquipmentCounts] = useState({});
+  const [equipments, setEquipments] = useState([]);
 
   useEffect(() => {
     const token = window.localStorage.getItem("token");
@@ -43,99 +44,56 @@ export default function AddEquipUser() {
         .then((data) => {
           setAdminData(data.data);
           if (data.data === "token expired" && !tokenExpiredAlertShown.current) {
-            tokenExpiredAlertShown.current = true; 
+            tokenExpiredAlertShown.current = true;
             alert("Token expired login again");
             window.localStorage.clear();
             window.location.href = "./";
           }
         });
     }
-    getAllEquip();
+
   }, [token]);
 
-  const getAllEquip = () => {
-    fetch("https://backend-deploy-render-mxok.onrender.com/allequip", {
-      method: "GET",
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    })
-      .then((res) => res.json())
-      .then((data) => {
-        setData(data.data);
+  const [medicalEquipment, setMedicalEquipment] = useState([]);
+  useEffect(() => {
+    const fetchMedicalEquipmentThenEquip = async () => {
+      try {
+        const res = await fetch(`https://backend-deploy-render-mxok.onrender.com/equipment/${id}`);
+        const data = await res.json();
+        setMedicalEquipment(data);
 
-        // นับจำนวนอุปกรณ์แต่ละประเภท
-        const counts = data.data.reduce((acc, item) => {
-          acc[item.equipment_type] = (acc[item.equipment_type] || 0) + 1;
-          return acc;
-        }, {});
+        // รอโหลด medicalEquipment ก่อน แล้วค่อย fetch อุปกรณ์ทั้งหมด
+        const allEquipRes = await fetch("https://backend-deploy-render-mxok.onrender.com/allequip", {
+          method: "GET",
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+        const allEquipData = await allEquipRes.json();
 
-        setEquipmentCounts(counts);
-      });
-  };
+        if (Array.isArray(allEquipData.data)) {
+          setEquipments(allEquipData.data);
 
-  const handleCheckboxChange = (e, equipmentName, equipmentType) => {
-    const isChecked = e.target.checked;
-    let updatedEquipments;
-
-    if (isChecked) {
-      updatedEquipments = [
-        ...selectedEquipments,
-        {
-          equipmentname_forUser: equipmentName,
-          equipmenttype_forUser: equipmentType,
-        },
-      ];
-    } else {
-      updatedEquipments = selectedEquipments.filter(
-        (equip) => equip.equipmentname_forUser !== equipmentName
-      );
-    }
-
-    setSelectedEquipments(updatedEquipments);
-
-    // Check for duplicates and update validation messages
-    const validationMessages = {};
-    updatedEquipments.forEach((equip, index) => {
-      const duplicates = updatedEquipments.filter(
-        (e) => e.equipmentname_forUser === equip.equipmentname_forUser
-      ).length;
-
-      if (duplicates > 1) {
-        validationMessages[equip.equipmentname_forUser] = "มีอุปกรณ์นี้อยู่แล้ว";
-      }
-    });
-
-    setEquipValidationMessages(validationMessages);
-    setValidationMessage(""); // Clear general validation message
-  };
-
-  const handleSelectAll = (equipmentType, isChecked) => {
-    let updatedEquipments = [...selectedEquipments];
-
-    data
-      .filter((equipment) => equipment.equipment_type === equipmentType)
-      .forEach((equipment) => {
-        if (isChecked) {
-          if (
-            !updatedEquipments.some(
-              (equip) => equip.equipmentname_forUser === equipment.equipment_name
-            )
-          ) {
-            updatedEquipments.push({
-              equipmentname_forUser: equipment.equipment_name,
-              equipmenttype_forUser: equipmentType,
-            });
-          }
-        } else {
-          updatedEquipments = updatedEquipments.filter(
-            (equip) => equip.equipmentname_forUser !== equipment.equipment_name
-          );
+          // คำนวณจำนวนเฉพาะอุปกรณ์ที่ยังไม่มี
+          const counts = allEquipData.data.reduce((acc, item) => {
+            const alreadyAssigned = data.some(
+              (equip) => equip.equipmentname_forUser === item.equipment_name
+            );
+            if (!alreadyAssigned) {
+              acc[item.equipment_type] = (acc[item.equipment_type] || 0) + 1;
+            }
+            return acc;
+          }, {});
+          setEquipmentCounts(counts);
         }
-      });
+      } catch (error) {
+        console.error("Error loading equipment:", error);
+      }
+    };
 
-    setSelectedEquipments(updatedEquipments);
-  };
+    fetchMedicalEquipmentThenEquip();
+  }, [id, token]);
+
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -170,11 +128,6 @@ export default function AddEquipUser() {
           setTimeout(() => {
             navigate("/allinfo", { state: { id } });
           }, 1100);
-        } else if (
-          data.status === "error" &&
-          data.message === "มีอุปกรณ์นี้อยู่แล้ว"
-        ) {
-          setValidationMessage("มีอุปกรณ์นี้อยู่แล้ว");
         } else {
           toast.error("เกิดข้อผิดพลาดในการเพิ่มข้อมูล");
         }
@@ -185,38 +138,63 @@ export default function AddEquipUser() {
       });
   };
 
-  const handleChange = (e, equipTypeSetter, equipType) => {
-    equipTypeSetter(e.target.value);
-    setEquipValidationMessages((prevMessages) => {
-      const newMessages = { ...prevMessages };
-      delete newMessages[equipType];
-      return newMessages;
-    });
-    setValidationMessage(""); // Clear general validation message
-  };
+  const toggleAllCheckboxes = () => {
+    const unassignedEquipments = equipments.filter(equipment =>
+      equipment.equipment_type === selectedCategory &&
+      !medicalEquipment.some(
+        (me) => me.equipmentname_forUser === equipment.equipment_name
+      )
+    );
 
-  const toggleAllCheckboxes = (e) => {
-    const isChecked = e.target.checked;
-    let updatedEquipments = [];
+    const allSelected = unassignedEquipments.every(equipment =>
+      selectedEquipments.some(
+        (equip) => equip.equipmentname_forUser === equipment.equipment_name
+      )
+    );
 
-    if (isChecked) {
-      updatedEquipments = data.map((equipment) => ({
+    if (allSelected) {
+      // ยกเลิกเฉพาะของประเภทนี้
+      const remaining = selectedEquipments.filter(
+        (equip) =>
+          equip.equipmenttype_forUser !== selectedCategory
+      );
+      setSelectedEquipments(remaining);
+    } else {
+      const validEquipments = unassignedEquipments.map(equipment => ({
         equipmentname_forUser: equipment.equipment_name,
         equipmenttype_forUser: equipment.equipment_type,
       }));
+
+      setSelectedEquipments([...selectedEquipments, ...validEquipments]);
+    }
+
+    setValidationMessage("");
+  };
+  const handleCheckboxChange = (e, equipmentName, equipmentType) => {
+    const isChecked = e ? e.target.checked : !selectedEquipments.some(
+      equip => equip.equipmentname_forUser === equipmentName
+    );
+
+    let updatedEquipments;
+
+    if (isChecked) {
+      updatedEquipments = [
+        ...selectedEquipments,
+        {
+          equipmentname_forUser: equipmentName,
+          equipmenttype_forUser: equipmentType,
+        },
+      ];
+    } else {
+      updatedEquipments = selectedEquipments.filter(
+        (equip) => equip.equipmentname_forUser !== equipmentName
+      );
     }
 
     setSelectedEquipments(updatedEquipments);
+    setValidationMessage(""); // ไม่ต้องแจ้งเตือนแล้ว
   };
-
-  const handleRowClick = (equipmentName, equipmentType) => {
-    setSelectedEquipments((prevSelected) =>
-      prevSelected.some((equip) => equip.equipmentname_forUser === equipmentName)
-        ? prevSelected.filter((equip) => equip.equipmentname_forUser !== equipmentName)
-        : [...prevSelected, { equipmentname_forUser: equipmentName, equipmenttype_forUser: equipmentType }]
-    );
-  };
-
+  const [selectedCategory, setSelectedCategory] = useState("อุปกรณ์ติดตัว");
 
   return (
     <main className="body">
@@ -274,7 +252,7 @@ export default function AddEquipUser() {
             </li>
             <li className="ellipsis">
               <a onClick={() => navigate("/allinfo", { state: { id } })}
-              className="info"
+                className="info"
               >...</a>
             </li>
             <li className="arrow ellipsis">
@@ -286,90 +264,133 @@ export default function AddEquipUser() {
           </ul>
         </div>
         <p className="title-header-user">เพิ่มอุปกรณ์สำหรับผู้ป่วย</p>
-        <div className="table-responsive">
+        <div className="equipment-category ps-5 pe-5 mt-4">
+
+          {/* ปุ่มเลือกประเภทอุปกรณ์ */}
+          <div className="assessment-tabs mt-0">
+            {["อุปกรณ์ติดตัว", "อุปกรณ์เสริม", "อุปกรณ์อื่นๆ"].map((type) => (
+              <button
+                key={type}
+                className={`tab-btn ${selectedCategory === type ? "active" : ""}`}
+                onClick={() => setSelectedCategory(type)}
+              >
+                {type}
+              </button>
+            ))}
+          </div>
+
+          {/* แสดงชื่อประเภท + จำนวน + แจ้งเตือน */}
+          <div className="mb-2 fw-bold d-flex align-items-center" style={{ color: "#1565c0" }}>
+            <span>
+              {selectedCategory} (จำนวน {equipmentCounts[selectedCategory] || 0} รายการ)
+            </span>
+          </div>
+
           <form onSubmit={handleSubmit}>
-            <table className="table table-hover">
-              <thead>
-                <tr>
-                  <th style={{ width: "10%" }}>
-                    <input
-                      style={{ transform: 'scale(1.4)',marginLeft: "45px", cursor: "pointer" }}
-                      type="checkbox"
-                      onChange={toggleAllCheckboxes}
-                    />
-                  </th>
-                  <th style={{ width: "10%" }}>#</th>
-                  <th>ชื่ออุปกรณ์</th>
-                </tr>
-              </thead>
-              <tbody>
-                {["อุปกรณ์ติดตัว", "อุปกรณ์เสริม", "อุปกรณ์อื่นๆ"].map((equipmentType) => {
-                  const equipmentList = data.filter(
-                    (equipment) => equipment.equipment_type === equipmentType
-                  );
+            {/* ทำให้ตารางอยู่กับที่ + มี scrollbar ถ้ายาว */}
+            <div style={{ overflowY: "auto" }}>
+              <table className="equipment-table table-hover" style={{ border: "1px solid #ddd" }}>
+                <thead>
+                  <tr>
+                    <th style={{ width: "10%" }}>
+                      {equipmentCounts[selectedCategory] > 0 && (
+                        <input
+                          style={{ marginLeft: "20px", cursor: "pointer",transform: 'scale(1.4)' }}
+                          type="checkbox"
+                          onChange={toggleAllCheckboxes}
+                          checked={
+                            equipments.filter(e =>
+                              e.equipment_type === selectedCategory &&
+                              !medicalEquipment.some(
+                                (me) => me.equipmentname_forUser === e.equipment_name
+                              )
+                            ).every(e =>
+                              selectedEquipments.some(
+                                (se) => se.equipmentname_forUser === e.equipment_name
+                              )
+                            )
+                          }
+                        />
+                      )}
+                    </th>
+                    <th style={{ width: "10%" }}>#</th>
+                    <th>ชื่ออุปกรณ์</th>
+                  </tr>
+                </thead>
 
-                  // กรณีไม่มีข้อมูลของประเภทอุปกรณ์นี้
-                  // if (equipmentList.length === 0) {
-                  //   return (
-                  //     <tr key={equipmentType} className="table-light">
-                  //       <td colSpan="3" className="text-center">
-                  //         ไม่พบข้อมูล {equipmentType}
-                  //       </td>
-                  //     </tr>
-                  //   );
-                  // }
 
-                  // ตรวจสอบว่าอุปกรณ์ทั้งหมดถูกเลือกหรือไม่
-                  const isAllSelected = equipmentList.every((equipment) =>
-                    selectedEquipments.some(
-                      (equip) => equip.equipmentname_forUser === equipment.equipment_name
-                    )
-                  );
+                <tbody>
+                  {(() => {
+                    const equipmentList = equipments.filter(
+                      (equipment) => {
+                        const isSameType = equipment.equipment_type === selectedCategory;
+                        const alreadyAssigned = medicalEquipment.some(
+                          (me) => me.equipmentname_forUser === equipment.equipment_name
+                        );
+                        return isSameType && !alreadyAssigned;
+                      }
+                    );
 
-                  return (
-                    <React.Fragment key={equipmentType}>
-                      {/* หัวข้อประเภทอุปกรณ์ */}
-                      <tr >
-                        <td colSpan="3" className="fw-bold text-left"
-                          style={{ backgroundColor: "#e8f5fd", cursor: "default" }}>
-                          
-                          {equipmentType} (จำนวน {equipmentCounts[equipmentType] || 0} รายการ)
-                        </td>
-                      </tr>
+                    // ✅ เช็คว่าไม่มีอุปกรณ์ให้เลือก เพราะ "ถูกเลือกครบแล้ว"
+                    const originalEquipmentsOfCategory = equipments.filter(
+                      (e) => e.equipment_type === selectedCategory
+                    );
+                    const allAssigned =
+                      originalEquipmentsOfCategory.length > 0 &&
+                      originalEquipmentsOfCategory.every((e) =>
+                        medicalEquipment.some(
+                          (me) => me.equipmentname_forUser === e.equipment_name
+                        )
+                      );
 
-                      {/* รายการอุปกรณ์ */}
-                      {equipmentList.map((equipment, index) => (
-                        <tr key={equipment._id}
-                          onClick={() => handleRowClick(equipment.equipment_name, equipmentType)}
-                          style={{ cursor: "pointer" }}>
-                          <td style={{ width: "10%" }}>
-                            <input
-                              style={{ transform: 'scale(1.4)', marginLeft: "45px", pointerEvents: "none" }} // ป้องกัน input รับคลิกตรงๆ
-                              
-                              type="checkbox"
-                              checked={selectedEquipments.some(
-                                (equip) => equip.equipmentname_forUser === equipment.equipment_name
-                              )}
-                              readOnly
-                            />
+                    if (equipmentList.length === 0) {
+                      return (
+                        <tr className="table-light">
+                          <td colSpan="3" className="text-center">
+                            {allAssigned
+                              ? `คุณได้เพิ่ม ${selectedCategory} ครบแล้ว`
+                              : `ไม่มีข้อมูล ${selectedCategory}`}
                           </td>
-                          <td style={{ width: "10%" }}>{index + 1}</td>
-                          <td>{equipment.equipment_name}</td>
                         </tr>
-                      ))}
-                    </React.Fragment>
-                  );
-                })}
-              </tbody>
-            </table>
+                      );
+                    }
 
-            {/* ข้อความแจ้งเตือนกรณีมีข้อผิดพลาด */}
-            {validationMessage && (
-              <div style={{ color: "red", textAlign: "center" }}>{validationMessage}</div>
-            )}
+                    return equipmentList.map((equipment, index) => (
+                      <tr
+                        key={equipment._id}
+                        onClick={() =>
+                          handleCheckboxChange(
+                            null,
+                            equipment.equipment_name,
+                            selectedCategory
+                          )
+                        }
+                        style={{ cursor: "pointer" }}
+                      >
+                        <td style={{ width: "10%" }}>
+                          <input
+                            style={{ marginLeft: "20px", pointerEvents: "none",transform: 'scale(1.4)' }}
+                            type="checkbox"
+                            checked={selectedEquipments.some(
+                              (equip) =>
+                                equip.equipmentname_forUser === equipment.equipment_name
+                            )}
+                            readOnly
+                          />
+                        </td>
+                        <td style={{ width: "10%" }}>{index + 1}</td>
+                        <td>{equipment.equipment_name}</td>
+                      </tr>
+                    ));
+                  })()}
+                </tbody>
+
+
+              </table>
+            </div>
 
             {/* ปุ่มบันทึก */}
-            <div className="btn-group mt-3">
+            <div className="btn-group mt-4">
               <div className="btn-next">
                 <button type="submit" className="btn btn-outline py-2">
                   บันทึก
